@@ -24,9 +24,8 @@ $geny_ptr = new GenyProjectTaskRelation();
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
 		Ce formulaire permet d'ajouter un rapport d'activité.<br />
-		<strong class="important_note">Important :</strong> La charge journalière est <u>une charge par jour</u>. <br />
-		La charge moyenne est en heures (8h pour une journée complète, 4h pour une demie journée).<br />
-		C'est à dire que si vous remplissez un CRA pour une semaine (5 jours), vous positionnez les dates de début et de fin avec une charge moyenne de 8 heures (8x5=45 magique !).<br />
+		<strong class="important_note">Important :</strong> La charge journalière est <u>une charge répartie par jour</u>. <br />
+		C'est à dire que si vous remplissez un CRA pour une semaine (5 jours), vous positionnez les dates de début et de fin avec une charge moyenne de 8 heures.<br />
 		Une charge supérieure signifie des heures supplémentaires et l'accord du manager est nécessaire.
 		</p>
 		<script>
@@ -68,7 +67,7 @@ $geny_ptr = new GenyProjectTaskRelation();
 			foreign key(activity_report_status_id) references Activity_Report_Status(activity_report_status_id) ON DELETE CASCADE
 		);-->
 
-		<form id="formID" action="cra_edit.php" method="post">
+		<form id="formID" action="cra_add.php" method="post">
 			<input type="hidden" name="create_cra" value="true" />
 			<p>
 				<label for="assignement_id">Projet</label>
