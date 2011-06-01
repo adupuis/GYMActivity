@@ -5,14 +5,18 @@ $required_group_rights = 5;
 
 include_once 'header.php';
 
-if(isset($_POST['update_password']) && $_POST['update_password'] == "yes" && isset($_POST['password_first']) && isset($_POST['password_second']) && $_POST['password_first'] == $_POST['password_second'] ){
+$db_status = '';
+
+if(isset($_POST['update_password']) && $_POST['update_password'] == "true" && isset($_POST['password_first']) && isset($_POST['password_second']) && $_POST['password_first'] == $_POST['password_second'] ){
 	$profile->updateString('profile_password',md5($_POST['password_first']));
-	if( $profile->commit() )
+	$profile->updateBool('profile_needs_password_reset','false');
+	if( $profile->commitUpdates() ){
 		$db_status .= "<li class=\"status_message_success\">Mot de passe mis à jour avec succès.</li>\n";
+		include_once 'menu.php';
+	}
 	else
 		$db_status .= "<li class=\"status_message_error\">Erreur lors de la mise à jour du mot de passe.</li>\n";
 }
-
 ?>
 
 <div class="page_title">
@@ -30,11 +34,19 @@ if(isset($_POST['update_password']) && $_POST['update_password'] == "yes" && iss
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier votre mot de passe.<br />
 		</p>
+		<?php
+			if( isset($db_status) && $db_status != "" ){
+				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
+			}
+		?>
 		<script>
 			jQuery(document).ready(function(){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
+			});
+			$(".status_message").click(function () {
+			$(".status_message").fadeOut("slow");
 			});
 		</script>
 		<form id="formID" action="user_admin_password_change.php" method="post">
@@ -48,7 +60,7 @@ if(isset($_POST['update_password']) && $_POST['update_password'] == "yes" && iss
 				<input name="password_second" id="password_second" class="validate[required,confirm[password_first]] text-input" type="password" />
 			</p>
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="#formID">annuler</a>
 			</p>
 		</form>
 	</p>
