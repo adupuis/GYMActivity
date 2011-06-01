@@ -3,6 +3,7 @@
 session_start();
 
 include_once 'classes/GenyWebConfig.php';
+include_once 'classes/GenyProfile.php';
 $web_config = new GenyWebConfig();
 
 if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
@@ -19,7 +20,7 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 
 	$handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
 	mysql_select_db("GYMActivity");
-	$query = "SELECT profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd'";
+	$query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd'";
 
 	$result = mysql_query($query, $handle);
 
@@ -29,7 +30,11 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 		$sqldata = mysql_fetch_assoc($result);
 		$_SESSION['USERID'] = $username;
 		$_SESSION['LOGGEDIN'] = true;
-		header("Location: home.php");
+		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );
+		if( $tmp_profile->needs_password_reset )
+			header('Location: user_admin_password_change.php');
+		else
+			header("Location: home.php");
 		exit;
 	}
 
