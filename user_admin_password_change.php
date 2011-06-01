@@ -4,13 +4,19 @@ $header_title = 'GenY Mobile - Mise à jour du mot de passe';
 $required_group_rights = 5;
 
 include_once 'header.php';
-include_once 'menu.php';
 
+if(isset($_POST['update_password']) && $_POST['update_password'] == "yes" && isset($_POST['password_first']) && isset($_POST['password_second']) && $_POST['password_first'] == $_POST['password_second'] ){
+	$profile->updateString('profile_password',md5($_POST['password_first']));
+	if( $profile->commit() )
+		$db_status .= "<li class=\"status_message_success\">Mot de passe mis à jour avec succès.</li>\n";
+	else
+		$db_status .= "<li class=\"status_message_error\">Erreur lors de la mise à jour du mot de passe.</li>\n";
+}
 
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/profile_admin.png"/><p>Admin</p>
+	<img src="images/<?php echo $web_config->theme ?>/profile_admin.png"/><p>Password</p>
 </div>
 
 
