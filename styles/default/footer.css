@@ -1,0 +1,16 @@
+#footer {
+	background:#f7f7f7;
+	background:-moz-linear-gradient(90deg, #ccc, #fff); /* Firefox */
+	background:-webkit-gradient(linear, left top, left bottom, from(#fff), to(#ccc)); /* Webkit */
+	border:1px solid #aaa;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-moz-box-shadow:0 0 15px #aaa;
+	-webkit-box-shadow:0 0 15px #aaa;
+	margin:10px auto 0;
+	padding:20px;
+	width:440px;
+	font-size:11px;
+	/*margin-top:20px;*/
+	text-align:center;
+}
