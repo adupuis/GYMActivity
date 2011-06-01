@@ -406,6 +406,10 @@ div#maindock ul li.profile_list a {
 	background-image: url(../../images/default/profile_list.png);
 }
 
+div#maindock ul li.profile_admin a {
+	background-image: url(../../images/default/profile_admin.png);
+}
+
 div#maindock ul li.client_add a {
 	background-image: url(../../images/default/client_add.png);
 }
@@ -542,6 +546,10 @@ div#mainarea p.mainarea_title span.profile_edit {
 
 div#mainarea p.mainarea_title span.profile_remove {
 	background-image: url(../../images/default/profile_remove.png);
+}
+
+div#mainarea p.mainarea_title span.profile_admin {
+	background-image: url(../../images/default/profile_admin.png);
 }
 
 div#mainarea p.mainarea_title span.client_add {
