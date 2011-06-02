@@ -21,9 +21,9 @@ if( isset($_POST['remove_task']) && $_POST['remove_task'] == "true" ){
 			if(! mysql_query($query)){
 				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table Activities.</li>\n";
 			}
-			$query = "DELETE FROM Project_Task_Relations WHERE task_id=$id";
+			$query = "DELETE FROM ProjectTaskRelations WHERE task_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table Project_Task_Relations.</li>\n";
+				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table ProjectTaskRelations.</li>\n";
 			}
 			$query = "DELETE FROM Tasks WHERE task_id=$id";
 			if(! mysql_query($query)){

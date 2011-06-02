@@ -20,9 +20,9 @@ if( isset($_POST['remove_project']) && $_POST['remove_project'] == "true" ){
 			if(! mysql_query($query)){
 				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du projet de la table Assignements.</li>\n";
 			}
-			$query = "DELETE FROM Project_Task_Relations WHERE project_id=$id";
+			$query = "DELETE FROM ProjectTaskRelations WHERE project_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du projet de la table Project_Task_Relations.</li>\n";
+				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du projet de la table ProjectTaskRelations.</li>\n";
 			}
 			$query = "DELETE FROM Projects WHERE project_id=$id";
 			if(! mysql_query($query)){

@@ -131,7 +131,7 @@ INSERT INTO Tasks VALUES(NULL,'Repos Compensateur','');
 INSERT INTO Tasks VALUES(NULL,'Suspension de Contrat','');
 INSERT INTO Tasks VALUES(NULL,'Temps Partiel','');
 
-CREATE TABLE Project_Task_Relations (
+CREATE TABLE ProjectTaskRelations (
 	project_task_relation_id int auto_increment,
 	project_id int not null,
 	task_id int not null,
@@ -139,13 +139,13 @@ CREATE TABLE Project_Task_Relations (
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
 );
-ALTER TABLE Project_Task_Relations AUTO_INCREMENT = 1;
-INSERT INTO Project_Task_Relations VALUES(NULL,1,1);
-INSERT INTO Project_Task_Relations VALUES(NULL,3,1);
-INSERT INTO Project_Task_Relations VALUES(NULL,1,2);
-INSERT INTO Project_Task_Relations VALUES(NULL,3,2);
-INSERT INTO Project_Task_Relations VALUES(NULL,1,3);
-INSERT INTO Project_Task_Relations VALUES(NULL,3,3);
+ALTER TABLE ProjectTaskRelations AUTO_INCREMENT = 1;
+INSERT INTO ProjectTaskRelations VALUES(NULL,1,1);
+INSERT INTO ProjectTaskRelations VALUES(NULL,3,1);
+INSERT INTO ProjectTaskRelations VALUES(NULL,1,2);
+INSERT INTO ProjectTaskRelations VALUES(NULL,3,2);
+INSERT INTO ProjectTaskRelations VALUES(NULL,1,3);
+INSERT INTO ProjectTaskRelations VALUES(NULL,3,3);
 
 CREATE TABLE Assignements (
 	assignement_id int auto_increment,

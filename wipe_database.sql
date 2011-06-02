@@ -13,7 +13,7 @@ DROP TABLE Tasks;
 DROP TABLE Projects;
 DROP TABLE ProjectStatus;
 DROP TABLE ProjectTypes;
-DROP TABLE Project_Task_Relations;
+DROP TABLE ProjectTaskRelations;
 DROP TABLE Clients;
 DROP TABLE ProfileManagementData;
 DROP TABLE Profiles;

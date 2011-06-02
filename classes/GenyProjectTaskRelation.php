@@ -16,15 +16,15 @@ class GenyProjectTaskRelation {
 			$this->loadProjectTaskRelationById($id);
 	}
 	public function insertNewProjectTaskRelation($id,$project_id,$task_id){
-		$query = "INSERT INTO Project_Task_Relations VALUES($id,$project_id,$task_id)";
+		$query = "INSERT INTO ProjectTaskRelations VALUES($id,$project_id,$task_id)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProject_Task_Relations MySQL query : $query -->\n";
+			echo "<!-- DEBUG: GenyProjectTaskRelations MySQL query : $query -->\n";
 		return mysql_query($query,$this->handle);
 	}
 	public function getProjectTaskRelationsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT project_task_relation_id,project_id,task_id FROM Project_Task_Relations";
+		$query = "SELECT project_task_relation_id,project_id,task_id FROM ProjectTaskRelations";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -78,7 +78,7 @@ class GenyProjectTaskRelation {
 		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
 	}
 	public function commitUpdates(){
-		$query = "UPDATE Project_Task_Relations SET ";
+		$query = "UPDATE ProjectTaskRelations SET ";
 		foreach($this->updates as $up) {
 			$query .= "$up,";
 		}
@@ -91,7 +91,7 @@ class GenyProjectTaskRelation {
 	public function deleteAllProjectTaskRelationsByProjectId($project_id){
 		if(!is_numeric($project_id))
 			return false;
-		$query = "DELETE FROM Project_Task_Relations WHERE project_id=$project_id";
+		$query = "DELETE FROM ProjectTaskRelations WHERE project_id=$project_id";
 		return mysql_query($query, $this->handle);
 	}
 }
