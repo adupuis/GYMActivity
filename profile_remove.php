@@ -24,13 +24,13 @@ if( isset($_POST['remove_profile']) && $_POST['remove_profile'] == "true" ){
 	if(isset($_POST['profile_id'])){
 		if( isset($_POST['force_remove']) && $_POST['force_remove'] == "true" ){
 			$id = mysql_real_escape_string($_POST['profile_id']);
-			$query = "DELETE FROM Idea_Messages WHERE profile_id=$id";
+			$query = "DELETE FROM IdeaMessages WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table Idea_Messages.</li>\n";
+				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table IdeaMessages.</li>\n";
 			}
-			$query = "DELETE FROM Activity_Reports WHERE profile_id=$id";
+			$query = "DELETE FROM ActivityReports WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table Activity_Reports.</li>\n";
+				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table ActivityReports.</li>\n";
 			}
 			$query = "DELETE FROM Assignements WHERE profile_id=$id";
 			if(! mysql_query($query)){

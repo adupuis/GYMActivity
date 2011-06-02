@@ -221,24 +221,24 @@ CREATE TABLE AccessLogs (
 );
 ALTER TABLE AccessLogs AUTO_INCREMENT=1;
 
-CREATE TABLE Idea_Status (
+CREATE TABLE IdeaStatus (
 	idea_status_id int auto_increment,
 	idea_status_name varchar(200) not null,
 	idea_status_description varchar(200) not null,
 	primary key(idea_status_id)
 );
-ALTER TABLE Idea_Status AUTO_INCREMENT=1;
-INSERT INTO Idea_Status VALUES (NULL,'No status','Idea have not yet been reviewed.');
-INSERT INTO Idea_Status VALUES (NULL,'Accepted','Idea have been accepted for implementation.');
-INSERT INTO Idea_Status VALUES (NULL,'Rejected','Idea have been rejected.');
-INSERT INTO Idea_Status VALUES (NULL,'In progress','Idea is currently being implemented.');
-INSERT INTO Idea_Status VALUES (NULL,'Private alpha','Idea is implemented and is currently being tested with a restricted user base (alpha version).');
-INSERT INTO Idea_Status VALUES (NULL,'Public alpha','Idea is implemented and is currently being tested with all GenY Mobile employees (alpha version).');
-INSERT INTO Idea_Status VALUES (NULL,'Private beta','Idea is implemented and is currently being tested with a restricted user base (beta version).');
-INSERT INTO Idea_Status VALUES (NULL,'Public beta','Idea is implemented and is currently being tested with all GenY Mobile employees (beta version).');
-INSERT INTO Idea_Status VALUES (NULL,'Private RC','Idea is implemented and is currently being tested with a restricted user base (release candidate).');
-INSERT INTO Idea_Status VALUES (NULL,'Public RC','Idea is implemented and is currently being tested with all GenY Mobile employees (release candidate).');
-INSERT INTO Idea_Status VALUES (NULL,'Implemented','Idea have been implemented and is now available in production use.');
+ALTER TABLE IdeaStatus AUTO_INCREMENT=1;
+INSERT INTO IdeaStatus VALUES (NULL,'No status','Idea have not yet been reviewed.');
+INSERT INTO IdeaStatus VALUES (NULL,'Accepted','Idea have been accepted for implementation.');
+INSERT INTO IdeaStatus VALUES (NULL,'Rejected','Idea have been rejected.');
+INSERT INTO IdeaStatus VALUES (NULL,'In progress','Idea is currently being implemented.');
+INSERT INTO IdeaStatus VALUES (NULL,'Private alpha','Idea is implemented and is currently being tested with a restricted user base (alpha version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public alpha','Idea is implemented and is currently being tested with all GenY Mobile employees (alpha version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Private beta','Idea is implemented and is currently being tested with a restricted user base (beta version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public beta','Idea is implemented and is currently being tested with all GenY Mobile employees (beta version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Private RC','Idea is implemented and is currently being tested with a restricted user base (release candidate).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public RC','Idea is implemented and is currently being tested with all GenY Mobile employees (release candidate).');
+INSERT INTO IdeaStatus VALUES (NULL,'Implemented','Idea have been implemented and is now available in production use.');
 
 CREATE TABLE Ideas (
 	idea_id int auto_increment,
@@ -249,11 +249,11 @@ CREATE TABLE Ideas (
 	idea_submitter int not null,
 	primary key(idea_id),
 	foreign key(idea_submitter) references Profiles(profile_id) ON DELETE CASCADE,
-	foreign key(idea_status_id) references Idea_Status(idea_status_id) ON DELETE CASCADE
+	foreign key(idea_status_id) references IdeaStatus(idea_status_id) ON DELETE CASCADE
 );
 ALTER TABLE Ideas AUTO_INCREMENT=1;
 
-CREATE TABLE Idea_Messages (
+CREATE TABLE IdeaMessages (
 	idea_message_id int auto_increment,
 	idea_message_content text not null,
 	profile_id int not null,
@@ -262,6 +262,6 @@ CREATE TABLE Idea_Messages (
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
 );
-ALTER TABLE Idea_Messages AUTO_INCREMENT=1;
+ALTER TABLE IdeaMessages AUTO_INCREMENT=1;
 
 COMMIT;

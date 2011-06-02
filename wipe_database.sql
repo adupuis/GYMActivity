@@ -20,6 +20,6 @@ DROP TABLE Profiles;
 DROP TABLE RightsGroups;
 DROP TABLE AccessLogs;
 DROP TABLE Ideas;
-DROP TABLE Idea_Status;
-DROP TABLE Idea_Messages;
+DROP TABLE IdeaStatus;
+DROP TABLE IdeaMessages;
 COMMIT;
