@@ -4,7 +4,7 @@ SET NAMES 'utf8';
 /* Drop all tables before creating them */
 
 START TRANSACTION;
-DROP TABLE Activity_Reports;
+DROP TABLE ActivityReports;
 DROP TABLE Activity_Report_Status;
 DROP TABLE Assignements;
 DROP TABLE Activities;

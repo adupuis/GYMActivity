@@ -196,7 +196,7 @@ INSERT INTO Activity_Report_Status VALUES(NULL,'Close','Nothing can be done with
 INSERT INTO Activity_Report_Status VALUES(NULL,'Pending removal','Activity report has been submited for removal and waiting for validation.');
 INSERT INTO Activity_Report_Status VALUES(NULL,'Removed','Activity report has been removed and nothing more can be done with this report anymore.');
 
-CREATE TABLE Activity_Reports (
+CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
 	activity_report_invoice_reference varchar(200),
 	activity_id int,
@@ -207,7 +207,7 @@ CREATE TABLE Activity_Reports (
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(activity_report_status_id) references Activity_Report_Status(activity_report_status_id) ON DELETE CASCADE
 );
-ALTER TABLE Activity_Reports AUTO_INCREMENT = 1;
+ALTER TABLE ActivityReports AUTO_INCREMENT = 1;
 
 CREATE TABLE Access_Logs (
 	access_log_id int auto_increment,
