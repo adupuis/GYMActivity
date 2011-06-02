@@ -17,7 +17,7 @@ DROP TABLE Project_Task_Relations;
 DROP TABLE Clients;
 DROP TABLE ProfileManagementData;
 DROP TABLE Profiles;
-DROP TABLE Rights_Groups;
+DROP TABLE RightsGroups;
 DROP TABLE Access_Logs;
 DROP TABLE Ideas;
 DROP TABLE Idea_Status;

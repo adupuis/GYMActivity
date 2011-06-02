@@ -3,18 +3,18 @@ SET NAMES 'utf8';
 /* Create the new schema and add default data */
 START TRANSACTION;
 
-CREATE TABLE Rights_Groups (
+CREATE TABLE RightsGroups (
 	rights_group_id int auto_increment,
 	rights_group_name varchar(100) not null default 'Undefined',
 	rights_group_description text,
 	primary key(rights_group_id)
 );
-ALTER TABLE Rights_Groups AUTO_INCREMENT = 1;
-INSERT INTO Rights_Groups VALUES(1,'Admins','Administrators of the application');
-INSERT INTO Rights_Groups VALUES(2,'SuperUsers','Users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
-INSERT INTO Rights_Groups VALUES(3,'Users','Standard users, they can create and edit activities.');
-INSERT INTO Rights_Groups VALUES(4,'SuperReporters','Read only access for various reports. They can see almost all data.');
-INSERT INTO Rights_Groups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
+ALTER TABLE RightsGroups AUTO_INCREMENT = 1;
+INSERT INTO RightsGroups VALUES(1,'Admins','Administrators of the application');
+INSERT INTO RightsGroups VALUES(2,'SuperUsers','Users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
+INSERT INTO RightsGroups VALUES(3,'Users','Standard users, they can create and edit activities.');
+INSERT INTO RightsGroups VALUES(4,'SuperReporters','Read only access for various reports. They can see almost all data.');
+INSERT INTO RightsGroups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
 
 
 CREATE TABLE Profiles (
@@ -29,7 +29,7 @@ CREATE TABLE Profiles (
 	rights_group_id int not null default 2,
 	primary key(profile_id),
 	unique key profile_login (profile_login),
-	foreign key(rights_group_id) references Rights_Groups(rights_group_id) ON DELETE CASCADE
+	foreign key(rights_group_id) references RightsGroups(rights_group_id) ON DELETE CASCADE
 );
 INSERT INTO Profiles VALUES (1,'admin','','','admin','admin@genymobile.com',true,false,1);
 UPDATE Profiles SET profile_password = MD5('admin') WHERE profile_id=1;

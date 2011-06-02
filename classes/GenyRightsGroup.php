@@ -14,16 +14,16 @@ class GenyRightsGroup {
 		if($id > -1)
 			$this->loadRightsGroupById($id);
 	}
-	public function insertNewRights_Group($id,$name,$description){
-		$query = "INSERT INTO Rights_Groups VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
+	public function insertNewRightsGroup($id,$name,$description){
+		$query = "INSERT INTO RightsGroups VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyRights_Groups MySQL query : $query -->\n";
+			echo "<!-- DEBUG: GenyRightsGroups MySQL query : $query -->\n";
 		return mysql_query($query,$this->handle);
 	}
 	public function getRightsGroupsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT rights_group_id,rights_group_name,rights_group_description FROM Rights_Groups";
+		$query = "SELECT rights_group_id,rights_group_name,rights_group_description FROM RightsGroups";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -80,7 +80,7 @@ class GenyRightsGroup {
 		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
 	}
 	public function commitUpdates(){
-		$query = "UPDATE Rights_Groups SET ";
+		$query = "UPDATE RightsGroups SET ";
 		foreach($this->updates as $up) {
 			$query .= "$up,";
 		}
