@@ -16,7 +16,7 @@ class GenyActivityReportStatus {
 			$this->loadActivityReportStatusById($id);
 	}
 	public function insertNewActivityReportStatus($id,$name,$description){
-		$query = "INSERT INTO Activity_Report_Status VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
+		$query = "INSERT INTO ActivityReportStatus VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivityReportStatus MySQL query : $query -->\n";
 		return mysql_query($query,$this->handle);
@@ -24,7 +24,7 @@ class GenyActivityReportStatus {
 	public function getActivityReportStatusListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT activity_report_status_id,activity_report_status_name,activity_report_status_description FROM Activity_Report_Status";
+		$query = "SELECT activity_report_status_id,activity_report_status_name,activity_report_status_description FROM ActivityReportStatus";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -79,7 +79,7 @@ class GenyActivityReportStatus {
 		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
 	}
 	public function commitUpdates(){
-		$query = "UPDATE Activity_Report_Status SET ";
+		$query = "UPDATE ActivityReportStatus SET ";
 		foreach($this->updates as $up) {
 			$query .= "$up,";
 		}

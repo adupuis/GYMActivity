@@ -5,7 +5,7 @@ SET NAMES 'utf8';
 
 START TRANSACTION;
 DROP TABLE ActivityReports;
-DROP TABLE Activity_Report_Status;
+DROP TABLE ActivityReportStatus;
 DROP TABLE DailyFees;
 DROP TABLE Assignements;
 DROP TABLE Activities;
