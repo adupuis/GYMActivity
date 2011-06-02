@@ -18,7 +18,7 @@ DROP TABLE Clients;
 DROP TABLE ProfileManagementData;
 DROP TABLE Profiles;
 DROP TABLE RightsGroups;
-DROP TABLE Access_Logs;
+DROP TABLE AccessLogs;
 DROP TABLE Ideas;
 DROP TABLE Idea_Status;
 DROP TABLE Idea_Messages;

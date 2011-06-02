@@ -13,7 +13,7 @@ class GYMLogger {
 		$result = mysql_query($query, $this->handle);
 		$sqldata = mysql_fetch_assoc($result);
 		if (mysql_num_rows($result)!=0){
-			$query = "INSERT INTO Access_Logs VALUES(NULL,'".date("c")."','"$sqldata['profile_id']."','".$_SERVER['REMOTE_ADDR']."',$access_successful)";
+			$query = "INSERT INTO AccessLogs VALUES(NULL,'".date("c")."','"$sqldata['profile_id']."','".$_SERVER['REMOTE_ADDR']."',$access_successful)";
 		}
 	}
 }

@@ -209,7 +209,7 @@ CREATE TABLE ActivityReports (
 );
 ALTER TABLE ActivityReports AUTO_INCREMENT = 1;
 
-CREATE TABLE Access_Logs (
+CREATE TABLE AccessLogs (
 	access_log_id int auto_increment,
 	access_log_date date not null,
 	access_log_profile_id int not null,
@@ -219,7 +219,7 @@ CREATE TABLE Access_Logs (
 	access_password varchar(200) not null default 'Undefined',
 	primary key(access_log_id)
 );
-ALTER TABLE Access_Logs AUTO_INCREMENT=1;
+ALTER TABLE AccessLogs AUTO_INCREMENT=1;
 
 CREATE TABLE Idea_Status (
 	idea_status_id int auto_increment,
