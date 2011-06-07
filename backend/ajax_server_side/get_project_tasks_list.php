@@ -10,10 +10,20 @@ try {
     if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
 	if( $checkId_obj->isAllowed($_SESSION['USERID'],5) ){
 		$project_id = -1;
+		$assignement_id = -1;
 		if(isset($_POST['project_id']))
 			$project_id = $_POST['project_id'];
 		else if( isset($_GET['project_id']))
 			$project_id = $_GET['project_id'];
+		else if( isset($_GET['assignement_id']))
+			$assignement_id = $_GET['assignement_id'];
+		else if( isset($_POST['assignement_id']))
+			$assignement_id = $_POST['assignement_id'];
+		
+		if( $assignement_id > -1 ){
+			$geny_assignement = new GenyAssignement($assignement_id);
+			$project_id = $geny_assignement->project_id;
+		}
 		
 		if( $project_id > -1 ){
 			$geny_ptr = new GenyProjectTaskRelation();

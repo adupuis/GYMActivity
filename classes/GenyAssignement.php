@@ -60,7 +60,7 @@ class GenyAssignement {
 		return $this->getAssignementsListWithRestrictions(array("project_id=$id"));
 	}
 	public function loadAssignementById($id){
-		$objects = $this->getAssignementListWithRestrictions(array("assignement_id=$id"));
+		$objects = $this->getAssignementsListWithRestrictions(array("assignement_id=$id"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;

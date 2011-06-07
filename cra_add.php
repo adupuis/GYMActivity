@@ -76,7 +76,7 @@ $geny_ptr = new GenyProjectTaskRelation();
 						$geny_assignements = new GenyAssignement();
 						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
 							$p = new GenyProject( $assignement->project_id );
-							echo "<option value=\"$p->id\" title=\"$p->description\">$p->name</input></option>";
+							echo "<option value=\"$assignement->id\" title=\"$p->description\">$p->name</input></option>";
 						}
 					?>
 				</select>
@@ -88,7 +88,7 @@ $geny_ptr = new GenyProjectTaskRelation();
 				<script>
 					function getTasks(){
 						var project_id = $("#assignement_id").val();
-						$.get('backend/ajax_server_side/get_project_tasks_list.php?project_id='+project_id, function(data){
+						$.get('backend/ajax_server_side/get_project_tasks_list.php?assignement_id='+project_id, function(data){
 							$('.tasks_options').remove();
 							$.each(data, function(key, val) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
