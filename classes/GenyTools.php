@@ -20,15 +20,16 @@ class GenyTools {
 		return $arr_bank_holidays;
 	}
 	// Cette fonction prend deux dates en arguments sous forme de timestamp UNIX.
-	function getWorkedDaysList($start_date,$end_date){
+	static function getWorkedDaysList($start_date,$end_date){
 		$worked_days = array();
-		while ($date_start < $date_stop) {
+		$arr_bank_holidays = GenyTools::getYearHolidays();
+		while ($start_date < $end_date) {
 			// Si le jour suivant n'est ni un dimanche (0) ou un samedi (6), ni un jour férié, on incrémente les jours ouvrés
-			if (!in_array(date('w', $date_start), array(0, 6))
-			&& !in_array(date(date('Y', $date_start).'-n-j', $date_start), $arr_bank_holidays)) {
+			if (!in_array(date('w', $start_date), array(0, 6))
+			&& !in_array(date(date('Y', $start_date).'-n-j', $start_date), $arr_bank_holidays)) {
 				$worked_days[] = date('Y-m-j',$start_date);
 			}
-			$date_start = mktime(date('H', $date_start), date('i', $date_start), date('s', $date_start), date('m', $date_start), date('d', $date_start) + 1, date('Y', $date_start));
+			$start_date = mktime(date('H', $start_date), date('i', $start_date), date('s', $start_date), date('m', $start_date), date('d', $start_date) + 1, date('Y', $start_date));
 		} 
 		return $worked_days;
 	}
