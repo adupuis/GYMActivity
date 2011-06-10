@@ -199,7 +199,6 @@ INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Removed','Activity repor
 
 CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
-	activity_report_checksum varchar(200),
 	activity_report_invoice_reference varchar(200),
 	activity_id int,
 	profile_id int,
