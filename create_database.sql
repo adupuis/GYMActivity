@@ -199,11 +199,12 @@ INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Removed','Activity repor
 
 CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
+	activity_report_checksum varchar(200),
 	activity_report_invoice_reference varchar(200),
 	activity_id int,
 	profile_id int,
 	activity_report_status_id int,
-	primary key(activity_report_id),
+	primary key(activity_report_id,activity_report_checksum),
 	foreign key(activity_id) references Activities(activity_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(activity_report_status_id) references ActivityReportStatus(activity_report_status_id) ON DELETE CASCADE

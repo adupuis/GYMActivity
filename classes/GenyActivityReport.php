@@ -10,6 +10,7 @@ class GenyActivityReport {
 		mysql_select_db("GYMActivity");
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
+		$this->checksum = '';
 		$this->invoice_reference = '';
 		$this->activity_id = -1;
 		$this->profile_id = -1;
@@ -17,9 +18,9 @@ class GenyActivityReport {
 		if($id > -1)
 			$this->loadActivityReportById($id);
 	}
-	public function insertNewActivityReport($id,$invoice_reference,$activity_id,$profile_id,$status_id){
+	public function insertNewActivityReport($id,$checksum,$invoice_reference,$activity_id,$profile_id,$status_id){
 		if( is_numeric($id) && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
-			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
+			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($checksum)."','".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
 			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
 			return mysql_query($query,$this->handle);
@@ -30,7 +31,7 @@ class GenyActivityReport {
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT activity_report_id,activity_report_invoice_reference,activity_id,profile_id,activity_report_status_id FROM ActivityReports";
+		$query = "SELECT activity_report_id,activity_report_checksum,activity_report_invoice_reference,activity_id,profile_id,activity_report_status_id FROM ActivityReports";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -48,10 +49,11 @@ class GenyActivityReport {
 			while ($row = mysql_fetch_row($result)){
 				$tmp_obj = new GenyActivityReport();
 				$tmp_obj->id = $row[0];
-				$tmp_obj->invoice_reference = $row[1];
-				$tmp_obj->activity_id = $row[2];
-				$tmp_obj->profile_id = $row[3];
-				$tmp_obj->status_id = $row[4];
+				$tmp_obj->checksum = $row[1];
+				$tmp_obj->invoice_reference = $row[2];
+				$tmp_obj->activity_id = $row[3];
+				$tmp_obj->profile_id = $row[4];
+				$tmp_obj->status_id = $row[5];
 				$obj_list[] = $tmp_obj;
 			}
 		}
@@ -73,6 +75,9 @@ class GenyActivityReport {
 			return false;
 		return $this->getActivityReportsListWithRestrictions( array("activity_report_status_id=$id") );
 	}
+	public getActivityReportsByChecksum($chk){
+		return $this->getActivityReportsListWithRestrictions( array("activity_report_checksum=".mysql_real_escape_string($chk)) );
+	}
 	public function getAllActivityReports(){
 		return $this->getActivityReportsListWithRestrictions( array() );
 	}
@@ -83,6 +88,7 @@ class GenyActivityReport {
 		$activity_report = $activity_reports[0];
 		if(isset($activity_report) && $activity_report->id > -1){
 			$this->id = $activity_report->id;
+			$this->checksum = $activity_report->checksum;
 			$this->invoice_reference = $activity_report->invoice_reference ;
 			$this->activity_id = $activity_report->activity_id ;
 			$this->profile_id = $activity_report->profile_id ;
@@ -94,6 +100,19 @@ class GenyActivityReport {
 		$activity_report = $activity_reports[0];
 		if(isset($activity_report) && $activity_report->id > -1){
 			$this->id = $activity_report->id;
+			$this->checksum = $activity_report->checksum;
+			$this->invoice_reference = $activity_report->invoice_reference ;
+			$this->activity_id = $activity_report->activity_id ;
+			$this->profile_id = $activity_report->profile_id ;
+			$this->status_id = $activity_report->status_id ;
+		}
+	}
+	public function loadActivityReportByChecksum($chk){
+		$activity_reports = $this->getActivityReportsListWithRestrictions(array("activity_report_checksum=".mysql_real_escape_string($chk)));
+		$activity_report = $activity_reports[0];
+		if(isset($activity_report) && $activity_report->id > -1){
+			$this->id = $activity_report->id;
+			$this->checksum = $activity_report->checksum;
 			$this->invoice_reference = $activity_report->invoice_reference ;
 			$this->activity_id = $activity_report->activity_id ;
 			$this->profile_id = $activity_report->profile_id ;
