@@ -181,20 +181,21 @@ ALTER TABLE Activities AUTO_INCREMENT = 1;
 
 CREATE TABLE ActivityReportStatus (
 	activity_report_status_id int auto_increment,
+	activity_report_status_shortname varchar(200),
 	activity_report_status_name varchar(200) not null default 'Undefined',
 	activity_report_status_description text,
-	primary key(activity_report_status_id)
+	primary key(activity_report_status_id,activity_report_status_shortname)
 );
 
 ALTER TABLE ActivityReportStatus AUTO_INCREMENT = 1;
-INSERT INTO ActivityReportStatus VALUES(NULL,'Pending user validation','Activity report has been pre-submited and is pending validation from user.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Pending approval','Activity report has been submited and is pending approval from management.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Approved','Activity report was approve by management, it is now pending billing actions.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Billed','Bill was sent to the client.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Paid','Client paid for this activity report.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Close','Nothing can be done with this activity report anymore');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Pending removal','Activity report has been submited for removal and waiting for validation.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'Removed','Activity report has been removed and nothing more can be done with this report anymore.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','Pending user validation','Activity report has been pre-submited and is pending validation from user.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_APPROVAL','Pending approval','Activity report has been submited and is pending approval from management.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'APPROVED','Approved','Activity report was approve by management, it is now pending billing actions.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'BILLED','Billed','Bill was sent to the client.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'PAID','Paid','Client paid for this activity report.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'CLOSE','Close','Nothing can be done with this activity report anymore');
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_REMOVAL','Pending removal','Activity report has been submited for removal and waiting for validation.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Removed','Activity report has been removed and nothing more can be done with this report anymore.');
 
 CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
