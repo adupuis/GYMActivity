@@ -15,8 +15,8 @@ class GenyActivityReportStatus {
 		if($id > -1)
 			$this->loadActivityReportStatusById($id);
 	}
-	public function insertNewActivityReportStatus($id,$name,$description){
-		$query = "INSERT INTO ActivityReportStatus VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
+	public function insertNewActivityReportStatus($id,$shortname,$name,$description){
+		$query = "INSERT INTO ActivityReportStatus VALUES($id,'".mysql_real_escape_string($shortname)."','".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivityReportStatus MySQL query : $query -->\n";
 		return mysql_query($query,$this->handle);
