@@ -107,24 +107,9 @@ date_default_timezone_set('Europe/Paris');
 					
 				</select>
 			</p>
-			<?php
-			$t = new GenyActivityReportStatus() ;
-			foreach( $t->getAllActivityReportStatus() as $a ){
-				echo "<!-- DEBUG: $a->id - $a->name - $a->description -->\n";
-			}
-			?>
 			<p>
 				<input type="submit" value="Créer" /> ou <a href="#formID">annuler</a>
 			</p>
-		</form>
-		<form>
-		<?php
-			if( isset($html_worked_days_table) && $html_worked_days_table != '' ){
-				echo '<table><tr><th>Date</th><th>Blou</th></tr>';
-				echo $html_worked_days_table;
-				echo '</table>';
-			}
-		?>
 		</form>
 	</p>
 </div>
