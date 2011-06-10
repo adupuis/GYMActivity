@@ -7,6 +7,8 @@ include_once 'header.php';
 include_once 'menu.php';
 
 $geny_ptr = new GenyProjectTaskRelation();
+$geny_tools = new GenyTools();
+date_default_timezone_set('Europe/Paris');
 
 ?>
 
@@ -35,39 +37,8 @@ $geny_ptr = new GenyProjectTaskRelation();
 				$("#formID").validationEngine('attach');
 			});
 		</script>
-		<!--CREATE TABLE Activities (
-			activity_id int auto_increment,
-			activity_date date not null,
-			activity_load int not null,
-			activity_input_date date not null,
-			assignement_id int not null,
-			task_id int not null,
-			primary key(activity_id),
-			foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
-			foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-		);
-		ALTER TABLE Activities AUTO_INCREMENT = 1;
 
-		CREATE TABLE Activity_Report_Status (
-			activity_report_status_id int auto_increment,
-			activity_report_status_name varchar(200) not null default 'Undefined',
-			activity_report_status_description text,
-			primary key(activity_report_status_id)
-		);
-		
-		CREATE TABLE Activity_Reports (
-			activity_report_id int auto_increment,
-			activity_report_invoice_reference varchar(200),
-			activity_id int,
-			profile_id int,
-			activity_report_status_id int,
-			primary key(activity_report_id),
-			foreign key(activity_id) references Activities(activity_id) ON DELETE CASCADE,
-			foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
-			foreign key(activity_report_status_id) references Activity_Report_Status(activity_report_status_id) ON DELETE CASCADE
-		);-->
-
-		<form id="formID" action="cra_add.php" method="post">
+		<form id="formID" action="cra_validation.php" method="post">
 			<input type="hidden" name="create_cra" value="true" />
 			<p>
 				<label for="assignement_id">Projet</label>
@@ -145,6 +116,15 @@ $geny_ptr = new GenyProjectTaskRelation();
 			<p>
 				<input type="submit" value="Créer" /> ou <a href="#formID">annuler</a>
 			</p>
+		</form>
+		<form>
+		<?php
+			if( isset($html_worked_days_table) && $html_worked_days_table != '' ){
+				echo '<table><tr><th>Date</th><th>Blou</th></tr>';
+				echo $html_worked_days_table;
+				echo '</table>';
+			}
+		?>
 		</form>
 	</p>
 </div>
