@@ -42,8 +42,9 @@ class GenyActivityReportStatus {
 			while ($row = mysql_fetch_row($result)){
 				$tmp_obj = new GenyActivityReportStatus();
 				$tmp_obj->id = $row[0];
-				$tmp_obj->name = $row[1];
-				$tmp_obj->description = $row[2];
+				$tmp_obj->shortname = $row[1];
+				$tmp_obj->name = $row[2];
+				$tmp_obj->description = $row[3];
 				$activity_report_status_list[] = $tmp_obj;
 			}
 		}
