@@ -28,7 +28,7 @@ date_default_timezone_set('Europe/Paris');
 		Ce formulaire permet d'ajouter un rapport d'activité.<br />
 		<strong class="important_note">Important :</strong> La charge journalière est <u>une charge répartie par jour</u>. <br />
 		C'est à dire que si vous remplissez un CRA pour une semaine (5 jours), vous positionnez les dates de début et de fin avec une charge moyenne de 8 heures.<br />
-		Une charge supérieure signifie des heures supplémentaires et l'accord du manager est nécessaire.
+		Une charge supérieure signifie des heures supplémentaires et l'accord préalable du manager est nécessaire.
 		</p>
 		<script>
 			jQuery(document).ready(function(){
