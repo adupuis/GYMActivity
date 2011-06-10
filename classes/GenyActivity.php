@@ -2,18 +2,6 @@
 
 include_once 'GenyWebConfig.php';
 
-CREATE TABLE Activities (
-			activity_id int auto_increment,
-			activity_date date not null,
-			activity_load int not null,
-			activity_input_date date not null,
-			assignement_id int not null,
-			task_id int not null,
-			primary key(activity_id),
-			foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
-			foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-		);
-
 class GenyActivity {
 	private $updates = array();
 	public function __construct($id = -1){
@@ -31,7 +19,10 @@ class GenyActivity {
 		$query = "INSERT INTO Activities VALUES($id,'".mysql_real_escape_string($activity_date)."','".mysql_real_escape_string($activity_input_date)."','".mysql_real_escape_string($assignement_id)."','".mysql_real_escape_string($task_id)."')";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivity MySQL query : $query -->\n";
-		return mysql_query($query,$this->handle);
+		if(mysql_query($query,$this->handle))
+			return mysql_insert_id($this->handle);
+		else
+			return -1;
 	}
 	public function getActivitiesListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
