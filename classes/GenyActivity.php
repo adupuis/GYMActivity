@@ -19,7 +19,7 @@ class GenyActivity {
 			$this->loadActivityById($id);
 	}
 	public function insertNewActivity($id,$activity_date,$activity_load,$activity_input_date,$assignement_id,$task_id){
-		if( ! is_numeric($id) || $id != 'NULL' )
+		if( ! is_numeric($id) && $id != 'NULL' )
 			return -1;
 		if(! is_numeric($assignement_id) )
 			return -1;
