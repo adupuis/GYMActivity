@@ -6,4 +6,10 @@ Pour "installer" ce projet il suffit de :
 
 C'est tout.
 
+Dans le cas d'une mise à jour, il peut être nécessaire de mettre le schéma de la base à jour. Pour le moment cela se fait par :
+- source wipe_database.sql
+- source create_database.sql
+
+Dans mysql.
+
 Arnaud.
