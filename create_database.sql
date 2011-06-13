@@ -15,6 +15,7 @@ INSERT INTO RightsGroups VALUES(2,'SuperUsers','Users with more rights than basi
 INSERT INTO RightsGroups VALUES(3,'Users','Standard users, they can create and edit activities.');
 INSERT INTO RightsGroups VALUES(4,'SuperReporters','Read only access for various reports. They can see almost all data.');
 INSERT INTO RightsGroups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
+INSERT INTO RightsGroups VALUES(6,'Externes','Les profiles entrants dans ce groupe sont les externes à GenY Mobile fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
 
 
 CREATE TABLE Profiles (
@@ -66,8 +67,8 @@ CREATE TABLE ProjectTypes (
 	primary key(project_type_id)
 );
 ALTER TABLE ProjectTypes AUTO_INCREMENT = 1;
-INSERT INTO ProjectTypes VALUES(1,'Régie','Employee is at client disposal in client office.');
-INSERT INTO ProjectTypes VALUES(2,'Forfait','Employee is executing strong commitment project.');
+INSERT INTO ProjectTypes VALUES(1,'Régie','Employé à disposition du client dans les bureaux du client.');
+INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projets au forfait.');
 INSERT INTO ProjectTypes VALUES(3,'Autre','Autre types. Par exemple: travaux internes à GenY Mobile, congés, etc.');
 
 CREATE TABLE ProjectStatus (
@@ -77,10 +78,12 @@ CREATE TABLE ProjectStatus (
 	primary key(project_status_id)
 );
 ALTER TABLE ProjectStatus AUTO_INCREMENT = 1;
-INSERT INTO ProjectStatus VALUES(1,'Running','Project is currently going on.');
-INSERT INTO ProjectStatus VALUES(2,'Closed','Project is closed.');
-INSERT INTO ProjectStatus VALUES(3,'Paused','Project is currently paused (no facturation, no expenses).');
-INSERT INTO ProjectStatus VALUES(4,'Out of bound','Project is currently out of bonds (we are loosing money).');
+INSERT INTO ProjectStatus VALUES(1,'En cours','Projet en cours sans risques identifiés ni avérés.');
+INSERT INTO ProjectStatus VALUES(2,'Fermé','Projet fermé (plus aucune imputation possible).');
+INSERT INTO ProjectStatus VALUES(3,'Pause','Projet en pause (pas de facturation, pas de dépenses ni notes de frais).');
+INSERT INTO ProjectStatus VALUES(4,'Dépassement',"Projet en dépassement (nous perdons de l'argent).");
+INSERT INTO ProjectStatus VALUES(5,'Risque client','Un risque de dépassement est identifié et celui-ci est dû au client.');
+INSERT INTO ProjectStatus VALUES(6,'Risque interne','Un risque de dépassement est identifié et celui-ci est dû à GenY Mobile (ou un de ces sous-traitant).');
 
 CREATE TABLE Projects (
 	project_id int auto_increment,
@@ -151,6 +154,7 @@ CREATE TABLE Assignements (
 	assignement_id int auto_increment,
 	profile_id int not null,
 	project_id int not null,
+	assignement_overtime_allowed boolean not null default false,
 	primary key(assignement_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE
@@ -188,14 +192,14 @@ CREATE TABLE ActivityReportStatus (
 );
 
 ALTER TABLE ActivityReportStatus AUTO_INCREMENT = 1;
-INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','Pending user validation','Activity report has been pre-submited and is pending validation from user.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'P_APPROVAL','Pending approval','Activity report has been submited and is pending approval from management.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'APPROVED','Approved','Activity report was approve by management, it is now pending billing actions.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'BILLED','Billed','Bill was sent to the client.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'PAID','Paid','Client paid for this activity report.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'CLOSE','Close','Nothing can be done with this activity report anymore');
-INSERT INTO ActivityReportStatus VALUES(NULL,'P_REMOVAL','Pending removal','Activity report has been submited for removal and waiting for validation.');
-INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Removed','Activity report has been removed and nothing more can be done with this report anymore.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','En attente de validation utilisateur',"Le rapport d'activité a été pré-soumis et est en attente de validation par l'utilisateur.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_APPROVAL','En attente de validation',"Le rapport d'activité a été soumis et est en attente d'approbation du management.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'APPROVED','Validé',"Le rapport d'activité a été approuvé par la direction, il est maintenant en attente de facturation.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'BILLED','Facturé','Facture envoyée au client.');
+INSERT INTO ActivityReportStatus VALUES(NULL,'PAID','Payé',"Le client a payé pour ce rapport d'activité.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'CLOSE','Fermé',"Plus rien ne peut être fait avec ce rapport d'activité.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_REMOVAL','En attente de suppression',"Le rapport d'activité a été soumis pour suppression et est en attente de validation par le management");
+INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Supprimé',"Le rapport d'activité a été supprimé et plus rien ne peut être fait dessus.");
 
 CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
@@ -203,7 +207,7 @@ CREATE TABLE ActivityReports (
 	activity_id int,
 	profile_id int,
 	activity_report_status_id int,
-	primary key(activity_report_id,activity_report_checksum),
+	primary key(activity_report_id),
 	foreign key(activity_id) references Activities(activity_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(activity_report_status_id) references ActivityReportStatus(activity_report_status_id) ON DELETE CASCADE
