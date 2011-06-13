@@ -2,18 +2,6 @@
 
 include_once 'GenyWebConfig.php';
 
-CREATE TABLE Activities (
-			activity_id int auto_increment,
-			activity_date date not null,
-			activity_load int not null,
-			activity_input_date date not null,
-			assignement_id int not null,
-			task_id int not null,
-			primary key(activity_id),
-			foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
-			foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-		);
-
 class GenyActivity {
 	private $updates = array();
 	public function __construct($id = -1){
@@ -22,15 +10,35 @@ class GenyActivity {
 		mysql_select_db("GYMActivity");
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
-		$this->name = '';
-		$this->description = '';
+		$this->activity_date = '';
+		$this->load = -1;
+		$this->input_date = '';
+		$this->assignement_id = -1;
+		$this->task_id = -1;
 		if($id > -1)
 			$this->loadActivityById($id);
 	}
 	public function insertNewActivity($id,$activity_date,$activity_load,$activity_input_date,$assignement_id,$task_id){
-		$query = "INSERT INTO Activities VALUES($id,'".mysql_real_escape_string($activity_date)."','".mysql_real_escape_string($activity_input_date)."','".mysql_real_escape_string($assignement_id)."','".mysql_real_escape_string($task_id)."')";
+		if( ! is_numeric($id) && $id != 'NULL' )
+			return -1;
+		if(! is_numeric($assignement_id) )
+			return -1;
+		if(! is_numeric($task_id) )
+			return -1;
+		if(! is_numeric($activity_load) )
+			return -1;
+		$query = "INSERT INTO Activities VALUES($id,'".mysql_real_escape_string($activity_date)."',$activity_load,'".mysql_real_escape_string($activity_input_date)."',$assignement_id,$task_id)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivity MySQL query : $query -->\n";
+		if(mysql_query($query,$this->handle))
+			return mysql_insert_id($this->handle);
+		else
+			return -1;
+	}
+	public function removeActivity($id){
+		if( ! is_numeric($id) )
+			return false;
+		$query = "DELETE FROM Activities WHERE activity_id=$id";
 		return mysql_query($query,$this->handle);
 	}
 	public function getActivitiesListWithRestrictions($restrictions){
@@ -72,20 +80,32 @@ class GenyActivity {
 		return $this->getActivitiesListWithRestrictions(array("activity_date='".mysql_real_escape_string($name)."'"));
 	}
 	public function getActivitiesListByAssignementId($id){
-		return $this->getActivitiesListWithRestrictions(array("assignement_id='".mysql_real_escape_string($id)."'"));
+		if( ! is_numeric($id) )
+			return array();
+		return $this->getActivitiesListWithRestrictions(array("assignement_id=$id"));
 	}
 	public function getActivitiesListByTaskId($id){
-		return $this->getActivitiesListWithRestrictions(array("task_id='".mysql_real_escape_string($id)."'"));
+		if( ! is_numeric($id) )
+			return array();
+		return $this->getActivitiesListWithRestrictions(array("task_id=$id"));
 	}
 	public function getActivitiesListByTaskAndAssignementId($task_id,$assignement_id){
-		return $this->getActivitiesListWithRestrictions(array("task_id='".mysql_real_escape_string($task_id)."'","assignement_id='".mysql_real_escape_string($assignement_id)."'"));
+		if( ! is_numeric($task_id) || ! is_numeric($assignement_id) )
+			return array();
+		return $this->getActivitiesListWithRestrictions(array("task_id=$task_id","assignement_id=$assignement_id"));
 	}
 	public function loadActivityById($id){
-		$clients = $this->getActivitiesListWithRestrictions(array("activity_id=".mysql_real_escape_string($id)));
-		$client = $clients[0];
-		if(isset($client) && $client->id > -1){
-			$this->id = $client->id;
-			$this->name = $client->name;
+		if( ! is_numeric($id) )
+			return false;
+		$objects = $this->getActivitiesListWithRestrictions(array("activity_id=".mysql_real_escape_string($id)));
+		$object = $objects[0];
+		if(isset($object) && $object->id > -1){
+			$this->id = $object->id;
+			$this->activity_date = $object->activity_date;
+			$this->load = $object->load;
+			$this->input_date = $object->input_date;
+			$this->assignement_id = $object->assignement_id;
+			$this->task_id = $object->task_id;
 		}
 	}
 	public function updateString($key,$value){
