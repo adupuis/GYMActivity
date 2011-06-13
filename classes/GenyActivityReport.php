@@ -18,18 +18,17 @@ class GenyActivityReport {
 			$this->loadActivityReportById($id);
 	}
 	public function insertNewActivityReport($id,$invoice_reference,$activity_id,$profile_id,$status_id){
-		if( is_numeric($id) && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
+		if( (is_numeric($id) || $id == 'NULL') && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
 			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
-			if( $this->config->debug )
+// 			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
-			return mysql_query($query,$this->handle);
 			if(mysql_query($query,$this->handle))
 				return mysql_insert_id($this->handle);
 			else
 				return -1;
 		}
 		else
-			return false;
+			return -1;
 	}
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
@@ -62,17 +61,17 @@ class GenyActivityReport {
 		mysql_close();
 		return $obj_list;
 	}
-	public getActivityReportsByProfileId($id){
+	public function getActivityReportsByProfileId($id){
 		if(! is_numeric($id) )
 			return false;
 		return $this->getActivityReportsListWithRestrictions( array("profile_id=$id") );
 	}
-	public getActivityReportsByActivityId($id){
+	public function getActivityReportsByActivityId($id){
 		if(! is_numeric($id) )
 			return false;
 		return $this->getActivityReportsListWithRestrictions( array("activity_id=$id") );
 	}
-	public getActivityReportsByReportStatusId($id){
+	public function getActivityReportsByReportStatusId($id){
 		if(! is_numeric($id) )
 			return false;
 		return $this->getActivityReportsListWithRestrictions( array("activity_report_status_id=$id") );
