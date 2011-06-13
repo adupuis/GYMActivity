@@ -64,7 +64,7 @@ class GenyActivityReportStatus {
 			$this->description = $object->description;
 		}
 	}
-	public function loadActivityReportStatusByName($name){
+	public function loadActivityReportStatusByShortName($name){
 		$objects = $this->getActivityReportStatusListWithRestrictions(array("activity_report_status_shortname='".mysql_real_escape_string($name)."'"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
