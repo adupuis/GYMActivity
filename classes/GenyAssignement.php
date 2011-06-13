@@ -12,19 +12,23 @@ class GenyAssignement {
 		$this->id = -1;
 		$this->profile_id = -1;
 		$this->project_id = -1;
+		$this->overtime_allowed = false;
 		if($id > -1)
 			$this->loadAssignementById($id);
 	}
-	public function insertNewAssignement($id,$profile_id,$project_id){
-		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id)";
+	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed=false){
+		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id,$overtime_allowed)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyAssignements MySQL query : $query -->\n";
-		return mysql_query($query,$this->handle);
+		if(mysql_query($query,$this->handle))
+			return mysql_insert_id($this->handle);
+		else
+			return -1;
 	}
 	public function getAssignementsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("profile_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT assignement_id,profile_id,project_id FROM Assignements";
+		$query = "SELECT assignement_id,profile_id,project_id,assignement_overtime_allowed FROM Assignements";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -44,6 +48,7 @@ class GenyAssignement {
 				$tmp_object->id = $row[0];
 				$tmp_object->profile_id = $row[1];
 				$tmp_object->project_id = $row[2];
+				$tmp_object->overtime_allowed = $row[3];
 				$object_list[] = $tmp_object;
 			}
 		}
@@ -66,6 +71,7 @@ class GenyAssignement {
 			$this->id = $object->id;
 			$this->profile_id = $object->profile_id;
 			$this->project_id = $object->project_id;
+			$this->overtime_allowed = $object->overtime_allowed;
 		}
 	}
 	public function updateString($key,$value){
