@@ -11,9 +11,10 @@ $db_status = '';
 
 if( isset($_POST['create_task']) && $_POST['create_task'] == "true" ){
 	if( isset($_POST['task_name']) && $_POST['task_name'] != "" ){
-		if( $geny_task->insertNewTask('NULL',$_POST['task_name'],$_POST['task_description']) ){
+		$new_task_id = $geny_task->insertNewTask('NULL',$_POST['task_name'],$_POST['task_description']);
+		if( $new_task_id > -1 ){
 			$db_status .= "<li class=\"status_message_success\">Tâche créée avec succès.</li>\n";
-			$geny_task->loadTaskByName($_POST['task_name']);
+			$geny_task->loadTaskById($new_task_id);
 		}
 		else{
 			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création de la tâche.</li>\n";
