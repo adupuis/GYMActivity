@@ -71,9 +71,11 @@ date_default_timezone_set('Europe/Paris');
 					getTasks();
 					$(function() {
 					$( "#assignement_start_date" ).datepicker();
+					$( "#assignement_start_date" ).datepicker('setDate', new Date());
 					$( "#assignement_start_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#assignement_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 					$( "#assignement_end_date" ).datepicker();
+					$( "#assignement_end_date" ).datepicker('setDate', new Date());
 					$( "#assignement_end_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#assignement_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 					$( "#assignement_start_date" ).change( function(){ $( "#assignement_end_date" ).val( $( "#assignement_start_date" ).val() ) } );
