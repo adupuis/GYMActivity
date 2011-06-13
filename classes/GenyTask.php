@@ -17,7 +17,7 @@ class GenyTask {
 	public function insertNewTask($id,$name,$description){
 		$query = "INSERT INTO Tasks VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyTask MySQL query : $query -->\n";
+			echo "<!-- DEBUG: GenyTask MySQL query : $query -->\n" ;
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
