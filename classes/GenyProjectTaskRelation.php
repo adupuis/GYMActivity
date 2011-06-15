@@ -19,7 +19,10 @@ class GenyProjectTaskRelation {
 		$query = "INSERT INTO ProjectTaskRelations VALUES($id,$project_id,$task_id)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyProjectTaskRelations MySQL query : $query -->\n";
-		return mysql_query($query,$this->handle);
+		if(mysql_query($query,$this->handle))
+			return mysql_insert_id($this->handle);
+		else
+			return -1;
 	}
 	public function getProjectTaskRelationsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
