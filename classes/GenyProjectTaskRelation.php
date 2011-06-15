@@ -15,6 +15,7 @@ class GenyProjectTaskRelation {
 		if($id > -1)
 			$this->loadProjectTaskRelationById($id);
 	}
+	
 	public function insertNewProjectTaskRelation($id,$project_id,$task_id){
 		$query = "INSERT INTO ProjectTaskRelations VALUES($id,$project_id,$task_id)";
 		if( $this->config->debug )
