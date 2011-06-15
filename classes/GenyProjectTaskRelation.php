@@ -25,7 +25,7 @@ class GenyProjectTaskRelation {
 			return -1;
 	}
 	public function getProjectTaskRelationsListWithRestrictions($restrictions){
-		// $restrictions is in the form of array("project_id=1","project_status_id=2")
+		// $restrictions is in the form of array("project_id=1","project_status_id=2" )
 		$last_index = count($restrictions)-1;
 		$query = "SELECT project_task_relation_id,project_id,task_id FROM ProjectTaskRelations";
 		if(count($restrictions) > 0){
