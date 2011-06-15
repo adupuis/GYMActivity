@@ -15,7 +15,7 @@ $geny_assignement = new GenyAssignement();
 
 if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 	if( isset($_POST['project_name']) && isset($_POST['project_start_date']) && isset($_POST['project_end_date']) ){
-		if( $geny_project->insertNewProject($_POST['project_name'],$_POST['project_description'],$_POST['project_client'],$_POST['project_location'],$_POST['project_start_date'],$_POST['project_end_date'],$_POST['project_type'],$_POST['project_status']) ){
+		if( $geny_project->insertNewProject($_POST['project_name'],$_POST['project_description'],$_POST['project_client'],$_POST['project_location'],$_POST['project_start_date'],$_POST['project_end_date'],$_POST['project_type'],$_POST['project_status']) > -1 ){
 			$db_status .= "<li class=\"status_message_success\">Projet créé avec succès.</li>\n";
 			$geny_project->loadProjectByName( $_POST['project_name'] );
 			foreach ($_POST['project_tasks'] as $key => $value){
@@ -28,7 +28,7 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 			}
 			foreach ($_POST['project_profiles'] as $key => $value){
 				$tmp_profile = new GenyProfile( $value );
-				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id) ) {
+				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, 'false') ) {
 					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
 				}
 				else

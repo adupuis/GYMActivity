@@ -101,9 +101,11 @@ $geny_profile = new GenyProfile();
 			<script type="text/javascript">
 				$(function() {
 					$( "#project_start_date" ).datepicker();
+					$( "#project_start_date" ).datepicker('setDate', new Date());
 					$( "#project_start_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#project_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 					$( "#project_end_date" ).datepicker();
+					$( "#project_end_date" ).datepicker('setDate', new Date());
 					$( "#project_end_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#project_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 				});

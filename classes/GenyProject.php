@@ -25,7 +25,10 @@ class GenyProject {
 		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).")";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyProject MySQL query : $query -->\n";
-		return mysql_query($query,$this->handle);
+		if(mysql_query($query,$this->handle))
+			return mysql_insert_id($this->handle);
+		else
+			return -1;
 	}
 	public function getProjectsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
