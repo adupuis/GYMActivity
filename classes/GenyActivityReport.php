@@ -20,7 +20,7 @@ class GenyActivityReport {
 	public function insertNewActivityReport($id,$invoice_reference,$activity_id,$profile_id,$status_id){
 		if( (is_numeric($id) || $id == 'NULL') && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
 			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
-// 			if( $this->config->debug )
+			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
 			if(mysql_query($query,$this->handle))
 				return mysql_insert_id($this->handle);
@@ -29,6 +29,21 @@ class GenyActivityReport {
 		}
 		else
 			return -1;
+	}
+	public function getDayLoad($profile_id,$date){
+		if( ! is_numeric($profile_id))
+			return -1;
+		$query = "select ifnull(sum(activity_load),0) as activity_day_load from Activities where activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id)";
+// 		if( $this->config->debug )
+			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
+		$result = mysql_query($query,$this->handle);
+		if( mysql_num_rows($result) != 0 ){
+			while ($row = mysql_fetch_row($result)){
+				return $row[0];
+			}
+		}
+		else
+			return -2;
 	}
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
