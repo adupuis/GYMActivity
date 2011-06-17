@@ -16,7 +16,7 @@ class GenyAssignement {
 		if($id > -1)
 			$this->loadAssignementById($id);
 	}
-	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed=false){
+	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed='false'){
 		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id,$overtime_allowed)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyAssignements MySQL query : $query -->\n";

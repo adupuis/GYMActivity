@@ -102,10 +102,10 @@ date_default_timezone_set('Europe/Paris');
 					<option value="6">6 Heures</option>
 					<option value="7">7 Heures</option>
 					<option value="8" selected="selected">8 Heures (1 journée)</option>
-					<option value="9">9 Heures (1 heure supp.)</option>
-					<option value="10">10 Heures (1 heure supp.)</option>
-					<option value="11">11 Heures (2 heure supp.)</option>
-					<option value="12">12 Heures (3 heure supp.)</option>
+					<!--<option value="9">9 Heures (1 heure supp.)</option>
+					<option value="10">10 Heures (2 heure supp.)</option>
+					<option value="11">11 Heures (3 heure supp.)</option>
+					<option value="12">12 Heures (4 heure supp.)</option>-->
 					
 				</select>
 			</p>

@@ -34,7 +34,7 @@ class GenyActivityReport {
 		if( ! is_numeric($profile_id))
 			return -1;
 		$query = "select ifnull(sum(activity_load),0) as activity_day_load from Activities where activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id)";
-// 		if( $this->config->debug )
+		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
 		$result = mysql_query($query,$this->handle);
 		if( mysql_num_rows($result) != 0 ){
@@ -43,7 +43,27 @@ class GenyActivityReport {
 			}
 		}
 		else
-			return -2;
+			return -1;
+	}
+	public function getDayLoadByProject($profile_id,$date){
+		if( ! is_numeric($profile_id))
+			return -1;
+		$query = "select a.activity_date,sum(a.activity_load) as sum_activity_load,p.project_id from Activities a,Assignements ass, Projects p where a.activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id) AND ass.assignement_id=a.assignement_id AND p.project_id=ass.project_id group by project_id";
+		if( $this->config->debug )
+			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
+		$result = mysql_query($query,$this->handle);
+		$results = array();
+		if( mysql_num_rows($result) != 0 ){
+			$i=0;
+			while ($row = mysql_fetch_row($result)){
+				$results[$i]['activity_date'] = $row[0];
+				$results[$i]['sum_activity_load'] = $row[1];
+				$results[$i]['project_id'] = $row[2];
+				$i++;
+			}
+		}
+		else
+			return array();
 	}
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")

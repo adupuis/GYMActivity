@@ -133,6 +133,7 @@ INSERT INTO Tasks VALUES(NULL,'R.T.T.','');
 INSERT INTO Tasks VALUES(NULL,'Repos Compensateur','');
 INSERT INTO Tasks VALUES(NULL,'Suspension de Contrat','');
 INSERT INTO Tasks VALUES(NULL,'Temps Partiel','');
+INSERT INTO Tasks VALUES(NULL,'Heures supplémentaires','Si les heures supplémentaires sont autorisés sur un projet, utilisez cette tâche pour les imputer.');
 
 CREATE TABLE ProjectTaskRelations (
 	project_task_relation_id int auto_increment,
