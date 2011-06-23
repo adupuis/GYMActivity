@@ -39,7 +39,7 @@ else {
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Profil</p>
+	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Idée</p>
 </div>
 
 

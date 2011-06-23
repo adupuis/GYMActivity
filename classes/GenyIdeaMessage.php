@@ -30,7 +30,7 @@ class GenyIdeaMessage {
 		if( !is_numeric( $idea_id ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO IdeaMessages VALUES($id,'".mysql_real_escape_string($idea_message_content)."','".$profile_id"','".$idea_id.")";
+		$query = "INSERT INTO IdeaMessages VALUES($id,'".mysql_real_escape_string( $idea_message_content )."','".$profile_id."','".$idea_id."')";
 		if( $this->config->debug ) {
 			echo "<!-- DEBUG: GenyIdeaMessage MySQL query : $query -->\n";
 		}

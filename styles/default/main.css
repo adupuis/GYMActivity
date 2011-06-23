@@ -659,3 +659,33 @@ table.object_list tr:nth-child(odd){
 	font-size:12px;
 	text-align:center;
 }
+
+
+.idea_table_header {
+	background: #333;
+}
+
+#idea_table_header_author {
+	width: 20%;
+}
+
+#idea_table_header_content {
+}
+
+#idea_table_idea {
+	background: #EDEDED;
+}
+
+.messages_table_header {
+	background: #CCCCCC;
+}
+
+#messages_table_header_author {
+	width: 20%;
+}
+
+#messages_table_header_content {
+}
+
+#messages_table_idea {
+}

@@ -68,7 +68,7 @@ else if( isset($_POST['edit_idea']) && $_POST['edit_idea'] == "true" ) {
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Projet</p>
+	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Idée</p>
 </div>
 
 <div id="mainarea">
