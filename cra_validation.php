@@ -38,9 +38,18 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				}
 			}
 			else{
-				$day_work_load_by_project = $geny_ar->getDayLoadByProject($profile->id,$day);
-				// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
-				$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière.</li>\n";
+				if( $day_load > 12 ){
+					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
+				}
+				else{
+					$day_work_load_by_project = $geny_ar->getDayLoadByProject($profile->id,$day);
+					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
+					$extra = '';
+					for($k=0; $k < count($day_work_load_by_project); $k++ ){
+						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['project_id'].",";
+					}
+					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière ($extra).</li>\n";
+				}
 			}
 		}
 	}

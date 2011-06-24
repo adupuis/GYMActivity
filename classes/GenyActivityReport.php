@@ -49,7 +49,7 @@ class GenyActivityReport {
 		if( ! is_numeric($profile_id))
 			return -1;
 		$query = "select a.activity_date,sum(a.activity_load) as sum_activity_load,p.project_id from Activities a,Assignements ass, Projects p where a.activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id) AND ass.assignement_id=a.assignement_id AND p.project_id=ass.project_id group by project_id";
-		if( $this->config->debug )
+// 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
 		$result = mysql_query($query,$this->handle);
 		$results = array();
@@ -61,6 +61,7 @@ class GenyActivityReport {
 				$results[$i]['project_id'] = $row[2];
 				$i++;
 			}
+			return $results;
 		}
 		else
 			return array();
