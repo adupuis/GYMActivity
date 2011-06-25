@@ -664,28 +664,43 @@ table.object_list tr:nth-child(odd){
 .idea_table_header {
 	background: #333;
 }
-
 #idea_table_header_author {
 	width: 20%;
 }
-
 #idea_table_header_content {
+	width: 80%;
 }
-
 #idea_table_idea {
 	background: #EDEDED;
 }
 
-.messages_table_header {
+.idea_message_table_header {
 	background: #CCCCCC;
 }
-
-#messages_table_header_author {
+#idea_message_table_header_author {
 	width: 20%;
 }
-
-#messages_table_header_content {
+#idea_message_table_header_content {
+	width: 80%;
+}
+#idea_message_table_idea {
+	background: #EDEDED;
 }
 
-#messages_table_idea {
+
+#idea_message_content {
+	width: 65%;
+	height: 100px;
+}
+
+#idea_message_create_form {
+	margin:0 auto 0;
+	padding:0;
+	width:100%;
+}
+
+#idea_message_create_form_submit {
+	/*position: absolute;
+	right: 20px;
+	bottom: 30px;*/
 }
