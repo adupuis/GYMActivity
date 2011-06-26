@@ -7,8 +7,6 @@ include_once 'header.php';
 include_once 'menu.php';
 
 $geny_client = new GenyClient();
-$geny_profile = new GenyProfile();
-$geny_idea_status = new GenyIdeaStatus();
 
 ?>
 
@@ -39,32 +37,12 @@ $geny_idea_status = new GenyIdeaStatus();
 		<form id="formID" action="idea_edit.php" method="post">
 			<input type="hidden" name="create_idea" value="true" />
 			<p>
-				<label for="idea_title">Titre de l'idée</label>
+				<label for="idea_title">Titre</label>
 				<input name="idea_title" id="idea_title" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="idea_description">Description</label>
 				<textarea name="idea_description" id="idea_description" class="validate[required] text-input"></textarea>
-			</p>
-			<p>
-				<label for="idea_status">Statut</label>
-				<select name="idea_status" id="idea_status">
-				<?php
-					foreach( $geny_idea_status->getAllIdeaStatus() as $idea_status ) {
-						echo "<option value=\"".$idea_status->id."\">".$idea_status->name."</option>\n";
-					}
-				?>
-				</select>
-			</p>
-			<p>
-				<label for="idea_submitter">Soumetteur</label>
-				<select name="idea_submitter" id="idea_submitter">
-				<?php
-					foreach( $geny_profile->getAllProfiles() as $profile ) {
-						echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
-					}
-				?>
-				</select>
 			</p>
 			<p>
 				<input type="submit" value="Créer" /> ou <a href="#form">annuler</a>

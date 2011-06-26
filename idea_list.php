@@ -39,14 +39,22 @@ foreach( $geny_profile->getAllProfiles() as $profile ) {
 			<table class="object_list">
 			<tr><th>Titre</th><th>Votes</th><th>Statut</th><th>Soumetteur</th><th>Voir</th><th>Éditer</th><th>Supprimer</th></tr>
 			<?php
-				function getImage($bool){
-					if($bool == 1)
+				function getImage( $bool ) {
+					if( $bool == 1 )
 						return 'images/'.$web_config->theme.'/button_success_small.png';
 					else
 						return 'images/'.$web_config->theme.'/button_error_small.png';
 				}
-				foreach( $geny_idea->getAllIdeas() as $tmp ){
-					echo "<tr><td>$tmp->title</td><td>".$tmp->votes."</td><td>".$idea_statuses["$tmp->status_id"]->name."</td><td>".$profiles["$tmp->submitter"]->firstname." ".$profiles["$tmp->submitter"]->lastname."</td><td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Voir l'idée'></a></td><td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer l'idée'></a></td><td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement l'idée'></a></td></tr>";
+
+				foreach( $geny_idea->getAllIdeas() as $tmp ) {
+					$profile = $profiles["$tmp->submitter"];
+					if( $profile->firstname && $profile->lastname ) {
+						$screen_name = $profile->firstname." ".$profile->lastname;
+					}
+					else {
+						$screen_name = $profile->login;
+					}
+					echo "<tr><td>$tmp->title</td><td>".$tmp->votes."</td><td>".$idea_statuses["$tmp->status_id"]->name."</td><td>".$screen_name."</td><td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Voir l'idée'></a></td><td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer l'idée'></a></td><td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement l'idée'></a></td></tr>";
 				}
 			?>
 			</table>

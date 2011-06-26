@@ -661,6 +661,12 @@ table.object_list tr:nth-child(odd){
 }
 
 
+
+#idea_description {
+	width: 75%;
+	height: 200px;
+}
+
 .idea_table_header {
 	background: #333;
 }
