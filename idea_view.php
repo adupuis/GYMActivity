@@ -25,6 +25,14 @@ if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
 	}
 }
+else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
+	if( isset( $_GET['idea_id'] ) ) {
+		$geny_idea->loadIdeaById( $_GET['idea_id'] );
+	}
+	else  {
+		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+	}
+}
 else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create'] == "true" ) {
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );

@@ -30,11 +30,19 @@ if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
 	}
 }
-else if( isset($_POST['load_idea']) && $_POST['load_idea'] == "true" ) {
-	if(isset($_POST['idea_id'])) {
-		$geny_idea->loadIdeaById($_POST['idea_id']);
+else if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
+	if( isset( $_POST['idea_id'] ) ) {
+		$geny_idea->loadIdeaById( $_POST['idea_id'] );
 	}
 	else {
+		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+	}
+}
+else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
+	if( isset( $_GET['idea_id'] ) ) {
+		$geny_idea->loadIdeaById( $_GET['idea_id'] );
+	}
+	else  {
 		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
 	}
 }
@@ -106,7 +114,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 					<?php
 						$ideas = $geny_idea->getAllIdeas();
 						foreach( $ideas as $idea ){
-							if( (isset($_POST['idea_id']) && $_POST['idea_id'] == $idea->id) || (isset($_GET['idea_id']) && $_GET['idea_id'] == $idea->id) )
+							if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) )
 								echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
 							else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->name)
 								echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
