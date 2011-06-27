@@ -22,9 +22,9 @@ include_once 'menu.php';
 			</a>
 		</li>
 		<li class="cra_edit">
-			<a href="cra_edit.php">
-				<span class="dock_item_title">Editer un CRA</span><br/>
-				<span class="dock_item_content">Modifier un rapport d'activité précédemment saisi.</span>
+			<a href="cra_validation.php">
+				<span class="dock_item_title">Valider des CRA</span><br/>
+				<span class="dock_item_content">Voir la liste des CRA non validés afin de les valider.</span>
 			</a>
 		</li>
 		<li class="cra_remove">

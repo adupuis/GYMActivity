@@ -49,6 +49,7 @@ CREATE TABLE ProfileManagementData (
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
 -- TODO: Ajouter le support des entretiens annuels
+-- TODO: Ajouter le support des profiles tags
 
 CREATE TABLE Clients (
 	client_id int auto_increment,

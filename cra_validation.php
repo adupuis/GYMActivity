@@ -13,7 +13,7 @@ $db_status = "";
 
 if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 	$html_worked_days_table = '';
-	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) ){
+	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
 		foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
 			$geny_activity = new GenyActivity();
 			$geny_ar = new GenyActivityReport();
@@ -42,16 +42,19 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
 				}
 				else{
-					$day_work_load_by_project = $geny_ar->getDayLoadByProject($profile->id,$day);
+					$day_work_load_by_project = $geny_ar->getDayLoadByAssignement($profile->id,$day);
 					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
 					$extra = '';
 					for($k=0; $k < count($day_work_load_by_project); $k++ ){
-						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['project_id'].",";
+						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['assignement_id'].",";
 					}
 					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière ($extra).</li>\n";
 				}
 			}
 		}
+	}
+	else{
+		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
 	}
 }
 
@@ -111,7 +114,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				</table>
 			</p>
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Valider" /> ou <a href="#formID">annuler</a>
 			</p>
 		</form>
 	</p>
