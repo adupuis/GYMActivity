@@ -81,7 +81,7 @@ class GenyIdeaMessage {
 				$idea_message_list[] = $tmp_idea_message;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $idea_message_list;
 	}
 

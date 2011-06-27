@@ -63,7 +63,7 @@ class GenyProfile {
 				$profile_list[] = $tmp_profile;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $profile_list;
 	}
 	public function getAllProfiles(){

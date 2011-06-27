@@ -13,7 +13,7 @@ class CheckIdentity {
 		mysql_select_db("GYMActivity");
 		$query = "SELECT profile_login,rights_group_id,profile_is_active FROM Profiles WHERE md5(profile_login)='$username'";
 		$result = mysql_query($query, $this->handle);
-		mysql_close();
+// 		mysql_close();
 		if (mysql_num_rows($result)<=0)
 			return false;
 		$sqldata = mysql_fetch_assoc($result);

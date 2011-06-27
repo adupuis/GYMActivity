@@ -62,7 +62,7 @@ class GenyProject {
 				$project_list[] = $tmp_project;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $project_list;
 	}
 	public function getLocationsList(){
@@ -76,7 +76,7 @@ class GenyProject {
 				$project_location_list[] = $row[0];
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $project_location_list;
 	}
 	public function updateString($key,$value){

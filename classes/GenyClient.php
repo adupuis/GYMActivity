@@ -45,7 +45,7 @@ class GenyClient {
 				$client_list[] = $tmp_client;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $client_list;
 	}
 	public function getAllClients(){

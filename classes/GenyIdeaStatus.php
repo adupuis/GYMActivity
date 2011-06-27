@@ -70,7 +70,7 @@ class GenyIdeaStatus {
 				$idea_status_list[] = $tmp_idea_status;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $idea_status_list;
 	}
 

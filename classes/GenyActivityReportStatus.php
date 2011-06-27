@@ -48,7 +48,7 @@ class GenyActivityReportStatus {
 				$activity_report_status_list[] = $tmp_obj;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $activity_report_status_list;
 	}
 	public function getAllActivityReportStatus(){

@@ -85,7 +85,7 @@ class GenyIdea {
 				$idea_list[] = $tmp_idea;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $idea_list;
 	}
 

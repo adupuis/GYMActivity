@@ -52,7 +52,7 @@ class GenyAssignement {
 				$object_list[] = $tmp_object;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $object_list;
 	}
 	public function getAllAssignements(){

@@ -70,7 +70,7 @@ class GenyActivity {
 				$activityies_list[] = $tmp_obj;
 			}
 		}
-		mysql_close();
+// 		mysql_close();
 		return $activityies_list;
 	}
 	public function getAllActivities(){
