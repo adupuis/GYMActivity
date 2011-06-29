@@ -67,6 +67,14 @@ a.submit:focus{
 	outline:none;
 }
 
+form.table_container {
+	width: 932px;
+}
+
+form.table_container select {
+	width: 150px;
+}
+
 form{
 	/*background:#f7f7f7;*/
 	/*background:-moz-linear-gradient(90deg, #ccc, #fff);
@@ -608,7 +616,7 @@ table.object_list {
 	-khtml-border-radius:5px;
 }
 
-table.object_list,th, td
+table.object_list > th > td
 {
 	border: 1px solid black;
 	padding: 5px;
@@ -616,7 +624,7 @@ table.object_list,th, td
 	vertical-align: middle;
 }
 
-table.object_list th {
+table.object_list > th {
 	font-size: 18px;
 	font-weight: x-large;
 	padding: 5px;
@@ -627,7 +635,7 @@ table.object_list th {
 	color: white;
 }
 
-table.object_list tr:nth-child(odd){
+table.object_list > tr:nth-child(odd){
 	background-color:#d2d2d2;
 }
 
