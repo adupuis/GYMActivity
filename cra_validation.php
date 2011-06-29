@@ -170,7 +170,6 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					"bJQueryUI": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
-					"sDom": '<"toolbar">frtip',
 					"oLanguage": {
 						"sSearch": "Recherche :",
 						"sLengthMenu": "Rapport par page _MENU_",
