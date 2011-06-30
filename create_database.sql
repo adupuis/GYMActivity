@@ -163,6 +163,18 @@ CREATE TABLE Assignements (
 );
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
 
+CREATE TABLE AssignementFees (
+	assignement_fee_id int auto_increment,
+	assignement_id int not null,
+	task_id int not null,
+	assignement_fee_value float not null,
+	primary key(assignement_fee_id),
+	foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
+	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
+);
+
+ALTER TABLE AssignementFees AUTO_INCREMENT = 1;
+
 CREATE TABLE DailyFees (
 	daily_fee_id int auto_increment,
 	assignement_id int not null,
