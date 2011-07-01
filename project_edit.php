@@ -28,7 +28,10 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 			}
 			foreach ($_POST['project_profiles'] as $key => $value){
 				$tmp_profile = new GenyProfile( $value );
-				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, 'false') ) {
+				$overtime_allowed = 'false';
+				if(isset($_POST['project_allow_overtime']) && $_POST['project_allow_overtime'] == 'true' )
+					$overtime_allowed = 'true';
+				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, $overtime_allowed) ) {
 					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
 				}
 				else
