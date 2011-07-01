@@ -1,1 +1,24 @@
-Voir le fichier INSTALL.
+Voir le fichier INSTALL pour la procédure d'installation.
+
+Un petit mot sur les heures supplémentaires :
+les heures supplémentaires sont gérées au niveau de l'affectation d'un projet (Assignement).
+Il est possible de donner le droit en masse à des collaborateurs de saisir des heures supplémentaires, mais uniquement à la création du projet. Il est impossible de le faire plus tard. Après la création du projet, il est nécessaire de passer par la gestion d'affectation pour autoriser individuellement chaque collaborateur à saisr des heures supplémentaires.
+
+En ce qui concerne les CRA/Congés, le workflow est le suivant :
+A la soumission, que ce soit une soumission automatique ou manuelle, le rapport entre dans l'état 'En attente de validation utilisateur'. C'est à dire que le rapport à été enregistré mais que le collaborateur doit le valider.
+
+Une fois validé par le collaborateur, le rapport prend l'état 'En attente de validation'. C'est à dire que le rapport d'activité a été soumis et est en attente de validation de la part du management. A ce moment, il est possible de renvoyer le rapport à l'utilisateur en le remettant dans l'état 'En attente de validation utilisateur' accompagné d'une justification/demande de rectification ou d'information. Il est aussi possible de le passer à l'état 'En attente de suppression' aussi accompagné d'une justification. 
+
+Une fois ceci fait le rapport entre dans l'état 'Validé', il est maintenant en attente de facturation. C'est le dernier état changeant pour un utilisateur de l'application, les autres états du workflow ne sont dédiés qu'à la partie facturation.
+
+L'état 'Facturé' signifie que la facture a été envoyée au client ou que les congés sont en attente de paiement (dans le cas de CP). Dans ce cas il est indispensable d'attacher la facture ou un lien vers la facture (Dropbox ou Google docs par exemple).
+
+Un rapport dans l'état 'Payé' signifie que le client a payé pour ce rapport d'activité, ou que les congés ont été payés. Il est nécessaire de joindre un justificatif ou le lien vers le justificatif.
+
+Une fois que le rapport (ou l'activité concernée par le rapport) a été payé, le rapport doit passé à l'état 'Fermé'. Dans ce cas, plus rien ne peut être fait avec ce rapport d'activité, car plus aucune action n'est nécessaire sur ce rapport.
+
+En parallèle de celà, il existe deux états décrivant la suppression d'un rapport. Pour des raisons d'historisation des données, il est impossible à un utilisateur qui n'est pas administrateur d'éffacer un CRA de la base de donnée. Par contre il est possible de le marquer comme "supprimé", ce qui aura le même effet sur l'affichage. La seule différence est que les données seront toujours présentes dans la base.
+Les états de suppressions sont donc :
+
+'En attente de suppression' : le rapport d'activité a été soumis pour suppression et est en attente de validation par le management. Un rapport dans cet état peut être repasser dans l'état 'En attente de validation utilisateur' accompagné d'une justification.
+'Supprimé' : e rapport d'activité a été supprimé et plus rien ne peut être fait dessus.
