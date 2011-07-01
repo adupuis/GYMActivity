@@ -1,7 +1,7 @@
 Pour "installer" ce projet il suffit de :
 - configurer un vhost apache qui pointe vers la racine de GYMactivity.
 - créer une base de donnée GYMActivity dans mysql.
-- editer la classe classes/GenyWebConfig.php si nécessaire (ainsi que classes/CheckIdentity.php)
+- editer la classe classes/GenyWebConfig.php si nécessaire.
 - importer le fichier create_database.sql.
 
 C'est tout.
