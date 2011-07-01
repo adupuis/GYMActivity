@@ -7,6 +7,7 @@ START TRANSACTION;
 DROP TABLE ActivityReports;
 DROP TABLE ActivityReportStatus;
 DROP TABLE DailyFees;
+DROP TABLE AssignementFees;
 DROP TABLE Assignements;
 DROP TABLE Activities;
 DROP TABLE Tasks;
