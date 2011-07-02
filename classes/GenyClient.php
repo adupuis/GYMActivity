@@ -18,7 +18,12 @@ class GenyClient {
 		$query = "INSERT INTO Clients VALUES($id,'".mysql_real_escape_string($name)."')";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyClient MySQL query : $query -->\n";
-		return mysql_query($query,$this->handle);
+		if( mysql_query( $query, $this->handle ) ) {
+			return mysql_insert_id( $this->handle );
+		}
+		else {
+			return -1;
+		}
 	}
 	public function getClientsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
