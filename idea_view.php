@@ -15,7 +15,11 @@ $db_status = "";
 $geny_idea = new GenyIdea();
 $geny_idea_status = new GenyIdeaStatus();
 $geny_idea_message = new GenyIdeaMessage();
+$geny_idea_vote = new GenyIdeaVote();
 $geny_profile = new GenyProfile();
+
+$logged_in_profile = new GenyProfile();
+$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
 if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 	if( isset( $_POST['idea_id'] ) ) {
@@ -33,14 +37,75 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
 	}
 }
+else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
+	if( isset( $_GET['idea_vote_idea_id'] ) ) {
+		$geny_idea->loadIdeaById( $_GET['idea_vote_idea_id'] );
+		if( isset( $_GET['idea_vote_positive'] ) && $_GET['idea_vote_positive'] == "true" ) {
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			if( count( $my_votes_for_this_idea ) > 0 ) {
+				$geny_idea_vote = $my_votes_for_this_idea[0];
+				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
+				$geny_idea_vote->updateInt( 'idea_positive_vote', 1 );
+				if( $geny_idea_vote->commitUpdates() ) {
+					$db_status .= "<li class=\"status_message_success\">Finalement vous êtes pour!</li>\n";
+				}
+				else {
+					$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du vote.</li>\n";
+				}
+			}
+			else {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
+					$db_status .= "<li class=\"status_message_success\">Vous avez voté pour !</li>\n";
+				}
+				else {
+					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote positif.</li>\n";
+				}
+			}
+
+		}
+		else if( isset( $_GET['idea_vote_negative'] ) && $_GET['idea_vote_negative'] == "true" ) {
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			if( count( $my_votes_for_this_idea ) > 0 ) {
+				$geny_idea_vote = $my_votes_for_this_idea[0];
+				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
+				$geny_idea_vote->updateInt( 'idea_positive_vote', 0 );
+				if( $geny_idea_vote->commitUpdates() ) {
+					$db_status .= "<li class=\"status_message_success\">Finalement vous êtes contre...</li>\n";
+				}
+				else {
+					$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du vote.</li>\n";
+				}
+			}
+			else {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
+					$db_status .= "<li class=\"status_message_success\">Vous avez voté contre...</li>\n";
+				}
+				else {
+					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote négatif.</li>\n";
+				}
+			}
+		}
+		else if( isset( $_GET['idea_vote_neutral'] ) && $_GET['idea_vote_neutral'] == "true" ) {
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			if( count( $my_votes_for_this_idea ) > 0 ) {
+				$geny_idea_vote = $my_votes_for_this_idea[0];
+				if( $geny_idea_vote->removeIdeaVote( $geny_idea_vote->id ) ) {
+					$db_status .= "<li class=\"status_message_success\">Finalement vous n'avez pas d'avis sur la question...</li>\n";
+				}
+				else {
+					$db_status .= "<li class=\"status_message_error\">Erreur lors de la suppression du vote.</li>\n";
+				}
+			}
+		}
+	}
+	else {
+		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+	}
+}
 else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create'] == "true" ) {
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-
-			$logged_in_profile = new GenyProfile();
-			$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
-
 			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', $_POST['idea_message_content'], $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$db_status .= "<li class=\"status_message_success\">Commentaire ajouté avec succès.</li>\n";
 			}
@@ -73,10 +138,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			<?php
 			$ideas = $geny_idea->getAllIdeas();
 			foreach( $ideas as $idea ) {
-				if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
-					echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
-				}
-				else if( isset( $_POST['idea_name'] ) && $_POST['idea_name'] == $idea->name ) {
+				if( $geny_idea->id == $idea->id ) {
 					echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
 				}
 				else {
@@ -118,7 +180,39 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			}
 		}
 		?>
-		</span></center><br><br>
+		</span></center>
+
+		<br>
+
+		<center>
+		<?php
+		$bProfileHasVoted = false;
+		foreach( $geny_idea_vote->getIdeaVotesListByIdeaId( $geny_idea->id ) as $idea_vote ) {
+			if( $idea_vote->profile_id == $logged_in_profile->id ) {
+				if( $idea_vote->idea_positive_vote == 1 ) {
+					$bProfileHasVoted = true;
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/smiley_down.png\" alt=\"Voter contre cette idée\"></a>";
+					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_neutral.png\" alt=\"Pas d'avis pour cette idée\"></a>";
+				}
+				else if( $idea_vote->idea_negative_vote == 1 ) {
+					$bProfileHasVoted = true;
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_up.png\" alt=\"Voter pour cette idée\"></a>";
+					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_neutral.png\" alt=\"Pas d'avis pour cette idée\"></a>";
+				}
+				break;
+			}
+		}
+		if( !$bProfileHasVoted ) {
+			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_up.png\" alt=\"Voter pour cette idée\"></a>";
+			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/smiley_down.png\" alt=\"Voter contre cette idée\"></a>";
+		}
+		?>
+		</center>
+
+		<br><br>
 		
 		<table cellspacing="0" cellpadding="4" class="idea_table">
 		<tbody>

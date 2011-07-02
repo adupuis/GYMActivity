@@ -283,4 +283,16 @@ CREATE TABLE IdeaMessages (
 );
 ALTER TABLE IdeaMessages AUTO_INCREMENT=1;
 
+CREATE TABLE IdeaVotes (
+        idea_vote_id int auto_increment,
+        idea_positive_vote int default null,
+        idea_negative_vote int default null,
+        profile_id int not null,
+        idea_id int not null,
+        primary key(idea_vote_id),
+        foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
+        foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
+);
+ALTER TABLE IdeaVotes AUTO_INCREMENT=1;
+
 COMMIT;

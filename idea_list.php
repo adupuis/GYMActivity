@@ -18,6 +18,8 @@ foreach( $geny_profile->getAllProfiles() as $profile ) {
 	$profiles[$profile->id] = $profile;
 }
 
+$geny_idea_vote = new GenyIdeaVote();
+
 ?>
 
 <div class="page_title">
@@ -54,7 +56,16 @@ foreach( $geny_profile->getAllProfiles() as $profile ) {
 					else {
 						$screen_name = $profile->login;
 					}
-					echo "<tr><td>$tmp->title</td><td>".$tmp->votes."</td><td>".$idea_statuses["$tmp->status_id"]->name."</td><td>".$screen_name."</td><td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Voir l'idée'></a></td><td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer l'idée'></a></td><td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement l'idée'></a></td></tr>";
+					$vote_count = 0;
+					foreach( $geny_idea_vote->getIdeaVotesListByIdeaId( $tmp->id ) as $vote ) {
+						if( $vote->idea_positive_vote == 1 ) {
+							$vote_count++;
+						}
+						else if( $vote->idea_negative_vote == 1 ) {
+							$vote_count--;
+						}
+					}
+					echo "<tr><td>$tmp->title</td><td>".$vote_count."</td><td>".$idea_statuses["$tmp->status_id"]->name."</td><td>".$screen_name."</td><td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Voir l'idée'></a></td><td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer l'idée'></a></td><td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement l'idée'></a></td></tr>";
 				}
 			?>
 			</table>
