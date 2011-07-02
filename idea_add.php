@@ -38,7 +38,7 @@ $geny_client = new GenyClient();
 			<input type="hidden" name="create_idea" value="true" />
 			<p>
 				<label for="idea_title">Titre</label>
-				<input name="idea_title" id="idea_title" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="idea_title" id="idea_title" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="idea_description">Description</label>
