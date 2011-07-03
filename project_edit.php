@@ -28,7 +28,10 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 			}
 			foreach ($_POST['project_profiles'] as $key => $value){
 				$tmp_profile = new GenyProfile( $value );
-				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, 'false') ) {
+				$overtime_allowed = 'false';
+				if(isset($_POST['project_allow_overtime']) && $_POST['project_allow_overtime'] == 'true' )
+					$overtime_allowed = 'true';
+				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, $overtime_allowed) ) {
 					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
 				}
 				else
@@ -88,21 +91,40 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 		}
 		if( isset($_POST['project_tasks']) && count($_POST['project_tasks']) > 0 ){
 			if($geny_ptr->deleteAllProjectTaskRelationsByProjectId( $geny_project->id )){
+				$err_string = '';
 				foreach ($_POST['project_tasks'] as $key => $value){
 					$geny_task = new GenyTask( $value );
 					if ($geny_ptr->insertNewProjectTaskRelation('NULL', $geny_project->id, $geny_task->id) ) {
-						$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
+						//$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
 					}
-					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout de la tâche $geny_task->name.</li>\n";
+					else{
+						$err_string .= "<li class=\"status_message_error\">Erreur lors de l'ajout de la tâche $geny_task->name.</li>\n";
+					}
+				}
+				if( $err_string != '' ){
+					$db_status .= $err_string;
+				}
+				else{
+					$db_status .= "<li class=\"status_message_success\">Les tâches ont été mis à jour avec succès.</li>\n";
 				}
 			}
 		}
 		if( isset($_POST['project_profiles']) && count($_POST['project_profiles']) > 0 ){
+			$old_assignements = $geny_assignement->getAssignementsListByProjectId($geny_project->id);
+			$old_overtime_states = array();
+			foreach( $old_assignements as $tmp_ass ){
+				if(isset($tmp_ass->overtime_allowed) && $tmp_ass->overtime_allowed)
+					$old_overtime_states[$tmp_ass->profile_id] = 'true' ;
+				else
+					$old_overtime_states[$tmp_ass->profile_id] = 'false' ;
+			}
 			if($geny_assignement->deleteAllAssignementsByProjectId( $geny_project->id )){
 				foreach ($_POST['project_profiles'] as $key => $value){
 					$tmp_profile = new GenyProfile( $value );
-					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id) ) {
+					$tmp_overtime_allowed = 'false';
+					if( isset( $old_overtime_states[$tmp_profile->id] ) )
+						$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
+					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
 						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
 					}
 					else
@@ -317,7 +339,12 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 		</form>
 	</p>
 </div>
-
+<div id="bottomdock">
+	<ul>
+		<?php include 'backend/widgets/project_list.dock.widget.php'; ?>
+		<?php include 'backend/widgets/project_add.dock.widget.php'; ?>
+	</ul>
+</div>
 <?php
 include_once 'footer.php';
 ?>
