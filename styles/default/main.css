@@ -67,11 +67,11 @@ a.submit:focus{
 	outline:none;
 }
 
-form.table_container {
+.table_container {
 	width: 932px;
 }
 
-form.table_container select {
+.table_container select {
 	width: 150px;
 }
 
