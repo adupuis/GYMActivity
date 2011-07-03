@@ -450,6 +450,92 @@ div#maindock ul li.task_list a {
 	background-image: url(../../images/default/task_list.png);
 }
 
+/* End of main dock style */
+
+/* Start of bottom dock style */
+
+div#bottomdock {
+	position: relative;
+	margin-top:10px;
+	margin-left: 160px;
+	margin-right: auto;
+/* 	border: 1px solid black; */
+	/*height: auto;*/
+	/*width: 100%;*/
+}
+
+div#bottomdock ul {
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#bottomdock ul li {
+	display: inline;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#bottomdock ul li a {
+	text-align: center;
+	margin-left: 20px;
+	margin-bottom: 50px;
+	background-repeat:no-repeat;
+	background-position:10px 10px;
+}
+
+div#bottomdock ul li a {
+	display:block;
+	float: left;
+	width: 350px;
+	height: 150px;
+	text-decoration:none;
+	color: #6a6a6a;
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+	-moz-border-radius:10px 10px 10px 10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius: 10px;
+	text-align:center;
+	opacity: 0.85; 
+	padding: 5px;
+}
+
+div#bottomdock a:hover{
+	background-color:#cedc9e;
+}
+
+div#bottomdock a span.dock_item_title{
+	position: relative;
+	left: 30px;
+	top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size:30px;
+	font-weight: x-large;
+	color: #6a6a6a;
+	text-shadow: 0 -1px 1px #fff; 
+	text-align:center;
+}
+
+div#bottomdock a span.dock_item_content {
+	position: relative;
+	top: 60px;
+	font-size:14px;
+}
+
+div#bottomdock ul li.project_add a {
+	background-image: url(../../images/default/project_add.png);
+}
+div#bottomdock ul li.project_list a {
+	background-image: url(../../images/default/project_list.png);
+}
+
+
+/* End of bottom dock style */
+
 ul.status_message {
 	text-align: left;
 	font-size: 16px;

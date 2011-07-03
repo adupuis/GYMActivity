@@ -109,6 +109,13 @@ else{
 		</form>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php include 'backend/widgets/project_list.dock.widget.php'; ?>
+		<?php include 'backend/widgets/project_add.dock.widget.php'; ?>
+	</ul>
+</div>
+
 
 <?php
 include_once 'footer.php';
