@@ -15,6 +15,30 @@ include_once 'menu.php';
 
 <div id="maindock">
 	<ul>
+		<li class="idea_add">
+			<a href="idea_add.php">
+				<span class="dock_item_title">Ajouter une idée</span><br/>
+				<span class="dock_item_content">Ajouter une idée dans la boîte à idées.</span>
+			</a>
+		</li>
+		<li class="idea_edit">
+			<a href="idea_edit.php">
+				<span class="dock_item_title">Modifier une idée</span><br/>
+				<span class="dock_item_content">Modifier une idée existante.</span>
+			</a>
+		</li>
+		<li class="idea_remove">
+			<a href="idea_remove.php">
+				<span class="dock_item_title">Supprimer une idée</span><br/>
+				<span class="dock_item_content">Supprimer une idée existante.</span>
+			</a>
+		</li>
+		<li class="idea_list">
+			<a href="idea_list.php">
+				<span class="dock_item_title">Liste des idées</span><br/>
+				<span class="dock_item_content">Lister toutes les idées de la boîte à idée Geny Mobile.</span>
+			</a>
+		</li>
 		<li class="cra_add">
 			<a href="cra_add.php">
 				<span class="dock_item_title">Ajouter un CRA</span><br/>
