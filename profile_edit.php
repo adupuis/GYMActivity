@@ -232,6 +232,14 @@ else{
 		</form>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/profile_list.dock.widget.php';
+			include 'backend/widgets/profile_add.dock.widget.php';
+		?>
+	</ul>
+</div>
 
 <?php
 include_once 'footer.php';

@@ -100,7 +100,13 @@ $geny_profile = new GenyProfile();
 		</form>
 	</p>
 </div>
-
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/profile_list.dock.widget.php'; 
+		?>
+	</ul>
+</div>
 <?php
 include_once 'footer.php';
 ?>
