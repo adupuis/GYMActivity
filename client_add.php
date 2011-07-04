@@ -45,6 +45,13 @@ include_once 'menu.php';
 		</form>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/client_list.dock.widget.php';
+		?>
+	</ul>
+</div>
 
 <?php
 include_once 'footer.php';
