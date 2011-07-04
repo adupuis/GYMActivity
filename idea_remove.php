@@ -6,7 +6,9 @@ $required_group_rights = 5;
 include_once 'header.php';
 include_once 'menu.php';
 
-// $geny_idea = new GenyIdea();
+$geny_idea = new GenyIdea();
+$logged_in_profile = new GenyProfile();
+$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
 mysql_select_db("GYMActivity");
@@ -53,11 +55,11 @@ else {
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> une idée de la boîte à idées.
 		</p>
-		<?php
+			<?php
 			if( isset($db_status) && $db_status != "" ){
 				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
 			}
-		?>
+			?>
 		<script>
 			$(".status_message").click(function () {
 			$(".status_message").fadeOut("slow");
@@ -78,20 +80,21 @@ else {
 
 				<select name="idea_id" id="idea_id">
 					<?php
-						$query = "SELECT idea_id,idea_title FROM Ideas";
-						$result = mysql_query($query, $handle);
-						
-						while ($row = mysql_fetch_row($result)) {
-							if( (isset($_POST['idea_id']) && $_POST['idea_id'] == $row[0]) || (isset($_GET['idea_id']) && $_GET['idea_id'] == $row[0]) ) {
-								echo "<option value=\"".$row[0]."\" selected>".$row[1]."</option>\n";
-							}
-							else if( isset($_POST['idea_title']) && $_POST['idea_title'] == $row[1] ) {
-								echo "<option value=\"".$row[0]."\" selected>".$row[1]."</option>\n";
-							}
-							else {
-								echo "<option value=\"".$row[0]."\">".$row[1]."</option>\n";
-							}
+					$ideas = $geny_idea->getIdeasListBySubmitter( $logged_in_profile->id );
+					foreach( $ideas as $idea ) {
+						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
+							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
 						}
+						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->name) {
+							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
+						}
+						else {
+							echo "<option value=\"".$idea->id."\">".$idea->title."</option>\n";
+						}
+					}
+					if( $geny_idea->id < 0 ) {
+						$geny_idea->loadIdeaById( $ideas[0]->id );
+					}
 					?>
 				</select>
 			</p>
