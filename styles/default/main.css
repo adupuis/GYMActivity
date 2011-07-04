@@ -342,111 +342,111 @@ div#maindock a span.dock_item_content {
 	font-size:14px;
 }
 
-div#maindock ul li.cra_add a {
+li.cra_add a {
 	background-image: url(../../images/default/cra_add.png);
 }
 
-div#maindock ul li.cra_edit a {
+li.cra_edit a {
 	background-image: url(../../images/default/cra_edit.png);
 }
 
-div#maindock ul li.cra_remove a {
+li.cra_remove a {
 	background-image: url(../../images/default/cra_remove.png);
 }
 
-div#maindock ul li.cra_list a {
+li.cra_list a {
 	background-image: url(../../images/default/cra_list.png);
 }
 
-div#maindock ul li.conges_add a {
+li.conges_add a {
 	background-image: url(../../images/default/conges_add.png);
 }
 
-div#maindock ul li.conges_edit a {
+li.conges_edit a {
 	background-image: url(../../images/default/conges_edit.png);
 }
 
-div#maindock ul li.conges_remove a {
+li.conges_remove a {
 	background-image: url(../../images/default/conges_remove.png);
 }
 
-div#maindock ul li.conges_list a {
+li.conges_list a {
 	background-image: url(../../images/default/conges_list.png);
 }
 
-div#maindock ul li.cra_admin_generic a {
+li.cra_admin_generic a {
 	background-image: url(../../images/default/cra_admin_generic.png);
 }
 
-div#maindock ul li.conges_admin_generic a {
+li.conges_admin_generic a {
 	background-image: url(../../images/default/conges_admin_generic.png);
 }
 
-div#maindock ul li.project_add a {
+li.project_add a {
 	background-image: url(../../images/default/project_add.png);
 }
 
-div#maindock ul li.project_edit a {
+li.project_edit a {
 	background-image: url(../../images/default/project_edit.png);
 }
 
-div#maindock ul li.project_remove a {
+li.project_remove a {
 	background-image: url(../../images/default/project_remove.png);
 }
 
-div#maindock ul li.project_list a {
+li.project_list a {
 	background-image: url(../../images/default/project_list.png);
 }
 
-div#maindock ul li.profile_add a {
+li.profile_add a {
 	background-image: url(../../images/default/profile_add.png);
 }
 
-div#maindock ul li.profile_edit a {
+li.profile_edit a {
 	background-image: url(../../images/default/profile_edit.png);
 }
 
-div#maindock ul li.profile_remove a {
+li.profile_remove a {
 	background-image: url(../../images/default/profile_remove.png);
 }
 
-div#maindock ul li.profile_list a {
+li.profile_list a {
 	background-image: url(../../images/default/profile_list.png);
 }
 
-div#maindock ul li.profile_admin a {
+li.profile_admin a {
 	background-image: url(../../images/default/profile_admin.png);
 }
 
-div#maindock ul li.client_add a {
+li.client_add a {
 	background-image: url(../../images/default/client_add.png);
 }
 
-div#maindock ul li.client_edit a {
+li.client_edit a {
 	background-image: url(../../images/default/client_edit.png);
 }
 
-div#maindock ul li.client_remove a {
+li.client_remove a {
 	background-image: url(../../images/default/client_remove.png);
 }
 
-div#maindock ul li.client_list a {
+li.client_list a {
 	background-image: url(../../images/default/client_list.png);
 }
 
-div#maindock ul li.task_add a {
+li.task_add a {
 	background-image: url(../../images/default/task_add.png);
 }
 
-div#maindock ul li.task_edit a {
+li.task_edit a {
 	background-image: url(../../images/default/task_edit.png);
 }
 
-div#maindock ul li.task_remove a {
+li.task_remove a {
 	background-image: url(../../images/default/task_remove.png);
 }
 
-div#maindock ul li.task_list a {
+li.task_list a {
 	background-image: url(../../images/default/task_list.png);
 }
 
@@ -524,13 +524,6 @@ div#bottomdock a span.dock_item_content {
 	position: relative;
 	top: 60px;
 	font-size:14px;
-}
-
-div#bottomdock ul li.project_add a {
-	background-image: url(../../images/default/project_add.png);
-}
-div#bottomdock ul li.project_list a {
-	background-image: url(../../images/default/project_list.png);
 }
 
 
@@ -614,83 +607,83 @@ div#mainarea p.mainarea_title span {
 	padding-top: 20px;
 }
 
-div#mainarea p.mainarea_title span.project_add {
+p.mainarea_title span.project_add {
 	background-image: url(../../images/default/project_add.png);
 }
 
-div#mainarea p.mainarea_title span.project_edit {
+p.mainarea_title span.project_edit {
 	background-image: url(../../images/default/project_edit.png);
 }
 
-div#mainarea p.mainarea_title span.project_remove {
+p.mainarea_title span.project_remove {
 	background-image: url(../../images/default/project_remove.png);
 }
 
-div#mainarea p.mainarea_title span.project_list {
+p.mainarea_title span.project_list {
 	background-image: url(../../images/default/project_list.png);
 }
 
-div#mainarea p.mainarea_title span.profile_add {
+p.mainarea_title span.profile_add {
 	background-image: url(../../images/default/profile_add.png);
 }
 
-div#mainarea p.mainarea_title span.profile_edit {
+p.mainarea_title span.profile_edit {
 	background-image: url(../../images/default/profile_edit.png);
 }
 
-div#mainarea p.mainarea_title span.profile_remove {
+p.mainarea_title span.profile_remove {
 	background-image: url(../../images/default/profile_remove.png);
 }
 
-div#mainarea p.mainarea_title span.profile_admin {
+p.mainarea_title span.profile_admin {
 	background-image: url(../../images/default/profile_admin.png);
 }
 
-div#mainarea p.mainarea_title span.client_add {
+p.mainarea_title span.client_add {
 	background-image: url(../../images/default/client_add.png);
 }
 
-div#mainarea p.mainarea_title span.client_edit {
+p.mainarea_title span.client_edit {
 	background-image: url(../../images/default/client_edit.png);
 }
 
-div#mainarea p.mainarea_title span.client_remove {
+p.mainarea_title span.client_remove {
 	background-image: url(../../images/default/client_remove.png);
 }
 
-div#mainarea p.mainarea_title span.client_list {
+p.mainarea_title span.client_list {
 	background-image: url(../../images/default/client_list.png);
 }
 
-div#mainarea p.mainarea_title span.task_add {
+p.mainarea_title span.task_add {
 	background-image: url(../../images/default/task_add.png);
 }
 
-div#mainarea p.mainarea_title span.task_edit {
+p.mainarea_title span.task_edit {
 	background-image: url(../../images/default/task_edit.png);
 }
 
-div#mainarea p.mainarea_title span.task_remove {
+p.mainarea_title span.task_remove {
 	background-image: url(../../images/default/task_remove.png);
 }
 
-div#mainarea p.mainarea_title span.task_list {
+p.mainarea_title span.task_list {
 	background-image: url(../../images/default/task_list.png);
 }
 
-div#mainarea p.mainarea_title span.cra_add {
+p.mainarea_title span.cra_add {
 	background-image: url(../../images/default/cra_add.png);
 }
 
-div#mainarea p.mainarea_title span.cra_edit {
+p.mainarea_title span.cra_edit {
 	background-image: url(../../images/default/cra_edit.png);
 }
 
-div#mainarea p.mainarea_title span.cra_remove {
+p.mainarea_title span.cra_remove {
 	background-image: url(../../images/default/cra_remove.png);
 }
 
-div#mainarea p.mainarea_title span.cra_list {
+p.mainarea_title span.cra_list {
 	background-image: url(../../images/default/cra_list.png);
 }
 
