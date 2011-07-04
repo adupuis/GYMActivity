@@ -34,7 +34,7 @@ $geny_client = new GenyClient();
 				$(".profileslistselect").listselect({listTitle: "Profils disponibles",selectedTitle: "Profils sélectionnés"});
 			});
 		</script>
-		<form id="formID" action="idea_edit.php" method="post">
+		<form id="formID" action="idea_view.php" method="post">
 			<input type="hidden" name="create_idea" value="true" />
 			<p>
 				<label for="idea_title">Titre</label>

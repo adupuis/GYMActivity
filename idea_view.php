@@ -21,7 +21,21 @@ $geny_profile = new GenyProfile();
 $logged_in_profile = new GenyProfile();
 $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
-if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
+if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
+	if( isset( $_POST['idea_title'] ) ) {
+		if( $geny_idea->insertNewIdea( 'NULL', $_POST['idea_title'], $_POST['idea_description'], $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
+			$db_status .= "<li class=\"status_message_success\">Idée créée avec succès.</li>\n";
+			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
+		}
+		else {
+			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création de l'idée.</li>\n";
+		}
+	}
+	else {
+		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+	}
+}
+else if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 	if( isset( $_POST['idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_id'] );
 	}
