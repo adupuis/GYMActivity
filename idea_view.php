@@ -285,6 +285,14 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		</form>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/idea_list.dock.widget.php';
+			include 'backend/widgets/idea_add.dock.widget.php';
+		?>
+	</ul>
+</div>
 
 <?php
 include_once 'footer.php';

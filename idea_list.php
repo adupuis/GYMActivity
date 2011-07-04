@@ -72,6 +72,13 @@ $geny_idea_vote = new GenyIdeaVote();
 		</p>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php
+			include 'backend/widgets/idea_add.dock.widget.php';
+		?>
+	</ul>
+</div>
 
 <?php
 include_once 'footer.php';

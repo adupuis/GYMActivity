@@ -50,6 +50,13 @@ $geny_client = new GenyClient();
 		</form>
 	</p>
 </div>
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/idea_list.dock.widget.php';
+		?>
+	</ul>
+</div>
 
 <?php
 include_once 'footer.php';
