@@ -98,17 +98,21 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 
 				<select name="idea_id" id="idea_id" onChange="submit()">
 					<?php
-						$ideas = $geny_idea->getAllIdeas();
-						foreach( $ideas as $idea ){
-							if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) )
-								echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
-							else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->name)
-								echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
-							else
-								echo "<option value=\"".$idea->id."\">".$idea->title."</option>\n";
+					$ideas = $geny_idea->getIdeasListBySubmitter( $logged_in_profile->id );
+					foreach( $ideas as $idea ) {
+						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
+							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
 						}
-						if( $geny_idea->id < 0 )
-							$geny_idea->loadIdeaById( $ideas[0]->id );
+						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->name) {
+							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
+						}
+						else {
+							echo "<option value=\"".$idea->id."\">".$idea->title."</option>\n";
+						}
+					}
+					if( $geny_idea->id < 0 ) {
+						$geny_idea->loadIdeaById( $ideas[0]->id );
+					}
 					?>
 				</select>
 			</p>
@@ -127,7 +131,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 			<p>
 				<label for="idea_status">Statut</label>
 				<select name="idea_status" id="idea_status">
-				<?php
+					<?php
 					foreach( $geny_idea_status->getAllIdeaStatus() as $idea_status ) {
 						if( $geny_idea->status_id == $idea_status->id ) {
 							echo "<option value=\"".$idea_status->id."\" selected>".$idea_status->name."</option>\n";
@@ -136,7 +140,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 							echo "<option value=\"".$idea_status->id."\">".$idea_status->name."</option>\n";
 						}
 					}
-				?>
+					?>
 				</select>
 			</p>
 			<p>
