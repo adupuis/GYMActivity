@@ -93,6 +93,30 @@ class GenyIdea {
 		return $this->getIdeasListWithRestrictions( array() );
 	}
 
+	public function getAllIdeasSortedByVotes() {
+		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter FROM Ideas ORDER BY idea_votes DESC";
+		if( $this->config->debug ) {
+			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+		}
+		$result = mysql_query( $query, $this->handle );
+		$idea_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_idea = new GenyIdea();
+				$tmp_idea->id = $row[0];
+				$tmp_idea->title = $row[1];
+				$tmp_idea->description = $row[2];
+				$tmp_idea->votes = $row[3];
+				$tmp_idea->status_id = $row[4];
+				$tmp_idea->submitter = $row[5];
+				$idea_list[] = $tmp_idea;
+			}
+		}
+// 		mysql_close();
+		return $idea_list;
+
+	}
+
 	public function getIdeasListByTitle( $title ) {
 		return $this->getIdeasListWithRestrictions( array("idea_title='".mysql_real_escape_string( $title )."'") );
 	}

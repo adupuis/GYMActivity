@@ -748,6 +748,9 @@ table.object_list > tr:nth-child(odd){
 }
 
 
+.idea_edit {
+	line-height: 30px;
+}
 
 #idea_description {
 	width: 75%;
@@ -758,10 +761,10 @@ table.object_list > tr:nth-child(odd){
 	background: #333;
 }
 #idea_table_header_author {
-	width: 20%;
+	width: 150px;
 }
 #idea_table_header_content {
-	width: 80%;
+	width: 800px;
 }
 #idea_table_idea {
 	background: #EDEDED;
@@ -771,10 +774,10 @@ table.object_list > tr:nth-child(odd){
 	background: #CCCCCC;
 }
 #idea_message_table_header_author {
-	width: 20%;
+	width: 150px;
 }
 #idea_message_table_header_content {
-	width: 80%;
+	width: 800px;
 }
 #idea_message_table_idea {
 	background: #EDEDED;

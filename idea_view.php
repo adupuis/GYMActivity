@@ -52,12 +52,15 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 	}
 }
 else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
+	$negative = 0;
+	$positive = 0;
 	if( isset( $_GET['idea_vote_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_GET['idea_vote_idea_id'] );
 		if( isset( $_GET['idea_vote_positive'] ) && $_GET['idea_vote_positive'] == "true" ) {
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				$geny_idea_vote = $my_votes_for_this_idea[0];
+				$negative = $geny_idea_vote->idea_negative_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 1 );
 				if( $geny_idea_vote->commitUpdates() ) {
@@ -75,12 +78,18 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote positif.</li>\n";
 				}
 			}
-
+			if( $negative == 1 ) {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 2 );
+			}
+			else {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
+			}
 		}
 		else if( isset( $_GET['idea_vote_negative'] ) && $_GET['idea_vote_negative'] == "true" ) {
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				$geny_idea_vote = $my_votes_for_this_idea[0];
+				$positive = $geny_idea_vote->idea_positive_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 0 );
 				if( $geny_idea_vote->commitUpdates() ) {
@@ -98,11 +107,18 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote négatif.</li>\n";
 				}
 			}
+			if( $positive == 1 ) {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 2 );
+			}
+			else {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 1 );
+			}
 		}
 		else if( isset( $_GET['idea_vote_neutral'] ) && $_GET['idea_vote_neutral'] == "true" ) {
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				$geny_idea_vote = $my_votes_for_this_idea[0];
+				$positive = $geny_idea_vote->idea_positive_vote;
 				if( $geny_idea_vote->removeIdeaVote( $geny_idea_vote->id ) ) {
 					$db_status .= "<li class=\"status_message_success\">Finalement vous n'avez pas d'avis sur la question...</li>\n";
 				}
@@ -110,6 +126,15 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$db_status .= "<li class=\"status_message_error\">Erreur lors de la suppression du vote.</li>\n";
 				}
 			}
+			if( $positive == 1 ) {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 1 );
+			}
+			else {
+				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
+			}
+		}
+		if( !$geny_idea->commitUpdates() ) {
+			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour de l'idée.</li>\n";
 		}
 	}
 	else {
@@ -184,6 +209,9 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
 			}
 		?>
+
+		<br><br>
+		
 
 		<center><strong>Statut: </strong><span>
 		<?php
@@ -269,15 +297,15 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			$geny_idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $geny_idea->id );
 			foreach( $geny_idea_messages as $idea_message ) {
 				foreach( $geny_profile->getAllProfiles() as $profile ) {
-				if( $idea_message->profile_id == $profile->id ) {
-					if( $profile->firstname && $profile->lastname ) {
-						$message_author = $profile->firstname." ".$profile->lastname;
+					if( $idea_message->profile_id == $profile->id ) {
+						if( $profile->firstname && $profile->lastname ) {
+							$message_author = $profile->firstname." ".$profile->lastname;
+						}
+						else {
+							$message_author = $profile->login;
+						}
+						break;
 					}
-					else {
-						$message_author = $profile->login;
-					}
-					break;
-				}
 				}
 				echo "<tr id=\"idea_message_table_idea\"><td>".$message_author."</td><td>".$idea_message->content."</td></tr>";
 			}
