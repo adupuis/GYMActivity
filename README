@@ -22,3 +22,6 @@ Les états de suppressions sont donc :
 
 'En attente de suppression' : le rapport d'activité a été soumis pour suppression et est en attente de validation par le management. Un rapport dans cet état peut être repasser dans l'état 'En attente de validation utilisateur' accompagné d'une justification.
 'Supprimé' : e rapport d'activité a été supprimé et plus rien ne peut être fait dessus.
+
+ICONES :
+Les icônes ont été créés à partir du pack SnowIsh-1.3 : http://kde-look.org/content/show.php/SnowIsh?content=42905
