@@ -14,6 +14,31 @@ $geny_client = new GenyClient();
 
 ?>
 
+<script>
+	jQuery(document).ready(function(){
+	
+		var oTable = $('#client_list').dataTable( {
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"sPaginationType": "full_numbers",
+			"oLanguage": {
+				"sSearch": "Recherche :",
+				"sLengthMenu": "Clients par page _MENU_",
+				"sZeroRecords": "Aucun résultat",
+				"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
+				"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
+				"sInfoFiltered": "(filtré de _MAX_ enregistrements)",
+				"oPaginate":{ 
+					"sFirst":"Début",
+					"sLast": "Fin",
+					"sNext": "Suivant",
+					"sPrevious": "Précédent"
+				}
+			}
+		} );
+	});
+</script>
+
 <div class="page_title">
 	<img src="images/<?php echo $web_config->theme ?>/client_generic.png"/><p>Client</p>
 </div>
@@ -29,20 +54,25 @@ $geny_client = new GenyClient();
 		<p class="mainarea_content_intro">
 		Voici la liste des clients dans la base des clients.
 		</p>
+		<style>
+			@import 'styles/default/client_list.css';
+		</style>
+		<div class="table_container">
 		<p>
-		<!--
-		client_id int auto_increment,
-		client_name
-		-->
-			<table class="object_list">
-			<tr><th>Nom</th><th>Éditer</th><th>Supprimer</th></tr>
-			<?php
-				foreach( $geny_client->getAllClients() as $client ){
-					echo "<tr><td>$client->name</td><td><a href='client_edit.php?load_client=true&client_id=$client->id'><img src='images/$web_config->theme/client_edit_small.png'></a></td><td><a href='client_remove.php?client_id=$client->id'><img src='images/$web_config->theme/client_remove_small.png'></a></td></tr>";
-				}
-			?>
+			<table id="client_list">
+				<thead>
+				<tr><th>Nom</th><th>Éditer</th><th>Supprimer</th></tr>
+				</thead>
+				<tbody>
+				<?php
+					foreach( $geny_client->getAllClients() as $client ){
+						echo "<tr><td>$client->name</td><td><a href='client_edit.php?load_client=true&client_id=$client->id'><img src='images/$web_config->theme/client_edit_small.png'></a></td><td><a href='client_remove.php?client_id=$client->id'><img src='images/$web_config->theme/client_remove_small.png'></a></td></tr>";
+					}
+				?>
+				</tbody>
 			</table>
 		</p>
+		</div>
 	</p>
 </div>
 <div id="bottomdock">
