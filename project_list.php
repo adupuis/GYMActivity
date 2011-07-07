@@ -141,7 +141,10 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 		<p class="mainarea_content_intro">
 		Voici la liste des projets dans la base des projets.
 		</p>
-		<div class="table_container" style="width:1320px; margin: auto;">
+		<style>
+			@import 'styles/default/project_list.css';
+		</style>
+		<div class="table_container">
 		<p>
 			
 			<table id="project_list">
