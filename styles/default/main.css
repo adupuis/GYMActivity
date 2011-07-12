@@ -131,6 +131,11 @@ form p:hover label{
 	color:#0459b7;
 }
 
+.centered {
+	vertical-align: middle;
+	text-align: center;
+}
+
 img#logo {
 	position: absolute;
 	display: block;
