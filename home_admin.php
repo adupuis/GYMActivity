@@ -16,7 +16,7 @@ include_once 'menu.php';
 <div id="maindock">
 	<ul>
 		<?php 
-			include 'backend/widgets/cra_validation.dock.widget.php'; 
+			include 'backend/widgets/cra_validation_admin.dock.widget.php'; 
 			include 'backend/widgets/conges_validation.dock.widget.php'; 
 			include 'backend/widgets/profile_add.dock.widget.php'; 
 			include 'backend/widgets/profile_list.dock.widget.php'; 
