@@ -57,6 +57,24 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
 	}
 }
+else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
+	if( isset( $_POST['activity_report_id'] ) ){
+		$tmp_ars = new GenyActivityReportStatus();
+		$tmp_ars->loadActivityReportStatusByShortName('P_APPROVAL');
+		$ok_count=0;
+		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
+			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
+			$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+			if($tmp_ass->commitUpdates()){
+				$ok_count++;
+			}
+			else{
+				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+			}
+		}
+		$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+	}
+}
 
 ?>
 
@@ -125,9 +143,6 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					var aData = this.fnGetData(iRow);
 					var sValue = aData[iColumn];
 					
-					// Ignore checkboxes
-					if( sValue.indexOf("<input") >= 0 ) continue;
-					
 					// ignore empty values?
 					if (bIgnoreEmpty == true && sValue.length == 0) continue;
 			
@@ -187,13 +202,42 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
-				$("tfoot th.filtered").each( function ( i ) {
-					this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i+1) );
-					$('select', this).change( function () {
-						oTable.fnFilter( $(this).val(), i+1 );
-					} );
+				$("tfoot th").each( function ( i ) {
+					if( i == 2 || i == 3 || i == 6){
+						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i+1) );
+						$('select', this).change( function () {
+							oTable.fnFilter( $(this).val(), i+1 );
+						} );
+					}
 				} );
+				
+				
+				$("#chkBoxSelectAll").click(function() {
+					alert("ok");
+// 					$(".chkAllItem input:checkbox").attr('checked',this.checked);
+				});
+				
+// 				$(".chkAllItem input:checkbox").click(function(){
+// 				if($("#chkBoxSelectAll").attr('checked') == true && this.checked == false)
+// 				$("#chkBoxSelectAll").attr('checked',false);
+// 					
+// 				if(this.checked == true)
+// 					CheckSelectAll();
+// 				});
+// 				
+// 				function CheckSelectAll()
+// 				{
+// 					var flag = true;
+// 					$(".chkAllItem input:checkbox").each(function() {
+// 						if(this.checked == false)
+// 						flag = false;
+// 					});
+// 					$("#chkBoxSelectAll").attr('checked',flag);
+// 				}
+				
 			});
+			
+			
 		</script>
 		<?php
 			if( isset($db_status) && $db_status != "" ){
@@ -207,8 +251,13 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		</script>
 		<form id="formID" action="cra_validation.php" method="post" class="table_container">
 			<input type="hidden" name="validate_cra" value="true" />
+			<ul style="display: inline; color: black;">
+				<li>
+					<input type="checkbox" id="chkBoxSelectAll"> Tout (dé)séléctionner
+				</li>
+			</ul>
 			<p>
-				<table id="cra_validation_table">
+				<table id="cra_validation_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
 						<th>Date</th>
@@ -230,7 +279,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
 							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." class='chkAllItem'/></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 						}
 					?>
 					</tbody>
