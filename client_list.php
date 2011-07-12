@@ -66,7 +66,7 @@ $geny_client = new GenyClient();
 				<tbody>
 				<?php
 					foreach( $geny_client->getAllClients() as $client ){
-						echo "<tr><td>$client->name</td><td><a href='client_edit.php?load_client=true&client_id=$client->id'><img src='images/$web_config->theme/client_edit_small.png'></a></td><td><a href='client_remove.php?client_id=$client->id'><img src='images/$web_config->theme/client_remove_small.png'></a></td></tr>";
+						echo "<tr class='centered'><td>$client->name</td><td><a href='client_edit.php?load_client=true&client_id=$client->id'><img src='images/$web_config->theme/client_edit_small.png'></a></td><td><a href='client_remove.php?client_id=$client->id'><img src='images/$web_config->theme/client_remove_small.png'></a></td></tr>";
 					}
 				?>
 				</tbody>
