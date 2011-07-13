@@ -72,7 +72,12 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
 			}
 		}
-		$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+		if($ok_count > 0 ){
+			if($ok_count == 1)
+				$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+			else
+				$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+		}
 	}
 }
 
