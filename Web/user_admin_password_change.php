@@ -2,6 +2,7 @@
 // Variable to configure global behaviour
 $header_title = 'GenY Mobile - Mise à jour du mot de passe';
 $required_group_rights = 5;
+$disable_password_reset_redirection = true;
 
 include_once 'header.php';
 

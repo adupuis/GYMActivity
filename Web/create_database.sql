@@ -37,6 +37,12 @@ UPDATE Profiles SET profile_password = MD5('admin') WHERE profile_id=1;
 INSERT INTO Profiles VALUES (2,'test','ALongFirstName','AVeryLongLastName','test','admin@genymobile.com',true,false,3);
 UPDATE Profiles SET profile_password = MD5('test') WHERE profile_id=2;
 ALTER TABLE Profiles AUTO_INCREMENT = 1;
+INSERT INTO Profiles VALUES (3,'cravalec','Cédric','Ravalec','genymobile','cravalec@genymobile.com',true,true,2);
+UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=3;
+INSERT INTO Profiles VALUES (4,'azettor','Angélique','Zettor','genymobile','azettor@genymobile.com',true,true,2);
+UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=4;
+INSERT INTO Profiles VALUES (5,'adupuis','Arnaud','Dupuis','genymobile','adupuis@genymobile.com',true,true,1);
+UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=5;
 
 CREATE TABLE ProfileManagementData (
 	profile_management_data_id int auto_increment,

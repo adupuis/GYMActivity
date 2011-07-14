@@ -19,8 +19,8 @@ try {
     }
     $profile = new GenyProfile();
     $profile->loadProfileByUsername($_SESSION['USERID']);
-//     if( $profile->needs_password_reset )
-// 	header('Location: user_admin_password_change.php');
+    if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
+	header('Location: user_admin_password_change.php');
     $web_config = new GenyWebConfig();
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";

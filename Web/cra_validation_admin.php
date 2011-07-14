@@ -1,7 +1,7 @@
 <?php
 // Variable to configure global behaviour
 $header_title = 'GenY Mobile - Validation CRA';
-$required_group_rights = 5;
+$required_group_rights = 2;
 
 include_once 'header.php';
 include_once 'menu.php';
@@ -219,6 +219,13 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				
 			});
 			
+			$("#chkBoxSelectAll").click(function() {
+					alert("ok");
+// 					$(".chkAllItem input:checkbox").attr('checked',this.checked);
+				});
+			function onCheckBoxSelectAll(){
+				$(".chkAllItem").attr('checked',this.checked);
+			}
 			
 		</script>
 		<?php
@@ -235,13 +242,14 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll"> Tout (dé)séléctionner
+					<input type="checkbox" id="chkBoxSelectAll" onclick="onCheckBoxSelectAll()"> Tout (dé)séléctionner
 				</li>
 			</ul>
 			<p>
 				<table id="cra_validation_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
+						<th>Collab.</th>
 						<th>Date</th>
 						<th>Projet</th>
 						<th>Tâche</th>
@@ -254,25 +262,27 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 						$geny_ar = new GenyActivityReport();
 						$geny_ars = new GenyActivityReportStatus();
 						$geny_ars->loadActivityReportStatusByShortName('P_APPROVAL');
-						foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id=".$geny_ars->id,"profile_id=".$profile->id) ) as $ar ){
+						foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 							$tmp_activity = new GenyActivity( $ar->activity_id );
 							$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
+							$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
 							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." class='chkAllItem'/></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." class='chkAllItem'/></td><td>".GenyTools::getProfileDisplayName($tmp_profile)."</td><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
 						<th>Sel.</th>
-						<th class="filtered">Date</th>
-						<th class="filtered">Projet</th>
-						<th class="filtered">Tâche</th>
-						<th class="filtered">Charge (tâche)</th>
-						<th class="filtered">Charge (total jour)</th>
-						<th class="filtered">Status</th>
+						<th>Collab.</th>
+						<th>Date</th>
+						<th>Projet</th>
+						<th>Tâche</th>
+						<th>Charge (tâche)</th>
+						<th>Charge (total jour)</th>
+						<th>Status</th>
 					</tfoot>
 				</table>
 			</p>
