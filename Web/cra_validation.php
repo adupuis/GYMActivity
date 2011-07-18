@@ -18,15 +18,45 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 			$geny_activity = new GenyActivity();
 			$geny_ar = new GenyActivityReport();
 			$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];
+			$create_report = false;
 			if($day_load <= 8){
+				$create_report = true;
+			}
+			else{
+				if( $day_load > 12 ){
+					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
+				}
+				else{
+					$day_work_load_by_assignement = $geny_ar->getDayLoadByAssignement($profile->id,$day);
+					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier que l'assignement en cours autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum).
+					// Quand nous sommes ici le total des heures travaillés H est compris obligatoirement entre 8h et 12h (8 > H < 12).
+					$extra = '';
+					$tmp_input_ga = new GenyAssignement( $_POST['assignement_id'] );
+					if( $tmp_input_ga->overtime_allowed )
+						$create_report = true;
+					else{
+						for($k=0; $k < count($day_work_load_by_assignement); $k++ ){
+							$extra .= $day_work_load_by_assignement[$k]['activity_date']."|".$day_work_load_by_assignement[$k]['sum_activity_load']."|".$day_work_load_by_assignement[$k]['assignement_id'].",";
+							$tmp_ga = new GenyAssignement( $day_work_load_by_assignement[$k]['assignement_id'] );
+							// Ici nous ne nous soucions que de savoir si les heures supplémentaires sont autorisées sur une des assignations (soit une assignation dans la base ou l'assignation en cours de traitement les autorise).
+							// Si ce n'est pas le cas aucun rapport ne sera créé, autrement nous créons un rapport.
+							// Dans le process une heure supplémentaire doit être entrée avec la tâche spéciale 'Heures supplémentaires', la validation est ensuite humaine.
+							if( $tmp_ga->overtime_allowed ){
+								$db_status .= "<li class=\"status_message_success\">Heures supplémentaires autorisées sur l'assignation $day_work_load_by_assignement[$k]['assignement_id'].</li>\n";
+								$create_report = true;
+							}
+						}
+					}
+					if( !$create_report )
+						$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires ($extra).</li>\n";
+				}
+			}
+			if( $create_report ){
 				$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-				echo "<!-- Geny Activity ID: $geny_activity_id -->\n";
 				if( $geny_activity_id > -1 ){
 					$geny_ars = new GenyActivityReportStatus();
-					$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION'); 
-					echo "<!-- Inserting new activity report -->\n";
+					$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
 					$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-					echo "<!-- Geny Activity Report ID: $geny_ar_id -->\n";
 					if( $geny_ar_id > -1 )
 						$db_status .= "<li class=\"status_message_success\">Rapport enregistré pour le $day (en attente de validation utilisateur).</li>\n";
 					else
@@ -35,20 +65,6 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				else {
 					$geny_activity->removeActivity($geny_activity_id);
 					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
-				}
-			}
-			else{
-				if( $day_load > 12 ){
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
-				}
-				else{
-					$day_work_load_by_project = $geny_ar->getDayLoadByAssignement($profile->id,$day);
-					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
-					$extra = '';
-					for($k=0; $k < count($day_work_load_by_project); $k++ ){
-						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['assignement_id'].",";
-					}
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière ($extra).</li>\n";
 				}
 			}
 		}
