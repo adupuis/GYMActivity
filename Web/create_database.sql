@@ -49,6 +49,7 @@ CREATE TABLE ProfileManagementData (
 	profile_id int not null,
 	profile_management_data_salary float not null,
 	profile_management_data_recruitement_date date not null,
+	profile_is_billable boolean not null default true,
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
 );
