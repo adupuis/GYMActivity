@@ -60,7 +60,7 @@ $geny_profile = new GenyProfile();
 			<input type="hidden" name="create_project" value="true" />
 			<p>
 				<label for="project_name">Nom du projet</label>
-				<input name="project_name" id="project_name" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="project_name" id="project_name" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="project_client">Client</label>
