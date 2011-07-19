@@ -225,9 +225,9 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
 					if( i == 2 || i == 3 || i == 6){
-						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i+1) );
+						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
-							oTable.fnFilter( $(this).val(), i+1 );
+							oTable.fnFilter( $(this).val(), i );
 						} );
 					}
 				} );
