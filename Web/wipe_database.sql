@@ -23,4 +23,5 @@ DROP TABLE AccessLogs;
 DROP TABLE Ideas;
 DROP TABLE IdeaStatus;
 DROP TABLE IdeaMessages;
+DROP TABLE IdeaVotes;
 COMMIT;
