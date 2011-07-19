@@ -184,11 +184,11 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
-				$("tfoot th.filtered").each( function ( i ) {
-					if( i == 2 || i == 3 || i == 6){
-						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i+1) );
+				$("tfoot th").each( function ( i ) {
+					if( i == 1 || i == 3 || i  == 4 ){
+						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
-							oTable.fnFilter( $(this).val(), i+1 );
+							oTable.fnFilter( $(this).val(), i );
 						} );
 					}
 				} );
@@ -210,6 +210,9 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 			$(".status_message").fadeOut("slow");
 			});
 		</script>
+		<style>
+			@import 'styles/default/cra_validation_admin.css';
+		</style>
 		<form id="formID" action="cra_validation.php" method="post" class="table_container">
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
