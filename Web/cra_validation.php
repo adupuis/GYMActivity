@@ -231,33 +231,12 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 						} );
 					}
 				} );
-				
-				
-				$("#chkBoxSelectAll").click(function() {
-					alert("ok");
-// 					$(".chkAllItem input:checkbox").attr('checked',this.checked);
-				});
-				
-// 				$(".chkAllItem input:checkbox").click(function(){
-// 				if($("#chkBoxSelectAll").attr('checked') == true && this.checked == false)
-// 				$("#chkBoxSelectAll").attr('checked',false);
-// 					
-// 				if(this.checked == true)
-// 					CheckSelectAll();
-// 				});
-// 				
-// 				function CheckSelectAll()
-// 				{
-// 					var flag = true;
-// 					$(".chkAllItem input:checkbox").each(function() {
-// 						if(this.checked == false)
-// 						flag = false;
-// 					});
-// 					$("#chkBoxSelectAll").attr('checked',flag);
-// 				}
-				
+			
 			});
 			
+			function onCheckBoxSelectAll(){
+				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
+			}
 			
 		</script>
 		<?php
@@ -274,7 +253,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll"> Tout (dé)séléctionner
+					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /> Tout (dé)séléctionner
 				</li>
 			</ul>
 			<p>
@@ -300,7 +279,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
 							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." class='chkAllItem'/></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 						}
 					?>
 					</tbody>

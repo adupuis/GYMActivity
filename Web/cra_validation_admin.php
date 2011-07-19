@@ -193,38 +193,10 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					}
 				} );
 				
-				
-				$("#chkBoxSelectAll").click(function() {
-					alert("ok");
-// 					$(".chkAllItem input:checkbox").attr('checked',this.checked);
-				});
-				
-// 				$(".chkAllItem input:checkbox").click(function(){
-// 				if($("#chkBoxSelectAll").attr('checked') == true && this.checked == false)
-// 				$("#chkBoxSelectAll").attr('checked',false);
-// 					
-// 				if(this.checked == true)
-// 					CheckSelectAll();
-// 				});
-// 				
-// 				function CheckSelectAll()
-// 				{
-// 					var flag = true;
-// 					$(".chkAllItem input:checkbox").each(function() {
-// 						if(this.checked == false)
-// 						flag = false;
-// 					});
-// 					$("#chkBoxSelectAll").attr('checked',flag);
-// 				}
-				
 			});
 			
-			$("#chkBoxSelectAll").click(function() {
-					alert("ok");
-// 					$(".chkAllItem input:checkbox").attr('checked',this.checked);
-				});
 			function onCheckBoxSelectAll(){
-				$(".chkAllItem").attr('checked',this.checked);
+				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
 			
 		</script>
@@ -242,7 +214,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onclick="onCheckBoxSelectAll()"> Tout (dé)séléctionner
+					<input type="checkbox" id="chkBoxSelectAll" onclick="onCheckBoxSelectAll()"/> Tout (dé)séléctionner
 				</li>
 			</ul>
 			<p>
@@ -270,7 +242,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
 							$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
 							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." class='chkAllItem'/></td><td>".GenyTools::getProfileDisplayName($tmp_profile)."</td><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".GenyTools::getProfileDisplayName($tmp_profile)."</td><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 						}
 					?>
 					</tbody>
