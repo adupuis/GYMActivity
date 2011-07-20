@@ -455,6 +455,10 @@ li.task_list a {
 	background-image: url(../../images/default/task_list.png);
 }
 
+li.user_admin_password_change a {
+	background-image: url(../../images/default/security_generic.png);
+}
+
 /* End of main dock style */
 
 /* Start of bottom dock style */
