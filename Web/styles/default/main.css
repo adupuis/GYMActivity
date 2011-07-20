@@ -696,6 +696,21 @@ p.mainarea_title span.cra_list {
 	background-image: url(../../images/default/cra_list.png);
 }
 
+p.mainarea_title span.conges_add {
+	background-image: url(../../images/default/conges_add.png);
+}
+p.mainarea_title span.conges_edit {
+	background-image: url(../../images/default/conges_edit.png);
+}
+
+p.mainarea_title span.conges_remove {
+	background-image: url(../../images/default/conges_remove.png);
+}
+
+p.mainarea_title span.conges_list {
+	background-image: url(../../images/default/conges_list.png);
+}
+
 table.object_list {
 	border-collapse:collapse;
 	margin: auto;
