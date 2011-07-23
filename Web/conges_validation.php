@@ -1,7 +1,7 @@
 <?php
 // Variable to configure global behaviour
 $header_title = 'GenY Mobile - Validation congés';
-$required_group_rights = 6;
+$required_group_rights = 5;
 
 include_once 'header.php';
 include_once 'menu.php';
@@ -11,44 +11,55 @@ $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
 $db_status = "";
 
-if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
+if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 	$html_worked_days_table = '';
 	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
-		foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
-			$geny_activity = new GenyActivity();
-			$geny_ar = new GenyActivityReport();
-			$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];
-			$create_report = false;
-			if($day_load <= 8){
-				$create_report = true;
-			}
-			else{
-				
-				$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires sur des jours de congés.</li>\n";
-			}
-			if( $create_report ){
-				$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-				if( $geny_activity_id > -1 ){
-					$geny_ars = new GenyActivityReportStatus();
-					$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-					$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-					if( $geny_ar_id > -1 )
-						$db_status .= "<li class=\"status_message_success\">Congés enregistrés pour le $day (en attente de validation utilisateur).</li>\n";
-					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement des congés du $day.</li>\n";
+		$time_assignement_start_date = strtotime($_POST['assignement_start_date']);
+		$time_assignement_end_date = strtotime($_POST['assignement_end_date']);
+		$tmp_input_ga = new GenyAssignement( $_POST['assignement_id'] );
+		$tmp_project = new GenyProject( $tmp_input_ga->project_id );
+		$time_project_start_date = strtotime( $tmp_project->start_date );
+		$time_project_end_date = strtotime( $tmp_project->end_date );
+		if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
+			foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
+				$geny_activity = new GenyActivity();
+				$geny_ar = new GenyActivityReport();
+				$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];
+				$create_report = false;
+				if($day_load <= 8){
+					$create_report = true;
 				}
-				else {
-					$geny_activity->removeActivity($geny_activity_id);
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
+				else{
+					
+					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires sur des jours de congés.</li>\n";
+				}
+				if( $create_report ){
+					$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
+					if( $geny_activity_id > -1 ){
+						$geny_ars = new GenyActivityReportStatus();
+						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
+						if( $geny_ar_id > -1 )
+							$db_status .= "<li class=\"status_message_success\">Congés enregistrés pour le $day (en attente de validation utilisateur).</li>\n";
+						else
+							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement des congés du $day.</li>\n";
+					}
+					else {
+						$geny_activity->removeActivity($geny_activity_id);
+						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
+					}
 				}
 			}
+		}
+		else {
+			$db_status .= "<li class=\"status_message_error\">Erreur: les dates saisies sont en dehors des bornes du projet.</li>\n";
 		}
 	}
 	else{
 		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
 	}
 }
-else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
+else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true"){
 	if( isset( $_POST['activity_report_id'] ) ){
 		$tmp_ars = new GenyActivityReportStatus();
 		$tmp_ars->loadActivityReportStatusByShortName('P_APPROVAL');
@@ -183,7 +194,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
-						"sLengthMenu": "Rapport par page _MENU_",
+						"sLengthMenu": "Congés par page _MENU_",
 						"sZeroRecords": "Aucun résultat",
 						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
 						"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
@@ -224,8 +235,8 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			$(".status_message").fadeOut("slow");
 			});
 		</script>
-		<form id="formID" action="cra_validation.php" method="post" class="table_container">
-			<input type="hidden" name="validate_cra" value="true" />
+		<form id="formID" action="conges_validation.php" method="post" class="table_container">
+			<input type="hidden" name="validate_conges" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
 					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /> Tout (dé)séléctionner
@@ -253,8 +264,9 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							if( strripos($tmp_project->name,'congés') !== false ){
+								echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							}
 						}
 					?>
 					</tbody>

@@ -1,7 +1,7 @@
 <?php
 // Variable to configure global behaviour
 $header_title = 'GenY Mobile - Ajout congés';
-$required_group_rights = 6;
+$required_group_rights = 5;
 
 include_once 'header.php';
 include_once 'menu.php';
