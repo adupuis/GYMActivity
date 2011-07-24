@@ -58,6 +58,18 @@ ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 -- TODO: Ajouter le support des entretiens annuels
 -- TODO: Ajouter le support des profiles tags
 
+
+CREATE TABLE Notifications (
+	notification_id int auto_increment,
+	profile_id int not null,
+	notification_text text not null default 'Undefined',
+	notification_is_unread bool default true,
+	primary key(notification_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+);
+
+ALTER TABLE Notifications AUTO_INCREMENT=1;
+
 CREATE TABLE Clients (
 	client_id int auto_increment,
 	client_name varchar(200) not null default 'Undefined',

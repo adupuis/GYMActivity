@@ -15,6 +15,9 @@ include_once 'menu.php';
 
 <div id="maindock">
 	<ul>
+		<?php
+			include 'backend/widgets/notifications.dock.widget.php';
+		?>
 		<li class="idea_add">
 			<a href="idea_add.php">
 				<span class="dock_item_title">Ajouter une idée</span><br/>

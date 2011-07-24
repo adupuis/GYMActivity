@@ -459,6 +459,10 @@ li.user_admin_password_change a {
 	background-image: url(../../images/default/security_generic.png);
 }
 
+li.notifications a {
+	background-image: url(../../images/default/notification.png);
+}
+
 /* End of main dock style */
 
 /* Start of bottom dock style */
@@ -537,6 +541,20 @@ div#bottomdock a span.dock_item_content {
 
 
 /* End of bottom dock style */
+
+.notifications_count {
+	position: absolute;
+	margin-left: 50px;
+	margin-top: 10px;
+	color: white;
+	background-color: red;
+	height: 24px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	width: 24px;
+	vertical-align: middle;
+	text-align: center;
+}
 
 ul.status_message {
 	text-align: left;
