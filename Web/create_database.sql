@@ -62,8 +62,9 @@ ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 CREATE TABLE Notifications (
 	notification_id int auto_increment,
 	profile_id int not null,
-	notification_text text not null default 'Undefined',
+	notification_text text not null,
 	notification_is_unread bool default true,
+	notification_type varchar(50) not null default 'info',
 	primary key(notification_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
 );
