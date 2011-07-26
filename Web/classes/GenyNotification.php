@@ -74,7 +74,7 @@ class GenyNotification {
 		if( ! is_numeric($id) )
 			return -1;
 		
-		$query = "SELECT COUNT(notification_id) as notif_count FROM Notifications WHERE profile_id=$id";
+		$query = "SELECT COUNT(notification_id) as notif_count FROM Notifications WHERE profile_id=$id AND notification_is_unread=true";
 		$result = mysql_query($query, $this->handle);
 		if (mysql_num_rows($result) == 1){
 			$row = mysql_fetch_row($result);
@@ -109,7 +109,7 @@ class GenyNotification {
 		}
 		$query = rtrim($query, ",");
 		$query .= " WHERE notification_id=".$this->id;
-		if( $this->config->debug )
+// 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyNotification MySQL query : $query -->\n";
 		return mysql_query($query, $this->handle);
 	}
