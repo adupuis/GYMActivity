@@ -21,6 +21,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
 		if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
+			$ok_count=0;
 			foreach( GenyTools::getWorkedDaysList($time_assignement_start_date, $time_assignement_end_date ) as $day ){
 				$geny_activity = new GenyActivity();
 				$geny_ar = new GenyActivityReport();
@@ -67,12 +68,21 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 							$db_status .= "<li class=\"status_message_success\">Rapport enregistré pour le $day (en attente de validation utilisateur).</li>\n";
 						else
 							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement du rapport du $day.</li>\n";
+						$ok_count++;
 					}
 					else {
 						$geny_activity->removeActivity($geny_activity_id);
 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
 					}
 				}
+			}
+			
+			if($ok_count > 0){
+				$notif = new GenyNotification();
+				// Notification des admins
+				$notif->insertNewGroupNotification(1,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+				// Notification des superusers
+				$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
 			}
 		}
 		else {
