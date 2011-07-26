@@ -30,6 +30,12 @@ class GenyNotification {
 			return -1;
 		}
 	}
+	public function insertNewGroupNotification($rights_group_id,$text,$type="info"){
+		$tmp_profile = new GenyProfile();
+		foreach( $tmp_profile->getProfileByRightsGroup($rights_group_id) as $p ){
+			$this->insertNewNotification( $p->id,$text,$type );
+		}
+	}
 	public function getNotificationsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
