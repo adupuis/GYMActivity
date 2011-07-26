@@ -75,6 +75,11 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 			}
 		}
 		if($ok_count > 0 ){
+			$notif = new GenyNotification();
+			// Notification des admins
+			$notif->insertNewGroupNotification(1,"$screen_name viens de déposer une demande de $ok_count jour(s) de congés, merci de faire le nécessaire.");
+			// Notification des superusers
+			$notif->insertNewGroupNotification(2,"$screen_name viens de déposer une demande de $ok_count jour(s) de congés, merci de faire le nécessaire.");
 			if($ok_count == 1)
 				$db_status .= "<li class=\"status_message_success\">$ok_count jour de congés est désormais en attente de validation par le management.</li>\n";
 			else
