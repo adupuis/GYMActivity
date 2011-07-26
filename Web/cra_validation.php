@@ -109,6 +109,11 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			}
 		}
 		if($ok_count > 0 ){
+			$notif = new GenyNotification();
+			// Notification des admins
+			$notif->insertNewGroupNotification(1,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+			// Notification des superusers
+			$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
 			if($ok_count == 1)
 				$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
 			else
@@ -298,8 +303,9 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							if( strripos($tmp_project->name,'congés') === false ){
+								echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
+							}
 						}
 					?>
 					</tbody>
