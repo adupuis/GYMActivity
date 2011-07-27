@@ -15,30 +15,10 @@ include_once 'menu.php';
 
 <div id="maindock">
 	<ul>
-		<li class="cra_add">
-			<a href="cra_add.php">
-				<span class="dock_item_title">Ajouter un CRA</span><br/>
-				<span class="dock_item_content">Ajouter un rapport d'activité pour une période donnée.</span>
-			</a>
-		</li>
-		<li class="cra_edit">
-			<a href="cra_validation.php">
-				<span class="dock_item_title">Valider des CRA</span><br/>
-				<span class="dock_item_content">Voir la liste des CRA non validés afin de les valider.</span>
-			</a>
-		</li>
-		<li class="cra_remove">
-			<a href="cra_remove.php">
-				<span class="dock_item_title">Supprimer un CRA</span><br/>
-				<span class="dock_item_content">Supprimer un rapport d'activité précédemment saisi.</span>
-			</a>
-		</li>
-		<li class="cra_list">
-			<a href="cra_list.php">
-				<span class="dock_item_title">Lister mes CRA</span><br/>
-				<span class="dock_item_content">Voir la liste de mes CRAs.</span>
-			</a>
-		</li>
+		<?php
+			include 'backend/widgets/cra_add.dock.widget.php';
+			include 'backend/widgets/cra_validation.dock.widget.php';
+		?>
 	</ul>
 </div>
 

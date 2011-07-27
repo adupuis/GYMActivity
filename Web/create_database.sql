@@ -8,7 +8,7 @@ CREATE TABLE RightsGroups (
 	rights_group_name varchar(100) not null default 'Undefined',
 	rights_group_description text,
 	primary key(rights_group_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE RightsGroups AUTO_INCREMENT = 1;
 INSERT INTO RightsGroups VALUES(1,'Admins','Administrators of the application');
 INSERT INTO RightsGroups VALUES(2,'SuperUsers','Users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
@@ -31,15 +31,15 @@ CREATE TABLE Profiles (
 	primary key(profile_id),
 	unique key profile_login (profile_login),
 	foreign key(rights_group_id) references RightsGroups(rights_group_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO Profiles VALUES (1,'admin','','','admin','admin@genymobile.com',true,false,1);
 UPDATE Profiles SET profile_password = MD5('admin') WHERE profile_id=1;
 INSERT INTO Profiles VALUES (2,'test','ALongFirstName','AVeryLongLastName','test','admin@genymobile.com',true,false,3);
 UPDATE Profiles SET profile_password = MD5('test') WHERE profile_id=2;
 ALTER TABLE Profiles AUTO_INCREMENT = 1;
-INSERT INTO Profiles VALUES (3,'cravalec','Cédric','Ravalec','genymobile','cravalec@genymobile.com',true,true,2);
+INSERT INTO Profiles VALUES (3,'cravalec','Cédric','Ravalec','genymobile','cravalec@genymobile.com',true,true,1);
 UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=3;
-INSERT INTO Profiles VALUES (4,'azettor','Angélique','Zettor','genymobile','azettor@genymobile.com',true,true,2);
+INSERT INTO Profiles VALUES (4,'azettor','Angélique','Zettor','genymobile','azettor@genymobile.com',true,true,1);
 UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=4;
 INSERT INTO Profiles VALUES (5,'adupuis','Arnaud','Dupuis','genymobile','adupuis@genymobile.com',true,true,1);
 UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=5;
@@ -52,7 +52,7 @@ CREATE TABLE ProfileManagementData (
 	profile_is_billable boolean not null default true,
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
 -- TODO: Ajouter le support des entretiens annuels
@@ -67,7 +67,7 @@ CREATE TABLE Notifications (
 	notification_type varchar(50) not null default 'info',
 	primary key(notification_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ALTER TABLE Notifications AUTO_INCREMENT=1;
 
@@ -75,7 +75,7 @@ CREATE TABLE Clients (
 	client_id int auto_increment,
 	client_name varchar(200) not null default 'Undefined',
 	primary key(client_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Clients AUTO_INCREMENT = 1;
 INSERT INTO Clients VALUES(1,'GenY Mobile');
 INSERT INTO Clients VALUES(NULL,'Orange Vallée');
@@ -86,7 +86,7 @@ CREATE TABLE ProjectTypes (
 	project_type_name varchar(200) not null default 'Undefined',
 	project_type_description varchar(200),
 	primary key(project_type_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProjectTypes AUTO_INCREMENT = 1;
 INSERT INTO ProjectTypes VALUES(1,'Régie','Employé à disposition du client dans les bureaux du client.');
 INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projets au forfait.');
@@ -97,7 +97,7 @@ CREATE TABLE ProjectStatus (
 	project_status_name varchar(200),
 	project_status_description varchar(200),
 	primary key(project_status_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProjectStatus AUTO_INCREMENT = 1;
 INSERT INTO ProjectStatus VALUES(1,'En cours','Projet en cours sans risques identifiés ni avérés.');
 INSERT INTO ProjectStatus VALUES(2,'Fermé','Projet fermé (plus aucune imputation possible).');
@@ -120,7 +120,7 @@ CREATE TABLE Projects (
 	foreign key(client_id) references Clients(client_id) ON DELETE CASCADE,
 	foreign key(project_type_id) references ProjectTypes(project_type_id) ON DELETE CASCADE,
 	foreign key(project_status_id) references ProjectStatus(project_status_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Projects AUTO_INCREMENT = 1;
 INSERT INTO Projects VALUES(1,'Administratif 2011','Tâches administratives (travaux internes, management, etc.).',1,'Paris','2011-01-01','2011-12-31',2,1);
 INSERT INTO Projects VALUES(2,'Congés 2011','Tous les congés.',1,'None','2011-01-01','2011-12-31',2,1);
@@ -132,7 +132,7 @@ CREATE TABLE Tasks (
 	task_name varchar(200) not null default 'Undefined',
 	task_description text,
 	primary key(task_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Tasks AUTO_INCREMENT = 1;
 INSERT INTO Tasks VALUES(NULL,'Avant Vente','Avant vente de projet (chiffrage, proposition commerciale, présentation client, etc.).');
 INSERT INTO Tasks VALUES(NULL,'Formation Interne','Formation interne à GenY Mobile.');
@@ -163,14 +163,16 @@ CREATE TABLE ProjectTaskRelations (
 	primary key(project_task_relation_id),
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProjectTaskRelations AUTO_INCREMENT = 1;
-INSERT INTO ProjectTaskRelations VALUES(NULL,1,1);
-INSERT INTO ProjectTaskRelations VALUES(NULL,3,1);
-INSERT INTO ProjectTaskRelations VALUES(NULL,1,2);
-INSERT INTO ProjectTaskRelations VALUES(NULL,3,2);
-INSERT INTO ProjectTaskRelations VALUES(NULL,1,3);
-INSERT INTO ProjectTaskRelations VALUES(NULL,3,3);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,1,1);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,3,1);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,1,2);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,3,2);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,1,3);
+-- INSERT INTO ProjectTaskRelations VALUES(NULL,3,3);
+
+INSERT INTO `ProjectTaskRelations` VALUES (NULL,1,3),(NULL,3,3),(NULL,1,2),(NULL,3,2),(NULL,1,1),(NULL,3,1),(NULL,1,4),(NULL,1,5),(NULL,1,6),(NULL,2,7),(NULL,2,8),(NULL,2,9),(NULL,2,10),(NULL,2,11),(NULL,2,12),(NULL,2,13),(NULL,2,14),(NULL,2,15),(NULL,2,16),(NULL,2,17),(NULL,2,18),(NULL,2,19),(NULL,2,20),(NULL,3,4),(NULL,3,5),(NULL,3,6),(NULL,4,7),(NULL,4,8),(NULL,4,9),(NULL,4,10),(NULL,4,11),(NULL,4,12),(NULL,4,13),(NULL,4,14),(NULL,4,15),(NULL,4,16),(NULL,4,17),(NULL,4,18),(NULL,4,19),(NULL,4,20);
 
 CREATE TABLE Assignements (
 	assignement_id int auto_increment,
@@ -180,8 +182,9 @@ CREATE TABLE Assignements (
 	primary key(assignement_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
+INSERT INTO `Assignements` VALUES (NULL,3,1,0),(NULL,4,1,0),(NULL,5,1,0),(NULL,3,4,0),(NULL,3,2,0),(NULL,4,2,0),(NULL,5,2,0),(NULL,3,3,0),(NULL,4,3,0),(NULL,5,3,0),(NULL,4,4,0),(NULL,5,4,0);
 
 CREATE TABLE AssignementFees (
 	assignement_fee_id int auto_increment,
@@ -191,7 +194,7 @@ CREATE TABLE AssignementFees (
 	primary key(assignement_fee_id),
 	foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ALTER TABLE AssignementFees AUTO_INCREMENT = 1;
 
@@ -201,7 +204,7 @@ CREATE TABLE DailyFees (
 	daily_fee_start_date date not null,
 	primary key(daily_fee_id),
 	foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE DailyFees AUTO_INCREMENT = 1;
 
 CREATE TABLE Activities (
@@ -214,7 +217,7 @@ CREATE TABLE Activities (
 	primary key(activity_id),
 	foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Activities AUTO_INCREMENT = 1;
 
 CREATE TABLE ActivityReportStatus (
@@ -223,7 +226,7 @@ CREATE TABLE ActivityReportStatus (
 	activity_report_status_name varchar(200) not null default 'Undefined',
 	activity_report_status_description text,
 	primary key(activity_report_status_id,activity_report_status_shortname)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ALTER TABLE ActivityReportStatus AUTO_INCREMENT = 1;
 INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','En attente de validation utilisateur',"Le rapport d'activité a été pré-soumis et est en attente de validation par l'utilisateur.");
@@ -245,7 +248,7 @@ CREATE TABLE ActivityReports (
 	foreign key(activity_id) references Activities(activity_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(activity_report_status_id) references ActivityReportStatus(activity_report_status_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ActivityReports AUTO_INCREMENT = 1;
 
 CREATE TABLE AccessLogs (
@@ -257,7 +260,7 @@ CREATE TABLE AccessLogs (
 	access_login varchar(200) not null default 'Undefined',
 	access_password varchar(200) not null default 'Undefined',
 	primary key(access_log_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE AccessLogs AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaStatus (
@@ -265,7 +268,7 @@ CREATE TABLE IdeaStatus (
 	idea_status_name varchar(200) not null,
 	idea_status_description varchar(200) not null,
 	primary key(idea_status_id)
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IdeaStatus AUTO_INCREMENT=1;
 INSERT INTO IdeaStatus VALUES (NULL,'No status','Idea have not yet been reviewed.');
 INSERT INTO IdeaStatus VALUES (NULL,'Accepted','Idea have been accepted for implementation.');
@@ -289,7 +292,7 @@ CREATE TABLE Ideas (
 	primary key(idea_id),
 	foreign key(idea_submitter) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_status_id) references IdeaStatus(idea_status_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Ideas AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaMessages (
@@ -300,7 +303,7 @@ CREATE TABLE IdeaMessages (
 	primary key(idea_message_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IdeaMessages AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaVotes (
@@ -312,7 +315,7 @@ CREATE TABLE IdeaVotes (
         primary key(idea_vote_id),
         foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
         foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
-);
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IdeaVotes AUTO_INCREMENT=1;
 
 COMMIT;
