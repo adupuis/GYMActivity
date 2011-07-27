@@ -57,6 +57,53 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
 	}
 }
+else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
+	if( isset( $_POST['activity_report_id'] ) ){
+		$tmp_ars = new GenyActivityReportStatus();
+		$tmp_ars->loadActivityReportStatusByShortName('APPROVED');
+		$ok_count=0;
+		$count_by_profile = array();
+		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
+			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
+			$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+			if($tmp_ass->commitUpdates()){
+				$ok_count++;
+				$tmp_activity = new GenyActivity( $tmp_ar_id );
+				$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
+				$tmp_project = new GenyProject( $tmp_assignement->project_id );
+				if(isset($count_by_profile[$tmp_ass->profile_id])){
+					if( strripos($tmp_project->name,'congés') !== false )
+						$count_by_profile[$tmp_ass->profile_id]['conges']++;
+					else
+						$count_by_profile[$tmp_ass->profile_id]['cra']++;
+				}
+				else{
+					$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
+					if( strripos($tmp_project->name,'congés') !== false )
+						$count_by_profile[$tmp_ass->profile_id]['conges']++;
+					else
+						$count_by_profile[$tmp_ass->profile_id]['cra']++;
+				}
+			}
+			else{
+				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+			}
+		}
+		if($ok_count > 0 ){
+			$notif = new GenyNotification();
+			foreach ($count_by_profile as $id => $value){
+				if( $value['conges'] > 0 )
+					$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être acceptés.","ok");
+				if( $value['cra'] > 0 )
+					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
+			}
+			if($ok_count == 1)
+				$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+			else
+				$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+		}
+	}
+}
 
 ?>
 
@@ -213,7 +260,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		<style>
 			@import 'styles/default/cra_validation_admin.css';
 		</style>
-		<form id="formID" action="cra_validation.php" method="post" class="table_container">
+		<form id="formID" action="cra_validation_admin.php" method="post" class="table_container">
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
