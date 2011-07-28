@@ -1,57 +1,37 @@
 <?php
 session_start();
-function __autoload($class_name) {
-    include 'classes/'.$class_name . '.php';
-}
+$required_group_rights = 6;
+$auth_granted = false;
+
 header('Content-type:text/javascript;charset=UTF-8');
+
+include_once 'ajax_authent_checking.php';
+
 try {
-    $checkId_obj = new CheckIdentity();
-    $profiles = array();
-    if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
-	if( $checkId_obj->isAllowed($_SESSION['USERID'],1) ){
-		$handle = mysql_connect("localhost","genymobile","toto");
-		mysql_select_db("GYMActivity");
-		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles WHERE md5(profile_login)='$username'";
-		$result = mysql_query($query, $handle);
-		$retArray = array();
-		while ($row = mysql_fetch_row($result)) {
-			$retArray[] = $row;
+	$profiles = array();
+	if($auth_granted){
+		$tmp_profile = new GenyProfile();
+		$results = array();
+		$term="";
+		if(isset($_POST['term']))
+			$term = $_POST['term'];
+		else if( isset($_GET['term']))
+			$term = $_GET['term'];
+		
+		if( $term != "" )
+			$results = $tmp_profile->searchProfiles($_GET['term']);
+		else
+			$results = $tmp_profile->getAllProfiles();
+		foreach( $results as $p ){
+			if( $p->firstname == "" && $p->lastname == "")
+				$p->firstname = $p->login;
+			$profiles[] = array( "value" => $p->login, "label" => $p->firstname." ".$p->lastname );
 		}
-// 		$idx=0;
-// 		foreach($result as $row){
-// 			foreach($row as $key => $value) {
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 				$profiles[$idx][''] = $row[''];
-// 			}
-// 		}
-		$data = json_encode($retArray);
-		$ret = "{data:" . $data .",\n";
-		$ret .= "pageInfo:{totalRowNum:" . $totalRec . "},\n";
-		$ret .= "recordType : 'array'}";
-		echo $ret;
+		$data = json_encode($profiles);
+		echo $data;
 	}
-	else
-		$data = json_encode(array('error'=>'User not allowed'));
-		$ret = "{data:" . $data .",\n";
-		$ret .= "pageInfo:{totalRowNum:" . $totalRec . "},\n";
-		$ret .= "recordType : 'array'}";
-		echo $ret;
-    }
-    else {
-	$data = json_encode(array('error'=>'Authentication required.'));
-	$ret = "{data:" . $data .",\n";
-	$ret .= "pageInfo:{totalRowNum:" . $totalRec . "},\n";
-	$ret .= "recordType : 'array'}";
-	echo $ret;
-    }
 } catch (Exception $e) {
-    echo $e->getMessage(), "\n";
+    echo "Exception: ".$e->getMessage(), "\n";
 }
 
 ?>
