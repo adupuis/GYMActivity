@@ -98,9 +98,9 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
 			}
 			if($ok_count == 1)
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+				$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
 			else
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+				$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
 		}
 	}
 }
