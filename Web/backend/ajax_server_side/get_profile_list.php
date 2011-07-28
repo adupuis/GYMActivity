@@ -6,20 +6,17 @@ $auth_granted = false;
 header('Content-type:text/javascript;charset=UTF-8');
 
 include_once 'ajax_authent_checking.php';
+include_once 'ajax_toolbox.php';
 
 try {
 	$profiles = array();
 	if($auth_granted){
 		$tmp_profile = new GenyProfile();
 		$results = array();
-		$term="";
-		if(isset($_POST['term']))
-			$term = $_POST['term'];
-		else if( isset($_GET['term']))
-			$term = $_GET['term'];
+		$term = getParam("term");
 		
 		if( $term != "" )
-			$results = $tmp_profile->searchProfiles($_GET['term']);
+			$results = $tmp_profile->searchProfiles($term);
 		else
 			$results = $tmp_profile->getAllProfiles();
 		foreach( $results as $p ){
