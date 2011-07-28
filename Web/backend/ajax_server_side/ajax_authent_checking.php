@@ -56,6 +56,7 @@ try {
     //echo $e->getMessage(), "\n";
 }
 
-session_destroy();
+if( $api_key != "" )
+	session_destroy();
 
 ?>
