@@ -71,6 +71,16 @@ CREATE TABLE Notifications (
 
 ALTER TABLE Notifications AUTO_INCREMENT=1;
 
+CREATE TABLE ApiKeys (
+	api_key_id int auto_increment,
+	profile_id int not null,
+	api_key_data text not null,
+	primary key(api_key_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE ApiKeys AUTO_INCREMENT=1;
+
 CREATE TABLE Clients (
 	client_id int auto_increment,
 	client_name varchar(200) not null default 'Undefined',
