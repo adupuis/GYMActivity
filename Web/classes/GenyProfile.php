@@ -37,16 +37,17 @@ class GenyProfile {
 			return -1;
 		}
 	}
-	public function getProfilesListWithRestrictions($restrictions){
+	public function getProfilesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
 		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string($restriction_type);
 			foreach($restrictions as $key => $value) {
 				$query .= $value;
 				if($key != $last_index){
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -70,6 +71,10 @@ class GenyProfile {
 		}
 // 		mysql_close();
 		return $profile_list;
+	}
+	public function searchProfiles($term){
+		$q = mysql_real_escape_string($term);
+		return $this->getProfilesListWithRestrictions( array("profile_login LIKE '%$q%'","profile_firstname LIKE '%$q%'","profile_lastname LIKE '%$q%'"), "OR" );
 	}
 	public function getAllProfiles(){
 		return $this->getProfilesListWithRestrictions( array() );
