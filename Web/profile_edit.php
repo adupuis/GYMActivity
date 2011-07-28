@@ -162,15 +162,15 @@ else{
 			</p>
 			<p>
 				<label for="profile_firstname">Prénom</label>
-				<input name="profile_firstname" id="profile_firstname" value="<?php echo $geny_profile->firstname ?>" type="text" class="validate[optional,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_firstname" id="profile_firstname" value="<?php echo $geny_profile->firstname ?>" type="text" class="validate[optional,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_lastname">Nom de famille</label>
-				<input name="profile_lastname" id="profile_lastname" value="<?php echo $geny_profile->lastname ?>" type="text" class="validate[optional,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_lastname" id="profile_lastname" value="<?php echo $geny_profile->lastname ?>" type="text" class="validate[optional,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_password">Mot de passe</label>
-				<input name="profile_password" id="profile_password" type="password" class="validate[optional,custom[onlyLetter],length[8,100]] text-input" />
+				<input name="profile_password" id="profile_password" type="password" class="validate[optional,length[8,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_email">E-Mail</label>
