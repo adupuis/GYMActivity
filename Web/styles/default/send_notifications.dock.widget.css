@@ -1,0 +1,38 @@
+form{
+	margin:10px auto 0;
+	padding:10px;
+	width:300px;
+}
+
+form p{
+	margin-bottom:15px;
+}
+form p:last-child{ /* Sélecteur avancé pour sélectionner le dernier paragraphe du formulaire */
+	margin-bottom:0;
+}
+label{
+	cursor:pointer;
+	display:block;
+	float:left;
+	font-size:15px;
+	font-weight:bold;
+	line-height:28px;
+	margin-bottom:5px;
+	width:100px;
+}
+
+form select {
+	cursor:pointer;
+	display:block;
+/* 	float:left; */
+	font-size:14px;
+	font-weight:bold;
+	line-height:28px;
+	margin-bottom:5px;
+	width:45px;
+	text-align: center;
+}
+
+form input[type=text] {
+	width: 150px;
+}
