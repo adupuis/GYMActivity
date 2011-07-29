@@ -1,6 +1,5 @@
 <?php
 
-session_start();
 function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }
@@ -13,6 +12,8 @@ try {
 	else if( isset($_GET['api_key']))
 		$api_key = $_GET['api_key'];
 	
+	if( $api_key != "" )
+		session_start();
 	
 	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
