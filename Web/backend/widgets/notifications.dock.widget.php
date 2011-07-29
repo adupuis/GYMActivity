@@ -47,9 +47,14 @@ $html .= '</ul>';
 		$.get("backend/ajax_server_side/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=list", function(data){
 			$("#notifications-dialog-message").empty();
 			var html = "<p><ul class='notifications_list'>";
+			var notification_count=0;
 			jQuery.each(data, function(row,content){
 				html += '<li class="notification_type_'+content.type+'"><img src="images/'+<?php echo "'".$web_config->theme."'"; ?>+'/notifications/'+content.type+'.png" /><span>'+content.text+'</span></li>';
+				notification_count++;
 			});
+			if( notification_count == 0 ){
+				html += '<li class="notification_type_ok"><img src="images/'+<?php echo "'".$web_config->theme."'"; ?>+"/notifications/ok.png\" /><span>Vous n\'avez pas de notifications non lues.</span></li>";
+			}
 			html += "</ul></p>";
 			$("#notifications-dialog-message").append(html);
 		},"json");
