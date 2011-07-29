@@ -76,14 +76,14 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					}
 				}
 			}
-			
-			if($ok_count > 0){
-				$notif = new GenyNotification();
-				// Notification des admins
-				$notif->insertNewGroupNotification(1,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
-				// Notification des superusers
-				$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
-			}
+// 			WARNING: Ne surtout pas envoyer de notification à la création !!
+// 			if($ok_count > 0){
+// 				$notif = new GenyNotification();
+// 				// Notification des admins
+// 				$notif->insertNewGroupNotification(1,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+// 				// Notification des superusers
+// 				$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+// 			}
 		}
 		else {
 			$db_status .= "<li class=\"status_message_error\">Erreur: les dates saisies sont en dehors des bornes du projet.</li>\n";
