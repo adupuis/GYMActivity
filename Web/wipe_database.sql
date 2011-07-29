@@ -1,4 +1,3 @@
-USE GYMActivity;
 SET NAMES 'utf8';
 
 /* Drop all tables before creating them */

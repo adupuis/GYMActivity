@@ -1,4 +1,3 @@
-USE GYMActivity;
 SET NAMES 'utf8';
 /* Create the new schema and add default data */
 START TRANSACTION;
