@@ -327,6 +327,14 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 	</p>
 </div>
 
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/cra_add.dock.widget.php';
+		?>
+	</ul>
+</div>
+
 <?php
 include_once 'footer.php';
 ?>
