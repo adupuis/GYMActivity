@@ -11,13 +11,18 @@ class GenyApiKey {
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
 		$this->name = '';
+		$this->timestamp = -1;
 		if($id > -1)
 			$this->loadApiKeyById($id);
 	}
 	public function insertNewApiKey($id,$profile_id,$data){
 		if( !is_numeric($id) || !is_numeric($profile_id) )
 			return -1;
-		$query = "INSERT INTO ApiKeys VALUES($id,$profile_id,'".mysql_real_escape_string($data)."')";
+		$timestamp = time();
+		// Il est impossible d'avoir 2 clés pour un profil, donc nous supprimons au préalable toutes les clés de ce profil.
+		$query = "DELETE FROM ApiKeys WHERE profile_id=$profile_id";
+		mysql_query( $query, $this->handle );
+		$query = "INSERT INTO ApiKeys VALUES($id,$profile_id,'".mysql_real_escape_string($data)."',$timestamp)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyApiKey MySQL query : $query -->\n";
 		if( mysql_query( $query, $this->handle ) ) {
@@ -30,7 +35,7 @@ class GenyApiKey {
 	public function getApiKeysListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT api_key_id,profile_id,api_key_data FROM ApiKeys";
+		$query = "SELECT api_key_id,profile_id,api_key_data,api_key_timestamp FROM ApiKeys";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -50,6 +55,7 @@ class GenyApiKey {
 				$tmp_client->id = $row[0];
 				$tmp_client->profile_id = $row[1];
 				$tmp_client->data = $row[2];
+				$tmp_client->timestamp = $row[3];
 				$api_key_list[] = $tmp_client;
 			}
 		}
@@ -67,6 +73,7 @@ class GenyApiKey {
 				$this->id = $apikey->id;
 				$this->profile_id = $apikey->profile_id;
 				$this->data = $apikey->data;
+				$this->timestamp = $apikey->timestamp;
 			}
 		}
 	}
@@ -78,6 +85,7 @@ class GenyApiKey {
 				$this->id = $apikey->id;
 				$this->profile_id = $apikey->profile_id;
 				$this->data = $apikey->data;
+				$this->timestamp = $apikey->timestamp;
 			}
 		}
 	}
@@ -88,6 +96,7 @@ class GenyApiKey {
 			$this->id = $apikey->id;
 			$this->profile_id = $apikey->profile_id;
 			$this->data = $apikey->data;
+			$this->timestamp = $apikey->timestamp;
 		}
 	}
 	// Generation d'une clé API plutôt sécurisé à partir des informations d'un objet profile.
