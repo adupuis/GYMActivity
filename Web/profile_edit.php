@@ -16,10 +16,6 @@ $profile_needs_password_reset = "true";
 $rights_group_id = 3;
 $geny_profile = new GenyProfile();
 
-// $handle = mysql_connect($db_host,$db_user,$db_password);
-// mysql_select_db("GYMActivity");
-// mysql_query("SET NAMES 'utf8'");
-
 if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) ){
 		$profile_login = $_POST['profile_login'];

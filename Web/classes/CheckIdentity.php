@@ -4,7 +4,7 @@ class CheckIdentity {
 	public function __construct(){
 		$this->config = new GenyWebConfig();
 		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db("GYMActivity");
+		mysql_select_db($this->db_name);
 	}
 	public function isAllowed($username,$needed_rights){
 		if(!isset($_SESSION['LOGGEDIN']))

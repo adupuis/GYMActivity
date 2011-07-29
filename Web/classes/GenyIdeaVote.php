@@ -9,7 +9,7 @@ class GenyIdeaVote {
 	public function __construct( $id = -1 ) {
 		$this->config = new GenyWebConfig();
 		$this->handle = mysql_connect( $this->config->db_host, $this->config->db_user, $this->config->db_password );
-		mysql_select_db( "GYMActivity" );
+		mysql_select_db($this->db_name);
 		mysql_query( "SET NAMES 'utf8'" );
 		$this->id = -1;
 		$this->positive_vote = -1;

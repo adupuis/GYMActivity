@@ -19,7 +19,7 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 	}
 
 	$handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
-	mysql_select_db("GYMActivity");
+	mysql_select_db($web_config->db_name);
 	$query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd'";
 
 	$result = mysql_query($query, $handle);

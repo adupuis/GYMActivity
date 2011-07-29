@@ -6,6 +6,7 @@ class GenyWebConfig {
 		$this->db_password = "toto";
 		$this->theme = "default";
 		$this->debug = false;
+		$this->db_name = "GYMActivity";
 	}
 }
 ?>

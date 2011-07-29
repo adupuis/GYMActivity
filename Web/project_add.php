@@ -6,9 +6,6 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-// $handle = mysql_connect($db_host,$db_user,$db_password);
-// mysql_select_db("GYMActivity");
-// mysql_query("SET NAMES 'utf8'");
 $geny_client = new GenyClient();
 $geny_profile = new GenyProfile();
 

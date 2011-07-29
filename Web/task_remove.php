@@ -10,7 +10,7 @@ $db_status = "";
 $geny_task = new GenyTask();
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
-mysql_select_db("GYMActivity");
+mysql_select_db($web_config->db_name);
 mysql_query("SET NAMES 'utf8'");
 
 if( isset($_POST['remove_task']) && $_POST['remove_task'] == "true" ){

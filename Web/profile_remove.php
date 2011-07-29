@@ -17,7 +17,7 @@ $rights_group_id = 3;
 $geny_profile = new GenyProfile();
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
-mysql_select_db("GYMActivity");
+mysql_select_db($web_config->db_name);
 mysql_query("SET NAMES 'utf8'");
 
 if( isset($_POST['remove_profile']) && $_POST['remove_profile'] == "true" ){
