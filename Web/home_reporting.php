@@ -15,12 +15,9 @@ include_once 'menu.php';
 
 <div id="maindock">
 	<ul>
-		<li class="">
-			<a href="cra_add_new.php">
-				<span class="dock_item_title"></span><br/>
-				<span class="dock_item_content">.</span>
-			</a>
-		</li>
+		<?php
+			include 'backend/widgets/reporting_monthly_view.dock.widget.php';
+		?>
 	</ul>
 </div>
 
