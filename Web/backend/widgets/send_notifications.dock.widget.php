@@ -35,7 +35,6 @@
 </li>
 <script>
 	function send_notification(){
-// 		alert("KABOOM");
 		$.get("backend/ajax_server_side/send_notification.php?to_type=pm&message="+$("#notification_message").val()+"&to="+$("#notification_to").val());
 		$("#notification_message").val("");
 		$("#notification_to").val("");
