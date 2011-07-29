@@ -7,7 +7,7 @@ class GenyAssignement {
 	public function __construct($id = -1){
 		$this->config = new GenyWebConfig();
 		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->db_name);
+		mysql_select_db($this->config->db_name);
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
 		$this->profile_id = -1;

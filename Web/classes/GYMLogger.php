@@ -4,7 +4,7 @@ class GYMLogger {
 	public function __construct(){
 		$this->config = new GenyWebConfig();
 		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->db_name);
+		mysql_select_db($this->config->db_name);
 	}
 	public function log_access($access_successful){
 		// Get user id
