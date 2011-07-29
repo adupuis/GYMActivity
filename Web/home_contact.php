@@ -16,10 +16,9 @@ include_once 'menu.php';
 <div id="maindock">
 	<ul>
 		<li class="">
-			<a href="cra_add_new.php">
-				<span class="dock_item_title"></span><br/>
-				<span class="dock_item_content">.</span>
-			</a>
+			<?php
+				include 'backend/widgets/send_notifications.dock.widget.php';
+			?>
 		</li>
 	</ul>
 </div>

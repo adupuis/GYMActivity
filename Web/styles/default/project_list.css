@@ -1,4 +1,8 @@
 .table_container {
-	width: 1320px; 
+	width: 1000px; 
 	margin: auto;
+}
+
+.table_container select {
+	width: 100px;
 }

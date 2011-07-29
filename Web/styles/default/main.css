@@ -28,6 +28,7 @@ a{
 }
 
 input[type=submit],
+input[type=button].submit,
 a.submit{
 	background:#ddd;
 	background:-moz-linear-gradient(90deg, #95bd0d, #b1e012); /* Firefox */
@@ -49,6 +50,7 @@ a.submit{
 	text-transform:uppercase;
 }
 input[type=submit]:hover,
+input[type=button].submit:hover,
 a.submit:hover{
 	background:#eee;
 	background:-moz-linear-gradient(90deg, #a9d60f, #c5fa14);
@@ -58,6 +60,8 @@ a.submit:hover{
 }
 input[type=submit]:active,
 input[type=submit]:focus,
+input[type=button].submit:active,
+input[type=button].submit:focus,
 a.submit:active,
 a.submit:focus{
 	background:#ccc;

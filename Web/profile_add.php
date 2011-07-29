@@ -51,11 +51,11 @@ $geny_profile = new GenyProfile();
 			</script>
 			<p>
 				<label for="profile_firstname">Prénom</label>
-				<input name="profile_firstname" id="profile_firstname" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_firstname" id="profile_firstname" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_lastname">Nom de famille</label>
-				<input name="profile_lastname" id="profile_lastname" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_lastname" id="profile_lastname" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_password">Mot de passe</label>

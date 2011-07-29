@@ -24,4 +24,5 @@ DROP TABLE Ideas;
 DROP TABLE IdeaStatus;
 DROP TABLE IdeaMessages;
 DROP TABLES Notifications;
+DROP TABLES ApiKeys;
 COMMIT;
