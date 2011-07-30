@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Liste idées';
+$header_title = 'GENYMOBILE - Liste idées';
 $required_group_rights = 5;
 
 include_once 'header.php';

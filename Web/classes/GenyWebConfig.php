@@ -7,6 +7,7 @@ class GenyWebConfig {
 		$this->theme = "default";
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
+		$this->company_name = "GENYMOBILE";
 	}
 }
 ?>

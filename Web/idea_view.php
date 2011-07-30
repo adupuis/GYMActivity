@@ -4,7 +4,7 @@ ini_set( 'error_reporting', E_ERROR );
 ini_set( 'display_errors', 1 );
 
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Visualisation idée';
+$header_title = 'GENYMOBILE - Visualisation idée';
 $required_group_rights = 5;
 
 include_once 'header.php';

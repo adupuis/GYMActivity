@@ -135,7 +135,7 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				$("tfoot th").each( function ( i ) {
-					if( i < 3){
+					if( i < 4){
 						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -163,6 +163,7 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 			
 			<table id="reporting_list">
 			<thead>
+				<th>Mois/années</th>
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>
@@ -181,6 +182,7 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 			?>
 			</tbody>
 			<tfoot>
+				<th>Mois/années</th>
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>

@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Ajout profil';
+$header_title = 'GENYMOBILE - Ajout profil';
 $required_group_rights = 2;
 
 include_once 'header.php';

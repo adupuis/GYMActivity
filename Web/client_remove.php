@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Suppression client';
+$header_title = 'GENYMOBILE - Suppression client';
 $required_group_rights = 2;
 
 include_once 'header.php';

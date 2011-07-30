@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Suppression tâche';
+$header_title = 'GENYMOBILE - Suppression tâche';
 $required_group_rights = 2;
 
 include_once 'header.php';

@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Validation CRA';
+$header_title = 'GENYMOBILE - Validation CRA';
 $required_group_rights = 6;
 
 include_once 'header.php';

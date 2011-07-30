@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Mise à jour du mot de passe';
+$header_title = 'GENYMOBILE - Mise à jour du mot de passe';
 $required_group_rights = 5;
 $disable_password_reset_redirection = true;
 
@@ -28,7 +28,7 @@ if(isset($_POST['update_password']) && $_POST['update_password'] == "true" && is
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="profile_admin">
-			Modifier le mot de passe.
+			Modifier mot de passe.
 		</span>
 	</p>
 	<p class="mainarea_content">

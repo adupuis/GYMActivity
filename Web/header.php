@@ -57,7 +57,7 @@ echo $header_title
 </style>
 </head>
 <body>
-<img id="logo" src="images/<?php echo $web_config->theme ?>/logo_genymobile_writting_small.jpg" alt="GenY Mobile Logo"/>
+<img id="logo" src="images/<?php echo $web_config->theme ?>/logo_genymobile_writting_small.jpg" alt="GENYMOBILE Logo"/>
 
 <p id="headband">
 	<?php

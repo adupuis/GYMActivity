@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>GenY Mobile - Apps</title>
+<title>GENYMOBILE - Apps</title>
 <link rel="stylesheet" type="text/css" href="styles/default/login-page.css" media="screen" title="bbxcss" />
 <style type="text/css">
 </style>
@@ -10,7 +10,7 @@
 <body>
 <p style="margin:10px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/logo_genymobile.jpg' /></p>
 <form id="start" action="check_login.php" method="post">
-	<h1>Login GenY Mobile - Apps</h1>
+	<h1>Login GENYMOBILE - Apps</h1>
 
 	<p>
 		<label for="geny_username">Login</label>
@@ -47,7 +47,7 @@
 	}
 ?>
 </form>
-<p id="credits">&copy; 2011-2012 <strong>GenY Mobile</strong>.</p>
+<p id="credits">&copy; 2011-2012 <strong>GENYMOBILE</strong>.</p>
 
 </body>
 </html>

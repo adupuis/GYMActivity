@@ -14,7 +14,7 @@ INSERT INTO RightsGroups VALUES(2,'SuperUsers','Users with more rights than basi
 INSERT INTO RightsGroups VALUES(3,'Users','Standard users, they can create and edit activities.');
 INSERT INTO RightsGroups VALUES(4,'SuperReporters','Read only access for various reports. They can see almost all data.');
 INSERT INTO RightsGroups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
-INSERT INTO RightsGroups VALUES(6,'Externes','Les profiles entrants dans ce groupe sont les externes à GenY Mobile fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
+INSERT INTO RightsGroups VALUES(6,'Externes','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
 
 
 CREATE TABLE Profiles (
@@ -87,7 +87,7 @@ CREATE TABLE Clients (
 	primary key(client_id)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Clients AUTO_INCREMENT = 1;
-INSERT INTO Clients VALUES(1,'GenY Mobile');
+INSERT INTO Clients VALUES(1,'GENYMOBILE');
 INSERT INTO Clients VALUES(NULL,'Orange Vallée');
 INSERT INTO Clients VALUES(NULL,'JCDecaux');
 
@@ -100,7 +100,9 @@ CREATE TABLE ProjectTypes (
 ALTER TABLE ProjectTypes AUTO_INCREMENT = 1;
 INSERT INTO ProjectTypes VALUES(1,'Régie','Employé à disposition du client dans les bureaux du client.');
 INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projets au forfait.');
-INSERT INTO ProjectTypes VALUES(3,'Autre','Autre types. Par exemple: travaux internes à GenY Mobile, congés, etc.');
+INSERT INTO ProjectTypes VALUES(3,'Régie forfaitée','Employé chez le client dans un cadre de régie forfaitée.');
+INSERT INTO ProjectTypes VALUES(4,'R&D', 'Employé travail sur un ou plusieurs projet de R&D ou innovation par et pour GENYMOBILE.');
+INSERT INTO ProjectTypes VALUES(0,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, congés, etc.');
 
 CREATE TABLE ProjectStatus (
 	project_status_id int auto_increment,
@@ -114,7 +116,7 @@ INSERT INTO ProjectStatus VALUES(2,'Fermé','Projet fermé (plus aucune imputati
 INSERT INTO ProjectStatus VALUES(3,'Pause','Projet en pause (pas de facturation, pas de dépenses ni notes de frais).');
 INSERT INTO ProjectStatus VALUES(4,'Dépassement',"Projet en dépassement (nous perdons de l'argent).");
 INSERT INTO ProjectStatus VALUES(5,'Risque client','Un risque de dépassement est identifié et celui-ci est dû au client.');
-INSERT INTO ProjectStatus VALUES(6,'Risque interne','Un risque de dépassement est identifié et celui-ci est dû à GenY Mobile (ou un de ces sous-traitant).');
+INSERT INTO ProjectStatus VALUES(6,'Risque interne','Un risque de dépassement est identifié et celui-ci est dû à GENYMOBILE (ou un de ces sous-traitant).');
 
 CREATE TABLE Projects (
 	project_id int auto_increment,
@@ -145,8 +147,8 @@ CREATE TABLE Tasks (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Tasks AUTO_INCREMENT = 1;
 INSERT INTO Tasks VALUES(NULL,'Avant Vente','Avant vente de projet (chiffrage, proposition commerciale, présentation client, etc.).');
-INSERT INTO Tasks VALUES(NULL,'Formation Interne','Formation interne à GenY Mobile.');
-INSERT INTO Tasks VALUES(NULL,'Formation Externe','Formation externe à GenY Mobile.');
+INSERT INTO Tasks VALUES(NULL,'Formation Interne','Formation interne à GENYMOBILE.');
+INSERT INTO Tasks VALUES(NULL,'Formation Externe','Formation externe à GENYMOBILE.');
 INSERT INTO Tasks VALUES(NULL,'Intercontrat','');
 INSERT INTO Tasks VALUES(NULL,'Management','');
 INSERT INTO Tasks VALUES(NULL,'Stagiaire','');
@@ -285,11 +287,11 @@ INSERT INTO IdeaStatus VALUES (NULL,'Accepted','Idea have been accepted for impl
 INSERT INTO IdeaStatus VALUES (NULL,'Rejected','Idea have been rejected.');
 INSERT INTO IdeaStatus VALUES (NULL,'In progress','Idea is currently being implemented.');
 INSERT INTO IdeaStatus VALUES (NULL,'Private alpha','Idea is implemented and is currently being tested with a restricted user base (alpha version).');
-INSERT INTO IdeaStatus VALUES (NULL,'Public alpha','Idea is implemented and is currently being tested with all GenY Mobile employees (alpha version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public alpha','Idea is implemented and is currently being tested with all GENYMOBILE employees (alpha version).');
 INSERT INTO IdeaStatus VALUES (NULL,'Private beta','Idea is implemented and is currently being tested with a restricted user base (beta version).');
-INSERT INTO IdeaStatus VALUES (NULL,'Public beta','Idea is implemented and is currently being tested with all GenY Mobile employees (beta version).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public beta','Idea is implemented and is currently being tested with all GENYMOBILE employees (beta version).');
 INSERT INTO IdeaStatus VALUES (NULL,'Private RC','Idea is implemented and is currently being tested with a restricted user base (release candidate).');
-INSERT INTO IdeaStatus VALUES (NULL,'Public RC','Idea is implemented and is currently being tested with all GenY Mobile employees (release candidate).');
+INSERT INTO IdeaStatus VALUES (NULL,'Public RC','Idea is implemented and is currently being tested with all GENYMOBILE employees (release candidate).');
 INSERT INTO IdeaStatus VALUES (NULL,'Implemented','Idea have been implemented and is now available in production use.');
 
 CREATE TABLE Ideas (

@@ -6,7 +6,7 @@
 
 <div id="footer">
 	<p>
-		&copy; 2011-2012 <strong>GenY Mobile</strong>.
+		&copy; 2011-2012 <strong>GENYMOBILE</strong>.
 	</p>
 </div>
 </body>

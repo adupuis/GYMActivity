@@ -1,6 +1,6 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Ajout congés';
+$header_title = 'GENYMOBILE - Ajout congés';
 $required_group_rights = 5;
 
 include_once 'header.php';
