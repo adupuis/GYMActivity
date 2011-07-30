@@ -1,7 +1,7 @@
 <?php
 // Variable to configure global behaviour
-$header_title = 'GenY Mobile - Reporting';
-$required_group_rights = 5;
+$header_title = 'GENYMOBILE - Reporting';
+$required_group_rights = 6;
 
 include_once 'header.php';
 include_once 'menu.php';
