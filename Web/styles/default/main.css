@@ -467,6 +467,11 @@ li.notifications a {
 	background-image: url(../../images/default/notification.png);
 }
 
+li.reporting_monthly_view a {
+	background-image: url(../../images/default/reporting.png);
+}
+
+
 /* End of main dock style */
 
 /* Start of bottom dock style */
@@ -740,6 +745,10 @@ p.mainarea_title span.conges_list {
 	background-image: url(../../images/default/conges_list.png);
 }
 
+p.mainarea_title span.reporting_monthly_view {
+	background-image: url(../../images/default/reporting.png);
+}
+
 table.object_list {
 	border-collapse:collapse;
 	margin: auto;
@@ -795,7 +804,7 @@ table.object_list > tr:nth-child(odd){
 	margin-left: auto;
 	margin-right: auto;
 	padding:4px;
-	width:150px;
+	width:160px;
 	font-size:12px;
 	text-align:center;
 }
