@@ -8,7 +8,7 @@ try {
     $checkId_obj = new CheckIdentity();
     $profiles = array();
     if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
-	if( $checkId_obj->isAllowed($_SESSION['USERID'],5) ){
+	if( $checkId_obj->isAllowed($_SESSION['USERID'],6) ){
 		$project_id = -1;
 		$assignement_id = -1;
 		if(isset($_POST['project_id']))
