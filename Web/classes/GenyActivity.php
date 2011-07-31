@@ -18,6 +18,22 @@ class GenyActivity {
 		if($id > -1)
 			$this->loadActivityById($id);
 	}
+	public function deleteActivity($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			$query = "DELETE FROM Activities WHERE activity_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyActivity MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
 	public function insertNewActivity($id,$activity_date,$activity_load,$activity_input_date,$assignement_id,$task_id){
 		if( ! is_numeric($id) && $id != 'NULL' )
 			return -1;

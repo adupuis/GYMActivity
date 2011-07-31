@@ -17,6 +17,29 @@ class GenyActivityReport {
 		if($id > -1)
 			$this->loadActivityReportById($id);
 	}
+	public function deleteActivityReport($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			$tmp_object = new GenyActivityReport($id);
+			// Avant de supprimer le rapport à proprement parler, il faut supprimer l'Activity.
+			if($tmp_object->activity_id <= 0)
+				return -1;
+			$tmp_activity = new GenyActivity( $tmp_object->activity_id );
+			if($tmp_activity->deleteActivity() > 0){
+				$query = "DELETE FROM ActivityReports WHERE activity_report_id=$id";
+				if( $this->config->debug )
+					echo "<!-- DEBUG: GenyActivityReport MySQL DELETE query : $query -->\n";
+				if(mysql_query($query,$this->handle))
+					return 1;
+				else
+					return -1;
+			}
+		}
+		return -1;
+	}
 	public function insertNewActivityReport($id,$invoice_reference,$activity_id,$profile_id,$status_id){
 		if( (is_numeric($id) || $id == 'NULL') && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
 			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
