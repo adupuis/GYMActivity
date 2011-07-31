@@ -102,7 +102,8 @@ INSERT INTO ProjectTypes VALUES(1,'Régie','Employé à disposition du client da
 INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projets au forfait.');
 INSERT INTO ProjectTypes VALUES(3,'Régie forfaitée','Employé chez le client dans un cadre de régie forfaitée.');
 INSERT INTO ProjectTypes VALUES(4,'R&D', 'Employé travail sur un ou plusieurs projet de R&D ou innovation par et pour GENYMOBILE.');
-INSERT INTO ProjectTypes VALUES(0,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, congés, etc.');
+INSERT INTO ProjectTypes VALUES(5,'Congés','Projet utilisé pour faire les demandes de congés des employés.');
+INSERT INTO ProjectTypes VALUES(6,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, congés, etc.');
 
 CREATE TABLE ProjectStatus (
 	project_status_id int auto_increment,

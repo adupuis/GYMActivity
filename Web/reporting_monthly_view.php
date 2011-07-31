@@ -27,7 +27,9 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 }
 
 $geny_ar = new GenyActivityReport();
-foreach( $geny_ar->getAllActivityReports() as $ar ){
+$geny_ars = new GenyActivityReportStatus();
+$geny_ars->loadActivityReportStatusByShortName('APPROVED');
+foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
 	if( !isset( $reporting_data[$ar->profile_id] ) )
 		$reporting_data[$ar->profile_id] = array();
@@ -153,7 +155,7 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des CRA ventilés par collaborateurs, par client et par projet.
+		Voici la liste des CRA ventilés par collaborateurs, par client et par projet pour le mois en cours.
 		</p>
 		<style>
 			@import 'styles/default/reporting_monthly_view.css';
@@ -163,7 +165,6 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 			
 			<table id="reporting_list">
 			<thead>
-				<th>Mois/années</th>
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>
@@ -182,7 +183,6 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 			?>
 			</tbody>
 			<tfoot>
-				<th>Mois/années</th>
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>
