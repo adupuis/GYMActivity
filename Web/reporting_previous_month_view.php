@@ -28,9 +28,11 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 
 $month = date('m', time());
 $year=date('Y', time());
-$d_month_name = date('F', mktime(0,0,0,$month,28,$year));
-$start_date="$year-$month-01";
-$end_date="$year-$month-31";
+$d_month_previous = date('m', mktime(0,0,0,($month-1),28,$year));
+$d_month_name = date('F', mktime(0,0,0,$d_month_previous,28,$year));
+$start_date="$year-$d_month_previous-01";
+$lastday = date('d',mktime(0, 0, 0, $d_month_previous, 0, $year));
+$end_date="$year-$d_month_previous-$lastday";
 
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
@@ -197,7 +199,7 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 	]);
 
 	// Set chart options
-	var options = {'title':'Reporting mensuel: <?php echo "$year-$month" ?> ',
+	var options = {'title':'Reporting mensuel: <?php echo "$year-$d_month_previous" ?> ',
 			'is3D': true,
 			'width':400,
 			'height':300};
@@ -212,7 +214,7 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="reporting_monthly_view">
-			Reporting mensuel
+			Reporting mensuel (M-1)
 		</span>
 	</p>
 	<p class="mainarea_content">
