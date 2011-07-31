@@ -17,6 +17,7 @@ include_once 'menu.php';
 	<ul>
 		<?php
 			include 'backend/widgets/reporting_monthly_view.dock.widget.php';
+			include 'backend/widgets/reporting_previous_month_view.dock.widget.php';
 		?>
 	</ul>
 </div>
