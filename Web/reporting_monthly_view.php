@@ -66,7 +66,7 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/reporting.png"/><p>Projet</p>
+	<img src="images/<?php echo $web_config->theme ?>/reporting.png"/><p>Reporting</p>
 </div>
 
 
