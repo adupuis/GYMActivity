@@ -93,6 +93,61 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
 	}
 }
+else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra") ){
+	if( $_POST['cra_action'] == "validate_cra" ){
+		if( isset( $_POST['activity_report_id'] ) ){
+			$tmp_ars = new GenyActivityReportStatus();
+			$tmp_ars->loadActivityReportStatusByShortName('P_APPROVAL');
+			$ok_count=0;
+			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
+				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
+				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+				if($tmp_ass->commitUpdates()){
+					$ok_count++;
+				}
+				else{
+					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+				}
+			}
+			if($ok_count > 0 ){
+				$notif = new GenyNotification();
+				// Notification des admins
+				$notif->insertNewGroupNotification(1,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+				// Notification des superusers
+				$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
+				if($ok_count == 1)
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+				else
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+			}
+		}
+	}
+	else if( $_POST['cra_action'] == "delete_cra" ){
+		if( isset( $_POST['activity_report_id'] ) ){
+			$ok_count=0;
+			$tmp_ass = new GenyActivityReport();
+			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
+				if($tmp_ass->deleteActivityReport($tmp_ar_id) == 1){
+					$ok_count++;
+				}
+				else{
+					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de supprimer le rapport ".$tmp_ar_id.".</li>\n";
+				}
+			}
+			if($ok_count > 0 ){
+				$notif = new GenyNotification();
+				// Notification des admins
+				$notif->insertNewGroupNotification(1,"$screen_name viens de supprimer $ok_count rapport(s) d'activité non validé(s).");
+				// Notification des superusers
+				$notif->insertNewGroupNotification(2,"$screen_name viens de supprimer $ok_count rapport(s) d'activité non validé(s).");
+				if($ok_count == 1)
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapport a été correctement supprimé.</li>\n";
+				else
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapports ont été correctement supprimés.</li>\n";
+			}
+		}
+	}
+}
 else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 	if( isset( $_POST['activity_report_id'] ) ){
 		$tmp_ars = new GenyActivityReportStatus();
@@ -262,7 +317,10 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			function onCheckBoxSelectAll(){
 				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
-			
+			$(function() {
+				$( "#radio" ).buttonset();
+				$( "#chkBoxSelectAll" ).button();
+			});
 		</script>
 		<?php
 			if( isset($db_status) && $db_status != "" ){
@@ -275,10 +333,18 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			});
 		</script>
 		<form id="formID" action="cra_validation.php" method="post" class="table_container">
-			<input type="hidden" name="validate_cra" value="true" />
-			<ul style="display: inline; color: black;">
+			<style>
+				.ui-widget{
+					font-size:14px;
+				}
+			</style>
+			<ul>
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /> Tout (dé)séléctionner
+					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+				</li>
+				<li id="radio">
+					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Valider</label>
+					<input type="radio" id="radio2" name="cra_action" value="delete_cra" /><label for="radio2">Supprimer</label>
 				</li>
 			</ul>
 			<p>
