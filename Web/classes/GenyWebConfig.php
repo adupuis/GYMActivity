@@ -8,6 +8,7 @@ class GenyWebConfig {
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
 		$this->company_name = "GENYMOBILE";
+		$this->version = "0.4.2";
 	}
 }
 ?>
