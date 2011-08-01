@@ -387,7 +387,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				</table>
 			</p>
 			<p>
-				<input type="submit" value="Valider" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Ok" /> ou <a href="#formID">annuler</a>
 			</p>
 		</form>
 	</p>
