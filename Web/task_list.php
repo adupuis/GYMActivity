@@ -15,6 +15,7 @@ $geny_task = new GenyTask();
 	
 		var oTable = $('#task_list').dataTable( {
 			"bJQueryUI": true,
+			"bStateSave": true,
 			"bAutoWidth": false,
 			"sPaginationType": "full_numbers",
 			"oLanguage": {

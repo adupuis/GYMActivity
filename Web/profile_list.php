@@ -90,6 +90,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 			
 				var oTable = $('#profile_list').dataTable( {
 					"bJQueryUI": true,
+					"bStateSave": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {

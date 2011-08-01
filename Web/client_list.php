@@ -15,6 +15,7 @@ $geny_client = new GenyClient();
 	
 		var oTable = $('#client_list').dataTable( {
 			"bJQueryUI": true,
+			"bStateSave": true,
 			"bAutoWidth": false,
 			"sPaginationType": "full_numbers",
 			"oLanguage": {

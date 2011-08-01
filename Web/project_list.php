@@ -102,6 +102,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 			
 				var oTable = $('#project_list').dataTable( {
 					"bJQueryUI": true,
+					"bStateSave": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
