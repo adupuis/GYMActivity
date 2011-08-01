@@ -245,6 +245,10 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			function onCheckBoxSelectAll(){
 				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
+			$(function() {
+				$( "#radio" ).buttonset();
+				$( "#chkBoxSelectAll" ).button();
+			});
 			
 		</script>
 		<?php
@@ -264,7 +268,15 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			<input type="hidden" name="validate_cra" value="true" />
 			<ul style="display: inline; color: black;">
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onclick="onCheckBoxSelectAll()"/> Tout (dé)séléctionner
+					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+				</li>
+				<li id="radio">
+					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Validé</label>
+					<input type="radio" id="radio2" name="cra_action" value="bill_cra" /><label for="radio2">Facturé</label>
+					<input type="radio" id="radio3" name="cra_action" value="pay_cra" /><label for="radio3">Payé</label>
+					<input type="radio" id="radio4" name="cra_action" value="close_cra" /><label for="radio4">Fermé</label>
+					<input type="radio" id="radio5" name="cra_action" value="deletion_cra" /><label for="radio5">Suppression</label>
+					<input type="radio" id="radio6" name="cra_action" value="delete_cra" /><label for="radio6">Supprimé</label>
 				</li>
 			</ul>
 			<p>
