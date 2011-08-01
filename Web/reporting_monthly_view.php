@@ -199,7 +199,7 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 	// Set chart options
 	var options = {'title':'Reporting mensuel: <?php echo "$year-$month" ?> ',
 			'is3D': true,
-			'width':400,
+			'width':500,
 			'height':300};
 
 	// Instantiate and draw our chart, passing in some options.
