@@ -10,7 +10,8 @@ class GenyApiKey {
 		mysql_select_db($this->config->db_name);
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
-		$this->name = '';
+		$this->profile_id = -1;
+		$this->data = '';
 		$this->timestamp = -1;
 		if($id > -1)
 			$this->loadApiKeyById($id);
