@@ -361,6 +361,16 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 	</p>
 </div>
 
+<div id="bottomdock">
+	<ul>
+		<?php 
+			include 'backend/widgets/conges_add.dock.widget.php';
+			include 'backend/widgets/conges_list.dock.widget.php';
+		?>
+	</ul>
+</div>
+
+
 <?php
 include_once 'footer.php';
 ?>

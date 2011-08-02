@@ -398,6 +398,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 	<ul>
 		<?php 
 			include 'backend/widgets/cra_add.dock.widget.php';
+			include 'backend/widgets/cra_list.dock.widget.php';
 		?>
 	</ul>
 </div>
