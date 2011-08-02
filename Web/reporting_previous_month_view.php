@@ -65,6 +65,24 @@ foreach( $load_by_clients as $client => $load ){
 	$tmp_array[]= "['$client', $load]";
 }
 $load_by_clients_js_data = implode(",",$tmp_array);
+
+// Création des données de reporting pour la charge par profile
+$load_by_profiles = array();
+foreach( $reporting_data as $profile_id => $data ){
+	$geny_profile->loadProfileById($profile_id);
+	$ptl=0;
+	foreach( $data as $assignement_id => $total_load ){
+		$ptl += $total_load;
+	}
+	$load_by_profiles[GenyTools::getProfileDisplayName($geny_profile)]=$ptl/8;
+}
+$load_by_profiles_js_data = "";
+$tmp_array=array();
+foreach( $load_by_profiles as $profile_sn => $load ){
+	$tmp_array[]= "['$profile_sn', $load]";
+}
+$load_by_profiles_js_data = implode(",",$tmp_array);
+
 ?>
 
 <div class="page_title">
@@ -191,23 +209,41 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 	// draws it.
 	function drawChart() {
 
-	// Create the data table.
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'Clients');
-	data.addColumn('number', 'Charge');
-	data.addRows([
-	<?php echo $load_by_clients_js_data;?>
-	]);
+		// Create the data table.
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Clients');
+		data.addColumn('number', 'Charge');
+		data.addRows([
+		<?php echo $load_by_clients_js_data;?>
+		]);
 
-	// Set chart options
-	var options = {'title':'Reporting mensuel: <?php echo "$year-$d_month_previous" ?> ',
-			'is3D': true,
-			'width':500,
-			'height':300};
+		// Set chart options
+		var options = {'title':'Reporting mensuel - charge/client - <?php echo "$year-$d_month_previous" ?> ',
+				'is3D': true,
+				'width':500,
+				'height':300};
 
-	// Instantiate and draw our chart, passing in some options.
-	var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-	chart.draw(data, options);
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.PieChart(document.getElementById('chart_div1'));
+		chart.draw(data, options);
+		
+		// Create the data table.
+		var data2 = new google.visualization.DataTable();
+		data2.addColumn('string', 'Profiles');
+		data2.addColumn('number', 'Charge');
+		data2.addRows([
+		<?php echo $load_by_profiles_js_data;?>
+		]);
+
+		// Set chart options
+		var options = {'title':'Reporting mensuel - charge/profile - <?php echo "$year-$month" ?> ',
+				'is3D': true,
+				'width':500,
+				'height':300};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
+		chart2.draw(data2, options);
 	}
 </script>
 
@@ -258,9 +294,9 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 		</p>
 		</div>
 		<p>
-			Représentation graphique par client :
 			<ul>
-				<li id="chart_div"></li>
+				<li id="chart_div1"></li>
+				<li id="chart_div2"></li>
 			</ul>
 		</p>
 	</p>
