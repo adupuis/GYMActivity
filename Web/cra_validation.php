@@ -335,9 +335,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 		</script>
 		<form id="formID" action="cra_validation.php" method="post" class="table_container">
 			<style>
-				.ui-widget{
-					font-size:14px;
-				}
+				@import 'styles/default/cra_validation.css';
 			</style>
 			<ul>
 				<li>
