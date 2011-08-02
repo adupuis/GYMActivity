@@ -250,6 +250,7 @@ INSERT INTO ActivityReportStatus VALUES(NULL,'PAID','Payé',"Le client a payé p
 INSERT INTO ActivityReportStatus VALUES(NULL,'CLOSE','Fermé',"Plus rien ne peut être fait avec ce rapport d'activité.");
 INSERT INTO ActivityReportStatus VALUES(NULL,'P_REMOVAL','En attente de suppression',"Le rapport d'activité a été soumis pour suppression et est en attente de validation par le management");
 INSERT INTO ActivityReportStatus VALUES(NULL,'REMOVED','Supprimé',"Le rapport d'activité a été supprimé et plus rien ne peut être fait dessus.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'REFUSED','Refusé',"Le rapport d'activité a été refusé par le management.");
 
 CREATE TABLE ActivityReports (
 	activity_report_id int auto_increment,
