@@ -23,7 +23,7 @@
 	<p>
 		<label for="geny_theme">Password</label>
 		<select name="geny_theme" id="geny_theme">
-			<option value='default'>Théme par défaut</option>
+			<option value='default'>Thème par défaut</option>
 			<option value='tablet'>Tablettes</option>
 		</select>
 	</p>
@@ -37,13 +37,13 @@
 <?php
 	if(isset($_GET['reason'])){
 		if($_GET['reason'] == 'goodcredentials')
-			echo '<div id="status_success"><p>Login successful!</p></div>';
+			echo '<div id="status_success"><p>Login réussi!</p></div>';
 		else if($_GET['reason'] == 'badcredentials')
-			echo '<div id="status_error"><p>Login failed.</p></div>';
+			echo '<div id="status_error"><p>Login échoué.</p></div>';
 		else if($_GET['reason'] == 'authrequired')
-			echo '<div id="status_error"><p>Authentification required.</p></div>';
+			echo '<div id="status_error"><p>Authentification requise.</p></div>';
 		else if($_GET['reason'] == 'forbidden')
-			echo '<div id="status_error"><p>Access denied. Access tentative logged and reported.</p></div>';
+			echo '<div id="status_error"><p>Accès refusé. Cette tentative d\'accès a été enregistrée et rapportée.</p></div>';
 	}
 ?>
 </form>
