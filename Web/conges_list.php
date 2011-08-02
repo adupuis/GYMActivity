@@ -138,7 +138,7 @@ $db_status = "";
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 1 || i == 2 || i == 6){
+					if( i==0 || i == 1 || i == 2 || i == 4){
 						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );

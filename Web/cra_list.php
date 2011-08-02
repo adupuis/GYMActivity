@@ -138,7 +138,7 @@ $db_status = "";
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 1 || i == 2 || i == 6){
+					if( i==0 || i == 1 || i == 2 || i == 4){
 						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -182,9 +182,12 @@ $db_status = "";
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
+							$status_name = "<strong style='color: red;'>error</strong>";
+							if( $geny_ars->name != "" )
+								$status_name = $geny_ars->name;
 							if( strripos($tmp_project->name,'congés') === false ){
 								$geny_ars->loadActivityReportStatusById($ar->status_id);
-								echo "<tr><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$geny_ars->name."</td></tr>";
+								echo "<tr><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$status_name."</td></tr>";
 							}
 						}
 					?>
