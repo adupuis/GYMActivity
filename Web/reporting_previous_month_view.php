@@ -145,6 +145,7 @@ $load_by_clients_js_data = implode(",",$tmp_array);
 			
 				var oTable = $('#reporting_list').dataTable( {
 					"bJQueryUI": true,
+					"bStateSave": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
