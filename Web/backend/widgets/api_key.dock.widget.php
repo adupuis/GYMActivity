@@ -1,14 +1,11 @@
 <?php
 $apikey = new GenyApiKey();
 $apikey->loadApiKeyByProfileId( $profile->id );
-$data = "";
 if( $apikey->id <= 0 ){
 	$tmp_key = $apikey->generateApiKey($profile);
-	$apikey->insertNewApiKey(0,$profile->id, $tmp_key);
-	$data = $tmp_key;
+	$key_id = $apikey->insertNewApiKey(0,$profile->id, $tmp_key);
+	$apikey->loadApiKeyById($key_id);
 }
-else
-	$data = $apikey->data;
 
 
 
@@ -21,12 +18,18 @@ else
 	</a>
 </li>
 
+<style>
+	#dialog_api_key p input {
+		width: 100%;
+	}
+</style>
+
 <div id="dialog_api_key" title="Votre clé API">
 	<p>
-		<input id="key" type="text" disabled="true" value="<?php echo $data; ?>" />
+		<input id="key" type="text" disabled="true" value="<?php echo $apikey->data; ?>" />
 	</p>
 	<p>
-		<img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=<?php echo $data; ?>" />
+		<img src="https://chart.googleapis.com/chart?chs=230x230&cht=qr&chl=<?php echo $apikey->data; ?>" />
 	</p>
 </div>
 
@@ -35,13 +38,24 @@ else
 		$( "#dialog_api_key" ).dialog({
 			modal: true,
 			autoOpen: false,
-			width: 200,
+			width: 250,
 			show: "slide",
 			hide: "explode",
 			buttons: {
 				Ok: function() {
 					$( this ).dialog( "close" );
 					
+				},
+				"Regénérer une clé" : function(){
+					$.get("backend/ajax_server_side/generate_new_api_key.php",
+					{"old_key":"<?php echo $apikey->data; ?>", "owner" : "<?php echo $apikey->profile_id; ?>", "ts" : "<?php echo $apikey->timestamp; ?>"},
+					function(returned_data){
+						if( returned_data.status == "error" ){
+							alert( returned_data.error_string );
+						}
+						$( this ).dialog( "close" );
+						location.reload;
+					});
 				}
 			}
 		});
