@@ -730,6 +730,10 @@ p.mainarea_title span.cra_list {
 	background-image: url(../../images/default/cra_list.png);
 }
 
+p.mainarea_title span.cra_admin_generic {
+	background-image: url(../../images/default/cra_admin_generic.png);
+}
+
 p.mainarea_title span.conges_add {
 	background-image: url(../../images/default/conges_add.png);
 }
