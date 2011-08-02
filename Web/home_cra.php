@@ -18,6 +18,7 @@ include_once 'menu.php';
 		<?php
 			include 'backend/widgets/cra_add.dock.widget.php';
 			include 'backend/widgets/cra_validation.dock.widget.php';
+			include 'backend/widgets/cra_list.dock.widget.php';
 		?>
 	</ul>
 </div>
