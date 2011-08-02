@@ -284,6 +284,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				
 				var oTable = $('#cra_validation_table').dataTable( {
 					"bJQueryUI": true,
+					"bStateSave": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {

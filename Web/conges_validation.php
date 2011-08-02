@@ -250,6 +250,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				
 				var oTable = $('#cra_validation_table').dataTable( {
 					"bJQueryUI": true,
+					"bStateSave": true,
 					"bAutoWidth": false,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
