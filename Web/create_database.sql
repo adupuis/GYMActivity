@@ -243,7 +243,7 @@ CREATE TABLE ActivityReportStatus (
 
 ALTER TABLE ActivityReportStatus AUTO_INCREMENT = 1;
 INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','En attente de validation utilisateur',"Le rapport d'activité a été pré-soumis et est en attente de validation par l'utilisateur.");
-INSERT INTO ActivityReportStatus VALUES(NULL,'P_APPROVAL','En attente de validation',"Le rapport d'activité a été soumis et est en attente d'approbation du management.");
+INSERT INTO ActivityReportStatus VALUES(NULL,'P_APPROVAL','En attente de validation manager',"Le rapport d'activité a été soumis et est en attente d'approbation du management.");
 INSERT INTO ActivityReportStatus VALUES(NULL,'APPROVED','Validé',"Le rapport d'activité a été approuvé par la direction, il est maintenant en attente de facturation.");
 INSERT INTO ActivityReportStatus VALUES(NULL,'BILLED','Facturé','Facture envoyée au client.');
 INSERT INTO ActivityReportStatus VALUES(NULL,'PAID','Payé',"Le client a payé pour ce rapport d'activité.");
