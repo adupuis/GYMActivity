@@ -179,9 +179,56 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été renvoyés à votre validation.","nok");
 				}
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
+					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement renvoyé en validation utilisateur.</li>\n";
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement renvoyés en validation utilisateur.</li>\n";
+			}
+		}
+	}
+	else if( $_POST['cra_action'] == "refuse_cra" ){
+		if( isset( $_POST['activity_report_id'] ) ){
+			$tmp_ars = new GenyActivityReportStatus();
+			$tmp_ars->loadActivityReportStatusByShortName('REFUSED');
+			$ok_count=0;
+			$count_by_profile = array();
+			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
+				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
+				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+				if($tmp_ass->commitUpdates()){
+					$ok_count++;
+					$tmp_activity = new GenyActivity( $tmp_ar_id );
+					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
+					$tmp_project = new GenyProject( $tmp_assignement->project_id );
+					if(isset($count_by_profile[$tmp_ass->profile_id])){
+						if( strripos($tmp_project->name,'congés') !== false )
+							$count_by_profile[$tmp_ass->profile_id]['conges']++;
+						else
+							$count_by_profile[$tmp_ass->profile_id]['cra']++;
+					}
+					else{
+						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
+						if( strripos($tmp_project->name,'congés') !== false )
+							$count_by_profile[$tmp_ass->profile_id]['conges']++;
+						else
+							$count_by_profile[$tmp_ass->profile_id]['cra']++;
+					}
+				}
+				else{
+					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de refuser le rapport ".$tmp_ass->id." à l'utilisateur.</li>\n";
+				}
+			}
+			if($ok_count > 0 ){
+				$notif = new GenyNotification();
+				foreach ($count_by_profile as $id => $value){
+					if( $value['conges'] > 0 )
+						$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être refusés.","nok");
+					if( $value['cra'] > 0 )
+						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été refusés.","nok");
+				}
+				if($ok_count == 1)
+					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement refusé.</li>\n";
+				else
+					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement refusés.</li>\n";
 			}
 		}
 	}
@@ -403,10 +450,10 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				<li id="radio">
 					<input type="radio" id="radio0" name="cra_action" value="user_validate_cra" /><label for="radio0">Validation utilisateur</label>
 					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Validé</label>
-					<input type="radio" id="radio2" name="cra_action" value="bill_cra" /><label for="radio2">Facturé</label>
+					<!--<input type="radio" id="radio2" name="cra_action" value="bill_cra" /><label for="radio2">Facturé</label>
 					<input type="radio" id="radio3" name="cra_action" value="pay_cra" /><label for="radio3">Payé</label>
 					<input type="radio" id="radio4" name="cra_action" value="close_cra" /><label for="radio4">Fermé</label>
-					<input type="radio" id="radio5" name="cra_action" value="deletion_cra" /><label for="radio5">Suppression</label>
+					<input type="radio" id="radio5" name="cra_action" value="deletion_cra" /><label for="radio5">Suppression</label>-->
 					<input type="radio" id="radio6" name="cra_action" value="delete_cra" /><label for="radio6">Supprimé</label>
 					<input type="radio" id="radio7" name="cra_action" value="refuse_cra" /><label for="radio7">Refusé</label>
 				</li>
