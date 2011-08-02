@@ -118,19 +118,61 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				else
 					$old_overtime_states[$tmp_ass->profile_id] = 'false' ;
 			}
-			if($geny_assignement->deleteAllAssignementsByProjectId( $geny_project->id )){
-				foreach ($_POST['project_profiles'] as $key => $value){
-					$tmp_profile = new GenyProfile( $value );
-					$tmp_overtime_allowed = 'false';
-					if( isset( $old_overtime_states[$tmp_profile->id] ) )
-						$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
-					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
-						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
+			
+			$assignements = $geny_assignement->getAssignementsListByProjectId( $geny_project->id );
+			$assigned_profile_id = array();
+			$assignements_by_profile_id = array();
+			foreach( $assignements as $ass){
+				$assigned_profile_id[] = $ass->profile_id;
+				$assignements_by_profile_id[$ass->profile_id] = $ass;
+			}
+			$new_profile_id = array();
+			foreach ($_POST['project_profiles'] as $key => $value){
+				$new_profile_id[] = $value;
+			}
+			
+			$notif = new GenyNotification();
+			
+			foreach( array_diff($assigned_profile_id,$new_profile_id) as $value ){
+				$tmp_profile = new GenyProfile( $value );
+				if( isset($assignements_by_profile_id[$value]) ){
+					if($geny_assignement->deleteAssignement( $assignements_by_profile_id[$value]->id ) > 0){
+						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login supprimé(e) du projet.</li>\n";
+						$notif->insertNewNotification( $tmp_profile->id, "Vous avez été supprimé(e) du projet ".$geny_project->name );
 					}
 					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+						$db_status .= "<li class=\"status_message_error\">Erreur lors de la suppression du profil $tmp_profile->login, aucune affectation pré-existante pour ce projet.</li>\n";
 				}
+				else
+					$db_status .= "<li class=\"status_message_error\">Erreur : lors de la suppression du profil $tmp_profile->login du projet $geny_project->name.</li>\n";
 			}
+			foreach( array_diff($new_profile_id,$assigned_profile_id) as $value ){
+				$tmp_profile = new GenyProfile( $value );
+				$tmp_overtime_allowed = 'false';
+				if( isset( $old_overtime_states[$tmp_profile->id] ) )
+					$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
+				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
+					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajouté(e) au projet.</li>\n";
+					$notif->insertNewNotification( $tmp_profile->id, "Vous avez été ajouté(e) au projet ".$geny_project->name );
+				}
+				else
+					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+			}
+			
+// 			WARNING: Cet ancien code est une cause de bug majeur !!!
+// 			if($geny_assignement->deleteAllAssignementsByProjectId( $geny_project->id )){
+// 				foreach ($_POST['project_profiles'] as $key => $value){
+// 					$tmp_profile = new GenyProfile( $value );
+// 					$tmp_overtime_allowed = 'false';
+// 					if( isset( $old_overtime_states[$tmp_profile->id] ) )
+// 						$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
+// 					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
+// 						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
+// 					}
+// 					else
+// 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+// 				}
+// 			}
 		}
 		if($geny_project->commitUpdates()){
 			$db_status .= "<li class=\"status_message_success\">Projet mis à jour avec succès.</li>\n";

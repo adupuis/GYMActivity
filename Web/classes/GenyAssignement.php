@@ -99,5 +99,21 @@ class GenyAssignement {
 		$query = "DELETE FROM Assignements WHERE project_id=$project_id";
 		return mysql_query($query, $this->handle);
 	}
+	public function deleteAssignement($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			$query = "DELETE FROM Assignements WHERE assignement_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyAssignement MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
 }
 ?>
