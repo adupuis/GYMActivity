@@ -175,7 +175,6 @@ $db_status = "";
 					<tbody>
 					<?php
 						$geny_ar = new GenyActivityReport();
-						$geny_ars = new GenyActivityReportStatus();
 						foreach( $geny_ar->getActivityReportsByProfileId( $profile->id ) as $ar ){
 							$tmp_activity = new GenyActivity( $ar->activity_id );
 							$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
@@ -183,10 +182,9 @@ $db_status = "";
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
 							$status_name = "<strong style='color: red;'>error</strong>";
-							if( $geny_ars->name != "" )
-								$status_name = $geny_ars->name;
+							if( $tmp_ars->name != "" )
+								$status_name = $tmp_ars->name;
 							if( strripos($tmp_project->name,'congés') === false ){
-								$geny_ars->loadActivityReportStatusById($ar->status_id);
 								echo "<tr><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$status_name."</td></tr>";
 							}
 						}
