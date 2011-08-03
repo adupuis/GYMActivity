@@ -26,12 +26,14 @@ try {
 				// Nous générons donc une nouvelle clé.
 				$new_key = $key1->generateApiKey();
 				if($key1->insertNewApiKey(0,$key1->profile_id,$new_key) > 0){
-					echo json_encode(array("status" => "success","success_string" => "New API key generated."));
+					echo json_encode(array("status" => "success","success_string" => "New API key generated.","new_key" => "$new_key"));
 				}
 				else
 					echo json_encode(array("status" => "error","error_string" => "Insertion of the newly generated key failed."));
 				
 			}
+			else
+				echo json_encode(array("status"=>"error","error_string"=>"Parameters does not match database's data."));
 		}
 		else
 			echo json_encode(array("status"=>"error","error_string"=>"Required parameters not provided."));

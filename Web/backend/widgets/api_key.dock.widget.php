@@ -31,6 +31,11 @@ if( $apikey->id <= 0 ){
 	<p>
 		<img src="https://chart.googleapis.com/chart?chs=230x230&cht=qr&chl=<?php echo $apikey->data; ?>" />
 	</p>
+	<style>
+		@import 'styles/<?php echo $web_config->theme ?>/api_key.dock.widget.css';
+	</style>
+	<ul id="key_status_message" class="status_message">
+	</ul>
 </div>
 
 <script>
@@ -50,12 +55,14 @@ if( $apikey->id <= 0 ){
 					$.get("backend/ajax_server_side/generate_new_api_key.php",
 					{"old_key":"<?php echo $apikey->data; ?>", "owner" : "<?php echo $apikey->profile_id; ?>", "ts" : "<?php echo $apikey->timestamp; ?>"},
 					function(returned_data){
-						if( returned_data.status == "error" ){
-							alert( returned_data.error_string );
+						if(returned_data.status == "success"){
+							$("#key_status_message").append("<li class=\"status_message_success\">"+returned_data.success_string+"</li>");
+							$("#key").val(returned_data.new_key);
 						}
-						$( this ).dialog( "close" );
-						location.reload;
-					});
+						else{
+							$("#key_status_message").append("<li class=\"status_message_error\">"+returned_data.error_string+"</li>");
+						}
+					},"json");
 				}
 			}
 		});
