@@ -101,10 +101,21 @@ $geny_profile = new GenyProfile();
 					$( "#project_start_date" ).datepicker('setDate', new Date());
 					$( "#project_start_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#project_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#project_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#project_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#project_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#project_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#project_start_date" ).datepicker( "option", "firstDay", 1 );
+					
 					$( "#project_end_date" ).datepicker();
 					$( "#project_end_date" ).datepicker('setDate', new Date());
 					$( "#project_end_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#project_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#project_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#project_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#project_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#project_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#project_end_date" ).datepicker( "option", "firstDay", 1 );
 				});
 			</script>
 			<p>
