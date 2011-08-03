@@ -75,10 +75,21 @@ date_default_timezone_set('Europe/Paris');
 					$( "#assignement_start_date" ).datepicker('setDate', new Date());
 					$( "#assignement_start_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#assignement_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#assignement_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#assignement_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#assignement_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#assignement_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#assignement_start_date" ).datepicker( "option", "firstDay", 1 );
 					$( "#assignement_end_date" ).datepicker();
 					$( "#assignement_end_date" ).datepicker('setDate', new Date());
 					$( "#assignement_end_date" ).datepicker( "option", "showAnim", "slideDown" );
 					$( "#assignement_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#assignement_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#assignement_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#assignement_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#assignement_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#assignement_end_date" ).datepicker( "option", "firstDay", 1 );
+					
 					$( "#assignement_start_date" ).change( function(){ $( "#assignement_end_date" ).val( $( "#assignement_start_date" ).val() ) } );
 					
 				});
