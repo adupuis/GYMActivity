@@ -1,0 +1,71 @@
+.notifications_list li {
+	border-radius: 5px;
+	height: 40px;
+	margin-top: 5px;
+}
+
+.notifications_list li img {
+	position: relative;
+	top: 4px;
+	left: 4px;
+	height:32px;
+	width: 32px;
+}
+
+.notifications_list li span {
+	position: relative;
+	top: -10px;
+	left: 10px;
+	height: 38px;
+}
+
+.notification_type_security {
+	border: 1px solid #0061b3;
+	background-color: #b5ddff;
+}
+
+.notification_type_question {
+	border: 1px solid #0061b3;
+	background-color: #b5ddff;
+}
+
+.notification_type_contacts {
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+}
+
+.notification_type_info {
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+}
+
+.notification_type_cra {
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+}
+
+.notification_type_info {
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+}
+
+.notification_type_ok {
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+}
+
+.notification_type_warning {
+	border: 1px #ec1717 solid;
+	background-color: #e7acac;
+}
+
+.notification_type_nok {
+	border: 1px #ec1717 solid;
+	background-color: #e7acac;
+}
+
+.notification_type_critical {
+	border: 1px #ec1717 solid;
+	background-color: #e7acac;
+}
+
