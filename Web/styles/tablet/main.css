@@ -251,7 +251,7 @@ ul#navigation .contact a    {
 
 div.page_title {
 	position:relative;
-	top: 70px;
+	top: 107px;
 	height:95px;
 	left:0px;
 	/*margin-left: auto;
@@ -305,8 +305,8 @@ div#maindock ul li {
 
 div#maindock ul li a {
 	text-align: center;
-	margin-left: 50px;
-	margin-bottom: 50px;
+	margin-left: 20px;
+	margin-bottom: 20px;
 	background-repeat:no-repeat;
 	background-position:10px 10px;
 }
@@ -314,8 +314,8 @@ div#maindock ul li a {
 div#maindock ul li a {
 	display:block;
 	float: left;
-	width: 350px;
-	height: 150px;
+	width: 300px;
+	height: 130px;
 	text-decoration:none;
 	color: #6a6a6a;
 	background-color: #e7f3bd;
@@ -338,8 +338,8 @@ div#maindock a span.dock_item_title{
 	top: 20px;
 	margin-left: auto;
 	margin-right: auto;
-	font-size:30px;
-	font-weight: x-large;
+	font-size:25px;
+	font-weight: large;
 	color: #6a6a6a;
 	text-shadow: 0 -1px 1px #fff; 
 	text-align:center;
