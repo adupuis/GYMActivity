@@ -30,6 +30,10 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 		$sqldata = mysql_fetch_assoc($result);
 		$_SESSION['USERID'] = $username;
 		$_SESSION['LOGGEDIN'] = true;
+		if(file_exists("styles/".$_POST['geny_theme']."/main.css"))
+			$_SESSION['THEME'] = $_POST['geny_theme'];
+		else
+			$_SESSION['THEME'] = 'default';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );
 		if( $tmp_profile->needs_password_reset )
 			header('Location: user_admin_password_change.php');

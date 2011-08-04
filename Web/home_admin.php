@@ -17,7 +17,8 @@ include_once 'menu.php';
 	<ul>
 		<?php 
 			include 'backend/widgets/user_admin_password_change.dock.widget.php';
-			include 'backend/widgets/api_key.dock.widget.php';
+			if( $web_config->theme != "tablet" )
+				include 'backend/widgets/api_key.dock.widget.php';
 			if( $profile->rights_group_id == 1 ){
 				include 'backend/widgets/profile_add.dock.widget.php'; 
 				include 'backend/widgets/profile_list.dock.widget.php'; 

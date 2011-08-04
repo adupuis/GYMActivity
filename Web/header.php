@@ -7,9 +7,11 @@ function __autoload($class_name) {
 
 try {
     $checkId_obj = new CheckIdentity();
+    $web_config = new GenyWebConfig();
     if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
 	if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
-		
+		if(isset($_SESSION['THEME']))
+			$web_config->theme = $_SESSION['THEME'];
 	}
 	else
 		header("Location: index.php?reason=forbidden");
@@ -21,7 +23,6 @@ try {
     $profile->loadProfileByUsername($_SESSION['USERID']);
     if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
 	header('Location: user_admin_password_change.php');
-    $web_config = new GenyWebConfig();
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";
 }

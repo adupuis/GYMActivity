@@ -302,7 +302,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 		</script>
 		<form id="formID" action="conges_validation.php" method="post" class="table_container">
 			<style>
-				@import 'styles/default/cra_validation.css';
+				@import 'styles/<?php echo $web_config->theme ?>/cra_validation.css';
 			</style>
 			<ul>
 				<li>

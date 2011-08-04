@@ -7,7 +7,7 @@ $html .= '</ul>';
 ?>
 
 <style>
-	@import 'styles/default/notifications.css';
+	@import 'styles/<?php echo $web_config->theme ?>/notifications.css';
 </style>
 
 <li class="notifications">
@@ -78,7 +78,7 @@ $html .= '</ul>';
 		$( "#notifications-dialog-message" ).dialog({
 			modal: true,
 			autoOpen: false,
-			width: 1000,
+			width: 900,
 			show: "slide",
 			hide: "explode",
 			buttons: {

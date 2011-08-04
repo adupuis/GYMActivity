@@ -131,7 +131,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 		Voici la liste des profils dans la base des utilisateurs.
 		</p>
 		<style>
-			@import 'styles/default/profile_list.css';
+			@import 'styles/<?php echo $web_config->theme ?>/profile_list.css';
 		</style>
 		<div class="table_container">
 		<p>

@@ -1,7 +1,7 @@
 
 
 <style>
-	@import 'styles/default/send_notifications.dock.widget.css';
+	@import 'styles/<?php echo $web_config->theme ?>/send_notifications.dock.widget.css';
 	.ui-autocomplete-loading { background: white url('images/default/ui-anim_basic_16x16.gif') right center no-repeat; }
 </style>
 <script>

@@ -259,7 +259,7 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.
 		</p>
 		<style>
-			@import 'styles/default/reporting_monthly_view.css';
+			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
 		</style>
 		<div class="table_container">
 		<p>

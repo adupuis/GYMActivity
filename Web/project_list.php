@@ -143,7 +143,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 		Voici la liste des projets dans la base des projets.
 		</p>
 		<style>
-			@import 'styles/default/project_list.css';
+			@import 'styles/<?php echo $web_config->theme ?>/project_list.css';
 		</style>
 		<div class="table_container">
 		<p>

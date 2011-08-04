@@ -52,7 +52,7 @@ $geny_task = new GenyTask();
 		Voici la liste des tâches dans la base des tâches.
 		</p>
 		<style>
-			@import 'styles/default/task_list.css';
+			@import 'styles/<?php echo $web_config->theme ?>/task_list.css';
 		</style>
 		<div class="table_container">
 		<p>

@@ -52,7 +52,7 @@ $geny_client = new GenyClient();
 		Voici la liste des clients dans la base des clients.
 		</p>
 		<style>
-			@import 'styles/default/client_list.css';
+			@import 'styles/<?php echo $web_config->theme ?>/client_list.css';
 		</style>
 		<div class="table_container">
 		<p>

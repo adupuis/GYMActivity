@@ -439,7 +439,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			});
 		</script>
 		<style>
-			@import 'styles/default/cra_validation_admin.css';
+			@import 'styles/<?php echo $web_config->theme ?>/cra_validation_admin.css';
 		</style>
 		<form id="formID" action="cra_validation_admin.php" method="post" class="table_container">
 			<input type="hidden" name="validate_cra" value="true" />
