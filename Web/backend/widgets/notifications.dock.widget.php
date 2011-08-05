@@ -49,7 +49,7 @@ $html .= '</ul>';
 <script>
 // 	Récupération du nombre de notifications non lues
 	function get_unread_notification_count(){
-		$.get("backend/ajax_server_side/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=count_unread", function(data){
+		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=count_unread", function(data){
 			$("span.notification_count_content").empty();
 			$("span.notification_count_content").append(data.count_unread);
 		},"json");
@@ -64,7 +64,7 @@ $html .= '</ul>';
 	
 // 	Récupération de la liste des notifications non lues et affichage dans la popup.
 	function get_unread_notification_list(){
-		$.get("backend/ajax_server_side/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=list", function(data){
+		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=list", function(data){
 			$("#notifications-dialog-message").empty();
 			var html = "<p><ul class='notifications_list'>";
 			var notification_count=0;
@@ -88,7 +88,7 @@ $html .= '</ul>';
 	});
 	
 	function mark_all_notifications_as_read(){
-		$.get("backend/ajax_server_side/mark_all_notifications_as_read.php?profile_id="+<?php echo $profile->id; ?>, function(){
+		$.get("backend/api/mark_all_notifications_as_read.php?profile_id="+<?php echo $profile->id; ?>, function(){
 			get_unread_notification_count();
 			get_unread_notification_list();
 		});

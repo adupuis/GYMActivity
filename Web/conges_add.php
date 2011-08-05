@@ -77,7 +77,7 @@ date_default_timezone_set('Europe/Paris');
 				<script>
 					function getTasks(){
 						var project_id = $("#assignement_id").val();
-						$.get('backend/ajax_server_side/get_project_tasks_list.php?assignement_id='+project_id, function(data){
+						$.get('backend/api/get_project_tasks_list.php?assignement_id='+project_id, function(data){
 							$('.tasks_options').remove();
 							$.each(data, function(key, val) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');

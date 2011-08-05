@@ -72,7 +72,7 @@ if( $apikey->id <= 0 ){
 					
 				},
 				"Regénérer une clé" : function(){
-					$.get("backend/ajax_server_side/generate_new_api_key.php",
+					$.get("backend/api/generate_new_api_key.php",
 					{"old_key":"<?php echo $apikey->data; ?>", "owner" : "<?php echo $apikey->profile_id; ?>", "ts" : "<?php echo $apikey->timestamp; ?>"},
 					function(returned_data){
 						if(returned_data.status == "success"){
