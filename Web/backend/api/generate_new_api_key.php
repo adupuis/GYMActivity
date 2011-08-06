@@ -22,6 +22,7 @@
 session_start();
 $required_group_rights = 6;
 $auth_granted = false;
+$authorized_auth_method="session";
 
 header('Content-type:text/javascript;charset=UTF-8');
 
@@ -44,7 +45,8 @@ try {
 			if( $key1->id == $key2->id && $key1->profile_id == $key2->profile_id && $key1->data == $key2->data && $key1->timestamp == $key2->timestamp && $key1->timestamp == $old_key_timestamp ){
 				// Arrivé là nous devrions être aussi certain que possible que la clé existe dans la base, que les paramètres sont cohérents entre eux et qu'ils correspondent à ce qu'il y a dans la base (y compris pour le timestamp).
 				// Nous générons donc une nouvelle clé.
-				$new_key = $key1->generateApiKey();
+				$tmp_profile = new GenyProfile($old_key_profile_id);
+				$new_key = $key1->generateApiKey($tmp_profile);
 				if($key1->insertNewApiKey(0,$key1->profile_id,$new_key) > 0){
 					echo json_encode(array("status" => "success","success_string" => "New API key generated.","new_key" => "$new_key"));
 				}
