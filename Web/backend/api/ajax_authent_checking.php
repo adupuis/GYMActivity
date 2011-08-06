@@ -30,11 +30,14 @@ try {
 		$api_key = $_POST['api_key'];
 	else if( isset($_GET['api_key']))
 		$api_key = $_GET['api_key'];
+		
+	if( !isset($authorized_auth_method) )
+		$authorized_auth_method="all";
 	
 	if( $api_key != "" )
 		session_start();
 	
-	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
+	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1 && ($authorized_auth_method == "session" || $authorized_auth_method=="all")){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
 			$auth_granted=true;
 		}
@@ -43,7 +46,7 @@ try {
 			echo json_encode(array('error'=>'User not allowed.'));
 		}
 	}
-	else if( $api_key != "" ){
+	else if( $api_key != "" && ($authorized_auth_method == "api_key" || $authorized_auth_method=="all")){
 		$ak_object = new GenyApiKey();
 		$ak_object->loadApiKeyByData($api_key);
 		if( $ak_object->id > 0 ){
