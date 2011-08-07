@@ -40,6 +40,23 @@ class GenyProject {
 		if($id > -1)
 			$this->loadProjectById($id);
 	}
+	public function deleteProject($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			
+			$query = "DELETE FROM Projects WHERE project_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyProject MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
 	public function insertNewProject($project_name,$project_description,$project_client,$project_location,$project_start_date,$project_end_date,$project_type_id,$project_status_id){
 		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).")";
 		if( $this->config->debug )
