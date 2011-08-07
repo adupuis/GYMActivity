@@ -40,7 +40,7 @@ try {
 		else
 			$results = $tmp_client->getAllClients();
 		foreach( $results as $c ){
-			$clients[] = array( "value" => $p->id, "label" => $c->name );
+			$clients[] = array( "value" => $c->id, "label" => $c->name );
 		}
 		$data = json_encode($clients);
 		echo $data;
