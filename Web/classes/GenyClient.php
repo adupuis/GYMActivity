@@ -33,6 +33,28 @@ class GenyClient {
 		if($id > -1)
 			$this->loadClientById($id);
 	}
+	public function deleteClient($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			// Avant de supprimer le client il faut supprimer tous les projets de ce client.
+			$p_object = new GenyProject();
+			foreach( $p_object->getProjectsByClientId($id) as $p ){
+				if( $p->deleteProject() <= 0 )
+					return -1;
+			}
+			$query = "DELETE FROM Clients WHERE client_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyClient MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
 	public function insertNewClient($id,$name){
 		$query = "INSERT INTO Clients VALUES($id,'".mysql_real_escape_string($name)."')";
 		if( $this->config->debug )
@@ -74,6 +96,10 @@ class GenyClient {
 	}
 	public function getAllClients(){
 		return $this->getClientsListWithRestrictions( array() );
+	}
+	public function searchClients($term){
+		$q = mysql_real_escape_string($term);
+		return $this->getClientsListWithRestrictions( array("client_name LIKE '%$q%'") );
 	}
 	public function loadClientByName($name){
 		$clients = $this->getClientsListWithRestrictions(array("client_name='".mysql_real_escape_string($name)."'"));
