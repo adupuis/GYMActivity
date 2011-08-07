@@ -255,7 +255,7 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		]);
 
 		// Set chart options
-		var options = {'title':'Reporting mensuel - charge/profile - <?php echo "$year-$month" ?> ',
+		var options = {'title':'Reporting mensuel - charge/profile - <?php echo "$year-$d_month_previous" ?> ',
 				'is3D': true,
 				'width':500,
 				'height':300};
