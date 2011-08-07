@@ -139,14 +139,20 @@ class GenyProject {
 		return $this->getProjectsListWithRestrictions( array() );
 	}
 	
-	public function getProjectsByStatus($status){
-		return $this->getProjectsListWithRestrictions(array("project_status_id=".mysql_real_escape_string($status)));
+	public function getProjectsByStatusId($status){
+		if(!is_numeric($status))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("project_status_id=$status"));
 	}
-	public function getProjectsByType($type){
-		return $this->getProjectsListWithRestrictions(array("project_type_id=".mysql_real_escape_string($type)));
+	public function getProjectsByTypeId($type){
+		if(!is_numeric($type))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("project_type_id=$type"));
 	}
-	public function getProjectsByClient($client_id){
-		return $this->getProjectsListWithRestrictions(array("client_id=".mysql_real_escape_string($client_id)));
+	public function getProjectsByClientId($client_id){
+		if(!is_numeric($client_id))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("client_id=$client_id"));
 	}
 	public function loadProjectByName($name){
 		$projects = $this->getProjectsListWithRestrictions(array("project_name='".mysql_real_escape_string($name)."'"));
