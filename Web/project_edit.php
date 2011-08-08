@@ -328,7 +328,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p>
 			<p>
 				<label for="project_location">Localisation</label>
-				<input name="project_location" id="project_location" type="text" value="<?php echo $geny_project->location ?>" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="project_location" id="project_location" type="text" value="<?php echo $geny_project->location ?>" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<script type="text/javascript">
 				$(function() {
