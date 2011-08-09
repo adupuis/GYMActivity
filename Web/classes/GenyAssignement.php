@@ -63,7 +63,7 @@ class GenyAssignement {
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
-				$tmp_object = new GenyClient();
+				$tmp_object = new GenyAssignement();
 				$tmp_object->id = $row[0];
 				$tmp_object->profile_id = $row[1];
 				$tmp_object->project_id = $row[2];
@@ -112,18 +112,20 @@ class GenyAssignement {
 		echo $query;
 		return mysql_query($query, $this->handle);
 	}
-	public function deleteAllAssignementsByProjectId($project_id){
-		if(!is_numeric($project_id))
-			return false;
-		$query = "DELETE FROM Assignements WHERE project_id=$project_id";
-		return mysql_query($query, $this->handle);
-	}
 	public function deleteAssignement($id=0){
 		if(is_numeric($id)){
 			if( $id == 0 && $this->id > 0 )
 				$id = $this->id;
 			if($id <= 0)
 				return -1;
+				
+			// Avant de supprimer un assignement il faut supprimer toutes les activity qui y sont attachés.
+			$tmp_activity = new GenyActivity();
+			foreach( $tmp_activity->getActivitiesListByAssignementId($id) as $a ){
+				if( $a->deleteActivity() <= 0 )
+					return -1;
+			}
+			
 			$query = "DELETE FROM Assignements WHERE assignement_id=$id";
 			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyAssignement MySQL DELETE query : $query -->\n";

@@ -63,7 +63,7 @@ class GenyProjectStatus {
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
-				$tmp_object = new GenyClient();
+				$tmp_object = new GenyProjectStatus();
 				$tmp_object->id = $row[0];
 				$tmp_object->name = $row[1];
 				$tmp_object->description = $row[2];

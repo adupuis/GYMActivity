@@ -47,6 +47,21 @@ class GenyProject {
 			if($id <= 0)
 				return -1;
 			
+			// Avant de supprimer le projet il faut supprimer les associations de tâches/projets.
+			$project_task_relations = new GenyProjectTaskRelation();
+			foreach( $project_task_relations->getProjectTaskRelationsListByProjectId($id) as $ptr ){
+				if( $ptr->deleteProjectTaskRelation() <= 0 ){
+					return -1;
+				}
+			}
+			
+			// Il faut ensuite supprimer les affectations.
+			$assignements = new GenyAssignement();
+			foreach( $assignements->getAssignementsListByProjectId($id) as $ass ){
+				if( $ass->deleteAssignement() <= 0 ) // Celà va déclencher la suppression des activities
+					return -1;
+			}
+			
 			$query = "DELETE FROM Projects WHERE project_id=$id";
 			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyProject MySQL DELETE query : $query -->\n";

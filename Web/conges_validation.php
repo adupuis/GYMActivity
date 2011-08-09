@@ -64,7 +64,7 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement des congés du $day.</li>\n";
 					}
 					else {
-						$geny_activity->removeActivity($geny_activity_id);
+						$geny_activity->deleteActivity($geny_activity_id);
 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
 					}
 				}

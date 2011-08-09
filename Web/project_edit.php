@@ -39,7 +39,7 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 			$geny_project->loadProjectByName( $_POST['project_name'] );
 			foreach ($_POST['project_tasks'] as $key => $value){
 				$geny_task = new GenyTask( $value );
-				if ($geny_ptr->insertNewProjectTaskRelation('NULL', $geny_project->id, $geny_task->id) ) {
+				if ($geny_ptr->insertNewProjectTaskRelation( $geny_project->id, $geny_task->id) ) {
 					$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
 				}
 				else
@@ -113,7 +113,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				$err_string = '';
 				foreach ($_POST['project_tasks'] as $key => $value){
 					$geny_task = new GenyTask( $value );
-					if ($geny_ptr->insertNewProjectTaskRelation('NULL', $geny_project->id, $geny_task->id) ) {
+					if ($geny_ptr->insertNewProjectTaskRelation($geny_project->id, $geny_task->id) ) {
 						//$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
 					}
 					else{

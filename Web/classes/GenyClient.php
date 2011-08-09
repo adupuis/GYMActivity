@@ -42,7 +42,7 @@ class GenyClient {
 			// Avant de supprimer le client il faut supprimer tous les projets de ce client.
 			$p_object = new GenyProject();
 			foreach( $p_object->getProjectsByClientId($id) as $p ){
-				if( $p->deleteProject() <= 0 )
+				if( $p->deleteProject() <= 0 ) // Celà va déclencher la suppression des Assignements
 					return -1;
 			}
 			$query = "DELETE FROM Clients WHERE client_id=$id";

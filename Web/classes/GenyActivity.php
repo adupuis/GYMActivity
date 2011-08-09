@@ -43,8 +43,16 @@ class GenyActivity {
 				$id = $this->id;
 			if($id <= 0)
 				return -1;
+				
+			// Avant de supprimer l'activité il faut s'assurer qu'auncun rapport lier à cette activitée ne subsiste.
+			$ar_object = new GenyActivityReport();
+			foreach( $ar_object->getActivityReportsByActivityId($id) as $aro ){
+				if($aro->deleteActivityReport() <= 0)
+					return -1;
+			}
+			
 			$query = "DELETE FROM Activities WHERE activity_id=$id";
-			if( $this->config->debug )
+// 			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivity MySQL DELETE query : $query -->\n";
 			if(mysql_query($query,$this->handle))
 				return 1;
@@ -69,12 +77,6 @@ class GenyActivity {
 			return mysql_insert_id($this->handle);
 		else
 			return -1;
-	}
-	public function removeActivity($id){
-		if( ! is_numeric($id) )
-			return false;
-		$query = "DELETE FROM Activities WHERE activity_id=$id";
-		return mysql_query($query,$this->handle);
 	}
 	public function getActivitiesListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
