@@ -19,7 +19,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// session_start();
+session_start();
 function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }

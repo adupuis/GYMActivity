@@ -19,7 +19,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// session_start();
+session_start();
 $required_group_rights = 2;
 $auth_granted = false;
 
