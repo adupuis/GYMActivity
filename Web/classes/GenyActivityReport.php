@@ -45,7 +45,7 @@ class GenyActivityReport {
 				return -1;
 			
 			$query = "DELETE FROM ActivityReports WHERE activity_report_id=$id";
-// 			if( $this->config->debug )
+			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivityReport MySQL DELETE query : $query -->\n";
 			if(mysql_query($query,$this->handle))
 				return 1;

@@ -52,7 +52,7 @@ class GenyActivity {
 			}
 			
 			$query = "DELETE FROM Activities WHERE activity_id=$id";
-// 			if( $this->config->debug )
+			if( $this->config->debug )
 				echo "<!-- DEBUG: GenyActivity MySQL DELETE query : $query -->\n";
 			if(mysql_query($query,$this->handle))
 				return 1;
