@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Liste idées';
+$header_title = '%COMPANY_NAME% - Liste idées';
 $required_group_rights = 5;
 
 include_once 'header.php';

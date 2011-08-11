@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Reporting mensuel';
+$header_title = '%COMPANY_NAME% - Reporting mensuel';
 $required_group_rights = 2; // TODO: Et la on voit que mon système d'ACL est merdique... Pas très grave je l'avais vu depuis le début mais bon...
 
 include_once 'header.php';

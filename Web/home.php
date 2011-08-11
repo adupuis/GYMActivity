@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Home';
+$header_title = '%COMPANY_NAME% - Home';
 $required_group_rights = 6;
 
 include_once 'header.php';
@@ -40,6 +40,7 @@ include_once 'menu.php';
 			include 'backend/widgets/cra_validation.dock.widget.php';
 			include 'backend/widgets/conges_add.dock.widget.php';
 			include 'backend/widgets/conges_validation.dock.widget.php';
+			include 'backend/widgets/gymactivity_version.dock.widget.php';
 		?>
 	</ul>
 </div>
