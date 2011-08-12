@@ -40,6 +40,38 @@ class GenyProject {
 		if($id > -1)
 			$this->loadProjectById($id);
 	}
+	public function deleteProject($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			
+			// Avant de supprimer le projet il faut supprimer les associations de tâches/projets.
+			$project_task_relations = new GenyProjectTaskRelation();
+			foreach( $project_task_relations->getProjectTaskRelationsListByProjectId($id) as $ptr ){
+				if( $ptr->deleteProjectTaskRelation() <= 0 ){
+					return -1;
+				}
+			}
+			
+			// Il faut ensuite supprimer les affectations.
+			$assignements = new GenyAssignement();
+			foreach( $assignements->getAssignementsListByProjectId($id) as $ass ){
+				if( $ass->deleteAssignement() <= 0 ) // Celà va déclencher la suppression des activities
+					return -1;
+			}
+			
+			$query = "DELETE FROM Projects WHERE project_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyProject MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
 	public function insertNewProject($project_name,$project_description,$project_client,$project_location,$project_start_date,$project_end_date,$project_type_id,$project_status_id){
 		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).")";
 		if( $this->config->debug )
@@ -122,14 +154,20 @@ class GenyProject {
 		return $this->getProjectsListWithRestrictions( array() );
 	}
 	
-	public function getProjectsByStatus($status){
-		return $this->getProjectsListWithRestrictions(array("project_status_id=".mysql_real_escape_string($status)));
+	public function getProjectsByStatusId($status){
+		if(!is_numeric($status))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("project_status_id=$status"));
 	}
-	public function getProjectsByType($type){
-		return $this->getProjectsListWithRestrictions(array("project_type_id=".mysql_real_escape_string($type)));
+	public function getProjectsByTypeId($type){
+		if(!is_numeric($type))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("project_type_id=$type"));
 	}
-	public function getProjectsByClient($client_id){
-		return $this->getProjectsListWithRestrictions(array("client_id=".mysql_real_escape_string($client_id)));
+	public function getProjectsByClientId($client_id){
+		if(!is_numeric($client_id))
+			return -1;
+		return $this->getProjectsListWithRestrictions(array("client_id=$client_id"));
 	}
 	public function loadProjectByName($name){
 		$projects = $this->getProjectsListWithRestrictions(array("project_name='".mysql_real_escape_string($name)."'"));

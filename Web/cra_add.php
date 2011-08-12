@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Ajout CRA';
+$header_title = '%COMPANY_NAME% - Ajout CRA';
 $required_group_rights = 6;
 
 include_once 'header.php';
@@ -79,7 +79,7 @@ date_default_timezone_set('Europe/Paris');
 				<script>
 					function getTasks(){
 						var project_id = $("#assignement_id").val();
-						$.get('backend/ajax_server_side/get_project_tasks_list.php?assignement_id='+project_id, function(data){
+						$.get('backend/api/get_project_tasks_list.php?assignement_id='+project_id, function(data){
 							$('.tasks_options').remove();
 							$.each(data, function(key, val) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');

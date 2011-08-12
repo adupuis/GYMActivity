@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Validation CRA';
+$header_title = '%COMPANY_NAME% - Validation CRA';
 $required_group_rights = 6;
 
 include_once 'header.php';
@@ -90,7 +90,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 						$ok_count++;
 					}
 					else {
-						$geny_activity->removeActivity($geny_activity_id);
+						$geny_activity->deleteActivity($geny_activity_id);
 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
 					}
 				}
@@ -144,9 +144,10 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 	else if( $_POST['cra_action'] == "delete_cra" ){
 		if( isset( $_POST['activity_report_id'] ) ){
 			$ok_count=0;
-			$tmp_ass = new GenyActivityReport();
+			$tmp_activity = new GenyActivity();
 			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
-				if($tmp_ass->deleteActivityReport($tmp_ar_id) == 1){
+				$tmp_ar = new GenyActivityReport($tmp_ar_id);
+				if($tmp_activity->deleteActivity($tmp_ar->activity_id) == 1){
 					$ok_count++;
 				}
 				else{

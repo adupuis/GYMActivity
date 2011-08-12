@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Ajout projet';
+$header_title = '%COMPANY_NAME% - Ajout projet';
 $required_group_rights = 2;
 
 include_once 'header.php';
@@ -112,7 +112,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="project_location">Localisation</label>
-				<input name="project_location" id="project_location" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="project_location" id="project_location" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<script type="text/javascript">
 				$(function() {

@@ -34,10 +34,31 @@ class GenyProjectTaskRelation {
 		if($id > -1)
 			$this->loadProjectTaskRelationById($id);
 	}
-	public function insertNewProjectTaskRelation($id,$project_id,$task_id){
-		$query = "INSERT INTO ProjectTaskRelations VALUES($id,$project_id,$task_id)";
+	public function deleteProjectTaskRelation($id=0){
+		if(is_numeric($id)){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if($id <= 0)
+				return -1;
+			
+			$query = "DELETE FROM ProjectTaskRelations WHERE project_task_relation_id=$id";
+			if( $this->config->debug )
+				echo "<!-- DEBUG: GenyProjectTaskRelation MySQL DELETE query : $query -->\n";
+			if(mysql_query($query,$this->handle))
+				return 1;
+			else
+				return -1;
+		}
+		return -1;
+	}
+	public function insertNewProjectTaskRelation($project_id,$task_id){
+		if(!is_numeric($project_id))
+			return -1;
+		if(!is_numeric($task_id))
+			return -1;
+		$query = "INSERT INTO ProjectTaskRelations VALUES(0,$project_id,$task_id)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectTaskRelations MySQL query : $query -->\n";
+			echo "<!-- DEBUG: GenyProjectTaskRelation MySQL query : $query -->\n";
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -62,7 +83,7 @@ class GenyProjectTaskRelation {
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
-				$tmp_object = new GenyClient();
+				$tmp_object = new GenyProjectTaskRelation();
 				$tmp_object->id = $row[0];
 				$tmp_object->project_id = $row[1];
 				$tmp_object->task_id = $row[2];
@@ -76,13 +97,19 @@ class GenyProjectTaskRelation {
 		return $this->getProjectTaskRelationsListWithRestrictions( array() );
 	}
 	public function getProjectTaskRelationsListByProjectId($id){
-		return $this->getProjectTaskRelationsListWithRestrictions(array("project_id=".mysql_real_escape_string($id)));
+		if(!is_numeric($id))
+			return -1;
+		return $this->getProjectTaskRelationsListWithRestrictions(array("project_id=$id"));
 	}
 	public function getProjectTaskRelationsListByTaskId($id){
-		return $this->getProjectTaskRelationsListWithRestrictions(array("task_id=".mysql_real_escape_string($id)));
+		if(!is_numeric($id))
+			return -1;
+		return $this->getProjectTaskRelationsListWithRestrictions(array("task_id=$id"));
 	}
 	public function loadProjectTaskRelationById($id){
-		$objects = $this->getProjectTaskRelationListWithRestrictions(array("project_task_relation_id=".mysql_real_escape_string($id)));
+		if(!is_numeric($id))
+			return -1;
+		$objects = $this->getProjectTaskRelationListWithRestrictions(array("project_task_relation_id=$id"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;

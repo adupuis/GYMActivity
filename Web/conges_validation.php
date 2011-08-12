@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Validation congés';
+$header_title = '%COMPANY_NAME% - Validation congés';
 $required_group_rights = 5;
 
 include_once 'header.php';
@@ -64,7 +64,7 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement des congés du $day.</li>\n";
 					}
 					else {
-						$geny_activity->removeActivity($geny_activity_id);
+						$geny_activity->deleteActivity($geny_activity_id);
 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
 					}
 				}

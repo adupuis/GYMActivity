@@ -19,7 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Edition projet';
+$header_title = '%COMPANY_NAME% - Edition projet';
 $required_group_rights = 2;
 
 include_once 'header.php';
@@ -39,7 +39,7 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 			$geny_project->loadProjectByName( $_POST['project_name'] );
 			foreach ($_POST['project_tasks'] as $key => $value){
 				$geny_task = new GenyTask( $value );
-				if ($geny_ptr->insertNewProjectTaskRelation('NULL', $geny_project->id, $geny_task->id) ) {
+				if ($geny_ptr->insertNewProjectTaskRelation( $geny_project->id, $geny_task->id) ) {
 					$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
 				}
 				else
@@ -113,7 +113,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				$err_string = '';
 				foreach ($_POST['project_tasks'] as $key => $value){
 					$geny_task = new GenyTask( $value );
-					if ($geny_ptr->insertNewProjectTaskRelation('NULL', $geny_project->id, $geny_task->id) ) {
+					if ($geny_ptr->insertNewProjectTaskRelation($geny_project->id, $geny_task->id) ) {
 						//$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
 					}
 					else{
@@ -328,7 +328,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p>
 			<p>
 				<label for="project_location">Localisation</label>
-				<input name="project_location" id="project_location" type="text" value="<?php echo $geny_project->location ?>" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="project_location" id="project_location" type="text" value="<?php echo $geny_project->location ?>" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<script type="text/javascript">
 				$(function() {

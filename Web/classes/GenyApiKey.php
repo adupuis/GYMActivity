@@ -121,6 +121,8 @@ class GenyApiKey {
 	}
 	// Generation d'une clé API plutôt sécurisé à partir des informations d'un objet profile.
 	public function generateApiKey($profile_object){
+		if(!isset($profile_object))
+			return -1;
 		$seed = $profile_object->id.$profile_object->login.rand().time();
 		return sha1(str_rot13(base64_encode(hash('sha512', $seed))));
 	}

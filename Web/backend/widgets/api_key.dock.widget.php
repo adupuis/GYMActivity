@@ -72,15 +72,15 @@ if( $apikey->id <= 0 ){
 					
 				},
 				"Regénérer une clé" : function(){
-					$.get("backend/ajax_server_side/generate_new_api_key.php",
+					$.get("backend/api/generate_new_api_key.php",
 					{"old_key":"<?php echo $apikey->data; ?>", "owner" : "<?php echo $apikey->profile_id; ?>", "ts" : "<?php echo $apikey->timestamp; ?>"},
 					function(returned_data){
 						if(returned_data.status == "success"){
-							$("#key_status_message").append("<li class=\"status_message_success\">"+returned_data.success_string+"</li>");
+							$("#key_status_message").append("<li class=\"status_message_success\">"+returned_data.status_string+"</li>");
 							$("#key").val(returned_data.new_key);
 						}
 						else{
-							$("#key_status_message").append("<li class=\"status_message_error\">"+returned_data.error_string+"</li>");
+							$("#key_status_message").append("<li class=\"status_message_error\">"+returned_data.status_string+"</li>");
 						}
 					},"json");
 				}

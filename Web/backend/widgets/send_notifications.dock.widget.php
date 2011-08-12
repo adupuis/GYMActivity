@@ -29,7 +29,7 @@
 	$(function() {
 		
 		$( "#notification_to" ).autocomplete({
-			source: "backend/ajax_server_side/get_profile_list.php",
+			source: "backend/api/get_profile_list.php",
 			minLength: 2
 		});
 	});
@@ -56,7 +56,7 @@
 </li>
 <script>
 	function send_notification(){
-		$.get("backend/ajax_server_side/send_notification.php?to_type=pm&message="+$("#notification_message").val()+"&to="+$("#notification_to").val());
+		$.get("backend/api/send_notification.php?to_type=pm&message="+$("#notification_message").val()+"&to="+$("#notification_to").val());
 		$("#notification_message").val("");
 		$("#notification_to").val("");
 	}

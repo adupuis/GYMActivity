@@ -1,4 +1,5 @@
 <?php
+
 //  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
 //  adupuis@genymobile.com
 //  http://www.genymobile.com
@@ -18,31 +19,34 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Congés';
+session_start();
 $required_group_rights = 6;
+$auth_granted = false;
 
-include_once 'header.php';
-include_once 'menu.php';
+header('Content-type:text/javascript;charset=UTF-8');
 
+include_once 'ajax_authent_checking.php';
+include_once 'ajax_toolbox.php';
 
-?>
+try {
+	$clients = array();
+	if($auth_granted){
+		$tmp_client = new GenyClient();
+		$results = array();
+		$term = getParam("term");
+		
+		if( $term != "" )
+			$results = $tmp_client->searchClients($term);
+		else
+			$results = $tmp_client->getAllClients();
+		foreach( $results as $c ){
+			$clients[] = array( "value" => $c->id, "label" => $c->name );
+		}
+		$data = json_encode($clients);
+		echo $data;
+	}
+} catch (Exception $e) {
+    echo "Exception: ".$e->getMessage(), "\n";
+}
 
-<div class="page_title">
-	<img src="images/default/conges.png"/><p>Congés</p>
-</div>
-
-
-<div id="maindock">
-	<ul>
-		<?php
-			include 'backend/widgets/conges_add.dock.widget.php';
-			include 'backend/widgets/conges_validation.dock.widget.php';
-			include 'backend/widgets/conges_list.dock.widget.php';
-		?>
-	</ul>
-</div>
-
-<?php
-include_once 'footer.php';
 ?>

@@ -20,7 +20,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = 'GENYMOBILE - Mise à jour du mot de passe';
+$header_title = '%COMPANY_NAME% - Mise à jour du mot de passe';
 $required_group_rights = 6;
 $disable_password_reset_redirection = true;
 
