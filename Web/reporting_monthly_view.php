@@ -20,7 +20,7 @@
 
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Reporting mensuel';
-$required_group_rights = 2; // TODO: Et la on voit que mon système d'ACL est merdique... Pas très grave je l'avais vu depuis le début mais bon...
+$required_group_rights = array(1,2,4,5);
 
 include_once 'header.php';
 include_once 'menu.php';
