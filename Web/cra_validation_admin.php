@@ -30,53 +30,7 @@ $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
 $db_status = "";
 
-if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
-	$html_worked_days_table = '';
-	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
-		foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
-			$geny_activity = new GenyActivity();
-			$geny_ar = new GenyActivityReport();
-			$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];
-			if($day_load <= 8){
-				$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-				echo "<!-- Geny Activity ID: $geny_activity_id -->\n";
-				if( $geny_activity_id > -1 ){
-					$geny_ars = new GenyActivityReportStatus();
-					$geny_ars->loadActivityReportStatusByShortName('P_APPROVAL'); 
-					echo "<!-- Inserting new activity report -->\n";
-					$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-					echo "<!-- Geny Activity Report ID: $geny_ar_id -->\n";
-					if( $geny_ar_id > -1 )
-						$db_status .= "<li class=\"status_message_success\">Rapport enregistré pour le $day (en attente de validation utilisateur).</li>\n";
-					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement du rapport du $day.</li>\n";
-				}
-				else {
-					$geny_activity->deleteActivity($geny_activity_id);
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
-				}
-			}
-			else{
-				if( $day_load > 12 ){
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
-				}
-				else{
-					$day_work_load_by_project = $geny_ar->getDayLoadByAssignement($profile->id,$day);
-					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
-					$extra = '';
-					for($k=0; $k < count($day_work_load_by_project); $k++ ){
-						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['assignement_id'].",";
-					}
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière ($extra).</li>\n";
-				}
-			}
-		}
-	}
-	else{
-		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
-	}
-}
-else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "user_validate_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" || $_POST['cra_action'] == "refuse_cra" ) ){
+if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "user_validate_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" || $_POST['cra_action'] == "refuse_cra" ) ){
 	if( $_POST['cra_action'] == "validate_cra" ){
 		if( isset( $_POST['activity_report_id'] ) ){
 			$tmp_ars = new GenyActivityReportStatus();
@@ -252,53 +206,6 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 		}
 	}
 }
-else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
-	if( isset( $_POST['activity_report_id'] ) ){
-		$tmp_ars = new GenyActivityReportStatus();
-		$tmp_ars->loadActivityReportStatusByShortName('APPROVED');
-		$ok_count=0;
-		$count_by_profile = array();
-		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
-			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-			$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-			if($tmp_ass->commitUpdates()){
-				$ok_count++;
-				$tmp_activity = new GenyActivity( $tmp_ar_id );
-				$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-				$tmp_project = new GenyProject( $tmp_assignement->project_id );
-				if(isset($count_by_profile[$tmp_ass->profile_id])){
-					if( $tmp_project->type_id == 5 )
-						$count_by_profile[$tmp_ass->profile_id]['conges']++;
-					else
-						$count_by_profile[$tmp_ass->profile_id]['cra']++;
-				}
-				else{
-					$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-					if( $tmp_project->type_id == 5 )
-						$count_by_profile[$tmp_ass->profile_id]['conges']++;
-					else
-						$count_by_profile[$tmp_ass->profile_id]['cra']++;
-				}
-			}
-			else{
-				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
-			}
-		}
-		if($ok_count > 0 ){
-			$notif = new GenyNotification();
-			foreach ($count_by_profile as $id => $value){
-				if( $value['conges'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être acceptés.","ok");
-				if( $value['cra'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
-			}
-			if($ok_count == 1)
-				$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
-			else
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
-		}
-	}
-}
 
 ?>
 
@@ -461,7 +368,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			@import 'styles/<?php echo $web_config->theme ?>/cra_validation_admin.css';
 		</style>
 		<form id="formID" action="cra_validation_admin.php" method="post" class="table_container">
-			<input type="hidden" name="validate_cra" value="true" />
+<!-- 			<input type="hidden" name="validate_cra" value="true" /> -->
 			<ul style="display: inline; color: black;">
 				<li>
 					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
