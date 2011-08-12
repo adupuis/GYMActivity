@@ -201,7 +201,7 @@ $db_status = "";
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							if( strripos($tmp_project->name,'congés') !== false ){
+							if( $tmp_project->type_id == 5 ){
 								$geny_ars->loadActivityReportStatusById($ar->status_id);
 								echo "<tr><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$geny_ars->name."</td></tr>";
 							}

@@ -39,7 +39,10 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$tmp_project = new GenyProject( $tmp_input_ga->project_id );
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
-		if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
+		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
+			$db_status .= "<li class=\"status_message_error\">Erreur: il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.</li>\n";
+		}
+		else if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
 			$ok_count=0;
 			foreach( GenyTools::getWorkedDaysList($time_assignement_start_date, $time_assignement_end_date ) as $day ){
 				$geny_activity = new GenyActivity();

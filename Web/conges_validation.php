@@ -39,6 +39,9 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 		$tmp_project = new GenyProject( $tmp_input_ga->project_id );
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
+		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
+			$db_status .= "<li class=\"status_message_error\">Erreur: il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.</li>\n";
+		}
 		if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
 			foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
 				$geny_activity = new GenyActivity();
@@ -354,7 +357,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							if( strripos($tmp_project->name,'congés') !== false ){
+							if( $tmp_project->type_id == 5 ){
 								echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 							}
 						}

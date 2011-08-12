@@ -63,7 +63,7 @@ date_default_timezone_set('Europe/Paris');
 						$geny_assignements = new GenyAssignement();
 						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
 							$p = new GenyProject( $assignement->project_id );
-							if( strripos($p->name,'congés') !== false ){
+							if(  $p->type_id == 5 && $p->status_id != 2 && $p->status_id != 3  ){
 								echo "<option value=\"$assignement->id\" title=\"$p->description\">$p->name</input></option>";
 							}
 						}
@@ -71,7 +71,7 @@ date_default_timezone_set('Europe/Paris');
 				</select>
 			</p>
 			<p>
-				<label for="task_id">Tâche</label>
+				<label for="task_id">Type</label>
 				<select name="task_id" id="task_id" />
 				</select>
 				<script>

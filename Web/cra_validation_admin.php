@@ -92,14 +92,14 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 					$tmp_project = new GenyProject( $tmp_assignement->project_id );
 					if(isset($count_by_profile[$tmp_ass->profile_id])){
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
 					}
 					else{
 						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
@@ -172,14 +172,14 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 					$tmp_project = new GenyProject( $tmp_assignement->project_id );
 					if(isset($count_by_profile[$tmp_ass->profile_id])){
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
 					}
 					else{
 						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
@@ -219,14 +219,14 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 					$tmp_project = new GenyProject( $tmp_assignement->project_id );
 					if(isset($count_by_profile[$tmp_ass->profile_id])){
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
 					}
 					else{
 						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-						if( strripos($tmp_project->name,'congés') !== false )
+						if( $tmp_project->type_id == 5 )
 							$count_by_profile[$tmp_ass->profile_id]['conges']++;
 						else
 							$count_by_profile[$tmp_ass->profile_id]['cra']++;
@@ -267,14 +267,14 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 				$tmp_project = new GenyProject( $tmp_assignement->project_id );
 				if(isset($count_by_profile[$tmp_ass->profile_id])){
-					if( strripos($tmp_project->name,'congés') !== false )
+					if( $tmp_project->type_id == 5 )
 						$count_by_profile[$tmp_ass->profile_id]['conges']++;
 					else
 						$count_by_profile[$tmp_ass->profile_id]['cra']++;
 				}
 				else{
 					$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-					if( strripos($tmp_project->name,'congés') !== false )
+					if( $tmp_project->type_id == 5 )
 						$count_by_profile[$tmp_ass->profile_id]['conges']++;
 					else
 						$count_by_profile[$tmp_ass->profile_id]['cra']++;
@@ -473,7 +473,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 					<input type="radio" id="radio3" name="cra_action" value="pay_cra" /><label for="radio3">Payé</label>
 					<input type="radio" id="radio4" name="cra_action" value="close_cra" /><label for="radio4">Fermé</label>
 					<input type="radio" id="radio5" name="cra_action" value="deletion_cra" /><label for="radio5">Suppression</label>-->
-					<input type="radio" id="radio6" name="cra_action" value="delete_cra" /><label for="radio6">Supprimé</label>
+					<input type="radio" id="radio6" name="cra_action" value="delete_cra" /><label for="radio6">Supprimer</label>
 					<input type="radio" id="radio7" name="cra_action" value="refuse_cra" /><label for="radio7">Refusé</label>
 				</li>
 			</ul>
