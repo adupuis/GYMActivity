@@ -44,6 +44,7 @@ include_once 'menu.php';
 			}
 			if( $profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
 				include 'backend/widgets/cra_validation_admin.dock.widget.php'; 
+				include 'backend/widgets/cra_post_validation_workflow.dock.widget.php';
 				include 'backend/widgets/client_add.dock.widget.php'; 
 				include 'backend/widgets/client_list.dock.widget.php'; 
 				include 'backend/widgets/task_add.dock.widget.php'; 
