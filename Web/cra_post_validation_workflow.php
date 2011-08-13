@@ -28,229 +28,78 @@ include_once 'menu.php';
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
-$db_status = "";
+$gritter_notifications = array();
 
-if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
-	$html_worked_days_table = '';
-	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
-		foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
-			$geny_activity = new GenyActivity();
-			$geny_ar = new GenyActivityReport();
-			$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];
-			if($day_load <= 8){
-				$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-				echo "<!-- Geny Activity ID: $geny_activity_id -->\n";
-				if( $geny_activity_id > -1 ){
-					$geny_ars = new GenyActivityReportStatus();
-					$geny_ars->loadActivityReportStatusByShortName('P_APPROVAL'); 
-					echo "<!-- Inserting new activity report -->\n";
-					$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-					echo "<!-- Geny Activity Report ID: $geny_ar_id -->\n";
-					if( $geny_ar_id > -1 )
-						$db_status .= "<li class=\"status_message_success\">Rapport enregistré pour le $day (en attente de validation utilisateur).</li>\n";
-					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement du rapport du $day.</li>\n";
-				}
-				else {
-					$geny_activity->removeActivity($geny_activity_id);
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
-				}
-			}
-			else{
-				if( $day_load > 12 ){
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
-				}
-				else{
-					$day_work_load_by_project = $geny_ar->getDayLoadByAssignement($profile->id,$day);
-					// TODO: gérer la vérification de l'autorisation des heures sup. Il faut vérifier l'assignement en cours récupérer le project_id, vérifier que le projet autorise les heures sup puis vérifier la sommes des heures travaillés (<= 8 + 4 heures sup au maximum)
-					$extra = '';
-					for($k=0; $k < count($day_work_load_by_project); $k++ ){
-						$extra .= $day_work_load_by_project[$k]['activity_date']."|".$day_work_load_by_project[$k]['sum_activity_load']."|".$day_work_load_by_project[$k]['assignement_id'].",";
-					}
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière ($extra).</li>\n";
-				}
-			}
-		}
-	}
-	else{
-		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
-	}
-}
-else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "user_validate_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" || $_POST['cra_action'] == "refuse_cra" ) ){
-	if( $_POST['cra_action'] == "validate_cra" ){
-		if( isset( $_POST['activity_report_id'] ) ){
-			$tmp_ars = new GenyActivityReportStatus();
-			$tmp_ars->loadActivityReportStatusByShortName('APPROVED');
-			$ok_count=0;
-			$count_by_profile = array();
-			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
-				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-				if($tmp_ass->commitUpdates()){
-					$ok_count++;
-					$tmp_activity = new GenyActivity( $tmp_ar_id );
-					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-					$tmp_project = new GenyProject( $tmp_assignement->project_id );
-					if(isset($count_by_profile[$tmp_ass->profile_id])){
-						if( strripos($tmp_project->name,'congés') !== false )
-							$count_by_profile[$tmp_ass->profile_id]['conges']++;
-						else
-							$count_by_profile[$tmp_ass->profile_id]['cra']++;
-					}
-					else{
-						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-						if( strripos($tmp_project->name,'congés') !== false )
-							$count_by_profile[$tmp_ass->profile_id]['conges']++;
-						else
-							$count_by_profile[$tmp_ass->profile_id]['cra']++;
-					}
-				}
-				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
-				}
-			}
-			if($ok_count > 0 ){
-				$notif = new GenyNotification();
-				foreach ($count_by_profile as $id => $value){
-					if( $value['conges'] > 0 )
-						$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être acceptés.","ok");
-					if( $value['cra'] > 0 )
-						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
-				}
-				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
-				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
-			}
-		}
-	}
-	else if( $_POST['cra_action'] == "delete_cra" ){
-		if( isset( $_POST['activity_report_id'] ) ){
-			$ok_count=0;
-			$tmp_ar = new GenyActivityReport();
-			$count_by_profile = array();
-			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
-				$tmp_ar->loadActivityReportById($tmp_ar_id);
-				if( ! isset($count_by_profile[$tmp_ar->profile_id]) )
-					$count_by_profile[$tmp_ar->profile_id]=0;
-				if($tmp_ar->deleteActivityReport($tmp_ar_id) == 1){
-					$ok_count++;
-					$count_by_profile[$tmp_ar->profile_id]++;
-				}
-				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de supprimer le rapport ".$tmp_ar_id.".</li>\n";
-				}
-			}
-			if($ok_count > 0 ){
-				$notif = new GenyNotification();
-				// Notification des users
-				foreach( $count_by_profile as $id => $total ){
-					if($total == 1)
-						$notif->insertNewNotification($id,"$total rapport d'activité a été supprimé par un manager.","warning");
-					else if($total > 1)
-						$notif->insertNewNotification($id,"$total rapports d'activité ont été supprimés par un manager.","warning");
-				}
-				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapport a été correctement supprimé.</li>\n";
-				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports ont été correctement supprimés.</li>\n";
-			}
-		}
-	}
-	else if( $_POST['cra_action'] == "user_validate_cra" ){
-		if( isset( $_POST['activity_report_id'] ) ){
-			$tmp_ars = new GenyActivityReportStatus();
-			$tmp_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-			$ok_count=0;
-			$count_by_profile = array();
-			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
-				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-				if($tmp_ass->commitUpdates()){
-					$ok_count++;
-					$tmp_activity = new GenyActivity( $tmp_ar_id );
-					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-					$tmp_project = new GenyProject( $tmp_assignement->project_id );
-					if(isset($count_by_profile[$tmp_ass->profile_id])){
-						if( strripos($tmp_project->name,'congés') !== false )
-							$count_by_profile[$tmp_ass->profile_id]['conges']++;
-						else
-							$count_by_profile[$tmp_ass->profile_id]['cra']++;
-					}
-					else{
-						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-						if( strripos($tmp_project->name,'congés') !== false )
-							$count_by_profile[$tmp_ass->profile_id]['conges']++;
-						else
-							$count_by_profile[$tmp_ass->profile_id]['cra']++;
-					}
-				}
-				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de renvoyer le rapport ".$tmp_ass->id." en validation utilisateur.</li>\n";
-				}
-			}
-			if($ok_count > 0 ){
-				$notif = new GenyNotification();
-				foreach ($count_by_profile as $id => $value){
-					if( $value['conges'] > 0 )
-						$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être renvoyés à votre validation.","nok");
-					if( $value['cra'] > 0 )
-						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été renvoyés à votre validation.","nok");
-				}
-				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
-				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
-			}
-		}
-	}
-}
-else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
+if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" ) ){
 	if( isset( $_POST['activity_report_id'] ) ){
-		$tmp_ars = new GenyActivityReportStatus();
-		$tmp_ars->loadActivityReportStatusByShortName('APPROVED');
+		// L'état initial dans lequel le CRA est censé être
+		$init_ars = new GenyActivityReportStatus();
+		
+		// Le nouvel état dans lequel le CRA est censé être après opérations
+		$new_ars = new GenyActivityReportStatus();
+		
+		if( $_POST['cra_action'] == "bill_cra" ){
+			$init_ars->loadActivityReportStatusByShortName('APPROVED');
+			$new_ars->loadActivityReportStatusByShortName('BILLED');
+		}
+		else if( $_POST['cra_action'] == "pay_cra" ){
+			$init_ars->loadActivityReportStatusByShortName('BILLED');
+			$new_ars->loadActivityReportStatusByShortName('PAID');
+		}
+		else if( $_POST['cra_action'] == "close_cra" ){
+			$init_ars->loadActivityReportStatusByShortName('PAID');
+			$new_ars->loadActivityReportStatusByShortName('CLOSE');
+		}
+		else if( $_POST['cra_action'] == "deletion_cra" ){
+			$init_ars->loadActivityReportStatusByShortName('APPROVED');
+			$new_ars->loadActivityReportStatusByShortName('P_REMOVAL');
+		}
+		else if( $_POST['cra_action'] == "delete_cra" ){
+			$init_ars->loadActivityReportStatusByShortName('P_REMOVAL');
+			$new_ars->loadActivityReportStatusByShortName('REMOVED');
+		}
 		$ok_count=0;
-		$count_by_profile = array();
+		$count_by_project = array();
 		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-			$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-			if($tmp_ass->commitUpdates()){
-				$ok_count++;
-				$tmp_activity = new GenyActivity( $tmp_ar_id );
-				$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-				$tmp_project = new GenyProject( $tmp_assignement->project_id );
-				if(isset($count_by_profile[$tmp_ass->profile_id])){
-					if( strripos($tmp_project->name,'congés') !== false )
-						$count_by_profile[$tmp_ass->profile_id]['conges']++;
-					else
-						$count_by_profile[$tmp_ass->profile_id]['cra']++;
+			if( $tmp_ass->status_id == $init_ars->id ){
+				$tmp_ass->updateInt('activity_report_status_id',$new_ars->id);
+				if($tmp_ass->commitUpdates()){
+					$ok_count++;
+					$tmp_activity = new GenyActivity( $tmp_ar_id );
+					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
+					if(isset($count_by_project[$tmp_assignement->project_id])){
+						$count_by_project[$tmp_assignement->project_id]++;
+					}
+					else{
+						$count_by_project[$tmp_assignement->project_id]= 1;
+					}
 				}
 				else{
-					$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
-					if( strripos($tmp_project->name,'congés') !== false )
-						$count_by_profile[$tmp_ass->profile_id]['conges']++;
-					else
-						$count_by_profile[$tmp_ass->profile_id]['cra']++;
+					$gritter_notifications[] = array('status'=>'error','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name);
 				}
 			}
-			else{
-				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+			else {
+				$gritter_notifications[] = array('status'=>'error','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name." car son status actuel n'est pas ".$init_ars->name);
 			}
 		}
 		if($ok_count > 0 ){
 			$notif = new GenyNotification();
-			foreach ($count_by_profile as $id => $value){
-				if( $value['conges'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être acceptés.","ok");
-				if( $value['cra'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
+			foreach ($count_by_project as $id => $value){
+				$tmp_p = new GenyProject($id);
+				$tmp_c = new GenyClient( $tmp_p->client_id );
+				// Notification des administrateurs
+				$notif->insertNewGroupNotification(1,"Notification au groupe administrateur: $value jour(s) ont été facturés à ".$tmp_c->name." sur le projet ".$tmp_c->name,"ok");
 			}
-			if($ok_count == 1)
-				$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
-			else
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
+			if($ok_count == 1){
+				$gritter_notifications[] = array('status'=>'success','msg'=>"Le rapport a été correctement passé au status ".$new_ars->name);
+			}
+			else{
+				$gritter_notifications[] = array('status'=>'success','msg'=>"$ok_count rapports ont été correctement passés au status ".$new_ars->name);
+			}
 		}
 	}
+	
 }
 
 ?>
@@ -263,13 +112,13 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="cra_admin_generic">
-			Validation d'activité
+			Workflow CRA
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet de valider des rapports d'activité.<br />
-		<strong class="important_note">Important :</strong> Ce formulaire contient tous les rapports que vous n'avez pas validé (y compris les plus anciens que vous n'auriez pas soumis).<br />
+		Ce formulaire permet de modifier l'état des CRAs dans le workflow.<br />
+		<strong class="important_note">Important :</strong> Ce formulaire contient tous les rapports déjà validés (validation utilisateur et management) et affiche leurs états d'avancement dans le workflow.<br />
 		</p>
 		<script>
 			
@@ -400,34 +249,27 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			});
 			
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/cra_validation_admin.css';
 		</style>
-		<form id="formID" action="cra_validation_admin.php" method="post" class="table_container">
-			<input type="hidden" name="validate_cra" value="true" />
+		<form id="formID" action="cra_post_validation_workflow.php" method="post" class="table_container">
+<!-- 			<input type="hidden" name="validate_cra" value="true" /> -->
 			<ul style="display: inline; color: black;">
 				<li>
 					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 				<li id="radio">
-					<input type="radio" id="radio0" name="cra_action" value="user_validate_cra" /><label for="radio0">Validation utilisateur</label>
-					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Validé</label>
 					<input type="radio" id="radio2" name="cra_action" value="bill_cra" /><label for="radio2">Facturé</label>
 					<input type="radio" id="radio3" name="cra_action" value="pay_cra" /><label for="radio3">Payé</label>
 					<input type="radio" id="radio4" name="cra_action" value="close_cra" /><label for="radio4">Fermé</label>
 					<input type="radio" id="radio5" name="cra_action" value="deletion_cra" /><label for="radio5">Suppression</label>
 					<input type="radio" id="radio6" name="cra_action" value="delete_cra" /><label for="radio6">Supprimé</label>
-					<input type="radio" id="radio7" name="cra_action" value="refuse_cra" /><label for="radio7">Refusé</label>
 				</li>
 			</ul>
 			<p>
@@ -446,10 +288,13 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 					<?php
 						$geny_ar = new GenyActivityReport();
 						$geny_ars = new GenyActivityReportStatus();
-						$geny_ars->loadActivityReportStatusByShortName('P_APPROVAL');
-						foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
+						$geny_ars_approval = new GenyActivityReportStatus();
+						$geny_ars_approval->loadActivityReportStatusByShortName('P_APPROVAL');
+						$geny_ars_user_validation = new GenyActivityReportStatus();
+						$geny_ars_user_validation->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+						foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id != ".$geny_ars_approval->id,"activity_report_status_id != ".$geny_ars_user_validation->id) ) as $ar ){
 							$tmp_activity = new GenyActivity( $ar->activity_id );
-							$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
+							$geny_ars->loadActivityReportStatusById( $ar->status_id );
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );

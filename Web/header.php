@@ -46,6 +46,15 @@ try {
     //echo $e->getMessage(), "\n";
 }
 
+function displayStatusNotifications($gritter_notifications,$theme="default"){
+	foreach( $gritter_notifications as $notif ){
+		if( $notif['status'] == "success" )
+			echo "$.gritter.add({title: 'Rapport mis à jour avec succès',text: '".$notif['msg']."',image: 'images/".$theme."/button_success.png',sticky: false,time: ''});";
+		else
+			echo "$.gritter.add({title: 'Erreur durant la mise à jour du rapport',text: \"".$notif['msg']."\",image: 'images/".$theme."/button_error.png',sticky: false,time: ''});";
+	}
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -65,6 +74,7 @@ echo $header_title
 <script src="js/formValidator/js/jquery.validationEngine.js" type="text/javascript"></script>
 <script src="js/jquery.listselect.js" type="text/javascript"></script>
 <script src="js/DataTables/media/js/jquery.dataTables.min.js" type="text/javascript"></script> 
+<script type="text/javascript" src="js/Gritter/js/jquery.gritter.min.js"></script>
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
@@ -73,6 +83,7 @@ echo $header_title
 <link rel="stylesheet" href="js/formValidator/css/validationEngine.jquery.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="js/formValidator/css/template.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="styles/default/jquery-ui.css" type="text/css" media="all" />
+<link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 
 <style type="text/css">
 </style>
