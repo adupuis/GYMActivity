@@ -46,12 +46,17 @@ try {
     //echo $e->getMessage(), "\n";
 }
 
-function displayStatusNotifications($gritter_notifications,$theme="default"){
+function displayStatusNotifications($gritter_notifications,$theme="default",$sticky="false",$time="''"){
+	$imgs = array(
+		"success" => "button_success.png",
+		"error" => "button_error.png",
+		"info" => "notifications/info.png",
+		"idea" => "notifications/idea.png",
+		"question" => "notifications/question.png",
+		"warning" => "notifications/warning.png"
+	);
 	foreach( $gritter_notifications as $notif ){
-		if( $notif['status'] == "success" )
-			echo "$.gritter.add({title: 'Rapport mis à jour avec succès',text: '".$notif['msg']."',image: 'images/".$theme."/button_success.png',sticky: false,time: ''});";
-		else
-			echo "$.gritter.add({title: 'Erreur durant la mise à jour du rapport',text: \"".$notif['msg']."\",image: 'images/".$theme."/button_error.png',sticky: false,time: ''});";
+		echo "$.gritter.add({title: \"".$notif['title']."\",text: \"".$notif['msg']."\",image: 'images/".$theme."/".$imgs[$notif['status']]."',sticky: $sticky,time: $time});";
 	}
 }
 
