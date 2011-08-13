@@ -50,8 +50,24 @@ $html .= '</ul>';
 // 	Récupération du nombre de notifications non lues
 	function get_unread_notification_count(){
 		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=count_unread", function(data){
+			var init_count = $("span.notification_count_content").text();
 			$("span.notification_count_content").empty();
 			$("span.notification_count_content").append(data.count_unread);
+			var diff_count = data.count_unread - init_count;
+			if( diff_count > 0 ){
+				$.gritter.add({
+					// (string | mandatory) the heading of the notification
+					title: 'Nouvelles notifications',
+					// (string | mandatory) the text inside the notification
+					text: 'Vous avez reçu '+diff_count+' nouvelle(s) notification(s).',
+					// (string | optional) the image to display on the left
+					image: 'images/default/notification.png',
+					// (bool | optional) if you want it to fade out on its own or just sit there
+					sticky: false,
+					// (int | optional) the time you want it to be alive for before fading out
+					time: ''
+				});
+			}
 		},"json");
 	}
 	get_unread_notification_count();

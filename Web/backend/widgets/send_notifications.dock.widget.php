@@ -57,6 +57,18 @@
 <script>
 	function send_notification(){
 		$.get("backend/api/send_notification.php?to_type=pm&message="+$("#notification_message").val()+"&to="+$("#notification_to").val());
+		$.gritter.add({
+			// (string | mandatory) the heading of the notification
+			title: 'Notification envoyée',
+			// (string | mandatory) the text inside the notification
+			text: 'Vous avez envoyé une notification à '+$("#notification_to").val()+' avec succès.',
+			// (string | optional) the image to display on the left
+			image: 'images/default/notification.png',
+			// (bool | optional) if you want it to fade out on its own or just sit there
+			sticky: false,
+			// (int | optional) the time you want it to be alive for before fading out
+			time: ''
+		});
 		$("#notification_message").val("");
 		$("#notification_to").val("");
 	}
