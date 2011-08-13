@@ -76,11 +76,11 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					}
 				}
 				else{
-					$gritter_notifications[] = array('status'=>'error','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name);
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur durant la mise à jour du rapport','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name);
 				}
 			}
 			else {
-				$gritter_notifications[] = array('status'=>'error','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name." car son status actuel n'est pas ".$init_ars->name);
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur durant la mise à jour du rapport','msg'=>"Erreur : impossible de passer le rapport ".$tmp_ass->id." au status ".$new_ars->name." car son status actuel n'est pas ".$init_ars->name);
 			}
 		}
 		if($ok_count > 0 ){
@@ -88,14 +88,29 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 			foreach ($count_by_project as $id => $value){
 				$tmp_p = new GenyProject($id);
 				$tmp_c = new GenyClient( $tmp_p->client_id );
-				// Notification des administrateurs
-				$notif->insertNewGroupNotification(1,"Notification au groupe administrateur: $value jour(s) ont été facturés à ".$tmp_c->name." sur le projet ".$tmp_c->name,"ok");
+				// Notification des administrateurs, des SuperUsers et des SuperReporters
+				if( $new_ars->shortname == "BILLED" ){
+					$notif->insertNewGroupNotification(1,"Notification au groupe Admins: $value rapport(s) ont été facturés à ".$tmp_c->name." sur le projet ".$tmp_p->name,"ok");
+					$notif->insertNewGroupNotification(2,"Notification au groupe SuperUsers: $value rapport(s) ont été facturés à ".$tmp_c->name." sur le projet ".$tmp_p->name,"ok");
+					$notif->insertNewGroupNotification(4,"Notification au groupe SuperReporters: $value rapport(s) ont été facturés à ".$tmp_c->name." sur le projet ".$tmp_p->name,"ok");
+				}
+				else if( $new_ars->shortname == "PAID" ){
+					$notif->insertNewGroupNotification(1,"Notification au groupe Admins: $value rapport(s) ont été payé(s) par ".$tmp_c->name." à ".$web_config->company_name." sur le projet ".$tmp_p->name,"ok");
+					$notif->insertNewGroupNotification(2,"Notification au groupe SuperUsers: $value rapport(s) ont été payé(s) par ".$tmp_c->name." à ".$web_config->company_name." sur le projet ".$tmp_p->name,"ok");
+					$notif->insertNewGroupNotification(4,"Notification au groupe SuperReporters: $value rapport(s) ont été payé(s) par ".$tmp_c->name." à ".$web_config->company_name." sur le projet ".$tmp_p->name,"ok");
+				}
+				else if( $new_ars->shortname == "CLOSE" ){
+					$notif->insertNewGroupNotification(1,"Notification au groupe Admins: $value rapport(s) ont été fermé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+					$notif->insertNewGroupNotification(2,"Notification au groupe SuperUsers: $value rapport(s) ont été fermé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+					$notif->insertNewGroupNotification(4,"Notification au groupe SuperReporters: $value rapport(s) ont été fermé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+				}
+				// TODO: il reste à gérer les notifications pour les status P_REMOVAL et REMOVED.
 			}
 			if($ok_count == 1){
-				$gritter_notifications[] = array('status'=>'success','msg'=>"Le rapport a été correctement passé au status ".$new_ars->name);
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Rapport mis à jour avec succès','msg'=>"Le rapport a été correctement passé au status ".$new_ars->name);
 			}
 			else{
-				$gritter_notifications[] = array('status'=>'success','msg'=>"$ok_count rapports ont été correctement passés au status ".$new_ars->name);
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Rapports mis à jour avec succès','msg'=>"$ok_count rapports ont été correctement passés au status ".$new_ars->name);
 			}
 		}
 	}
