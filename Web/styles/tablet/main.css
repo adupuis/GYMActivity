@@ -868,3 +868,12 @@ table.object_list > tr:nth-child(odd){
 	right: 20px;
 	bottom: 30px;*/
 }
+
+/* Adaptation nécessaire de la CSS de Gritter à la version tablet */
+#gritter-notice-wrapper {
+	position:fixed;
+	top:107px;
+	right:10px;
+	width:301px;
+	z-index:9999;
+}

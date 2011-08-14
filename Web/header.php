@@ -83,12 +83,12 @@ echo $header_title
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
+<link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 <link rel="stylesheet" href="js/DataTables/media/css/demo_table_jui.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="styles/<?php echo $web_config->theme ?>/main.css" media="screen" />
 <link rel="stylesheet" href="js/formValidator/css/validationEngine.jquery.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="js/formValidator/css/template.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="styles/default/jquery-ui.css" type="text/css" media="all" />
-<link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 
 <style type="text/css">
 </style>
