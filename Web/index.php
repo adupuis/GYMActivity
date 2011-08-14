@@ -46,7 +46,12 @@
 		<label for="geny_theme">Password</label>
 		<select name="geny_theme" id="geny_theme">
 			<option value='default'>Thème par défaut</option>
-			<option value='tablet'>Tablettes</option>
+			<?php
+				$selected='';
+				if( stripos($_SERVER['HTTP_USER_AGENT'],"Android 3") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"SCH-I") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad") !== false )
+					$selected = "selected='selected'";
+			?>
+			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>
 		</select>
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
