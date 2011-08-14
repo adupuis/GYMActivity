@@ -29,7 +29,7 @@ $required_group_rights = 5;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 
 $geny_idea = new GenyIdea();
 $geny_idea_status = new GenyIdeaStatus();
@@ -43,15 +43,15 @@ $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
 		if( $geny_idea->insertNewIdea( 'NULL', $_POST['idea_title'], $_POST['idea_description'], $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
-			$db_status .= "<li class=\"status_message_success\">Idée créée avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création de l'idée.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création de l'idée.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
 else if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
@@ -59,7 +59,7 @@ else if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 		$geny_idea->loadIdeaById( $_POST['idea_id'] );
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
@@ -67,7 +67,7 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 		$geny_idea->loadIdeaById( $_GET['idea_id'] );
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
@@ -83,18 +83,18 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 1 );
 				if( $geny_idea_vote->commitUpdates() ) {
-					$db_status .= "<li class=\"status_message_success\">Finalement vous êtes pour!</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes pour!");
 				}
 				else {
-					$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du vote.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du vote.");
 				}
 			}
 			else {
 				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
-					$db_status .= "<li class=\"status_message_success\">Vous avez voté pour !</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté pour !");
 				}
 				else {
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote positif.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du vote positif.");
 				}
 			}
 			if( $negative == 1 ) {
@@ -112,18 +112,18 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 0 );
 				if( $geny_idea_vote->commitUpdates() ) {
-					$db_status .= "<li class=\"status_message_success\">Finalement vous êtes contre...</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes contre...");
 				}
 				else {
-					$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du vote.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du vote.");
 				}
 			}
 			else {
 				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
-					$db_status .= "<li class=\"status_message_success\">Vous avez voté contre...</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté contre...");
 				}
 				else {
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du vote négatif.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du vote négatif.");
 				}
 			}
 			if( $positive == 1 ) {
@@ -139,10 +139,10 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea_vote = $my_votes_for_this_idea[0];
 				$positive = $geny_idea_vote->idea_positive_vote;
 				if( $geny_idea_vote->removeIdeaVote( $geny_idea_vote->id ) ) {
-					$db_status .= "<li class=\"status_message_success\">Finalement vous n'avez pas d'avis sur la question...</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous n'avez pas d'avis sur la question...");
 				}
 				else {
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de la suppression du vote.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la suppression du vote.");
 				}
 			}
 			if( $positive == 1 ) {
@@ -153,11 +153,11 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 		}
 		if( !$geny_idea->commitUpdates() ) {
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour de l'idée.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de l'idée.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create'] == "true" ) {
@@ -165,18 +165,18 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
 			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', $_POST['idea_message_content'], $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
-				$db_status .= "<li class=\"status_message_success\">Commentaire ajouté avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 			}
 			else {
-				$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du commentaire.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du commentaire.");
 			}
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 
@@ -222,12 +222,11 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ) {
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 
 		<br><br>
 		
