@@ -24,7 +24,7 @@ $required_group_rights = 2;
 
 include_once 'header.php';
 include_once 'menu.php';
-
+$gritter_notifications = array();
 $geny_project = new GenyProject();
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
@@ -37,29 +37,29 @@ if( isset($_POST['remove_project']) && $_POST['remove_project'] == "true" ){
 			$id = mysql_real_escape_string($_POST['project_id']);
 			$query = "DELETE FROM Assignements WHERE project_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du projet de la table Assignements.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du projet de la table Assignements.");
 			}
 			$query = "DELETE FROM ProjectTaskRelations WHERE project_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du projet de la table ProjectTaskRelations.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du projet de la table ProjectTaskRelations.");
 			}
 			$query = "DELETE FROM Projects WHERE project_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du project de la table Projects.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du project de la table Projects.");
 			}
 			else
-				$db_status .= "<li class=\"status_message_success\">Projet supprimé avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Projet supprimé avec succès.");
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de supprimer le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de supprimer le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -80,15 +80,11 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> un profil dans la base des utilisateurs.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<script>
 			jQuery(document).ready(function(){
