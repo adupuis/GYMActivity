@@ -153,6 +153,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			foreach( array_diff($assigned_profile_id,$new_profile_id) as $value ){
 				$tmp_profile = new GenyProfile( $value );
 				if( isset($assignements_by_profile_id[$value]) ){
+					// WARNING: Ici nous ne voulons pas que les activities soient supprimés suite à la suppression de l'assignement.
 					if($geny_assignement->deleteAssignement( $assignements_by_profile_id[$value]->id ) > 0){
 						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login supprimé(e) du projet.");
 						$notif->insertNewNotification( $tmp_profile->id, "Vous avez été supprimé(e) du projet ".$geny_project->name );
