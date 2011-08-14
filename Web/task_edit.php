@@ -27,21 +27,21 @@ include_once 'header.php';
 include_once 'menu.php';
 
 $geny_task = new GenyTask();
-$db_status = '';
+$gritter_notifications = array();
 
 if( isset($_POST['create_task']) && $_POST['create_task'] == "true" ){
 	if( isset($_POST['task_name']) && $_POST['task_name'] != "" ){
 		$new_task_id = $geny_task->insertNewTask('NULL',$_POST['task_name'],$_POST['task_description']);
 		if( $new_task_id > -1 ){
-			$db_status .= "<li class=\"status_message_success\">Tâche créée avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tâche créée avec succès.");
 			$geny_task->loadTaskById($new_task_id);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création de la tâche.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création de la tâche.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
 else if( isset($_POST['load_task']) && $_POST['load_task'] == "true" ){
@@ -49,7 +49,7 @@ else if( isset($_POST['load_task']) && $_POST['load_task'] == "true" ){
 		$geny_task->loadTaskById($_POST['task_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger la tâche : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger la tâche ','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_GET['load_task']) && $_GET['load_task'] == "true" ){
@@ -57,7 +57,7 @@ else if( isset($_GET['load_task']) && $_GET['load_task'] == "true" ){
 		$geny_task->loadTaskById($_GET['task_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger la tâche : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger la tâche ','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_POST['edit_task']) && $_POST['edit_task'] == "true" ){
@@ -70,19 +70,19 @@ else if( isset($_POST['edit_task']) && $_POST['edit_task'] == "true" ){
 			$geny_task->updateString('task_description',$_POST['task_description']);
 		}
 		if($geny_task->commitUpdates()){
-			$db_status .= "<li class=\"status_message_success\">Tâche mis à jour avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tâche mis à jour avec succès.");
 			$geny_task->loadTaskById($_POST['task_id']);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du tâche.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du tâche.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de modifier la tâche : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de modifier la tâche ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -103,15 +103,11 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier une tâche de la base des tâches.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		
 		<form id="select_login_form" action="task_edit.php" method="post">
