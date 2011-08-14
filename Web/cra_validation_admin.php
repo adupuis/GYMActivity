@@ -429,7 +429,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 			<p id="extra_info">
 			</p>
 			<p>
-				<input type="submit" value="Valider" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Appliquer" /> ou <a href="#formID">annuler</a>
 			</p>
 		</form>
 	</p>
