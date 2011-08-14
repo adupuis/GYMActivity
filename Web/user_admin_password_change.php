@@ -26,17 +26,17 @@ $disable_password_reset_redirection = true;
 
 include_once 'header.php';
 
-$db_status = '';
+$gritter_notifications = array();
 
 if(isset($_POST['update_password']) && $_POST['update_password'] == "true" && isset($_POST['password_first']) && isset($_POST['password_second']) && $_POST['password_first'] == $_POST['password_second'] ){
 	$profile->updateString('profile_password',md5($_POST['password_first']));
 	$profile->updateBool('profile_needs_password_reset','false');
 	if( $profile->commitUpdates() ){
-		$db_status .= "<li class=\"status_message_success\">Mot de passe mis à jour avec succès.</li>\n";
+		$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Mot de passe mis à jour avec succès.");
 		include_once 'menu.php';
 	}
 	else
-		$db_status .= "<li class=\"status_message_error\">Erreur lors de la mise à jour du mot de passe.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la mise à jour du mot de passe.");
 }
 ?>
 
@@ -55,20 +55,16 @@ if(isset($_POST['update_password']) && $_POST['update_password'] == "true" && is
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier votre mot de passe.<br />
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
 			jQuery(document).ready(function(){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 			});
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<form id="formID" action="user_admin_password_change.php" method="post">
 			<input type="hidden" name="update_password" value="true" />
