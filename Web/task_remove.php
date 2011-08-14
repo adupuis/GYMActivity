@@ -26,7 +26,7 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 $geny_task = new GenyTask();
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
@@ -39,29 +39,29 @@ if( isset($_POST['remove_task']) && $_POST['remove_task'] == "true" ){
 			$id = mysql_real_escape_string($_POST['task_id']);
 			$query = "DELETE FROM Activities WHERE task_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table Activities.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la tâche de la table Activities.");
 			}
 			$query = "DELETE FROM ProjectTaskRelations WHERE task_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table ProjectTaskRelations.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la tâche de la table ProjectTaskRelations.");
 			}
 			$query = "DELETE FROM Tasks WHERE task_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de la tâche de la table Tasks.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la tâche de la table Tasks.");
 			}
 			else
-				$db_status .= "<li class=\"status_message_success\">Tâche supprimée avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tâche supprimée avec succès.");
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de supprimer le tâche : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de supprimer le tâche ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -82,15 +82,11 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> un tâche dans la base des tâches.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<script>
 			jQuery(document).ready(function(){
