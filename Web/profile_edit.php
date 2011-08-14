@@ -134,11 +134,6 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier un profil dans la base des utilisateurs.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
 			<?php
 				// Cette fonction est définie dans header.php

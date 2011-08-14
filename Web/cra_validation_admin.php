@@ -354,11 +354,6 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 			});
 			
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
 			<?php
 				// Cette fonction est définie dans header.php
