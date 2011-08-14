@@ -25,7 +25,7 @@ $required_group_rights = 5;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 
 $geny_idea = new GenyIdea();
 $geny_idea_status = new GenyIdeaStatus();
@@ -40,7 +40,7 @@ if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 		$geny_idea->loadIdeaById( $_POST['idea_id'] );
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
@@ -48,7 +48,7 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 		$geny_idea->loadIdeaById( $_GET['idea_id'] );
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
@@ -70,15 +70,15 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 			$geny_idea->updateInt( 'idea_submitter', $logged_in_profile->id );
 		}
 		if( $geny_idea->commitUpdates() ) {
-			$db_status .= "<li class=\"status_message_success\">Idée mise à jour avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
 			$geny_idea->loadIdeaById( $_POST['idea_id'] );
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour de l'idée.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de l'idée.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de modifier l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de modifier l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 
@@ -104,12 +104,11 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<form id="select_idea_form" action="idea_edit.php" method="post">
 			<input type="hidden" name="load_idea" value="true" />
 			<p>
