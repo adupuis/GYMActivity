@@ -25,7 +25,7 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 $profile_firstname = "";
 $profile_lastname = "";
 $profile_email = "";
@@ -45,37 +45,37 @@ if( isset($_POST['remove_profile']) && $_POST['remove_profile'] == "true" ){
 			$id = mysql_real_escape_string($_POST['profile_id']);
 			$query = "DELETE FROM IdeaMessages WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table IdeaMessages.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du profil de la table IdeaMessages.");
 			}
 			$query = "DELETE FROM ActivityReports WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table ActivityReports.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du profil de la table ActivityReports.");
 			}
 			$query = "DELETE FROM Assignements WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table Assignements.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du profil de la table Assignements.");
 			}
 			$query = "DELETE FROM Activities WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table Activities.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du profil de la table Activities.");
 			}
 			$query = "DELETE FROM Profiles WHERE profile_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du profil de la table Profiles.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du profil de la table Profiles.");
 			}
 			else
-				$db_status .= "<li class=\"status_message_success\">Profil utilisateur supprimé avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil utilisateur supprimé avec succès.");
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de supprimer le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de supprimer le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -96,15 +96,11 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> un profil dans la base des utilisateurs.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<script>
 			jQuery(document).ready(function(){
