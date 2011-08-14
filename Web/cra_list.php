@@ -28,7 +28,6 @@ include_once 'menu.php';
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
-$db_status = "";
 
 ?>
 
@@ -170,16 +169,6 @@ $db_status = "";
 			function onCheckBoxSelectAll(){
 				$("#cra_list_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
-		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
-		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
 		</script>
 		<form id="formID" action="#" method="post" class="table_container">
 			<p>
