@@ -25,7 +25,7 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 $geny_client = new GenyClient();
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
@@ -38,25 +38,25 @@ if( isset($_POST['remove_client']) && $_POST['remove_client'] == "true" ){
 			$id = mysql_real_escape_string($_POST['client_id']);
 			$query = "DELETE FROM Projects WHERE client_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du client de la table Projects.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du client de la table Projects.");
 			}
 			$query = "DELETE FROM Clients WHERE client_id=$id";
 			if(! mysql_query($query)){
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression du client de la table Clients.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du client de la table Clients.");
 			}
 			else
-				$db_status .= "<li class=\"status_message_success\">Client supprimé avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Client supprimé avec succès.");
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de supprimer le client : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de supprimer le client ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -77,15 +77,11 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> un client dans la base des clients.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<script>
 			jQuery(document).ready(function(){
