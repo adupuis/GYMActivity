@@ -26,20 +26,20 @@ include_once 'header.php';
 include_once 'menu.php';
 
 $geny_client = new GenyClient();
-$db_status = '';
+$gritter_notifications = array();
 
 if( isset($_POST['create_client']) && $_POST['create_client'] == "true" ){
 	if( isset($_POST['client_name']) && $_POST['client_name'] != "" ){
 		if( $geny_client->insertNewClient('NULL',$_POST['client_name']) ){
-			$db_status .= "<li class=\"status_message_success\">Client créé avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Client créé avec succès.','msg'=>"Le client a été correctement créé.");
 			$geny_client->loadClientByName($_POST['client_name']);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création du client.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur.','msg'=>"Erreur lors de la création du client.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur.','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
 else if( isset($_POST['load_client']) && $_POST['load_client'] == "true" ){
@@ -47,7 +47,7 @@ else if( isset($_POST['load_client']) && $_POST['load_client'] == "true" ){
 		$geny_client->loadClientById($_POST['client_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le client client : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Chargement impossible','msg'=>"Impossible de charger le client client : id non spécifié.");
 	}
 }
 else if( isset($_GET['load_client']) && $_GET['load_client'] == "true" ){
@@ -55,30 +55,27 @@ else if( isset($_GET['load_client']) && $_GET['load_client'] == "true" ){
 		$geny_client->loadClientById($_GET['client_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le client client : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Chargement impossible','msg'=>"Impossible de charger le client client : id non spécifié.");
 	}
 }
 else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 	if(isset($_POST['client_id'])){
 		$geny_client->loadClientById($_POST['client_id']);
-		if( isset($_POST['client_name']) && $_POST['client_name'] != "" && $geny_client->login != $_POST['client_name'] ){
+		if( isset($_POST['client_name']) && $_POST['client_name'] != "" && $geny_client->name != $_POST['client_name'] ){
 			$geny_client->updateString('client_name',$_POST['client_name']);
 		}
 		
 		if($geny_client->commitUpdates()){
-			$db_status .= "<li class=\"status_message_success\">Client mis à jour avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Client mis à jour avec succès.");
 			$geny_client->loadClientById($_POST['client_id']);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du client.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du client.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de modifier le client utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Impossible de modifier le client utilisateur : id non spécifié.");
 	}
-}
-else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
 }
 
 
@@ -99,15 +96,12 @@ else{
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier un client dans la base des utilisateurs.
 		</p>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
+		
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		
 		<form id="select_login_form" action="client_edit.php" method="post">
