@@ -28,7 +28,7 @@ include_once 'menu.php';
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
-$db_status = "";
+$gritter_notifications = array();
 
 if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 	$html_worked_days_table = '';
@@ -40,7 +40,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
 		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
-			$db_status .= "<li class=\"status_message_error\">Erreur: il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.");
 		}
 		else if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
 			$ok_count=0;
@@ -54,7 +54,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				}
 				else{
 					if( $day_load > 12 ){
-						$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).</li>\n";
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"Le $day, vous déclaré plus de 12 heures journalière (maximum d'heures par jour : 8h + 4h sup.).");
 					}
 					else{
 						$day_work_load_by_assignement = $geny_ar->getDayLoadByAssignement($profile->id,$day);
@@ -71,13 +71,13 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 								// Si ce n'est pas le cas aucun rapport ne sera créé, autrement nous créons un rapport.
 								// Dans le process une heure supplémentaire doit être entrée avec la tâche spéciale 'Heures supplémentaires', la validation est ensuite humaine.
 								if( $tmp_ga->overtime_allowed ){
-									$db_status .= "<li class=\"status_message_success\">Heures supplémentaires autorisées sur l'assignation $day_work_load_by_assignement[$k]['assignement_id'].</li>\n";
+									$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Heures supplémentaires autorisées sur l'assignation $day_work_load_by_assignement[$k]['assignement_id'].");
 									$create_report = true;
 								}
 							}
 						}
 						if( !$create_report )
-							$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires ($extra).</li>\n";
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires ($extra).");
 					}
 				}
 				if( $create_report ){
@@ -87,14 +87,14 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
 						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
 						if( $geny_ar_id > -1 )
-							$db_status .= "<li class=\"status_message_success\">Rapport enregistré pour le $day (en attente de validation utilisateur).</li>\n";
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Rapport enregistré pour le $day (en attente de validation utilisateur).");
 						else
-							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement du rapport du $day.</li>\n";
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement du rapport du $day.");
 						$ok_count++;
 					}
 					else {
 						$geny_activity->deleteActivity($geny_activity_id);
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
 					}
 				}
 			}
@@ -108,11 +108,11 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 // 			}
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Erreur: les dates saisies sont en dehors des bornes du projet.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"les dates saisies sont en dehors des bornes du projet.");
 		}
 	}
 	else{
-		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"certaines informations sont manquantes.");
 	}
 }
 else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra") ){
@@ -128,7 +128,7 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 					$ok_count++;
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -138,9 +138,9 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 				// Notification des superusers
 				$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapport est désormais en attente de validation par le management.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports sont désormais en attente de validation par le management.");
 			}
 		}
 	}
@@ -154,7 +154,7 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 					$ok_count++;
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de supprimer le rapport ".$tmp_ar_id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de supprimer le rapport ".$tmp_ar_id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -164,9 +164,9 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 				// Notification des superusers
 				$notif->insertNewGroupNotification(2,"$screen_name viens de supprimer $ok_count rapport(s) d'activité non validé(s).");
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapport a été correctement supprimé.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapport a été correctement supprimé.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports ont été correctement supprimés.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports ont été correctement supprimés.");
 			}
 		}
 	}
@@ -183,7 +183,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				$ok_count++;
 			}
 			else{
-				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
 			}
 		}
 		if($ok_count > 0 ){
@@ -193,9 +193,9 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 			// Notification des superusers
 			$notif->insertNewGroupNotification(2,"$screen_name viens de créer $ok_count rapport(s) d'activité, merci de faire le nécessaire.");
 			if($ok_count == 1)
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapport est désormais en attente de validation par le management.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapport est désormais en attente de validation par le management.");
 			else
-				$db_status .= "<li class=\"status_message_success\">$ok_count rapports sont désormais en attente de validation par le management.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports sont désormais en attente de validation par le management.");
 		}
 	}
 }
@@ -346,15 +346,11 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				$( "#chkBoxSelectAll" ).button();
 			});
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<form id="formID" action="cra_validation.php" method="post" class="table_container">
 			<style>
