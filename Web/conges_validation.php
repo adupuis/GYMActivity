@@ -28,7 +28,7 @@ include_once 'menu.php';
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
-$db_status = "";
+$gritter_notifications = array();
 
 if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 	$html_worked_days_table = '';
@@ -40,7 +40,7 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
 		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
-			$db_status .= "<li class=\"status_message_error\">Erreur: il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur.','msg'=>"il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.");
 		}
 		if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
 			foreach( GenyTools::getWorkedDaysList(strtotime($_POST['assignement_start_date']), strtotime($_POST['assignement_end_date']) ) as $day ){
@@ -53,7 +53,7 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 				}
 				else{
 					
-					$db_status .= "<li class=\"status_message_error\">Erreur : Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires sur des jours de congés.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur .','msg'=>"Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires sur des jours de congés.");
 				}
 				if( $create_report ){
 					$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
@@ -62,23 +62,23 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
 						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
 						if( $geny_ar_id > -1 )
-							$db_status .= "<li class=\"status_message_success\">Congés enregistrés pour le $day (en attente de validation utilisateur).</li>\n";
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Congés enregistrés pour le $day (en attente de validation utilisateur).");
 						else
-							$db_status .= "<li class=\"status_message_error\">Erreur lors de l'enregistrement des congés du $day.</li>\n";
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement des congés du $day.");
 					}
 					else {
 						$geny_activity->deleteActivity($geny_activity_id);
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout d'une activité pour le $day.</li>\n";
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
 					}
 				}
 			}
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Erreur: les dates saisies sont en dehors des bornes du projet.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"les dates saisies sont en dehors des bornes du projet.");
 		}
 	}
 	else{
-		$db_status .= "<li class=\"status_message_error\">Erreur : certaines informations sont manquantes.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"certaines informations sont manquantes.");
 	}
 }
 else if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "validate_conges" || $_POST['conges_action'] == "delete_conges") ){
@@ -94,7 +94,7 @@ else if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "validate_
 					$ok_count++;
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -104,9 +104,9 @@ else if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "validate_
 				// Notification des superusers
 				$notif->insertNewGroupNotification(2,"$screen_name viens de déposer une demande de $ok_count jour(s) de congés, merci de faire le nécessaire.");
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count jour de congés est désormais en attente de validation par le management.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jour de congés est désormais en attente de validation par le management.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count jours de congés sont désormais en attente de validation par le management.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jours de congés sont désormais en attente de validation par le management.");
 			}
 		}
 	}
@@ -119,7 +119,7 @@ else if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "validate_
 					$ok_count++;
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de supprimer le congés ".$tmp_ar_id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"impossible de supprimer le congés ".$tmp_ar_id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -129,9 +129,9 @@ else if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "validate_
 				// Notification des superusers
 				$notif->insertNewGroupNotification(2,"$screen_name viens de supprimer $ok_count congés non validé(s).");
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count jour de congés a été correctement supprimé.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jour de congés a été correctement supprimé.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count jours de congés ont été correctement supprimés.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jours de congés ont été correctement supprimés.");
 			}
 		}
 	}
@@ -148,7 +148,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				$ok_count++;
 			}
 			else{
-				$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le congé ".$tmp_ass->id.".</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur .','msg'=>"impossible de valider le congé ".$tmp_ass->id.".");
 			}
 		}
 		if($ok_count > 0 ){
@@ -158,9 +158,9 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 			// Notification des superusers
 			$notif->insertNewGroupNotification(2,"$screen_name viens de déposer une demande de $ok_count jour(s) de congés, merci de faire le nécessaire.");
 			if($ok_count == 1)
-				$db_status .= "<li class=\"status_message_success\">$ok_count jour de congés est désormais en attente de validation par le management.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jour de congés est désormais en attente de validation par le management.");
 			else
-				$db_status .= "<li class=\"status_message_success\">$ok_count jours de congés sont désormais en attente de validation par le management.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count jours de congés sont désormais en attente de validation par le management.");
 		}
 	}
 }
@@ -312,15 +312,11 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 			});
 			
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<form id="formID" action="conges_validation.php" method="post" class="table_container">
 			<style>
