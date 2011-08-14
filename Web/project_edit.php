@@ -25,7 +25,7 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 
 $geny_project = new GenyProject();
 $geny_ptr = new GenyProjectTaskRelation();
@@ -35,15 +35,15 @@ $geny_assignement = new GenyAssignement();
 if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 	if( isset($_POST['project_name']) && isset($_POST['project_start_date']) && isset($_POST['project_end_date']) ){
 		if( $geny_project->insertNewProject($_POST['project_name'],$_POST['project_description'],$_POST['project_client'],$_POST['project_location'],$_POST['project_start_date'],$_POST['project_end_date'],$_POST['project_type'],$_POST['project_status']) > -1 ){
-			$db_status .= "<li class=\"status_message_success\">Projet créé avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Projet créé avec succès.");
 			$geny_project->loadProjectByName( $_POST['project_name'] );
 			foreach ($_POST['project_tasks'] as $key => $value){
 				$geny_task = new GenyTask( $value );
 				if ($geny_ptr->insertNewProjectTaskRelation( $geny_project->id, $geny_task->id) ) {
-					$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tâche $geny_task->name ajoutée au projet.");
 				}
 				else
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout de la tâche $geny_task->name.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de la tâche $geny_task->name.");
 			}
 			foreach ($_POST['project_profiles'] as $key => $value){
 				$tmp_profile = new GenyProfile( $value );
@@ -51,18 +51,18 @@ if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 				if(isset($_POST['project_allow_overtime']) && $_POST['project_allow_overtime'] == 'true' )
 					$overtime_allowed = 'true';
 				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id, $overtime_allowed) ) {
-					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ajoutée au projet.");
 				}
 				else
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du profil $tmp_profile->login.");
 			}
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création du projet.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création du projet.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
 else if( isset($_POST['load_project']) && $_POST['load_project'] == "true" ){
@@ -70,7 +70,7 @@ else if( isset($_POST['load_project']) && $_POST['load_project'] == "true" ){
 		$geny_project->loadProjectById($_POST['project_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le projet','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_GET['load_project']) && $_GET['load_project'] == "true" ){
@@ -78,7 +78,7 @@ else if( isset($_GET['load_project']) && $_GET['load_project'] == "true" ){
 		$geny_project->loadProjectById($_GET['project_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le projet','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
@@ -110,21 +110,19 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 		}
 		if( isset($_POST['project_tasks']) && count($_POST['project_tasks']) > 0 ){
 			if($geny_ptr->deleteAllProjectTaskRelationsByProjectId( $geny_project->id )){
-				$err_string = '';
+				$err = 0;
 				foreach ($_POST['project_tasks'] as $key => $value){
 					$geny_task = new GenyTask( $value );
 					if ($geny_ptr->insertNewProjectTaskRelation($geny_project->id, $geny_task->id) ) {
-						//$db_status .= "<li class=\"status_message_success\">Tâche $geny_task->name ajoutée au projet.</li>\n";
+						//$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tâche $geny_task->name ajoutée au projet.");
 					}
 					else{
-						$err_string .= "<li class=\"status_message_error\">Erreur lors de l'ajout de la tâche $geny_task->name.</li>\n";
+						$err++;
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de la tâche $geny_task->name.");
 					}
 				}
-				if( $err_string != '' ){
-					$db_status .= $err_string;
-				}
-				else{
-					$db_status .= "<li class=\"status_message_success\">Les tâches ont été mis à jour avec succès.</li>\n";
+				if( $err_string == 0 ){
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Les tâches ont été mis à jour avec succès.");
 				}
 			}
 		}
@@ -156,14 +154,14 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				$tmp_profile = new GenyProfile( $value );
 				if( isset($assignements_by_profile_id[$value]) ){
 					if($geny_assignement->deleteAssignement( $assignements_by_profile_id[$value]->id ) > 0){
-						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login supprimé(e) du projet.</li>\n";
+						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login supprimé(e) du projet.");
 						$notif->insertNewNotification( $tmp_profile->id, "Vous avez été supprimé(e) du projet ".$geny_project->name );
 					}
 					else
-						$db_status .= "<li class=\"status_message_error\">Erreur lors de la suppression du profil $tmp_profile->login, aucune affectation pré-existante pour ce projet.</li>\n";
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la suppression du profil $tmp_profile->login, aucune affectation pré-existante pour ce projet.");
 				}
 				else
-					$db_status .= "<li class=\"status_message_error\">Erreur : lors de la suppression du profil $tmp_profile->login du projet $geny_project->name.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"lors de la suppression du profil $tmp_profile->login du projet $geny_project->name.");
 			}
 			foreach( array_diff($new_profile_id,$assigned_profile_id) as $value ){
 				$tmp_profile = new GenyProfile( $value );
@@ -171,11 +169,11 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				if( isset( $old_overtime_states[$tmp_profile->id] ) )
 					$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
 				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
-					$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajouté(e) au projet.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ajouté(e) au projet.");
 					$notif->insertNewNotification( $tmp_profile->id, "Vous avez été ajouté(e) au projet ".$geny_project->name );
 				}
 				else
-					$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du profil $tmp_profile->login.");
 			}
 			
 // 			WARNING: Cet ancien code est une cause de bug majeur !!!
@@ -186,23 +184,23 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 // 					if( isset( $old_overtime_states[$tmp_profile->id] ) )
 // 						$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
 // 					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
-// 						$db_status .= "<li class=\"status_message_success\">Profil $tmp_profile->login ajoutée au projet.</li>\n";
+// 						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ajoutée au projet.");
 // 					}
 // 					else
-// 						$db_status .= "<li class=\"status_message_error\">Erreur lors de l'ajout du profil $tmp_profile->login.</li>\n";
+// 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du profil $tmp_profile->login.");
 // 				}
 // 			}
 		}
 		if($geny_project->commitUpdates()){
-			$db_status .= "<li class=\"status_message_success\">Projet mis à jour avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Projet mis à jour avec succès.");
 			$geny_project->loadProjectById($_POST['project_id']);
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du projet.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du projet.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de modifier le projet : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de modifier le projet ','msg'=>"id non spécifié.");
 	}
 }
 
@@ -249,12 +247,11 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 					source: availableTags
 				});
 			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
-		<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-		?>
 		<form id="select_project_form" action="project_edit.php" method="post">
 			<input type="hidden" name="load_project" value="true" />
 			<p>
