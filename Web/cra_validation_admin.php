@@ -28,7 +28,7 @@ include_once 'menu.php';
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
-$db_status = "";
+$gritter_notifications = array();
 
 if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "user_validate_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" || $_POST['cra_action'] == "refuse_cra" ) ){
 	if( $_POST['cra_action'] == "validate_cra" ){
@@ -60,7 +60,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 					}
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de valider le rapport ".$tmp_ass->id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -72,9 +72,9 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été validés.","ok");
 				}
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement validé.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Le rapport a été correctement validé.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement validés.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports correctement validés.");
 			}
 		}
 	}
@@ -92,7 +92,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 					$count_by_profile[$tmp_ar->profile_id]++;
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de supprimer le rapport ".$tmp_ar_id.".</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de supprimer le rapport ".$tmp_ar_id.".");
 				}
 			}
 			if($ok_count > 0 ){
@@ -105,9 +105,9 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 						$notif->insertNewNotification($id,"$total rapports d'activité ont été supprimés par un manager.","warning");
 				}
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapport a été correctement supprimé.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapport a été correctement supprimé.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports ont été correctement supprimés.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports ont été correctement supprimés.");
 			}
 		}
 	}
@@ -140,7 +140,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 					}
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de renvoyer le rapport ".$tmp_ass->id." en validation utilisateur.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de renvoyer le rapport ".$tmp_ass->id." en validation utilisateur.");
 				}
 			}
 			if($ok_count > 0 ){
@@ -152,9 +152,9 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été renvoyés à votre validation.","nok");
 				}
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement renvoyé en validation utilisateur.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Le rapport a été correctement renvoyé en validation utilisateur.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement renvoyés en validation utilisateur.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports correctement renvoyés en validation utilisateur.");
 			}
 		}
 	}
@@ -187,7 +187,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 					}
 				}
 				else{
-					$db_status .= "<li class=\"status_message_error\">Erreur : impossible de refuser le rapport ".$tmp_ass->id." à l'utilisateur.</li>\n";
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de refuser le rapport ".$tmp_ass->id." à l'utilisateur.");
 				}
 			}
 			if($ok_count > 0 ){
@@ -199,9 +199,9 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité ont été refusés.","nok");
 				}
 				if($ok_count == 1)
-					$db_status .= "<li class=\"status_message_success\">Le rapport a été correctement refusé.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Le rapport a été correctement refusé.");
 				else
-					$db_status .= "<li class=\"status_message_success\">$ok_count rapports correctement refusés.</li>\n";
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$ok_count rapports correctement refusés.");
 			}
 		}
 	}
@@ -360,9 +360,10 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 			}
 		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/cra_validation_admin.css';
