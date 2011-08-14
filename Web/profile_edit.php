@@ -25,7 +25,7 @@ $required_group_rights = 2;
 include_once 'header.php';
 include_once 'menu.php';
 
-$db_status = "";
+$gritter_notifications = array();
 $profile_firstname = "";
 $profile_lastname = "";
 $profile_email = "";
@@ -46,15 +46,15 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$profile_needs_password_reset = $_POST['profile_needs_password_reset'];
 		$rights_group_id = $_POST['rights_group_id'];
 		if( $geny_profile->insertNewProfile('NULL',$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id) ){
-			$db_status .= "<li class=\"status_message_success\">Profil créé avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil créé avec succès.");
 			$geny_profile->loadProfileByLogin($profile_login);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur lors de la création du profil.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création du profil.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Certains champs obligatoires sont manquant. Merci de les remplir.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
 else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
@@ -62,7 +62,7 @@ else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
 		$geny_profile->loadProfileById($_POST['profile_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
@@ -70,7 +70,7 @@ else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
 		$geny_profile->loadProfileById($_GET['profile_id']);
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de charger le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
 else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
@@ -101,19 +101,19 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 			$geny_profile->updateInt('rights_group_id',$_POST['rights_group_id']);
 		}
 		if($geny_profile->commitUpdates()){
-			$db_status .= "<li class=\"status_message_success\">Profil mis à jour avec succès.</li>\n";
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil mis à jour avec succès.");
 			$geny_profile->loadProfileById($_POST['profile_id']);
 		}
 		else{
-			$db_status .= "<li class=\"status_message_error\">Erreur durant la mise à jour du profil.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du profil.");
 		}
 	}
 	else  {
-		$db_status .= "<li class=\"status_message_error\">Impossible de modifier le profil utilisateur : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de modifier le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
 else{
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -140,9 +140,10 @@ else{
 			}
 		?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		
 		<form id="select_login_form" action="profile_edit.php" method="post">
