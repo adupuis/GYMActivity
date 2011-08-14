@@ -25,6 +25,8 @@ $required_group_rights = 5;
 include_once 'header.php';
 include_once 'menu.php';
 
+$gritter_notifications = array();
+
 $geny_idea = new GenyIdea();
 $logged_in_profile = new GenyProfile();
 $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
@@ -39,21 +41,21 @@ if( isset($_POST['remove_idea']) && $_POST['remove_idea'] == "true" ) {
 			$id = $_POST['idea_id'];
 			$query = "DELETE FROM Ideas WHERE idea_id=$id";
 			if(! mysql_query($query)) {
-				$db_status .= "<li class=\"status_message_error\">Erreur durant la suppression de l'idée de la table Ideas.</li>\n";
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de l'idée de la table Ideas.");
 			}
 			else
-				$db_status .= "<li class=\"status_message_success\">Idée supprimée avec succès.</li>\n";
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée supprimée avec succès.");
 		}
 		else {
-			$db_status .= "<li class=\"status_message_error\">Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.</li>\n";
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
 		}
 	}
 	else {
-		$db_status .= "<li class=\"status_message_error\">Impossible de supprimer l'idée : id non spécifié.</li>\n";
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de supprimer l'idée ",'msg'=>"id non spécifié.");
 	}
 }
 else {
-// 	$db_status .= "<li class=\"status_message_error\">Aucune action spécifiée.</li>\n";
+// 	$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Aucune action spécifiée.");
 }
 
 
@@ -74,15 +76,11 @@ else {
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de <strong>supprimer définitivement</strong> une idée de la boîte à idées.
 		</p>
-			<?php
-			if( isset($db_status) && $db_status != "" ){
-				echo "<ul class=\"status_message\">\n$db_status\n</ul>";
-			}
-			?>
 		<script>
-			$(".status_message").click(function () {
-			$(".status_message").fadeOut("slow");
-			});
+			<?php
+				// Cette fonction est définie dans header.php
+				displayStatusNotifications($gritter_notifications,$web_config->theme);
+			?>
 		</script>
 		<script>
 			jQuery(document).ready(function(){
