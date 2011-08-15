@@ -475,6 +475,23 @@ li.admin_generic a {
 	background-image: url(../../images/default/admin.png);
 }
 
+li.idea_add a {
+	background-image: url(../../images/default/idea_add.png);
+}
+
+li.idea_edit a {
+	background-image: url(../../images/default/idea_edit.png);
+}
+
+li.idea_remove a {
+	background-image: url(../../images/default/idea_remove.png);
+}
+
+li.idea_list a {
+	background-image: url(../../images/default/idea_list.png);
+}
+
+
 /* End of main dock style */
 
 /* Start of bottom dock style */
@@ -758,6 +775,22 @@ p.mainarea_title span.reporting_monthly_view {
 
 p.mainarea_title span.admin_generic {
 	background-image: url(../../images/default/admin.png);
+}
+
+p.mainarea_title span.idea_add {
+	background-image: url(../../images/default/idea_add.png);
+}
+
+p.mainarea_title span.idea_edit {
+	background-image: url(../../images/default/idea_edit.png);
+}
+
+p.mainarea_title span.idea_remove {
+	background-image: url(../../images/default/idea_remove.png);
+}
+
+p.mainarea_title span.idea_list {
+	background-image: url(../../images/default/idea_list.png);
 }
 
 table.object_list {
