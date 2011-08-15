@@ -195,28 +195,25 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 			function onCheckBoxSelectAll(){
 				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
-			$(function() {
-				$( "#radio" ).buttonset();
-				$( "#chkBoxSelectAll" ).button();
-			});
 		</script>
 		<script>
 			<?php
 				// Cette fonction est définie dans header.php
 				displayStatusNotifications($gritter_notifications,$web_config->theme);
 			?>
+			
+			$(function() {
+				$( "#chkBoxSelectAll" ).button();
+			});
 		</script>
-		<form id="formID" action="cra_validation.php" method="post" class="table_container">
+		<form id="formID" action="cra_deletion.php" method="post" class="table_container">
+			<input type="hidden" name="cra_action" value="cra_deletion" />
 			<style>
 				@import 'styles/<?php echo $web_config->theme ?>/cra_validation.css';
 			</style>
 			<ul>
 				<li>
 					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
-				</li>
-				<li id="radio">
-					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Valider</label>
-					<input type="radio" id="radio2" name="cra_action" value="delete_cra" /><label for="radio2">Supprimer</label>
 				</li>
 			</ul>
 			<p>
@@ -234,14 +231,14 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 					<?php
 						$geny_ar = new GenyActivityReport();
 						$geny_ars = new GenyActivityReportStatus();
-						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+						$geny_ars->loadActivityReportStatusByShortName('APPROVED');
 						foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id=".$geny_ars->id,"profile_id=".$profile->id) ) as $ar ){
 							$tmp_activity = new GenyActivity( $ar->activity_id );
 							$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
 							$tmp_task = new GenyTask( $tmp_activity->task_id );
 							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							if( strripos($tmp_project->name,'congés') === false ){
+							if( $tmp_project->type_id != 5 ){
 								echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
 							}
 						}
