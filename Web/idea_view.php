@@ -251,23 +251,23 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			if( $idea_vote->profile_id == $logged_in_profile->id ) {
 				if( $idea_vote->idea_positive_vote == 1 ) {
 					$bProfileHasVoted = true;
-					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/smiley_down.png\" alt=\"Voter contre cette idée\"></a>";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_down_small.png\" alt=\"Voter contre cette idée\"></a>";
 					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_neutral.png\" alt=\"Pas d'avis pour cette idée\"></a>";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_neutral_small.png\" alt=\"Pas d'avis pour cette idée\"></a>";
 				}
 				else if( $idea_vote->idea_negative_vote == 1 ) {
 					$bProfileHasVoted = true;
-					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_up.png\" alt=\"Voter pour cette idée\"></a>";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_up_small.png\" alt=\"Voter pour cette idée\"></a>";
 					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_neutral.png\" alt=\"Pas d'avis pour cette idée\"></a>";
+					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_neutral=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Pas d'avis pour cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_neutral_small.png\" alt=\"Pas d'avis pour cette idée\"></a>";
 				}
 				break;
 			}
 		}
 		if( !$bProfileHasVoted ) {
-			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/smiley_up.png\" alt=\"Voter pour cette idée\"></a>";
+			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_positive=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter pour cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_up_small.png\" alt=\"Voter pour cette idée\"></a>";
 			echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/smiley_down.png\" alt=\"Voter contre cette idée\"></a>";
+			echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_down_small.png\" alt=\"Voter contre cette idée\"></a>";
 		}
 		?>
 		</center>
