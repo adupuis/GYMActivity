@@ -1,4 +1,5 @@
 <?php
+
 //  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
 //  adupuis@genymobile.com
 //  http://www.genymobile.com
@@ -18,31 +19,14 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - CRA';
-$required_group_rights = 6;
 
-include_once 'header.php';
-include_once 'menu.php';
-
-
+	$debug = "THEME(session) : ".$_SESSION['THEME']."<br/>";
+	$debug .= "theme(webconfig) : ".$web_config->theme."<br/>";
 ?>
 
-<div class="page_title">
-	<img src="images/default/cra.png"/><p>CRA</p>
-</div>
-
-<div id="maindock">
-	<ul>
-		<?php
-			include 'backend/widgets/cra_add.dock.widget.php';
-			include 'backend/widgets/cra_validation.dock.widget.php';
-			include 'backend/widgets/cra_list.dock.widget.php';
-			include 'backend/widgets/cra_deletion.dock.widget.php';
-		?>
-	</ul>
-</div>
-
-<?php
-include_once 'footer.php';
-?>
+<li class="admin_generic">
+	<a href="#">
+		<span class="dock_item_title">Debug</span><br/>
+		<span class="dock_item_content"><?php echo $debug; ?></span>
+	</a>
+</li>
