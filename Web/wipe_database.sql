@@ -42,6 +42,7 @@ DROP TABLE AccessLogs;
 DROP TABLE Ideas;
 DROP TABLE IdeaStatus;
 DROP TABLE IdeaMessages;
+DROP TABLE IdeaVotes;
 DROP TABLES Notifications;
 DROP TABLES ApiKeys;
 COMMIT;
