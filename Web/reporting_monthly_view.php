@@ -65,8 +65,9 @@ foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
 	}
 }
 
-// Création des données de reporting pour la charge par client
+// Création des données de reporting pour la charge par client ainsi que par projet
 $load_by_clients = array();
+$load_by_projects = array();
 foreach( $reporting_data as $profile_id => $data ){
 	$geny_profile->loadProfileById($profile_id);
 	foreach( $data as $assignement_id => $total_load ){
@@ -74,7 +75,10 @@ foreach( $reporting_data as $profile_id => $data ){
 		$geny_project->loadProjectById($geny_assignement->project_id);
 		if( !isset($load_by_clients[$clients[$geny_project->client_id]->name]) )
 			$load_by_clients[$clients[$geny_project->client_id]->name]=0;
+		if( !isset($load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]) )
+			$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]=0;
 		$load_by_clients[$clients[$geny_project->client_id]->name] += $total_load/8;
+		$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name] += $total_load/8;
 	}
 }
 $load_by_clients_js_data = "";
@@ -83,6 +87,14 @@ foreach( $load_by_clients as $client => $load ){
 	$tmp_array[]= "['$client', $load]";
 }
 $load_by_clients_js_data = implode(",",$tmp_array);
+
+$load_by_projects_js_data = "";
+$tmp_array=array();
+foreach( $load_by_projects as $project => $load ){
+	$tmp_array[]= "['$project', $load]";
+}
+$load_by_projects_js_data = implode(",",$tmp_array);
+
 
 // Création des données de reporting pour la charge par profile
 $load_by_profiles = array();
@@ -262,6 +274,24 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		// Instantiate and draw our chart, passing in some options.
 		var chart2 = new google.visualization.PieChart(document.getElementById('chart_div2'));
 		chart2.draw(data2, options);
+		
+		// Create the data table.
+		var data3 = new google.visualization.DataTable();
+		data3.addColumn('string', 'Profiles');
+		data3.addColumn('number', 'Charge');
+		data3.addRows([
+		<?php echo $load_by_projects_js_data;?>
+		]);
+
+		// Set chart options
+		var options = {'title':'Reporting mensuel - charge/projet - <?php echo "$year-$month" ?> ',
+				'is3D': true,
+				'width':800,
+				'height':300};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart3 = new google.visualization.PieChart(document.getElementById('chart_div3'));
+		chart3.draw(data3, options);
 	}
 </script>
 
@@ -316,6 +346,7 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 			<ul>
 				<li id="chart_div1"></li>
 				<li id="chart_div2"></li>
+				<li id="chart_div3"></li>
 			</ul>
 		</p>
 	</p>
