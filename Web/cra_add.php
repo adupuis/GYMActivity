@@ -89,7 +89,6 @@ date_default_timezone_set('Europe/Paris');
 					}
 					$("#assignement_id").change(getTasks);
 					getTasks();
-					
 					$(function() {
 						$( "#assignement_start_date" ).datepicker();
 						$( "#assignement_start_date" ).datepicker('setDate', new Date());
@@ -113,7 +112,6 @@ date_default_timezone_set('Europe/Paris');
 						$( "#assignement_start_date" ).change( function(){ $( "#assignement_end_date" ).val( $( "#assignement_start_date" ).val() ) } );
 						
 					});
-					
 				</script>
 			</p>
 			<p>

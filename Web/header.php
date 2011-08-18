@@ -20,6 +20,8 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 session_start();
+date_default_timezone_set('Europe/Paris');
+
 function __autoload($class_name) {
     include 'classes/'.$class_name . '.php';
 }

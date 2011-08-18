@@ -60,6 +60,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 		}
 		$ok_count=0;
 		$count_by_project = array();
+		$count_by_profile = array();
 		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
 			if( $tmp_ass->status_id == $init_ars->id ){
@@ -68,6 +69,20 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					$ok_count++;
 					$tmp_activity = new GenyActivity( $tmp_ar_id );
 					$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
+					$tmp_project = new GenyProject( $tmp_assignement->project_id );
+					if(isset($count_by_profile[$tmp_ass->profile_id])){
+						if( $tmp_project->type_id == 5 )
+							$count_by_profile[$tmp_ass->profile_id]['conges']++;
+						else
+							$count_by_profile[$tmp_ass->profile_id]['cra']++;
+					}
+					else{
+						$count_by_profile[$tmp_ass->profile_id]= array('cra' => 0, 'conges' => 0);
+						if( $tmp_project->type_id == 5 )
+							$count_by_profile[$tmp_ass->profile_id]['conges']++;
+						else
+							$count_by_profile[$tmp_ass->profile_id]['cra']++;
+					}
 					if(isset($count_by_project[$tmp_assignement->project_id])){
 						$count_by_project[$tmp_assignement->project_id]++;
 					}
@@ -104,7 +119,18 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					$notif->insertNewGroupNotification(2,"Notification au groupe SuperUsers: $value rapport(s) ont été fermé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
 					$notif->insertNewGroupNotification(4,"Notification au groupe SuperReporters: $value rapport(s) ont été fermé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
 				}
-				// TODO: il reste à gérer les notifications pour les status P_REMOVAL et REMOVED.
+				else if( $new_ars->shortname == "REMOVED" ){
+					$notif->insertNewGroupNotification(1,"Notification au groupe Admins: $value rapport(s) ont été supprimé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+					$notif->insertNewGroupNotification(2,"Notification au groupe SuperUsers: $value rapport(s) ont été supprimé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+					$notif->insertNewGroupNotification(4,"Notification au groupe SuperReporters: $value rapport(s) ont été supprimé(s) par $screen_name (".$tmp_c->name." / ".$tmp_p->name.")","ok");
+				}
+				// TODO: il reste à gérer les notifications pour les status P_REMOVAL.
+			}
+			foreach ($count_by_profile as $id => $value){
+				if( $value['conges'] > 0 )
+					$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être supprimés par votre manager.","warning");
+				if( $value['cra'] > 0 )
+					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité viennent d'être supprimés par votre manager.","warning");
 			}
 			if($ok_count == 1){
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Rapport mis à jour avec succès','msg'=>"Le rapport a été correctement passé au status ".$new_ars->name);
@@ -226,6 +252,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"bProcessing": true,
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

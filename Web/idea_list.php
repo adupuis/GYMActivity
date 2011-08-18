@@ -45,7 +45,7 @@ $geny_idea_vote = new GenyIdeaVote();
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Idées</p>
+	<img src="images/<?php echo $web_config->theme ?>/idea.png"/><p>Idées</p>
 </div>
 
 
@@ -84,10 +84,10 @@ $geny_idea_vote = new GenyIdeaVote();
 					echo "<td>".$tmp->votes."</td>";
 					echo "<td>".$idea_statuses["$tmp->status_id"]->name."</td>";
 					echo "<td>".$screen_name."</td>";
-					echo "<td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Voir l'idée'></a></td>";
+					echo "<td><a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/idea_view_small.png' alt='Voir l'idée'></a></td>";
 					if( $tmp->submitter == $logged_in_profile->id ) {
-						echo "<td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer l'idée'></a></td>";
-						echo "<td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitiement l'idée'></a></td>";
+						echo "<td><a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/idea_edit_small.png' alt='Editer l'idée'></a></td>";
+						echo "<td><a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/idea_remove_small.png' alt='Supprimer définitiement l'idée'></a></td>";
 					}
 					else {
 						echo "<td></td>";
