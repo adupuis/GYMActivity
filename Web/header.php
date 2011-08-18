@@ -80,6 +80,8 @@ echo $header_title
 <script src="js/jquery.listselect.js" type="text/javascript"></script>
 <script src="js/DataTables/media/js/jquery.dataTables.min.js" type="text/javascript"></script> 
 <script type="text/javascript" src="js/Gritter/js/jquery.gritter.min.js"></script>
+<script type="text/javascript" src="js/jquery.datepick.js"></script>
+<script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
@@ -91,6 +93,8 @@ echo $header_title
 <link rel="stylesheet" href="styles/default/jquery-ui.css" type="text/css" media="all" />
 
 <style type="text/css">
+	@import "styles/default/jquery.datepick.css";
+	@import "styles/default/smoothness.datepick.css";
 </style>
 </head>
 <body>

@@ -30,11 +30,36 @@ $geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
+function processDaysList( $list_as_string ){
+	$dates = array();
+	foreach( explode(",",$list_as_string) as $date ){
+		$tmp_date = explode("-", $date);
+		if( checkdate( $tmp_date[1],$tmp_date[2],$tmp_date[0] ) ){
+			// Il faut vérifier que le jour est un jour ouvré !
+			$time = strtotime($date);
+			$tmp_t = GenyTools::getWorkedDaysList($time, $time );
+			// Si il y a plus d'un jour dans ce tableau... bah capu.
+			if( count($tmp_t) == 1 ){
+				$dates[] = $tmp_t[0];
+			}
+		}
+	}
+	return $dates;
+}
+
 if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 	$html_worked_days_table = '';
-	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
-		$time_assignement_start_date = strtotime($_POST['assignement_start_date']);
-		$time_assignement_end_date = strtotime($_POST['assignement_end_date']);
+	if( isset($_POST['date_selection_type']) && ( ($_POST['date_selection_type'] == "interval" && isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date'])) || ($_POST['date_selection_type'] == "days_list" && isset($_POST['assignement_date_list']) ) ) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
+		$time_assignement_start_date = 0;
+		$time_assignement_end_date = 0;
+		$time_assignement_days_list = array();
+		if( $_POST['date_selection_type'] == "interval" ){
+			$time_assignement_start_date = strtotime($_POST['assignement_start_date']);
+			$time_assignement_end_date = strtotime($_POST['assignement_end_date']);
+		}
+		else if( $_POST['date_selection_type'] == "days_list" ){
+			$time_assignement_days_list = processDaysList( $_POST['assignement_date_list'] );
+		}
 		$tmp_input_ga = new GenyAssignement( $_POST['assignement_id'] );
 		$tmp_project = new GenyProject( $tmp_input_ga->project_id );
 		$time_project_start_date = strtotime( $tmp_project->start_date );
@@ -42,9 +67,16 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.");
 		}
-		else if( $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date ){
+		else if( ($_POST['date_selection_type'] == "interval" && $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date) || ( $_POST['date_selection_type'] == "days_list" && count($time_assignement_days_list) > 0 ) ){
 			$ok_count=0;
-			foreach( GenyTools::getWorkedDaysList($time_assignement_start_date, $time_assignement_end_date ) as $day ){
+			$list = array();
+			if( $_POST['date_selection_type'] == "interval" ){
+				$list = GenyTools::getWorkedDaysList($time_assignement_start_date, $time_assignement_end_date );
+			}
+			else if( $_POST['date_selection_type'] == "days_list" ){
+				$list = $time_assignement_days_list;
+			}
+			foreach( $list as $day ){
 				$geny_activity = new GenyActivity();
 				$geny_ar = new GenyActivityReport();
 				$day_load = $geny_ar->getDayLoad($profile->id,$day)+$_POST['assignement_load'];

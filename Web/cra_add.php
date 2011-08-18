@@ -89,39 +89,76 @@ date_default_timezone_set('Europe/Paris');
 					}
 					$("#assignement_id").change(getTasks);
 					getTasks();
+					
 					$(function() {
-					$( "#assignement_start_date" ).datepicker();
-					$( "#assignement_start_date" ).datepicker('setDate', new Date());
-					$( "#assignement_start_date" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#assignement_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#assignement_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#assignement_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#assignement_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#assignement_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#assignement_start_date" ).datepicker( "option", "firstDay", 1 );
-					$( "#assignement_end_date" ).datepicker();
-					$( "#assignement_end_date" ).datepicker('setDate', new Date());
-					$( "#assignement_end_date" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#assignement_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#assignement_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#assignement_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#assignement_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#assignement_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#assignement_end_date" ).datepicker( "option", "firstDay", 1 );
+						$( "#assignement_start_date" ).datepicker();
+						$( "#assignement_start_date" ).datepicker('setDate', new Date());
+						$( "#assignement_start_date" ).datepicker( "option", "showAnim", "slideDown" );
+						$( "#assignement_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+						$( "#assignement_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+						$( "#assignement_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+						$( "#assignement_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+						$( "#assignement_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+						$( "#assignement_start_date" ).datepicker( "option", "firstDay", 1 );
+						$( "#assignement_end_date" ).datepicker();
+						$( "#assignement_end_date" ).datepicker('setDate', new Date());
+						$( "#assignement_end_date" ).datepicker( "option", "showAnim", "slideDown" );
+						$( "#assignement_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+						$( "#assignement_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+						$( "#assignement_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+						$( "#assignement_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+						$( "#assignement_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+						$( "#assignement_end_date" ).datepicker( "option", "firstDay", 1 );
+						
+						$( "#assignement_start_date" ).change( function(){ $( "#assignement_end_date" ).val( $( "#assignement_start_date" ).val() ) } );
+						
+					});
 					
-					$( "#assignement_start_date" ).change( function(){ $( "#assignement_end_date" ).val( $( "#assignement_start_date" ).val() ) } );
-					
-				});
 				</script>
 			</p>
 			<p>
+				<label for="date_selection_type">Type de séléction</label>
+				<select name="date_selection_type" id="date_selection_type">
+					<option value="interval">Interval de dates</option>
+					<option value="days_list">Liste de jours</option>
+				</select>
+			</p>
+			<p id="interval_start_date">
 				<label for="assignement_start_date">Date de début</label>
 				<input name="assignement_start_date" id="assignement_start_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
-			<p>
+			<p id="interval_stop_date">
 				<label for="assignement_end_date">Date de fin</label>
 				<input name="assignement_end_date" id="assignement_end_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
+			<p id="days_list_date">
+				<label for="assignement_date_list">Liste des dates</label>
+				<style type="text/css">
+					@import "styles/default/jquery.datepick.css";
+					@import "styles/default/smoothness.datepick.css";
+				</style>
+				<input name="assignement_date_list" id="assignement_date_list" type="text" class="validate[required text-input" />
+			</p>
+			<script>
+				function showCalendar(){
+					if( $("#date_selection_type").val() == "interval" ){
+						$("#interval_start_date").show();
+						$("#interval_stop_date").show();
+						$("#days_list_date").hide();
+					}
+					else {
+						$("#interval_start_date").hide();
+						$("#interval_stop_date").hide();
+						$("#days_list_date").show();
+					}
+				}
+				$("#date_selection_type").change(showCalendar);
+				showCalendar();
+				$('#assignement_date_list').datepick({ 
+					renderer: $.datepick.themeRollerRenderer,
+					multiSelect: 999
+					}); 
+			</script>
 			<p>
 				<label for="assignement_load">Charge journalière</label>
 				<select name="assignement_load" id="assignement_load">
