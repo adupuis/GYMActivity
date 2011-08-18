@@ -405,7 +405,6 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		</p>
 		</div>
 		<p>
-			Représentation graphique par client :
 			<ul>
 				<li id="chart_div1"></li>
 				<li id="chart_div2"></li>
