@@ -144,7 +144,6 @@ class GenyAssignement {
 		}
 		$query = rtrim($query, ",");
 		$query .= " WHERE assignement_id=".$this->id;
-		echo $query;
 		return mysql_query($query, $this->handle);
 	}
 	public function deleteAssignement($id=0){
