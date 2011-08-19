@@ -32,11 +32,12 @@ class GenyAssignement {
 		$this->profile_id = -1;
 		$this->project_id = -1;
 		$this->overtime_allowed = false;
+		$this->is_active = false;
 		if($id > -1)
 			$this->loadAssignementById($id);
 	}
-	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed='false'){
-		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id,$overtime_allowed)";
+	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed='false',$is_active='true'){
+		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id,$overtime_allowed,$is_active)";
 		if( $this->config->debug )
 			echo "<!-- DEBUG: GenyAssignements MySQL query : $query -->\n";
 		if(mysql_query($query,$this->handle))
@@ -47,7 +48,7 @@ class GenyAssignement {
 	public function getAssignementsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("profile_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT assignement_id,profile_id,project_id,assignement_overtime_allowed FROM Assignements";
+		$query = "SELECT assignement_id,profile_id,project_id,assignement_overtime_allowed,assignement_is_active FROM Assignements";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -68,6 +69,7 @@ class GenyAssignement {
 				$tmp_object->profile_id = $row[1];
 				$tmp_object->project_id = $row[2];
 				$tmp_object->overtime_allowed = $row[3];
+				$tmp_object->is_active = $row[4];
 				$object_list[] = $tmp_object;
 			}
 		}
@@ -80,8 +82,26 @@ class GenyAssignement {
 	public function getAssignementsListByProfileId($id){
 		return $this->getAssignementsListWithRestrictions(array("profile_id=$id"));
 	}
+	public function getActiveAssignementsListByProfileId($id){
+		return $this->getAssignementsListWithRestrictions(array("profile_id=$id","assignement_is_active=true"));
+	}
+	public function getInactiveAssignementsListByProfileId($id){
+		return $this->getAssignementsListWithRestrictions(array("profile_id=$id","assignement_is_active=false"));
+	}
 	public function getAssignementsListByProjectId($id){
 		return $this->getAssignementsListWithRestrictions(array("project_id=$id"));
+	}
+	public function getActiveAssignementsListByProjectId($id){
+		return $this->getAssignementsListWithRestrictions(array("project_id=$id","assignement_is_active=true"));
+	}
+	public function getInactiveAssignementsListByProjectId($id){
+		return $this->getAssignementsListWithRestrictions(array("project_id=$id","assignement_is_active=false"));
+	}
+	public function getAssignementsListByProjectIdAndProfileId($proj_id,$prof_id){
+		if( !is_numeric($proj_id) || ! is_numeric($prof_id) )
+			return -1;
+		// This should return only one record as the database should not contains 2 assignements for a unique profile and a unique project.
+		return $this->getAssignementsListWithRestrictions(array("profile_id=$prof_id","project_id=$proj_id"));
 	}
 	public function loadAssignementById($id){
 		$objects = $this->getAssignementsListWithRestrictions(array("assignement_id=$id"));
@@ -91,7 +111,22 @@ class GenyAssignement {
 			$this->profile_id = $object->profile_id;
 			$this->project_id = $object->project_id;
 			$this->overtime_allowed = $object->overtime_allowed;
+			$this->is_active = $object->is_active;
 		}
+	}
+	public function setActive(){
+		$this->updateBool("assignement_is_active",'true');
+		if($this->commitUpdates())
+			return 1;
+		else
+			return -1;
+	}
+	public function setInactive(){
+		$this->updateBool("assignement_is_active",'false');
+		if($this->commitUpdates())
+			return 1;
+		else
+			return -1;
 	}
 	public function updateString($key,$value){
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";

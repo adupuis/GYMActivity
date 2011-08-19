@@ -212,6 +212,7 @@ CREATE TABLE Assignements (
 	profile_id int not null,
 	project_id int not null,
 	assignement_overtime_allowed boolean not null default false,
+	assignement_is_active boolean not null default true,
 	primary key(assignement_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE

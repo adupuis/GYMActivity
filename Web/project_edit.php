@@ -121,27 +121,29 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de la tâche $geny_task->name.");
 					}
 				}
-				if( $err_string == 0 ){
+				if( $err == 0 ){
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Les tâches ont été mis à jour avec succès.");
 				}
 			}
 		}
 		if( isset($_POST['project_profiles']) && count($_POST['project_profiles']) > 0 ){
-			$old_assignements = $geny_assignement->getAssignementsListByProjectId($geny_project->id);
-			$old_overtime_states = array();
-			foreach( $old_assignements as $tmp_ass ){
-				if(isset($tmp_ass->overtime_allowed) && $tmp_ass->overtime_allowed)
-					$old_overtime_states[$tmp_ass->profile_id] = 'true' ;
-				else
-					$old_overtime_states[$tmp_ass->profile_id] = 'false' ;
-			}
-			
-			$assignements = $geny_assignement->getAssignementsListByProjectId( $geny_project->id );
+// 			$old_assignements = $geny_assignement->getAssignementsListByProjectId($geny_project->id);
+			$active_assignements = $geny_assignement->getActiveAssignementsListByProjectId( $geny_project->id );
+// 			$old_overtime_states = array();
+// 			// Récupération de l'ancien état des heures sup'
+// // 			foreach( $old_assignements as $tmp_ass ){
+// 			foreach( $active_assignements as $tmp_ass ){
+// 				if(isset($tmp_ass->overtime_allowed) && $tmp_ass->overtime_allowed)
+// 					$old_overtime_states[$tmp_ass->profile_id] = 'true' ;
+// 				else
+// 					$old_overtime_states[$tmp_ass->profile_id] = 'false' ;
+// 			}
+// 			
 			$assigned_profile_id = array();
-			$assignements_by_profile_id = array();
-			foreach( $assignements as $ass){
+			$active_assignements_by_profile_id = array();
+			foreach( $active_assignements as $ass){
 				$assigned_profile_id[] = $ass->profile_id;
-				$assignements_by_profile_id[$ass->profile_id] = $ass;
+				$active_assignements_by_profile_id[$ass->profile_id] = $ass;
 			}
 			$new_profile_id = array();
 			foreach ($_POST['project_profiles'] as $key => $value){
@@ -152,9 +154,11 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			
 			foreach( array_diff($assigned_profile_id,$new_profile_id) as $value ){
 				$tmp_profile = new GenyProfile( $value );
-				if( isset($assignements_by_profile_id[$value]) ){
+				if( isset($active_assignements_by_profile_id[$value]) ){
 					// WARNING: Ici nous ne voulons pas que les activities soient supprimés suite à la suppression de l'assignement.
-					if($geny_assignement->deleteAssignement( $assignements_by_profile_id[$value]->id ) > 0){
+					$tmp_assignement = new GenyAssignement( $active_assignements_by_profile_id[$value]->id );
+// 					if($geny_assignement->deleteAssignement( $active_assignements_by_profile_id[$value]->id ) > 0){
+					if($tmp_assignement->setInactive() > 0){
 						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login supprimé(e) du projet.");
 						$notif->insertNewNotification( $tmp_profile->id, "Vous avez été supprimé(e) du projet ".$geny_project->name );
 					}
@@ -167,9 +171,20 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			foreach( array_diff($new_profile_id,$assigned_profile_id) as $value ){
 				$tmp_profile = new GenyProfile( $value );
 				$tmp_overtime_allowed = 'false';
-				if( isset( $old_overtime_states[$tmp_profile->id] ) )
-					$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
-				if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
+// 				if( isset( $old_overtime_states[$tmp_profile->id] ) )
+// 					$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
+				$tmp_assignement = new GenyAssignement();
+				$tmp_assignements = $tmp_assignement->getAssignementsListByProjectIdAndProfileId($geny_project->id,$tmp_profile->id);
+				if( count($tmp_assignements) == 1 ){
+					// Si le profil avait déjà été affecté, il suffit de ré-activer son affectation.
+					$tmp_assignements[0]->setActive();
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ré-affecté(e) au projet.");
+					$notif->insertNewNotification( $tmp_profile->id, "Vous avez été ré-affecté(e) au projet ".$geny_project->name );
+				}
+				else if(count($tmp_assignements) > 1){
+					$gritter_notifications[] = array('status'=>'error', 'title' => "Erreur lors de l'ajout du profil $tmp_profile->login",'msg'=>"Ce profil est déjà affecté ".count($tmp_assignements)." fois à ce projet !");
+				}
+				else if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ajouté(e) au projet.");
 					$notif->insertNewNotification( $tmp_profile->id, "Vous avez été ajouté(e) au projet ".$geny_project->name );
 				}
@@ -390,7 +405,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			<p>
 				<label for="profiles_checkboxgroup">Attributions</label>
 				<?php
-					$assignements = $geny_assignement->getAssignementsListByProjectId( $geny_project->id );
+					$assignements = $geny_assignement->getActiveAssignementsListByProjectId( $geny_project->id );
 					$selected_profiles = '';
 					foreach( $assignements as $assignement ){
 						$selected_profiles .= "$assignement->profile_id,";
