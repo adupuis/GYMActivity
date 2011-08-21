@@ -197,7 +197,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			$ideas = $geny_idea->getAllIdeas();
 			foreach( $ideas as $idea ) {
 				if( $geny_idea->id == $idea->id ) {
-					echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
+					echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
 				}
 				else {
 					echo "<option value=\"".$idea->id."\">".$idea->title."</option>\n";

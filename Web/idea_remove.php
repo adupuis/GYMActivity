@@ -100,10 +100,10 @@ else {
 					$ideas = $geny_idea->getIdeasListBySubmitter( $logged_in_profile->id );
 					foreach( $ideas as $idea ) {
 						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
-							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
+							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
 						}
-						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->name) {
-							echo "<option value=\"".$idea->id."\" selected>".$idea->name."</option>\n";
+						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->title) {
+							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
 						}
 						else {
 							echo "<option value=\"".$idea->id."\">".$idea->title."</option>\n";
