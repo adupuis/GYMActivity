@@ -183,7 +183,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Idée</p>
+	<img src="images/<?php echo $web_config->theme ?>/idea.png"/><p>Idée</p>
 </div>
 
 <div id="mainarea">
