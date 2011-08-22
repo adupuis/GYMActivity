@@ -18,6 +18,10 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+define("GENYMOBILE_TRUE",1);
+define("GENYMOBILE_FALSE",-1);
+define("GENYMOBILE_ERROR",-2);
+
 class GenyWebConfig {
 	public function __construct(){
 		$this->db_host = "localhost";

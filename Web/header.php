@@ -27,19 +27,25 @@ function __autoload($class_name) {
 }
 
 try {
-    $checkId_obj = new CheckIdentity();
-    $web_config = new GenyWebConfig();
-    if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
-	if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
-		if(isset($_SESSION['THEME']))
-			$web_config->theme = $_SESSION['THEME'];
+	$access_loger = new GenyAccessLog();
+	$checkId_obj = new CheckIdentity();
+	$web_config = new GenyWebConfig();
+	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
+		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
+			if(isset($_SESSION['THEME']))
+				$web_config->theme = $_SESSION['THEME'];
+		}
+		else{
+			$tmp_profile = new GenyProfile();
+			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
+			$access_loger->insertNewAccessLog($tmp_profile->id,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",UNAUTHORIZED_ACCESS,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+			header("Location: index.php?reason=forbidden");
+		}
 	}
-	else
-		header("Location: index.php?reason=forbidden");
-    }
-    else {
-	header("Location: index.php?reason=authrequired");
-    }
+	else {
+		$access_loger->insertNewAccessLog(GENYMOBILE_ERROR,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",AUTH_REQUIRED,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+		header("Location: index.php?reason=authrequired");
+	}
     $profile = new GenyProfile();
     $profile->loadProfileByUsername($_SESSION['USERID']);
     if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
