@@ -36,7 +36,7 @@ class GenyProjectType {
 	public function insertNewProjectType($id,$name,$description){
 		$query = "INSERT INTO ProjectTypes VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectType MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectType MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -56,7 +56,7 @@ class GenyProjectType {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectType MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectType MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -109,7 +109,7 @@ class GenyProjectType {
 		$query = rtrim($query, ",");
 		$query .= " WHERE project_type_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectType MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectType MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

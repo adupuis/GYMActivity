@@ -44,7 +44,7 @@ class GenyIdeaStatus {
 		}
 		$query = "INSERT INTO IdeaStatus VALUES($id,'".mysql_real_escape_string($idea_status_name)."','".mysql_real_escape_string($idea_status_description).")";
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaStatus MySQL query : $query",0);
 		}
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
@@ -76,7 +76,7 @@ class GenyIdeaStatus {
 			}
 		}
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaStatus MySQL query : $query",0);
 		}
 		$result = mysql_query( $query, $this->handle );
 		$idea_status_list = array();
@@ -144,7 +144,7 @@ class GenyIdeaStatus {
 		$query = rtrim( $query, "," );
 		$query .= " WHERE idea_status_id=".$this->id;
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaStatus MySQL query : $query",0);
 		}
 		return mysql_query( $query, $this->handle );
 	}

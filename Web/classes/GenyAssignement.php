@@ -39,7 +39,7 @@ class GenyAssignement {
 	public function insertNewAssignement($id,$profile_id,$project_id,$overtime_allowed='false',$is_active='true'){
 		$query = "INSERT INTO Assignements VALUES($id,$profile_id,$project_id,$overtime_allowed,$is_active)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyAssignements MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyAssignements MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -59,7 +59,7 @@ class GenyAssignement {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyAssignement MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyAssignement MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -162,7 +162,7 @@ class GenyAssignement {
 			
 			$query = "DELETE FROM Assignements WHERE assignement_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyAssignement MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyAssignement MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else

@@ -64,7 +64,7 @@ class GenyProject {
 			
 			$query = "DELETE FROM Projects WHERE project_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyProject MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyProject MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -75,7 +75,7 @@ class GenyProject {
 	public function insertNewProject($project_name,$project_description,$project_client,$project_location,$project_start_date,$project_end_date,$project_type_id,$project_status_id){
 		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).")";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProject MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -95,7 +95,7 @@ class GenyProject {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProject MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$project_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -119,7 +119,7 @@ class GenyProject {
 	public function getLocationsList(){
 		$query = "SELECT DISTINCT project_location FROM Projects";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProject MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$project_location_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -147,7 +147,7 @@ class GenyProject {
 		$query = rtrim($query, ",");
 		$query .= " WHERE project_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProject MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 	public function getAllProjects(){

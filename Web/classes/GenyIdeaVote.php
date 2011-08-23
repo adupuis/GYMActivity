@@ -58,10 +58,10 @@ class GenyIdeaVote {
 		}
 		$query = "INSERT INTO IdeaVotes VALUES($id,'".$idea_positive_vote."','".$idea_negative_vote."','".$profile_id."','".$idea_id."')";
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaVote MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaVote MySQL query : $query",0);
 		}
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
@@ -93,7 +93,7 @@ class GenyIdeaVote {
 			}
 		}
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaVote MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaVote MySQL query : $query",0);
 		}
 		$result = mysql_query( $query, $this->handle );
 		$idea_vote_list = array();
@@ -172,7 +172,7 @@ class GenyIdeaVote {
 		$query = rtrim( $query, "," );
 		$query .= " WHERE idea_vote_id=".$this->id;
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdeaVote MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdeaVote MySQL query : $query",0);
 		}
 		return mysql_query( $query, $this->handle );
 	}

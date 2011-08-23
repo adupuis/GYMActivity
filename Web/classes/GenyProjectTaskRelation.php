@@ -43,7 +43,7 @@ class GenyProjectTaskRelation {
 			
 			$query = "DELETE FROM ProjectTaskRelations WHERE project_task_relation_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyProjectTaskRelation MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyProjectTaskRelation MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -58,7 +58,7 @@ class GenyProjectTaskRelation {
 			return -1;
 		$query = "INSERT INTO ProjectTaskRelations VALUES(0,$project_id,$task_id)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectTaskRelation MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectTaskRelation MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -78,7 +78,7 @@ class GenyProjectTaskRelation {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectTaskRelation MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectTaskRelation MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -134,7 +134,7 @@ class GenyProjectTaskRelation {
 		$query = rtrim($query, ",");
 		$query .= " WHERE project_task_relation_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProjectTaskRelation MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProjectTaskRelation MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 	public function deleteAllProjectTaskRelationsByProjectId($project_id){

@@ -48,7 +48,7 @@ class GenyProfile {
 	public function insertNewProfile($profile_id,$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id){
 		$query = "INSERT INTO Profiles VALUES($profile_id,'".mysql_real_escape_string($profile_login)."','".mysql_real_escape_string($profile_firstname)."','".mysql_real_escape_string($profile_lastname)."','".md5(mysql_real_escape_string($profile_password))."','".mysql_real_escape_string($profile_email)."',".mysql_real_escape_string($profile_is_active).",".mysql_real_escape_string($profile_needs_password_reset).",".mysql_real_escape_string($rights_group_id).")";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProfile MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -71,7 +71,7 @@ class GenyProfile {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProfile MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$profile_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -166,7 +166,7 @@ class GenyProfile {
 		$query = rtrim($query, ",");
 		$query .= " WHERE profile_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyProfile MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

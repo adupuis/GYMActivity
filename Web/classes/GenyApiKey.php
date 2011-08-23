@@ -44,7 +44,7 @@ class GenyApiKey {
 		mysql_query( $query, $this->handle );
 		$query = "INSERT INTO ApiKeys VALUES($id,$profile_id,'".mysql_real_escape_string($data)."',$timestamp)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyApiKey MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyApiKey MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -66,7 +66,7 @@ class GenyApiKey {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyApiKey MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyApiKey MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$api_key_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -143,7 +143,7 @@ class GenyApiKey {
 		$query = rtrim($query, ",");
 		$query .= " WHERE api_key_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyApiKey MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyApiKey MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }
