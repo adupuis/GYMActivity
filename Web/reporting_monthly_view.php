@@ -56,12 +56,14 @@ $geny_ars = new GenyActivityReportStatus();
 $geny_ars->loadActivityReportStatusByShortName('APPROVED');
 foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
-	if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
-		if( !isset( $reporting_data[$ar->profile_id] ) )
-			$reporting_data[$ar->profile_id] = array();
-		if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) )
-			$reporting_data[$ar->profile_id][$geny_activity->assignement_id]=0;
-		$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
+	if( $geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19 ){ // Nous ne voulons pas des absences non payé par l'entreprise.
+		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
+			if( !isset( $reporting_data[$ar->profile_id] ) )
+				$reporting_data[$ar->profile_id] = array();
+			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) )
+				$reporting_data[$ar->profile_id][$geny_activity->assignement_id]=0;
+			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
+		}
 	}
 }
 
@@ -305,7 +307,8 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
 		Voici la liste des CRA ventilés par collaborateurs, par client et par projet pour le mois en cours.<br/>
-		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.
+		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
+		<strong>Attention: Ces rapports excluent les congés non rémunérés !</strong>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
