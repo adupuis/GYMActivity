@@ -253,7 +253,9 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"bProcessing": true,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
+					"sScrollY": 400,
 					"oLanguage": {
 						"sSearch": "Recherche :",
 						"sLengthMenu": "Rapport par page _MENU_",

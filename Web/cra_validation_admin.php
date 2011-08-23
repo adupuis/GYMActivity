@@ -316,6 +316,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" || $_P
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

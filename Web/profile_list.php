@@ -111,6 +111,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

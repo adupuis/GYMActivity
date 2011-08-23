@@ -198,6 +198,7 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
