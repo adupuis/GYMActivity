@@ -192,9 +192,9 @@ date_default_timezone_set('Europe/Paris');
 							$status_name = "<strong style='color: red;'>error</strong>";
 							if( $tmp_ars->name != "" )
 								$status_name = $tmp_ars->name;
-							if( $tmp_project->type_id != 5 ){
+// 							if( $tmp_project->type_id != 5 ){
 								echo "<tr><td class='centered'>".$tmp_activity->activity_date."</td><td class='centered'>".$tmp_project->name."</td><td class='centered'>".$tmp_task->name."</td><td class='centered'>".$tmp_activity->load."</td><td class='centered'>".$status_name."</td></tr>";
-							}
+// 							}
 						}
 					?>
 					</tbody>
