@@ -253,6 +253,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"bProcessing": true,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
@@ -267,6 +268,28 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 							"sNext": "Suivant",
 							"sPrevious": "Précédent"
 						}
+					},
+					"fnStateLoadCallback": function ( oSettings, oData ) {
+						console.log("sFilter="+oData.sFilter);
+						console.log("oData="+oData);
+						
+						jQuery.each(oData,function(row,content){
+							console.log("oData."+row+"="+content);
+// 							if(row == "oPreviousSearch"){
+// 								jQuery.each(content,function(r,c){
+// 									console.log("oSettings."+row+"."+r+"="+c);
+// 								});
+// 							}
+						})
+// 						jQuery.each(oSettings,function(row,content){
+// 							console.log("oSettings."+row+"="+content);
+// 							if(row == "oPreviousSearch"){
+// 								jQuery.each(content,function(r,c){
+// 									console.log("oSettings."+row+"."+r+"="+c);
+// 								});
+// 							}
+// 						})
+						return true;
 					}
 				} );
 				/* Add a select menu for each TH element in the table footer */
@@ -279,6 +302,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 						} );
 					}
 				} );
+				$('option[value|="Stagiaire"]').attr("selected","selected");
 				
 			});
 			

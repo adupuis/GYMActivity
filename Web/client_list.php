@@ -36,6 +36,9 @@ $geny_client = new GenyClient();
 			"bJQueryUI": true,
 			"bStateSave": true,
 			"bAutoWidth": false,
+// 			"sScrollY": 400,
+// 			"bScrollCollapse": true,
+			"sCookiePrefix": "GYMActivity_",
 			"sPaginationType": "full_numbers",
 			"oLanguage": {
 				"sSearch": "Recherche :",

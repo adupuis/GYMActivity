@@ -274,6 +274,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

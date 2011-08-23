@@ -137,6 +137,7 @@ date_default_timezone_set('Europe/Paris');
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
