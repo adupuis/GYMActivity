@@ -283,7 +283,7 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		]);
 
 		// Set chart options
-		var options = {'title':'Reporting de charge - charge/profile - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
+		var options = {'title':'Reporting de charge - charge/profil - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
 				'is3D': true,
 				'width':500,
 				'height':300};
