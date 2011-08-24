@@ -53,7 +53,7 @@ class GenyActivity {
 			
 			$query = "DELETE FROM Activities WHERE activity_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyActivity MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyActivity MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -72,7 +72,7 @@ class GenyActivity {
 			return -1;
 		$query = "INSERT INTO Activities VALUES($id,'".mysql_real_escape_string($activity_date)."',$activity_load,'".mysql_real_escape_string($activity_input_date)."',$assignement_id,$task_id)";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivity MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivity MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -92,7 +92,7 @@ class GenyActivity {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivity MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivity MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$activityies_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -162,7 +162,7 @@ class GenyActivity {
 		$query = rtrim($query, ",");
 		$query .= " WHERE activity_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivity MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivity MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

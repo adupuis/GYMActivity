@@ -52,7 +52,7 @@ class GenyAccessLog {
 				return -1;
 			$query = "DELETE FROM AccessLogs WHERE access_log_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyAccessLog MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyAccessLog MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -61,20 +61,20 @@ class GenyAccessLog {
 		return -1;
 	}
 	public function insertNewAccessLog($profile_id,$ip,$status,$page_requested,$type,$extra){
-		error_log("DEBUG: GenyAccessLog::insertNewAccessLog entering function", 0);
+// 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog entering function", 0);
 		if( ! is_numeric($profile_id) )
 			return -1;
-		error_log("DEBUG: GenyAccessLog::insertNewAccessLog profile_id ok", 0);
+// 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog profile_id ok", 0);
 		if( $status != "false" && $status != "true" )
 			return -1;
-		error_log("DEBUG: GenyAccessLog::insertNewAccessLog $status ok", 0);
+// 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog $status ok", 0);
 		if( ! defined($type) )
 			return -1;
-		error_log("DEBUG: GenyAccessLog::insertNewAccessLog type ok", 0);
+// 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog type ok", 0);
 		$query = "INSERT INTO AccessLogs VALUES(0,".time().",$profile_id,'".mysql_real_escape_string($ip)."',$status,'".mysql_real_escape_string($page_requested)."','".mysql_real_escape_string($type)."','".mysql_real_escape_string($extra)."')" ;
-		error_log("DEBUG: GenyAccessLog MySQL query : $query\n", 0);
+// 		error_log("DEBUG: GenyAccessLog MySQL query : $query\n", 0);
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyAccessLog MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyAccessLog MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -97,7 +97,7 @@ class GenyAccessLog {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyAccessLog MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyAccessLog MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$access_log_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -176,7 +176,7 @@ class GenyAccessLog {
 		$query = rtrim($query, ",");
 		$query .= " WHERE access_log_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyAccessLog MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyAccessLog MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

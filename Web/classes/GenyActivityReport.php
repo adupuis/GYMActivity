@@ -46,7 +46,7 @@ class GenyActivityReport {
 			
 			$query = "DELETE FROM ActivityReports WHERE activity_report_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyActivityReport MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -58,7 +58,7 @@ class GenyActivityReport {
 		if( (is_numeric($id) || $id == 'NULL') && is_numeric($activity_id) && is_numeric($profile_id) && is_numeric($status_id) ){
 			$query = "INSERT INTO ActivityReports VALUES($id,'".mysql_real_escape_string($invoice_reference)."',$activity_id,$profile_id,$status_id)";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return mysql_insert_id($this->handle);
 			else
@@ -150,7 +150,7 @@ class GenyActivityReport {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$obj_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -237,7 +237,7 @@ class GenyActivityReport {
 		$query = rtrim($query, ",");
 		$query .= " WHERE activity_report_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReport MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

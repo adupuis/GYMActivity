@@ -47,7 +47,7 @@ class GenyClient {
 			}
 			$query = "DELETE FROM Clients WHERE client_id=$id";
 			if( $this->config->debug )
-				echo "<!-- DEBUG: GenyClient MySQL DELETE query : $query -->\n";
+				error_log("[GYMActivity::DEBUG] GenyClient MySQL DELETE query : $query",0);
 			if(mysql_query($query,$this->handle))
 				return 1;
 			else
@@ -58,7 +58,7 @@ class GenyClient {
 	public function insertNewClient($id,$name){
 		$query = "INSERT INTO Clients VALUES($id,'".mysql_real_escape_string($name)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyClient MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -80,7 +80,7 @@ class GenyClient {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyClient MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$client_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -134,7 +134,7 @@ class GenyClient {
 		$query = rtrim($query, ",");
 		$query .= " WHERE client_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyClient MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

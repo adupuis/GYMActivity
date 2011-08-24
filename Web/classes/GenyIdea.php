@@ -56,7 +56,7 @@ class GenyIdea {
 		}
 		$query = "INSERT INTO Ideas VALUES($id,'".mysql_real_escape_string( $idea_title )."','".mysql_real_escape_string( $idea_description )."','".$idea_votes."','".$idea_status_id."','".$idea_submitter."')";
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
@@ -88,7 +88,7 @@ class GenyIdea {
 			}
 		}
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
 		$result = mysql_query( $query, $this->handle );
 		$idea_list = array();
@@ -115,7 +115,7 @@ class GenyIdea {
 	public function getAllIdeasSortedByVotes() {
 		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter FROM Ideas ORDER BY idea_votes DESC";
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
 		$result = mysql_query( $query, $this->handle );
 		$idea_list = array();
@@ -203,7 +203,7 @@ class GenyIdea {
 		$query = rtrim( $query, "," );
 		$query .= " WHERE idea_id=".$this->id;
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
 		return mysql_query( $query, $this->handle );
 	}

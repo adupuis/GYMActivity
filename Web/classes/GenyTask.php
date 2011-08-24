@@ -56,7 +56,7 @@ class GenyTask {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyTask MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyTask MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -109,7 +109,7 @@ class GenyTask {
 		$query = rtrim($query, ",");
 		$query .= " WHERE task_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyTask MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyTask MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

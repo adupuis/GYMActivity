@@ -41,7 +41,7 @@ class GenyNotification {
 			return -1;
 		$query = "INSERT INTO Notifications VALUES(0,$profile_id,'".mysql_real_escape_string($text)."',true,'".mysql_real_escape_string($type)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyNotification MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyNotification MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -69,7 +69,7 @@ class GenyNotification {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyNotification MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyNotification MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$notification_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -135,7 +135,7 @@ class GenyNotification {
 		$query = rtrim($query, ",");
 		$query .= " WHERE notification_id=".$this->id;
 // 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyNotification MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyNotification MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

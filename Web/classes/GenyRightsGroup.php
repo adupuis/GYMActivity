@@ -37,7 +37,7 @@ class GenyRightsGroup {
 	public function insertNewRightsGroup($id,$name,$description){
 		$query = "INSERT INTO RightsGroups VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyRightsGroups MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyRightsGroups MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
 			return mysql_insert_id($this->handle);
 		else
@@ -57,7 +57,7 @@ class GenyRightsGroup {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyRightsGroup MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyRightsGroup MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$object_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -110,7 +110,7 @@ class GenyRightsGroup {
 		$query = rtrim($query, ",");
 		$query .= " WHERE rights_group_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyRightsGroup MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyRightsGroup MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }

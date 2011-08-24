@@ -163,6 +163,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
+					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

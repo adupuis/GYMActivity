@@ -37,7 +37,7 @@ class GenyActivityReportStatus {
 	public function insertNewActivityReportStatus($id,$shortname,$name,$description){
 		$query = "INSERT INTO ActivityReportStatus VALUES($id,'".mysql_real_escape_string($shortname)."','".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReportStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivityReportStatus MySQL query : $query",0);
 		return mysql_query($query,$this->handle);
 	}
 	public function getActivityReportStatusListWithRestrictions($restrictions){
@@ -54,7 +54,7 @@ class GenyActivityReportStatus {
 			}
 		}
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReportStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivityReportStatus MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$activity_report_status_list = array();
 		if (mysql_num_rows($result) != 0){
@@ -120,7 +120,7 @@ class GenyActivityReportStatus {
 		$query = rtrim($query, ",");
 		$query .= " WHERE activity_report_status_id=".$this->id;
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReportStatus MySQL query : $query -->\n";
+			error_log("[GYMActivity::DEBUG] GenyActivityReportStatus MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
 }
