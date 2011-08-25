@@ -341,7 +341,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			<p id="extra_info">
 			</p>
 			<p>
-				<input type="submit" value="Appliquer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Appliquer" /> ou <a href="home_cra.php">annuler</a>
 			</p>
 		</form>
 	</p>

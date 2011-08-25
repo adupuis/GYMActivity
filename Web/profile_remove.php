@@ -135,7 +135,7 @@ else{
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression du profil. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'un profil entraîne la suppression de tous ses messages, CRAs, reporting, etc.</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="profile_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

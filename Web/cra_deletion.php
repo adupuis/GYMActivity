@@ -257,7 +257,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 				</table>
 			</p>
 			<p>
-				<input type="submit" value="Appliquer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Appliquer" /> ou <a href="cra_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

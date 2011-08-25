@@ -113,7 +113,7 @@ else{
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression du client. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'un client entraîne la suppression de tous les projets rattachés à ce client !</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="client_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

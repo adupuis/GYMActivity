@@ -114,7 +114,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="profile_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

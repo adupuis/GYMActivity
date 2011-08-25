@@ -257,7 +257,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 				</table>
 			</p>
 			<p>
-				<input type="submit" value="Appliquer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Appliquer" /> ou <a href="conges_list.php">annuler</a>
 			</p>
 		</form>
 	</p>
