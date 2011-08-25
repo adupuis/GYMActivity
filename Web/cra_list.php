@@ -139,7 +139,6 @@ date_default_timezone_set('Europe/Paris');
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
 					"sPaginationType": "full_numbers",
-					"sScrollY": 400,
 					"oLanguage": {
 						"sSearch": "Recherche :",
 						"sLengthMenu": "Rapport par page _MENU_",

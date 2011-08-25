@@ -471,6 +471,10 @@ li.reporting_monthly_view a {
 	background-image: url(../../images/default/reporting.png);
 }
 
+li.reporting_cra a {
+	background-image: url(../../images/default/reporting_cra.png);
+}
+
 li.admin_generic a {
 	background-image: url(../../images/default/admin.png);
 }
@@ -771,6 +775,10 @@ p.mainarea_title span.conges_list {
 
 p.mainarea_title span.reporting_monthly_view {
 	background-image: url(../../images/default/reporting.png);
+}
+
+p.mainarea_title span.reporting_cra {
+	background-image: url(../../images/default/reporting_cra.png);
 }
 
 p.mainarea_title span.admin_generic {

@@ -35,9 +35,12 @@ include_once 'menu.php';
 <div id="maindock">
 	<ul>
 		<?php
-			include 'backend/widgets/reporting_monthly_view.dock.widget.php';
-			include 'backend/widgets/reporting_previous_month_view.dock.widget.php';
-			include 'backend/widgets/reporting_load.dock.widget.php';
+			include 'backend/widgets/reporting_cra_fulfilment.dock.widget.php';
+			if( in_array($profile->rights_group_id, array(1,2,4,5)) ){
+				include 'backend/widgets/reporting_monthly_view.dock.widget.php';
+				include 'backend/widgets/reporting_previous_month_view.dock.widget.php';
+				include 'backend/widgets/reporting_load.dock.widget.php';
+			}
 		?>
 	</ul>
 </div>
