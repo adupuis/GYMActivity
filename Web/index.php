@@ -56,7 +56,7 @@
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
 	<p>
-		<input type="submit" value="Login" /> ou <a href="#form">annuler</a>
+		<input type="submit" value="Login" />
 	</p>
 	<!--<p>
 		<a class="submit" href="#finish">Envoyer</a> ou <a href="#start">annuler</a>

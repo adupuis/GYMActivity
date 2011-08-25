@@ -372,7 +372,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				</table>
 			</p>
 			<p>
-				<input type="submit" value="Appliquer" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Appliquer" /> ou <a href="conges_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

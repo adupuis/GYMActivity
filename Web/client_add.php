@@ -59,7 +59,7 @@ include_once 'menu.php';
 			
 			
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="client_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

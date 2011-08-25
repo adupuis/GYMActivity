@@ -421,7 +421,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				</select>
 			</p>
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="project_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

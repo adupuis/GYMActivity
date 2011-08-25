@@ -129,7 +129,7 @@ date_default_timezone_set('Europe/Paris');
 				</select>
 			</p>
 			<p>
-				<input type="submit" value="Faire la demande" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Faire la demande" /> ou <a href="conges_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

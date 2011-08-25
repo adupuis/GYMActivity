@@ -174,7 +174,7 @@ $geny_profile = new GenyProfile();
 				<input type="checkbox" name="project_allow_overtime" value="true" /> Autoriser les heures supplémentaires pour tout les collaborateurs. Cette opération autorisera tous les collaborateurs ajoutés au projet à ce moment. C'est un mode de groupe afin de faciliter une opération de masse, pour autoriser les heures supplémentaires par collaborateur rendez vous sur la page de <a href="/assignement_list.php">gestion des affectactions</a>. 
 			</p>
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="project_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

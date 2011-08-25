@@ -77,7 +77,7 @@ if(isset($_POST['update_password']) && $_POST['update_password'] == "true" && is
 				<input name="password_second" id="password_second" class="validate[required,confirm[password_first]] text-input" type="password" />
 			</p>
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Modifier" />
 			</p>
 		</form>
 	</p>

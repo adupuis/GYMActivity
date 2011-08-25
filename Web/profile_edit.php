@@ -238,7 +238,7 @@ else{
 			</p>
 			
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="profile_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

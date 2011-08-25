@@ -119,7 +119,7 @@ else{
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression du projet. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'un projet entraîne la suppression de toutes les associations avec des tâches ainsi que de tous les CRAs.</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="project_list.php">annuler</a>
 			</p>
 		</form>
 	</p>
