@@ -1,4 +1,5 @@
 <?php
+
 //  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
 //  adupuis@genymobile.com
 //  http://www.genymobile.com
@@ -18,34 +19,11 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Reporting';
-$required_group_rights = 6;
-
-include_once 'header.php';
-include_once 'menu.php';
-
-
 ?>
 
-<div class="page_title">
-	<img src="images/default/reporting.png"/><p>Reporting</p>
-</div>
-
-<div id="maindock">
-	<ul>
-		<?php
-			include 'backend/widgets/reporting_cra_fulfilment.dock.widget.php';
-			if( in_array($profile->rights_group_id, array(1,2,4,5)) ){
-				include 'backend/widgets/reporting_monthly_view.dock.widget.php';
-				include 'backend/widgets/reporting_previous_month_view.dock.widget.php';
-				include 'backend/widgets/reporting_load.dock.widget.php';
-				include 'backend/widgets/reporting_cra_completion.dock.widget.php';
-			}
-		?>
-	</ul>
-</div>
-
-<?php
-include_once 'footer.php';
-?>
+<li class="reporting_cra">
+	<a href="reporting_cra_completion.php">
+		<span class="dock_item_title">Complétion des CRA</span><br/>
+		<span class="dock_item_content">Liste des profils est de l'état du remplissage des CRA.</span>
+	</a>
+</li>
