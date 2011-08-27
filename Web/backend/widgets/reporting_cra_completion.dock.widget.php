@@ -22,7 +22,7 @@
 ?>
 
 <li class="reporting_cra">
-	<a href="reporting_load.php">
+	<a href="reporting_cra_completion.php">
 		<span class="dock_item_title">Complétion des CRA</span><br/>
 		<span class="dock_item_content">Liste des profils est de l'état du remplissage des CRA.</span>
 	</a>
