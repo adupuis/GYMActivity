@@ -357,7 +357,8 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 </div>
 <div id="bottomdock">
 	<ul>
-<!-- 		<?php include 'backend/widgets/project_add.dock.widget.php'; ?> -->
+		<?php include 'backend/widgets/reporting_monthly_view.dock.widget.php'; ?>
+		<?php include 'backend/widgets/reporting_load.dock.widget.php'; ?>
 	</ul>
 </div>
 <?php
