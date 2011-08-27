@@ -44,11 +44,13 @@ foreach( $worked_days as $day ){
 $user_completion_data = array();
 
 foreach( $tmp_profile->getAllProfiles() as $p ){
-	$user_load=0;
-	foreach( $worked_days as $day ){
-		$user_load += $geny_ar->getDayLoad($p->id,$day);
+	if( $p->rights_group_id <= 5 ){
+		$user_load=0;
+		foreach( $worked_days as $day ){
+			$user_load += $geny_ar->getDayLoad($p->id,$day);
+		}
+		$user_completion_data[$p->id] = array( "profile_object" => $p, "completion" => round(($user_load*100)/$estimated_load,0) );
 	}
-	$user_completion_data[$p->id] = array( "profile_object" => $p, "completion" => ($user_load*100)/$estimated_load );
 }
 
 ?>
@@ -96,7 +98,7 @@ foreach( $tmp_profile->getAllProfiles() as $p ){
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici le taux de remplissage des CRA du mois courant (<?php echo "$year-$month"; ?>) par profil.<br/>
+		Voici le taux de remplissage des CRA du mois courant (<?php echo "$year-$month"; ?>) par profil (<strong>externes exclus</strong>).<br/>
 		<strong>Attention: la complétion est estimée en pourcentage et ne permet pas de voir les heures supplémentaires.</strong>
 		</p>
 		<style>
