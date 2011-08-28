@@ -74,6 +74,9 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--
+GYMActivity v<?php echo $web_config->version ?> by GENYMOBILE - http://www.genymobile.com.
+-->
 <title>
 <?php 
 $header_title = str_replace("%COMPANY_NAME%",$web_config->company_name,$header_title);
@@ -106,7 +109,7 @@ echo $header_title
 </style>
 </head>
 <body>
-<img id="logo" src="images/<?php echo $web_config->theme ?>/logo_genymobile_writting_small.jpg" alt="<?php echo $web_config->company_name ?> Logo"/>
+<img id="logo" src="images/<?php echo $web_config->theme ?>/<?php echo $web_config->company_corner_logo ?>" alt="<?php echo $web_config->company_name ?> Logo"/>
 
 <p id="headband">
 	<?php

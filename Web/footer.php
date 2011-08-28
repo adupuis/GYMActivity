@@ -18,15 +18,9 @@ along with this program; if not, write to the
 Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA -->
 
-<script>
-	$(".status_message").click(function () {
-		$(".status_message").fadeOut("slow");
-	});
-</script>
-
 <div id="footer">
 	<p>
-		&copy; 2011-2012 <strong>GENYMOBILE</strong>.
+		&copy; 2011-2012 <strong>G</strong>.
 	</p>
 </div>
 </body>
