@@ -48,6 +48,8 @@ try {
 	}
     $profile = new GenyProfile();
     $profile->loadProfileByUsername($_SESSION['USERID']);
+    if( ! isset($disable_password_reset_redirection) )
+	$disable_password_reset_redirection = false;
     if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
 	header('Location: user_admin_password_change.php');
 } catch (Exception $e) {
