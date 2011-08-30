@@ -161,7 +161,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 	$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 	$tmp_project = new GenyProject( $tmp_assignement->project_id );
 	$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
-	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$tmp_activity->load,$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date),$geny_ars->name );
+	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$tmp_activity->load,$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
 	
 	if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
 		$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
@@ -195,24 +195,38 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			
 			var indexData = new Array();
 			<?php
+				$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_cra_post_validation_workflow_php"]);
 				$html1 = '<select><option value=""></option>';
 				foreach( $data_array_filters[1] as $d ){
-					$html1 .= '<option value="'.$d.'">'.$d.'</option>';
+					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[1][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+						$html1 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					else
+						$html1 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 				}
 				$html1 .= '</select>';
 				$html3 = '<select><option value=""></option>';
 				foreach( $data_array_filters[3] as $d ){
-					$html3 .= '<option value="'.$d.'">'.$d.'</option>';;
+					
+					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[3][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+						$html3 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					else
+						$html3 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 				}
 				$html3 .= '</select>';
 				$html4 = '<select><option value=""></option>';
 				foreach( $data_array_filters[4] as $d ){
-					$html4 .= '<option value="'.$d.'">'.$d.'</option>';;
+					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[4][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+						$html4 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					else
+						$html4 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';;
 				}
 				$html4 .= '</select>';
 				$html7 = '<select><option value=""></option>';
 				foreach( $data_array_filters[7] as $d ){
-					$html7 .= '<option value="'.$d.'">'.$d.'</option>';;
+					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[7][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+						$html7 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					else
+						$html7 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 				}
 				$html7 .= '</select>';
 			?>
@@ -248,15 +262,6 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 							"sNext": "Suivant",
 							"sPrevious": "Précédent"
 						}
-					},
-					"fnStateLoadCallback": function ( oSettings, oData ) {
-						console.log("sFilter="+oData.sFilter);
-						console.log("oData.aaSearchCols="+oData.aaSearchCols);
-						activeFiltersData = oData.aaSearchCols;
-						for ( var i=0 ; i<oData.aaSearchCols.length ; i++ ){
-							console.log("oData.aaSearchCols["+i+"][0]="+oData.aaSearchCols[i][0]);
-						}
-						return true;
 					}
 				} );
 				$("tfoot th").each( function ( i ) {
@@ -267,10 +272,6 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 						} );
 					}
 				} );
-				$('option[value|="'+unescape(activeFiltersData[1][0])+'"]').attr("selected","selected");
-				$('option[value|="'+unescape(activeFiltersData[3][0])+'"]').attr("selected","selected");
-				$('option[value|="'+unescape(activeFiltersData[4][0])+'"]').attr("selected","selected");
-				$('option[value|="'+unescape(activeFiltersData[7][0])+'"]').attr("selected","selected");
 				
 				
 			});
