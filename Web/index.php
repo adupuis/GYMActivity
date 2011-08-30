@@ -19,6 +19,9 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include_once "classes/GenyWebConfig.php";
+$web_config = new GenyWebConfig();
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,7 +33,7 @@
 </style>
 </head>
 <body>
-<p style="margin:10px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/logo_genymobile.jpg' /></p>
+<p style="margin:10px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
 <form id="start" action="check_login.php" method="post">
 	<h1>Login GENYMOBILE - Apps</h1>
 

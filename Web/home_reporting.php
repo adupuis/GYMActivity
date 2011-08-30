@@ -40,6 +40,7 @@ include_once 'menu.php';
 				include 'backend/widgets/reporting_monthly_view.dock.widget.php';
 				include 'backend/widgets/reporting_previous_month_view.dock.widget.php';
 				include 'backend/widgets/reporting_load.dock.widget.php';
+				include 'backend/widgets/reporting_cra_completion.dock.widget.php';
 			}
 		?>
 	</ul>

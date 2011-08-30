@@ -1,4 +1,5 @@
 <?php
+
 //  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
 //  adupuis@genymobile.com
 //  http://www.genymobile.com
@@ -18,22 +19,11 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-define("GENYMOBILE_TRUE",1);
-define("GENYMOBILE_FALSE",-1);
-define("GENYMOBILE_ERROR",-2);
-
-class GenyWebConfig {
-	public function __construct(){
-		$this->db_host = "localhost";
-		$this->db_user = "genymobile";
-		$this->db_password = "toto";
-		$this->theme = "default";
-		$this->debug = false;
-		$this->db_name = "GYMActivity";
-		$this->company_name = "GENYMOBILE";
-		$this->version = "0.4.6-dev";
-		$this->company_corner_logo = "logo_genymobile_writting_small.jpg";
-		$this->company_index_logo = "logo_genymobile.jpg";
-	}
-}
 ?>
+
+<li class="reporting_cra">
+	<a href="reporting_cra_completion.php">
+		<span class="dock_item_title">Complétion des CRA</span><br/>
+		<span class="dock_item_content">Liste des profils est de l'état du remplissage des CRA.</span>
+	</a>
+</li>
