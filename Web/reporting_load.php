@@ -24,6 +24,7 @@ $required_group_rights = array(1,2,4,5);
 
 include_once 'header.php';
 include_once 'menu.php';
+include_once 'backend/api/ajax_toolbox.php';
 
 $reporting_data = array();
 $geny_tools = new GenyTools();
@@ -52,12 +53,16 @@ $year=date('Y', time());
 $d_month_name = date('F', mktime(0,0,0,$month,28,$year));
 $start_date="$year-$month-01";
 $end_date="$year-$month-31";
+$reporting_start_date = getParam('reporting_start_date');
+$reporting_end_date = getParam('reporting_end_date');
+$aggregation_level = getParam('aggregation_level','project');
 
-if( isset($_POST['reporting_start_date']) && isset($_POST['reporting_end_date']) ){
-	if( date_parse( $_POST['reporting_start_date'] ) !== false && date_parse( $_POST['reporting_end_date'] )!== false ){
-		if( $_POST['reporting_end_date'] >= $_POST['reporting_start_date'] ){
-			$start_date = $_POST['reporting_start_date'];
-			$end_date = $_POST['reporting_end_date'];
+
+if( isset($reporting_start_date) && $reporting_start_date != "" && isset($reporting_end_date) && $reporting_end_date != "" ){
+	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ){
+		if( $reporting_end_date >= $reporting_start_date ){
+			$start_date = $reporting_start_date;
+			$end_date = $reporting_end_date;
 		}
 		else
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"La date de fin doit être supérieure ou égale à la date de début de la période rapportée.");
