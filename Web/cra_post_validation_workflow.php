@@ -235,8 +235,6 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			indexData[4] = '<?php echo $html4; ?>';
 			indexData[7] = '<?php echo $html7; ?>';
 			
-			var activeFiltersData = new Array();
-			
 			jQuery(document).ready(function(){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
