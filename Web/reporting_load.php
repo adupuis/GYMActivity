@@ -24,6 +24,7 @@ $required_group_rights = array(1,2,4,5);
 
 include_once 'header.php';
 include_once 'menu.php';
+include_once 'backend/api/ajax_toolbox.php';
 
 $reporting_data = array();
 $geny_tools = new GenyTools();
@@ -52,12 +53,16 @@ $year=date('Y', time());
 $d_month_name = date('F', mktime(0,0,0,$month,28,$year));
 $start_date="$year-$month-01";
 $end_date="$year-$month-31";
+$reporting_start_date = getParam('reporting_start_date');
+$reporting_end_date = getParam('reporting_end_date');
+$aggregation_level = getParam('reporting_aggregation_level','project');
 
-if( isset($_POST['reporting_start_date']) && isset($_POST['reporting_end_date']) ){
-	if( date_parse( $_POST['reporting_start_date'] ) !== false && date_parse( $_POST['reporting_end_date'] )!== false ){
-		if( $_POST['reporting_end_date'] >= $_POST['reporting_start_date'] ){
-			$start_date = $_POST['reporting_start_date'];
-			$end_date = $_POST['reporting_end_date'];
+
+if( isset($reporting_start_date) && $reporting_start_date != "" && isset($reporting_end_date) && $reporting_end_date != "" ){
+	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ){
+		if( $reporting_end_date >= $reporting_start_date ){
+			$start_date = $reporting_start_date;
+			$end_date = $reporting_end_date;
 		}
 		else
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"La date de fin doit être supérieure ou égale à la date de début de la période rapportée.");
@@ -71,13 +76,22 @@ $geny_ars = new GenyActivityReportStatus();
 $geny_ars->loadActivityReportStatusByShortName('APPROVED');
 foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
-	if( $geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19 ){ // Nous ne voulons pas des absences non payé par l'entreprise.
+	// Nous ne voulons pas des absences non payé par l'entreprise dans l'aggregation par projet.
+	// En revanche quand le mode d'aggrégation est par tâche nous le voulons.
+	if( $aggregation_level == "tasks" || ($geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19) ){ 
 		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
-			if( !isset( $reporting_data[$ar->profile_id] ) )
+			if( !isset( $reporting_data[$ar->profile_id] ) ){
 				$reporting_data[$ar->profile_id] = array();
-			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) )
-				$reporting_data[$ar->profile_id][$geny_activity->assignement_id]=0;
+				$reporting_data_tasks[$ar->profile_id] = array();
+			}
+			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) ){
+				$reporting_data[$ar->profile_id][$geny_activity->assignement_id] = 0;
+				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id] = array();
+			}
+			if( !isset($reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id]) )
+				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
 			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
+			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
 		}
 	}
 }
@@ -361,7 +375,10 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 		<p class="mainarea_content_intro">
 		Voici la liste des CRA ventilés par collaborateurs, par client et par projet pour la période sélectionnée (par défaut le mois en cours).<br/>
 		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
-		<strong>Attention: Ces rapports excluent les congés non rémunérés !</strong>
+		<?php
+			if( $aggregation_level == "project" )
+				echo "<strong>Attention: Ces rapports excluent les congés non rémunérés !</strong>";
+		?>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
@@ -375,7 +392,10 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 				<label for="reporting_end_date">Date de fin</label>
 				<input name="reporting_end_date" id="reporting_end_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
-			<input type="submit" value="Ajuster les dates" />
+			<p>
+				<input type="checkbox" name="reporting_aggregation_level" value="tasks" onChange="form.submit()" <?php if($aggregation_level == "tasks"){echo "checked";} ?>/> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
+			</p>
+			<input type="submit" value="Ajuster le reporting" />
 		</form>
 		<div class="table_container">
 		<p>
@@ -385,16 +405,36 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>
+				<?php
+					if( $aggregation_level == "tasks" )
+						echo "<th>Tâche</th>\n";
+				?>
 				<th>Nbr. <strong>jours</strong></th>
 			</thead>
 			<tbody>
 			<?php
-				foreach( $reporting_data as $profile_id => $data ){
-					$geny_profile->loadProfileById($profile_id);
-					foreach( $data as $assignement_id => $total_load ){
-						$geny_assignement->loadAssignementById($assignement_id);
-						$geny_project->loadProjectById($geny_assignement->project_id);
-						echo "<tr><td>".GenyTools::getProfileDisplayName($geny_profile)."</td><td>".$clients[$geny_project->client_id]->name."</td><td>".$geny_project->name."</td><td>".($total_load/8)."</td></tr>";
+				if( $aggregation_level == "tasks" ){
+					$geny_task = new GenyTask();
+					foreach( $reporting_data_tasks as $profile_id => $data ){
+						$geny_profile->loadProfileById($profile_id);
+						foreach( $data as $assignement_id => $tasks ){
+							$geny_assignement->loadAssignementById($assignement_id);
+							$geny_project->loadProjectById($geny_assignement->project_id);
+							foreach ( $tasks as $task_id => $task_load ){
+								$geny_task->loadTaskById( $task_id );
+								echo "<tr><td>".GenyTools::getProfileDisplayName($geny_profile)."</td><td>".$clients[$geny_project->client_id]->name."</td><td>".$geny_project->name."</td><td>".$geny_task->name."</td><td>".($task_load/8)."</td></tr>";
+							}
+						}
+					}
+				}
+				else {
+					foreach( $reporting_data as $profile_id => $data ){
+						$geny_profile->loadProfileById($profile_id);
+						foreach( $data as $assignement_id => $total_load ){
+							$geny_assignement->loadAssignementById($assignement_id);
+							$geny_project->loadProjectById($geny_assignement->project_id);
+							echo "<tr><td>".GenyTools::getProfileDisplayName($geny_profile)."</td><td>".$clients[$geny_project->client_id]->name."</td><td>".$geny_project->name."</td><td>".($total_load/8)."</td></tr>";
+						}
 					}
 				}
 			?>
@@ -403,6 +443,10 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 				<th>Collab.</th>
 				<th>Client</th>
 				<th>Projet</th>
+				<?php
+					if( $aggregation_level == "tasks" )
+						echo "<th>Tâche</th>\n";
+				?>
 				<th>Nbr. <strong>jours</strong></th>
 			</tfoot>
 			</table>

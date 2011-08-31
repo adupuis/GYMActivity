@@ -19,10 +19,16 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+$month = date('m', time());
+$year=date('Y', time());
+$lastday = date('t',mktime(0,0,0,$month,28,$year));
+$start_date="$year-$month-01";
+$end_date="$year-$month-$lastday";
+
 ?>
 
 <li class="reporting_monthly_view">
-	<a href="reporting_monthly_view.php">
+	<a href="reporting_load.php?reporting_start_date=<?php echo $start_date; ?>&reporting_end_date=<?php echo $end_date; ?>">
 		<span class="dock_item_title">Reporting Mensuel</span><br/>
 		<span class="dock_item_content">Reporting sur l'activité mensuelle.</span>
 	</a>
