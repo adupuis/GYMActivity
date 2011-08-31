@@ -32,6 +32,7 @@ $geny_project = new GenyProject();
 $geny_profile = new GenyProfile();
 $geny_client = new GenyClient();
 $geny_assignement = new GenyAssignement();
+$geny_task = new GenyTask();
 $gritter_notifications = array();
 
 foreach( $geny_client->getAllClients() as $client ){
@@ -57,6 +58,8 @@ $reporting_start_date = getParam('reporting_start_date');
 $reporting_end_date = getParam('reporting_end_date');
 $aggregation_level = getParam('reporting_aggregation_level','project');
 
+// We create a table that contains the filters data (but only for required data).
+$data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 3 => array() );
 
 if( isset($reporting_start_date) && $reporting_start_date != "" && isset($reporting_end_date) && $reporting_end_date != "" ){
 	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ){
@@ -92,6 +95,20 @@ foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
 			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
 			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
+			
+			// Création des données de filtres par la même occasion
+			$geny_profile->loadProfileById( $ar->profile_id );
+			$geny_assignement->loadAssignementById($geny_activity->assignement_id);
+			$geny_project->loadProjectById($geny_assignement->project_id);
+			$geny_task->loadTaskById( $geny_activity->task_id );
+			if( ! in_array(GenyTools::getProfileDisplayName($geny_profile),$data_array_filters[0]) )
+				$data_array_filters[0][] = GenyTools::getProfileDisplayName($geny_profile);
+			if( ! in_array($clients[$geny_project->client_id]->name,$data_array_filters[1]) )
+				$data_array_filters[1][] = $clients[$geny_project->client_id]->name;
+			if( ! in_array($geny_project->name,$data_array_filters[2]) )
+				$data_array_filters[2][] = $geny_project->name;
+			if( ! in_array($geny_task->name,$data_array_filters[3]) )
+				$data_array_filters[3][] = $geny_task->name;
 		}
 	}
 }
@@ -152,107 +169,83 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 
 
 <script>
-	(function($) {
-		/*
-		 * Function: fnGetColumnData
-		 * Purpose:  Return an array of table values from a particular column.
-		 * Returns:  array string: 1d data array 
-		 * Inputs:   object:oSettings - dataTable settings object. This is always the last argument past to the function
-		 *           int:iColumn - the id of the column to extract the data from
-		 *           bool:bUnique - optional - if set to false duplicated values are not filtered out
-		 *           bool:bFiltered - optional - if set to false all the table data is used (not only the filtered)
-		 *           bool:bIgnoreEmpty - optional - if set to false empty values are not filtered from the result array
-		 * Author:   Benedikt Forchhammer <b.forchhammer /AT\ mind2.de>
-		 */
-		$.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty ) {
-			// check that we have a column id
-			if ( typeof iColumn == "undefined" ) return new Array();
-			
-			// by default we only wany unique data
-			if ( typeof bUnique == "undefined" ) bUnique = true;
-			
-			// by default we do want to only look at filtered data
-			if ( typeof bFiltered == "undefined" ) bFiltered = true;
-			
-			// by default we do not wany to include empty values
-			if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
-			
-			// list of rows which we're going to loop through
-			var aiRows;
-			
-			// use only filtered rows
-			if (bFiltered == true) aiRows = oSettings.aiDisplay; 
-			// use all rows
-			else aiRows = oSettings.aiDisplayMaster; // all row numbers
-		
-			// set up data array	
-			var asResultData = new Array();
-			
-			for (var i=0,c=aiRows.length; i<c; i++) {
-				iRow = aiRows[i];
-				var aData = this.fnGetData(iRow);
-				var sValue = aData[iColumn];
-				
-				// Ignore html
-				if( sValue.indexOf("<a") >= 0 ) continue;
-				
-				// ignore empty values?
-				if (bIgnoreEmpty == true && sValue.length == 0) continue;
-		
-				// ignore unique values?
-				else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
-				
-				// else push the value onto the result data array
-				else asResultData.push(sValue);
-			}
-			
-			return asResultData;
-		}}(jQuery));
-
-
-		function fnCreateSelect( aData )
-		{
-			var r='<select><option value=""></option>', i, iLen=aData.length;
-			for ( i=0 ; i<iLen ; i++ )
-			{
-				r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
-			}
-			return r+'</select>';
+	var indexData = new Array();
+	<?php
+		$cookie = json_decode($_COOKIE["GYMActivity_reporting_list_reporting_load_php"]);
+		$html1 = '<select><option value=""></option>';
+		foreach( $data_array_filters[0] as $d ){
+			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[0][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+				$html1 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+			else
+				$html1 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 		}
-		
-		jQuery(document).ready(function(){
+		$html1 .= '</select>';
+		$html2 = '<select><option value=""></option>';
+		foreach( $data_array_filters[1] as $d ){
+			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[1][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+				$html2 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+			else
+				$html2 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+		}
+		$html2 .= '</select>';
+		$html3 = '<select><option value=""></option>';
+		foreach( $data_array_filters[2] as $d ){
 			
-				var oTable = $('#reporting_list').dataTable( {
-					"bJQueryUI": true,
-					"bStateSave": true,
-					"bAutoWidth": false,
-					"sCookiePrefix": "GYMActivity_",
-					"sPaginationType": "full_numbers",
-					"oLanguage": {
-						"sSearch": "Recherche :",
-						"sLengthMenu": "Lignes par page _MENU_",
-						"sZeroRecords": "Aucun résultat",
-						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ lignes",
-						"sInfoEmpty": "Aff. 0 à 0 de 0 lignes",
-						"sInfoFiltered": "(filtré de _MAX_ lignes)",
-						"oPaginate":{ 
-							"sFirst":"Début",
-							"sLast": "Fin",
-							"sNext": "Suivant",
-							"sPrevious": "Précédent"
-						}
+			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[2][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+				$html3 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+			else
+				$html3 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+		}
+		$html3 .= '</select>';
+		$html4 = '<select><option value=""></option>';
+		if( $aggregation_level == "tasks" ){
+			foreach( $data_array_filters[3] as $d ){
+				if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[3][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+					$html4 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+				else
+					$html4 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';;
+			}
+		}
+		$html4 .= '</select>';
+	?>
+	indexData[0] = '<?php echo $html1; ?>';
+	indexData[1] = '<?php echo $html2; ?>';
+	indexData[2] = '<?php echo $html3; ?>';
+	indexData[3] = '<?php echo $html4; ?>';
+	
+	jQuery(document).ready(function(){
+		
+			var oTable = $('#reporting_list').dataTable( {
+				"bJQueryUI": true,
+				"bStateSave": true,
+				"bAutoWidth": false,
+				"sCookiePrefix": "GYMActivity_",
+				"sPaginationType": "full_numbers",
+				"oLanguage": {
+					"sSearch": "Recherche :",
+					"sLengthMenu": "Lignes par page _MENU_",
+					"sZeroRecords": "Aucun résultat",
+					"sInfo": "Aff. _START_ à _END_ de _TOTAL_ lignes",
+					"sInfoEmpty": "Aff. 0 à 0 de 0 lignes",
+					"sInfoFiltered": "(filtré de _MAX_ lignes)",
+					"oPaginate":{ 
+						"sFirst":"Début",
+						"sLast": "Fin",
+						"sNext": "Suivant",
+						"sPrevious": "Précédent"
 					}
-				} );
-				/* Add a select menu for each TH element in the table footer */
-				$("tfoot th").each( function ( i ) {
-					if( i < 3){
-						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
-						$('select', this).change( function () {
-							oTable.fnFilter( $(this).val(), i );
-						} );
-					}
-				} );
-			});
+				}
+			} );
+			/* Add a select menu for each TH element in the table footer */
+			$("tfoot th").each( function ( i ) {
+				if( i < <?php if($aggregation_level == "project"){echo "3";}else{echo "4";} ?> ){
+					this.innerHTML = indexData[i];
+					$('select', this).change( function () {
+						oTable.fnFilter( $(this).val(), i );
+					} );
+				}
+			} );
+		});
 </script>
 
 <!-- Création du reporting graphique -->
@@ -393,7 +386,17 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 				<input name="reporting_end_date" id="reporting_end_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
 			<p>
-				<input type="checkbox" name="reporting_aggregation_level" value="tasks" onChange="form.submit()" <?php if($aggregation_level == "tasks"){echo "checked";} ?>/> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
+				<script>
+					function setCookie( name, value )
+					{
+						document.cookie = name + "=" +escape( value );
+					}
+					function aggregationLevelChanged(){
+						setCookie('GYMActivity_reporting_list_reporting_load_php_task_state', $('#reporting_aggregation_level').attr('checked'));
+						$('#formID').submit();
+					}
+				</script>
+				<input type="checkbox" id="reporting_aggregation_level" name="reporting_aggregation_level" value="tasks" onChange="aggregationLevelChanged()" <?php if($aggregation_level == "tasks"){echo "checked";} ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
 			</p>
 			<input type="submit" value="Ajuster le reporting" />
 		</form>
@@ -414,7 +417,6 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 			<tbody>
 			<?php
 				if( $aggregation_level == "tasks" ){
-					$geny_task = new GenyTask();
 					foreach( $reporting_data_tasks as $profile_id => $data ){
 						$geny_profile->loadProfileById($profile_id);
 						foreach( $data as $assignement_id => $tasks ){
