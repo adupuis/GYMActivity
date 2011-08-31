@@ -51,12 +51,16 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 
 $month = date('m', time());
 $year=date('Y', time());
-$d_month_name = date('F', mktime(0,0,0,$month,28,$year));
+$lastday = date('t',mktime(0,0,0,$month,28,$year));
 $start_date="$year-$month-01";
-$end_date="$year-$month-31";
-$reporting_start_date = getParam('reporting_start_date');
-$reporting_end_date = getParam('reporting_end_date');
+$end_date="$year-$month-$lastday";
+$reporting_start_date = getParam('reporting_start_date',$start_date);
+$reporting_end_date = getParam('reporting_end_date',$end_date);
 $aggregation_level = getParam('reporting_aggregation_level','project');
+
+$ts_cookie = $_COOKIE['GYMActivity_reporting_list_reporting_load_php_task_state'];
+if( isset($ts_cookie) && $ts_cookie == "true" )
+	$aggregation_level = "tasks";
 
 // We create a table that contains the filters data (but only for required data).
 $data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 3 => array() );
