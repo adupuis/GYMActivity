@@ -1,0 +1,7 @@
+.ui-widget{
+	font-size:13px;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: .4em .4em;
+}
