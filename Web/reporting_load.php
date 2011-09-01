@@ -176,46 +176,23 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 	var indexData = new Array();
 	<?php
 		$cookie = json_decode($_COOKIE["GYMActivity_reporting_list_reporting_load_php"]);
-		$html1 = '<select><option value=""></option>';
-		foreach( $data_array_filters[0] as $d ){
-			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[0][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-				$html1 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-			else
-				$html1 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-		}
-		$html1 .= '</select>';
-		$html2 = '<select><option value=""></option>';
-		foreach( $data_array_filters[1] as $d ){
-			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[1][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-				$html2 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-			else
-				$html2 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-		}
-		$html2 .= '</select>';
-		$html3 = '<select><option value=""></option>';
-		foreach( $data_array_filters[2] as $d ){
-			
-			if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[2][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-				$html3 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-			else
-				$html3 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-		}
-		$html3 .= '</select>';
-		$html4 = '<select><option value=""></option>';
-		if( $aggregation_level == "tasks" ){
-			foreach( $data_array_filters[3] as $d ){
-				if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[3][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-					$html4 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+		
+		$data_array_filters_html = array();
+		foreach( $data_array_filters as $idx => $data ){
+			error_log("\$idx=$idx",0);
+			$data_array_filters_html[$idx] = '<select><option value=""></option>';
+			foreach( $data as $d ){
+				if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+					$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 				else
-					$html4 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';;
+					$data_array_filters_html[$idx] .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
 			}
+			$data_array_filters_html[$idx] .= '</select>';
 		}
-		$html4 .= '</select>';
+		foreach( $data_array_filters_html as $idx => $html ){
+			echo "indexData[$idx] = '$html';\n";
+		}
 	?>
-	indexData[0] = '<?php echo $html1; ?>';
-	indexData[1] = '<?php echo $html2; ?>';
-	indexData[2] = '<?php echo $html3; ?>';
-	indexData[3] = '<?php echo $html4; ?>';
 	
 	jQuery(document).ready(function(){
 		

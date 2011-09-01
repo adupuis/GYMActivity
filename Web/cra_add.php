@@ -117,7 +117,7 @@ date_default_timezone_set('Europe/Paris');
 			<p>
 				<label for="date_selection_type">Type de séléction</label>
 				<select name="date_selection_type" id="date_selection_type">
-					<option value="interval">Interval de dates</option>
+					<option value="interval">Intervalle de dates</option>
 					<option value="days_list">Liste de jours</option>
 				</select>
 			</p>
