@@ -232,6 +232,29 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 	}
 }
 
+$data_array = array();
+$data_array_filters = array( 2 => array(), 3 => array(), 6 => array() );
+$geny_ar = new GenyActivityReport();
+$geny_ars = new GenyActivityReportStatus();
+$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id=".$geny_ars->id,"profile_id=".$profile->id) ) as $ar ){
+	$tmp_activity = new GenyActivity( $ar->activity_id );
+	$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
+	$tmp_task = new GenyTask( $tmp_activity->task_id );
+	$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
+	$tmp_project = new GenyProject( $tmp_assignement->project_id );
+	if( $tmp_project->type_id != 5 ){
+		$data_array[] = array( $ar->id, $tmp_activity->activity_date, $tmp_project->name, $tmp_task->name, $tmp_activity->load, $geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date), GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
+		
+		if( ! in_array($tmp_project->name,$data_array_filters[2]) )
+			$data_array_filters[2][] = $tmp_project->name;
+		if( ! in_array($tmp_task->name,$data_array_filters[3]) )
+			$data_array_filters[3][] = $tmp_task->name;
+		if( ! in_array($geny_ars->name,$data_array_filters[6]) )
+			$data_array_filters[6][] = $geny_ars->name;
+	}
+}
+
 ?>
 
 <div class="page_title">
@@ -251,87 +274,25 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 		<strong class="important_note">Important :</strong> Ce formulaire contient tous les rapports que vous n'avez pas validé (y compris les plus anciens que vous n'auriez pas soumis).<br />
 		</p>
 		<script>
-			
-		
-		
-		
-		
-		
-		
-			(function($) {
-			/*
-			 * Function: fnGetColumnData
-			 * Purpose:  Return an array of table values from a particular column.
-			 * Returns:  array string: 1d data array 
-			 * Inputs:   object:oSettings - dataTable settings object. This is always the last argument past to the function
-			 *           int:iColumn - the id of the column to extract the data from
-			 *           bool:bUnique - optional - if set to false duplicated values are not filtered out
-			 *           bool:bFiltered - optional - if set to false all the table data is used (not only the filtered)
-			 *           bool:bIgnoreEmpty - optional - if set to false empty values are not filtered from the result array
-			 * Author:   Benedikt Forchhammer <b.forchhammer /AT\ mind2.de>
-			 */
-			$.fn.dataTableExt.oApi.fnGetColumnData = function ( oSettings, iColumn, bUnique, bFiltered, bIgnoreEmpty ) {
-				// check that we have a column id
-				if ( typeof iColumn == "undefined" ) return new Array();
+			var indexData = new Array();
+			<?php
+				$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_cra_validation_php"]);
 				
-				// by default we only wany unique data
-				if ( typeof bUnique == "undefined" ) bUnique = true;
-				
-				// by default we do want to only look at filtered data
-				if ( typeof bFiltered == "undefined" ) bFiltered = true;
-				
-				// by default we do not wany to include empty values
-				if ( typeof bIgnoreEmpty == "undefined" ) bIgnoreEmpty = true;
-				
-				// list of rows which we're going to loop through
-				var aiRows;
-				
-				// use only filtered rows
-				if (bFiltered == true) aiRows = oSettings.aiDisplay; 
-				// use all rows
-				else aiRows = oSettings.aiDisplayMaster; // all row numbers
-			
-				// set up data array	
-				var asResultData = new Array();
-				
-				for (var i=0,c=aiRows.length; i<c; i++) {
-					iRow = aiRows[i];
-					var aData = this.fnGetData(iRow);
-					var sValue = aData[iColumn];
-					
-					// ignore empty values?
-					if (bIgnoreEmpty == true && sValue.length == 0) continue;
-			
-					// ignore unique values?
-					else if (bUnique == true && jQuery.inArray(sValue, asResultData) > -1) continue;
-					
-					// else push the value onto the result data array
-					else asResultData.push(sValue);
+				$data_array_filters_html = array();
+				foreach( $data_array_filters as $idx => $data ){
+					$data_array_filters_html[$idx] = '<select><option value=""></option>';
+					foreach( $data as $d ){
+						if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+							$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+						else
+							$data_array_filters_html[$idx] .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					}
+					$data_array_filters_html[$idx] .= '</select>';
 				}
-				
-				return asResultData;
-			}}(jQuery));
-
-
-			function fnCreateSelect( aData )
-			{
-				var r='<select><option value=""></option>', i, iLen=aData.length;
-				for ( i=0 ; i<iLen ; i++ )
-				{
-					r += '<option value="'+aData[i]+'">'+aData[i]+'</option>';
+				foreach( $data_array_filters_html as $idx => $html ){
+					echo "indexData[$idx] = '$html';\n";
 				}
-				return r+'</select>';
-			}
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			?>
 			jQuery(document).ready(function(){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
@@ -362,7 +323,7 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
 					if( i == 2 || i == 3 || i == 6){
-						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
+						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
 						} );
@@ -411,18 +372,8 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 					</thead>
 					<tbody>
 					<?php
-						$geny_ar = new GenyActivityReport();
-						$geny_ars = new GenyActivityReportStatus();
-						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-						foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id=".$geny_ars->id,"profile_id=".$profile->id) ) as $ar ){
-							$tmp_activity = new GenyActivity( $ar->activity_id );
-							$tmp_ars = new GenyActivityReportStatus( $ar->status_id );
-							$tmp_task = new GenyTask( $tmp_activity->task_id );
-							$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-							$tmp_project = new GenyProject( $tmp_assignement->project_id );
-							if( $tmp_project->type_id != 5 ){
-								echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$ar->id." /></td><td>".$tmp_activity->activity_date."</td><td>".$tmp_project->name."</td><td>".$tmp_task->name."</td><td>".$tmp_activity->load."</td><td>".$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date)."</td><td>".$geny_ars->name."</td></tr>";
-							}
+						foreach( $data_array as $da ){
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$da[0]." /></td><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td>".$da[6]."</td></tr>";
 						}
 					?>
 					</tbody>
