@@ -196,44 +196,22 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			var indexData = new Array();
 			<?php
 				$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_cra_post_validation_workflow_php"]);
-				$html1 = '<select><option value=""></option>';
-				foreach( $data_array_filters[1] as $d ){
-					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[1][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-						$html1 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-					else
-						$html1 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+				
+				$data_array_filters_html = array();
+				foreach( $data_array_filters as $idx => $data ){
+					$data_array_filters_html[$idx] = '<select><option value=""></option>';
+					foreach( $data as $d ){
+						if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
+							$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+						else
+							$data_array_filters_html[$idx] .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					}
+					$data_array_filters_html[$idx] .= '</select>';
 				}
-				$html1 .= '</select>';
-				$html3 = '<select><option value=""></option>';
-				foreach( $data_array_filters[3] as $d ){
-					
-					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[3][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-						$html3 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-					else
-						$html3 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+				foreach( $data_array_filters_html as $idx => $html ){
+					echo "indexData[$idx] = '$html';\n";
 				}
-				$html3 .= '</select>';
-				$html4 = '<select><option value=""></option>';
-				foreach( $data_array_filters[4] as $d ){
-					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[4][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-						$html4 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-					else
-						$html4 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';;
-				}
-				$html4 .= '</select>';
-				$html7 = '<select><option value=""></option>';
-				foreach( $data_array_filters[7] as $d ){
-					if( htmlspecialchars_decode(urldecode($cookie->aaSearchCols[7][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-						$html7 .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-					else
-						$html7 .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-				}
-				$html7 .= '</select>';
 			?>
-			indexData[1] = '<?php echo $html1; ?>';
-			indexData[3] = '<?php echo $html3; ?>';
-			indexData[4] = '<?php echo $html4; ?>';
-			indexData[7] = '<?php echo $html7; ?>';
 			
 			jQuery(document).ready(function(){
 				$("#formID").validationEngine('init');
