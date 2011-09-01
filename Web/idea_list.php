@@ -60,15 +60,15 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$screen_name = $profile->login;
 	}
 
-	$view = "<a href='idea_view.php?load_idea=true&idea_id=$tmp->id' title='Voir l'idée'><img src='images/$web_config->theme/idea_view_small.png' alt='Voir l'idée'></a>";
+	$view = "<a href=\"idea_view.php?load_idea=true&idea_id=$tmp->id\" title=\"Voir l'idée\"><img src=\"images/$web_config->theme/idea_view_small.png\" alt=\"Voir l'idée\"></a>";
 
 	if( $tmp->submitter == $logged_in_profile->id ) {
-		$edit = "<a href='idea_edit.php?load_idea=true&idea_id=$tmp->id' title='Editer l'idée'><img src='images/$web_config->theme/idea_edit_small.png' alt='Editer l'idée'></a>";
-		$remove = "<a href='idea_remove.php?idea_id=$tmp->id' title='Supprimer définitivement l'idée'><img src='images/$web_config->theme/idea_remove_small.png' alt='Supprimer définitiement l'idée'></a>";
+		$edit = "<a href=\"idea_edit.php?load_idea=true&idea_id=$tmp->id\" title=\"Editer l'idée\"><img src=\"images/$web_config->theme/idea_edit_small.png\" alt=\"Editer l'idée\"></a>";
+		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {
-		$edit = "";
-		$remove = "";
+		$edit = $edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" alt=\"Editer l'idée\">";;
+		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" alt=\"Supprimer définitivement l'idée\">";
 	}
 
 	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $view, $edit, $remove );
