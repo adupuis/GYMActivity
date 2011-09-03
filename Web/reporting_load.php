@@ -58,7 +58,9 @@ $reporting_start_date = getParam('reporting_start_date',$start_date);
 $reporting_end_date = getParam('reporting_end_date',$end_date);
 $aggregation_level = getParam('reporting_aggregation_level','project');
 
-$ts_cookie = $_COOKIE['GYMActivity_reporting_list_reporting_load_php_task_state'];
+if(array_key_exists('GYMActivity_reporting_list_reporting_load_php_task_state', $_COOKIE)) {
+	$ts_cookie = $_COOKIE['GYMActivity_reporting_list_reporting_load_php_task_state'];
+}
 if( isset($ts_cookie) && $ts_cookie == "true" )
 	$aggregation_level = "tasks";
 
@@ -175,7 +177,9 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		$cookie = json_decode($_COOKIE["GYMActivity_reporting_list_reporting_load_php"]);
+		if(array_key_exists('GYMActivity_reporting_list_reporting_load_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_list_reporting_load_php"]);
+		}
 		
 		$data_array_filters_html = array();
 		foreach( $data_array_filters as $idx => $data ){
