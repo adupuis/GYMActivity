@@ -81,7 +81,9 @@ foreach( $geny_ar->getActivityReportsByProfileId( $profile->id ) as $ar ){
 		<script>
 			var indexData = new Array();
 			<?php
-				$cookie = json_decode($_COOKIE["GYMActivity_cra_list_table_cra_list_php"]);
+				if(array_key_exists("GYMActivity_cra_list_table_cra_list_php", $_COOKIE)) {
+					$cookie = json_decode($_COOKIE["GYMActivity_cra_list_table_cra_list_php"]);
+				}
 				
 				$data_array_filters_html = array();
 				foreach( $data_array_filters as $idx => $data ){
