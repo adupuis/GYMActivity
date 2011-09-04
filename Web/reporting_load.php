@@ -27,7 +27,6 @@ include_once 'menu.php';
 include_once 'backend/api/ajax_toolbox.php';
 
 $reporting_data = array();
-$geny_tools = new GenyTools();
 $geny_project = new GenyProject();
 $geny_profile = new GenyProfile();
 $geny_client = new GenyClient();
@@ -49,13 +48,8 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 	$pss[$ps->id] = $ps;
 }
 
-$month = date('m', time());
-$year=date('Y', time());
-$lastday = date('t',mktime(0,0,0,$month,28,$year));
-$start_date="$year-$month-01";
-$end_date="$year-$month-$lastday";
-$reporting_start_date = getParam('reporting_start_date',$start_date);
-$reporting_end_date = getParam('reporting_end_date',$end_date);
+$reporting_start_date = getParam('reporting_start_date',GenyTools::getCurrentMonthFirstDayDate());
+$reporting_end_date = getParam('reporting_end_date',GenyTools::getCurrentMonthLastDayDate());
 $aggregation_level = getParam('reporting_aggregation_level','project');
 
 $ts_cookie = $_COOKIE['GYMActivity_reporting_list_reporting_load_php_task_state'];
