@@ -75,14 +75,14 @@ class GenyTools {
 			return "<span style='color: red;'>".$s->name."</span>";
 		
 	}
-	static function getCurrentMonthFirstDay(){
+	static function getCurrentMonthFirstDayDate(){
 		$month = date('m', time());
 		$year=date('Y', time());
 		$lastday = date('t',mktime(0,0,0,$month,28,$year));
 		$start_date="$year-$month-01";
 		return $start_date;
 	}
-	static function getCurrentMonthLastDay(){
+	static function getCurrentMonthLastDayDate(){
 		$month = date('m', time());
 		$year=date('Y', time());
 		$lastday = date('t',mktime(0,0,0,$month,28,$year));
