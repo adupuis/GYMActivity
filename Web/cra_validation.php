@@ -76,6 +76,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 			else if( $_POST['date_selection_type'] == "days_list" ){
 				$list = $time_assignement_days_list;
 			}
+			$created_reports = 0;
 			foreach( $list as $day ){
 				$geny_activity = new GenyActivity();
 				$geny_ar = new GenyActivityReport();
@@ -119,7 +120,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
 						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
 						if( $geny_ar_id > -1 )
-							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Rapport enregistré pour le $day (en attente de validation utilisateur).");
+							$created_reports++;
 						else
 							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement du rapport du $day.");
 						$ok_count++;
@@ -130,6 +131,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					}
 				}
 			}
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$created_reports rapport(s) enregistré(s) (en attente de validation utilisateur).<br/><strong>N'oubliez pas de les valider.</strong>");
 // 			WARNING: Ne surtout pas envoyer de notification à la création !!
 // 			if($ok_count > 0){
 // 				$notif = new GenyNotification();
