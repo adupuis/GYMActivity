@@ -25,14 +25,13 @@ $required_group_rights = array(1,2,4,5);
 include_once 'header.php';
 include_once 'menu.php';
 
-$tool = new GenyTools();
 $tmp_profile = new GenyProfile();
 
 $month = date('m', time());
 $year=date('Y', time());
-$d_month_name = date('F', mktime(0,0,0,$month,28,$year));
-$start_date="$year-$month-01";
-$end_date="$year-$month-31";
+
+$start_date = GenyTools::getCurrentMonthFirstDayDate();
+$end_date = GenyTools::getCurrentMonthLastDayDate();
 
 $geny_ar = new GenyActivityReport();
 $worked_days = GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date));

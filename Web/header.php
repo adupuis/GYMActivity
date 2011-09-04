@@ -23,7 +23,11 @@ session_start();
 date_default_timezone_set('Europe/Paris');
 
 function __autoload($class_name) {
-    include 'classes/'.$class_name . '.php';
+	include 'classes/'.$class_name . '.php';
+}
+
+function loadClass($class_name) {
+	include 'classes/'.$class_name . '.php';
 }
 
 try {
@@ -69,6 +73,8 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 		echo "$.gritter.add({title: \"".$notif['title']."\",text: \"".$notif['msg']."\",image: 'images/".$theme."/".$imgs[$notif['status']]."',sticky: $sticky,time: $time});";
 	}
 }
+
+loadClass('GenyTools');
 
 ?>
 
