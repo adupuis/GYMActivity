@@ -25,7 +25,7 @@ function getParam($param,$default=""){
 		$ret = $_POST[$param];
 	else if( isset($_GET[$param]))
 		$ret = $_GET[$param];
-	return $ret;
+	return htmlentities($ret,ENT_QUOTES,'UTF-8');
 }
 
 ?>

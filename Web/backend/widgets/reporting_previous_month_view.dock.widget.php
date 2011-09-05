@@ -18,11 +18,17 @@
 //  along with this program; if not, write to the
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-
+$time = time();
+$month = date('m', $time);
+$year=date('Y', $time);
+$d_month_previous = date('m', mktime(0,0,0,($month-1),28,$year));
+$start_date="$year-$d_month_previous-01";
+$lastday = date('t',mktime(0,0,0,($month-1),28,$year));
+$end_date="$year-$d_month_previous-$lastday";
 ?>
 
 <li class="reporting_monthly_view">
-	<a href="reporting_previous_month_view.php">
+	<a href="reporting_load.php?reporting_start_date=<?php echo $start_date; ?>&reporting_end_date=<?php echo $end_date; ?>">
 		<span class="dock_item_title">Reporting M-1</span><br/>
 		<span class="dock_item_content">Reporting sur l'activité du mois précédent.</span>
 	</a>

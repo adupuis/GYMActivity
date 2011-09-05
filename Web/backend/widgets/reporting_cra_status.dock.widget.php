@@ -22,8 +22,8 @@
 ?>
 
 <li class="reporting_cra">
-	<a href="reporting_cra_completion.php">
-		<span class="dock_item_title">Remplissage CRA</span><br/>
-		<span class="dock_item_content">Liste des profils est de l'état du remplissage des CRA.</span>
+	<a href="reporting_cra_status.php">
+		<span class="dock_item_title">Status CRA</span><br/>
+		<span class="dock_item_content">Ventilation des CRA par status.</span>
 	</a>
 </li>

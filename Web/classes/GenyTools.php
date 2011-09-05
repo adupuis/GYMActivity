@@ -60,6 +60,35 @@ class GenyTools {
 		}
 		return $name;
 	}
+	static function getActivityReportStatusAsColoredHtml($s){
+		if( $s->shortname == "P_USER_VALIDATION" )
+			return "<span style='color: crimson;'>".$s->name."</span>";
+		if( $s->shortname == "P_APPROVAL" || $s->shortname == "P_REMOVAL")
+			return "<span style='color: orange;'>".$s->name."</span>";
+		if( $s->shortname == "APPROVED" )
+			return "<span style='color: RoyalBlue;'>".$s->name."</span>";
+		if( $s->shortname == "CLOSE" || $s->shortname == "REMOVED" )
+			return "<span style='color: SlateGrey;'>".$s->name."</span>";
+		if( $s->shortname == "BILLED" || $s->shortname == "PAID" )
+			return "<span style='color: green;'>".$s->name."</span>";
+		if( $s->shortname == "REFUSED" )
+			return "<span style='color: red;'>".$s->name."</span>";
+		
+	}
+	static function getCurrentMonthFirstDayDate(){
+		$month = date('m', time());
+		$year=date('Y', time());
+		$lastday = date('t',mktime(0,0,0,$month,28,$year));
+		$start_date="$year-$month-01";
+		return $start_date;
+	}
+	static function getCurrentMonthLastDayDate(){
+		$month = date('m', time());
+		$year=date('Y', time());
+		$lastday = date('t',mktime(0,0,0,$month,28,$year));
+		$end_date="$year-$month-$lastday";
+		return $end_date;
+	}
 }
 
 ?>
