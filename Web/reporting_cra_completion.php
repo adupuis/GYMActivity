@@ -139,6 +139,7 @@ foreach( $tmp_profile->getAllProfiles() as $p ){
 		<?php include 'backend/widgets/reporting_monthly_view.dock.widget.php'; ?>
 		<?php include 'backend/widgets/reporting_load.dock.widget.php'; ?>
 		<?php include 'backend/widgets/reporting_previous_month_view.dock.widget.php'; ?>
+		<?php include 'backend/widgets/reporting_cra_status.dock.widget.php'; ?>
 	</ul>
 </div>
 <?php

@@ -48,8 +48,10 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 	$pss[$ps->id] = $ps;
 }
 
-$reporting_start_date = getParam('reporting_start_date',GenyTools::getCurrentMonthFirstDayDate());
-$reporting_end_date = getParam('reporting_end_date',GenyTools::getCurrentMonthLastDayDate());
+$start_date = GenyTools::getCurrentMonthFirstDayDate();
+$end_date = GenyTools::getCurrentMonthLastDayDate();
+$reporting_start_date = getParam('reporting_start_date',$start_date);
+$reporting_end_date = getParam('reporting_end_date',$end_date);
 $aggregation_level = getParam('reporting_aggregation_level','project');
 
 if(array_key_exists('GYMActivity_reporting_list_reporting_load_php_task_state', $_COOKIE)) {
@@ -444,7 +446,10 @@ $load_by_profiles_js_data = implode(",",$tmp_array);
 </div>
 <div id="bottomdock">
 	<ul>
-<!-- 		<?php include 'backend/widgets/project_add.dock.widget.php'; ?> -->
+		<?php 
+		include 'backend/widgets/reporting_cra_completion.dock.widget.php';
+		include 'backend/widgets/reporting_cra_status.dock.widget.php'; 
+		?>
 	</ul>
 </div>
 <?php

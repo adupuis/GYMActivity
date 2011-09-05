@@ -258,7 +258,10 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 </div>
 <div id="bottomdock">
 	<ul>
-<!-- 		<?php include 'backend/widgets/project_add.dock.widget.php'; ?> -->
+		<?php 
+		include 'backend/widgets/reporting_load.dock.widget.php'; 
+		include 'backend/widgets/reporting_cra_completion.dock.widget.php';
+		?>
 	</ul>
 </div>
 <?php
