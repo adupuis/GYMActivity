@@ -31,7 +31,7 @@ class GenyWebConfig {
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
 		$this->company_name = "GENYMOBILE";
-		$this->version = "0.4.7-dev";
+		$this->version = "0.4.7";
 		$this->company_corner_logo = "logo_genymobile_writting_small.jpg";
 		$this->company_index_logo = "logo_genymobile.jpg";
 	}
