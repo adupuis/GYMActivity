@@ -57,7 +57,7 @@ foreach( $geny_ar->getAllActivityReports() as $ar ){
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et la date
 	$date = date( 'Y-m', strtotime( $geny_activity->activity_date ) );
 	$geny_ars->loadActivityReportStatusById( $ar->status_id );
-	$reporting_data[$date][$geny_ars->shortname] += round($geny_activity->load/8,1);
+	$reporting_data[$date][$geny_ars->shortname] += $geny_activity->load;
 	$debug_reports_count++;
 }
 error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to create the list with the $debug_reports_count reports.",0);
@@ -129,15 +129,15 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 		$idx=0;
 		foreach ( $reporting_data as $date => $arr ){
 			echo "data.setValue($idx, 0, '$date');\n";
-			echo "data.setValue($idx, 1, ".$arr['P_USER_VALIDATION'].");\n";
-			echo "data.setValue($idx, 2, ".$arr['P_APPROVAL'].");\n";
-			echo "data.setValue($idx, 3, ".$arr['APPROVED'].");\n";
-			echo "data.setValue($idx, 4, ".$arr['BILLED'].");\n";
-			echo "data.setValue($idx, 5, ".$arr['PAID'].");\n";
-			echo "data.setValue($idx, 6, ".$arr['CLOSE'].");\n";
-			echo "data.setValue($idx, 7, ".$arr['P_REMOVAL'].");\n";
-			echo "data.setValue($idx, 8, ".$arr['REMOVED'].");\n";
-			echo "data.setValue($idx, 9, ".$arr['REFUSED'].");\n";
+			echo "data.setValue($idx, 1, ".round($arr['P_USER_VALIDATION']/8,1).");\n";
+			echo "data.setValue($idx, 2, ".round($arr['P_APPROVAL']/8,1).");\n";
+			echo "data.setValue($idx, 3, ".round($arr['APPROVED']/8,1).");\n";
+			echo "data.setValue($idx, 4, ".round($arr['BILLED']/8,1).");\n";
+			echo "data.setValue($idx, 5, ".round($arr['PAID']/8,1).");\n";
+			echo "data.setValue($idx, 6, ".round($arr['CLOSE']/8,1).");\n";
+			echo "data.setValue($idx, 7, ".round($arr['P_REMOVAL']/8,1).");\n";
+			echo "data.setValue($idx, 8, ".round($arr['REMOVED']/8,1).");\n";
+			echo "data.setValue($idx, 9, ".round($arr['REFUSED']/8,1).");\n";
 			$idx++;
 		}
 		?>
@@ -231,7 +231,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 			<tbody>
 			<?php
 				foreach ( $reporting_data as $date => $arr ){
-					echo "<tr><td>$date</td><td>".$arr['P_USER_VALIDATION']."</td><td>".$arr['P_APPROVAL']."</td><td>".$arr['APPROVED']."</td><td>".$arr['BILLED']."</td><td>".$arr['PAID']."</td><td>".$arr['CLOSE']."</td><td>".$arr['P_REMOVAL']."</td><td>".$arr['REMOVED']."</td><td>".$arr['REFUSED']."</td></tr>\n";
+					echo "<tr><td>$date</td><td>".round($arr['P_USER_VALIDATION']/8,1)."</td><td>".round($arr['P_APPROVAL']/8,1)."</td><td>".round($arr['APPROVED']/8,1)."</td><td>".round($arr['BILLED']/8,1)."</td><td>".round($arr['PAID']/8,1)."</td><td>".round($arr['CLOSE']/8,1)."</td><td>".round($arr['P_REMOVAL']/8,1)."</td><td>".round($arr['REMOVED']/8,1)."</td><td>".round($arr['REFUSED']/8,1)."</td></tr>\n";
 				}
 			?>
 			</tbody>
