@@ -53,7 +53,7 @@ try {
 			$tmp_profile = new GenyProfile( $ak_object->profile_id );
 			if( $tmp_profile->id > 0 ){
 // 				echo "Profile: ID=$tmp_profile->id, LOGIN=$tmp_profile->login, MD5(LOGIN)=".md5($tmp_profile->login).", REQUIRED_GROUPS_RIGHTS=$required_group_rights\n";
-				if( $tmp_profile->rights_group_id < $required_group_rights ){
+				if( $tmp_profile->rights_group_id <= $required_group_rights ){
 					$auth_granted=true;
 				}
 				else{
