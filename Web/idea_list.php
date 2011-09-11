@@ -174,7 +174,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th>Titre</th>
 						<th>Votes</th>
 						<th>Statut</th>
-						<th>Soumetteur</th>
+						<th>Auteur</th>
 						<th>Voir</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
@@ -190,7 +190,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th class="filtered">Titre</th>
 						<th class="filtered">Votes</th>
 						<th class="filtered">Statut</th>
-						<th class="filtered">Soumetteur</th>
+						<th class="filtered">Auteur</th>
 						<th class="filtered">Voir</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>
