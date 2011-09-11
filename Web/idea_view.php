@@ -42,7 +42,7 @@ $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		if( $geny_idea->insertNewIdea( 'NULL', $_POST['idea_title'], $_POST['idea_description'], $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
+		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'] ), htmlentities( $_POST['idea_description'] ), $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
 		}
@@ -164,7 +164,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', $_POST['idea_message_content'], $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'] ), $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 			}
 			else {
