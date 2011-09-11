@@ -67,8 +67,8 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {
-		$edit = $edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" alt=\"Editer l'idée\">";;
-		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" alt=\"Supprimer définitivement l'idée\">";
+		$edit = $edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";;
+		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" title=\"Vous ne pouvez pas supprimer cette idée\" alt=\"Supprimer définitivement l'idée\">";
 	}
 
 	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $view, $edit, $remove );
