@@ -273,16 +273,11 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		</center>
 
 		<br><br>
-		
-		<table cellspacing="0" cellpadding="4" class="idea_table">
-		<tbody>
-			<tr>
-				<th id="idea_table_header_author" class="idea_table_header">Auteur</th>
-				<th id="idea_table_header_content" class="idea_table_header">Contenu</th>
-			</tr>
-			<tr id="idea_table_idea">
-				<td>
-				<?php
+
+		<div class='idea'>
+			<h1>
+			Idée de 
+			<?php
 				foreach( $geny_profile->getAllProfiles() as $profile ) {
 					if( $geny_idea->submitter == $profile->id ) {
 						if( $profile->firstname && $profile->lastname ) {
@@ -294,47 +289,46 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 						break;
 					}
 				}
-				?>
-				</td>
-				<td>
-				<?php echo $geny_idea->description ?>
-				</td>
-			</tr>
-		</tbody>
-		</table>
-
-		<br>
-		
-		<table cellspacing="0" cellpadding="4" class="idea_message_table">
-		<tbody>
-			<tr>
-			<th id="idea_message_table_header_author" class="idea_message_table_header">Auteurs</th>
-			<th id="idea_message_table_header_content" class="idea_message_table_header">Commentaires</th>
-			</tr>
-			<?php
-			$geny_idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $geny_idea->id );
-			foreach( $geny_idea_messages as $idea_message ) {
-				foreach( $geny_profile->getAllProfiles() as $profile ) {
-					if( $idea_message->profile_id == $profile->id ) {
-						if( $profile->firstname && $profile->lastname ) {
-							$message_author = $profile->firstname." ".$profile->lastname;
-						}
-						else {
-							$message_author = $profile->login;
-						}
-						break;
-					}
-				}
-				echo "<tr id=\"idea_message_table_idea\"><td>".$message_author."</td><td>".$idea_message->content."</td></tr>";
-			}
-			if( $geny_idea->id < 0 ) {
-				$geny_idea->loadIdeaById( $ideas[0]->id );
-			}
 			?>
-		</tbody>
-		</table>
+			</h1>
+			<div class='idea_description'>
+				<?php echo $geny_idea->description ?>
+				<br />
+			</div>
+		</div>
 
-		<br>
+		<div id='idea_messages'>
+
+		<?php
+		$geny_idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $geny_idea->id );
+		foreach( $geny_idea_messages as $idea_message ) {
+			foreach( $geny_profile->getAllProfiles() as $profile ) {
+				if( $idea_message->profile_id == $profile->id ) {
+					if( $profile->firstname && $profile->lastname ) {
+						$message_author = $profile->firstname." ".$profile->lastname;
+					}
+					else {
+						$message_author = $profile->login;
+					}
+					break;
+				}
+			}
+			echo "<div class=\"idea_message\">";
+			echo "<h1>";
+			echo $message_author;
+			echo "</h1>";
+			echo "<div class=\"idea_message_description\">";
+			echo $idea_message->content;
+ 			echo "</div></div>";
+		}
+		if( $geny_idea->id < 0 ) {
+			$geny_idea->loadIdeaById( $ideas[0]->id );
+		}
+		?>
+
+		</div>
+		
+		<br><br><br>
 
 		<form id="idea_message_create_form" action="idea_view.php" method="post">
  			<input type="hidden" name="idea_message_create" value="true" />
