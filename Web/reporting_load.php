@@ -78,8 +78,14 @@ if( isset($reporting_start_date) && $reporting_start_date != "" && isset($report
 
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
-$geny_ars->loadActivityReportStatusByShortName('APPROVED');
-foreach( $geny_ar->getActivityReportsByReportStatusId($geny_ars->id) as $ar ){
+$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+$ars_p_user_approval_id = $geny_ars->id;
+$geny_ars->loadActivityReportStatusByShortName('REMOVED');
+$ars_removed_id = $geny_ars->id;
+$geny_ars->loadActivityReportStatusByShortName('REFUSED');
+$ars_refused_id = $geny_ars->id;
+
+foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $ar ){
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
 	// Nous ne voulons pas des absences non payé par l'entreprise dans l'aggregation par projet.
 	// En revanche quand le mode d'aggrégation est par tâche nous le voulons.
