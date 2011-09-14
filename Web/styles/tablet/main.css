@@ -884,7 +884,7 @@ table.object_list > tr:nth-child(odd){
 	box-shadow: 3px 3px 4px #333;
 }
 
-.idea h1 {
+.idea_submitter {
 	font-size:18px;
 	font-style:italic;
 	font-weight:bold;
@@ -894,6 +894,14 @@ table.object_list > tr:nth-child(odd){
 	margin-right: 30px;
 	padding-top: 10px;
 	height:30px;
+}
+
+.idea_submission_date {
+	font-size:14px;
+	font-style:italic;
+	font-weight:bold;
+	text-align:right;
+	margin-right: 30px;
 }
 
 .idea_description {
@@ -912,22 +920,34 @@ table.object_list > tr:nth-child(odd){
 	box-shadow: 3px 3px 4px #555;
 }
 
-.idea_message h1 {
+.idea_message_author {
 	font-size:14px;
 	font-style:italic;
 	font-weight:bold;
 	color :#333;
 	text-align:left;
-	margin-top: 5px;
+	margin-top: 10px;
 	margin-left: 10px;
-	padding-top: 10px;
 	height:30px;
+	width: 70%;
+	float: left;
+}
+
+.idea_message_submission_date {
+	font-size:12px;
+	font-style:italic;
+	font-weight:bold;
+	text-align:right;
+	margin-right: 10px;
+	margin-top: 10px;
+	width: 25%;
+	float: right;
 }
 
 .idea_message_description {
 	padding-left:10px;
 	padding-right:10px;
-	padding-top:3px;
+	padding-top:50px;
 	padding-bottom:7px;
 }
 

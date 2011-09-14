@@ -51,6 +51,8 @@ $geny_idea_vote = new GenyIdeaVote();
 
 foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
+
+	$display_date = date("j-m-Y G:i", strtotime( $tmp->submission_date ) );
 	
 	$profile = $profiles["$tmp->submitter"];
 	if( $profile->firstname && $profile->lastname ) {
@@ -71,7 +73,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" title=\"Vous ne pouvez pas supprimer cette idée\" alt=\"Supprimer définitivement l'idée\">";
 	}
 
-	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $view, $edit, $remove );
+	$data_array[] = array( $tmp->id, $display_date, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $view, $edit, $remove );
 
 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
@@ -171,6 +173,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 			<p>
 				<table id="idea_list_table" style="color: black; width: 100%;">
 					<thead>
+						<th>Date</th>
 						<th>Titre</th>
 						<th>Votes</th>
 						<th>Statut</th>
@@ -182,11 +185,12 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
+						<th class="filtered">Date</th>
 						<th class="filtered">Titre</th>
 						<th class="filtered">Votes</th>
 						<th class="filtered">Statut</th>

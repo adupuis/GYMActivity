@@ -3,7 +3,7 @@
 //  Copyright (C) 2011 by GENYMOBILE & Quentin Désert
 //  qdesert@genymobile.com
 //  http://www.genymobile.com
-// 
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 3 of the License, or
@@ -40,9 +40,11 @@ $geny_profile = new GenyProfile();
 $logged_in_profile = new GenyProfile();
 $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
+$current_datetime = date("Y-m-d H:i:s");
+
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
+		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $logged_in_profile->id, $current_datetime ) ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
 		}
@@ -164,7 +166,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $current_datetime, $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 			}
 			else {
@@ -275,7 +277,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		<br><br>
 
 		<div class='idea'>
-			<h1>
+			<div class="idea_submitter">
 			Idée de 
 			<?php
 				foreach( $geny_profile->getAllProfiles() as $profile ) {
@@ -290,7 +292,12 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 					}
 				}
 			?>
-			</h1>
+			</div>
+			<div class="idea_submission_date">
+			<?php
+ 				echo date("j-m-Y G:i", strtotime( $geny_idea->submission_date ) );
+			?>
+			</div>
 			<div class='idea_description'>
 				<?php echo $geny_idea->description ?>
 				<br />
@@ -314,9 +321,12 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 				}
 			}
 			echo "<div class=\"idea_message\">";
-			echo "<h1>";
+			echo "<div class=\"idea_message_author\">";
 			echo $message_author;
-			echo "</h1>";
+			echo "</div>";
+			echo "<div class=\"idea_message_submission_date\">";
+			echo date("j-m-Y G:i", strtotime( $idea_message->submission_date ) );
+			echo "</div>";
 			echo "<div class=\"idea_message_description\">";
 			echo $idea_message->content;
  			echo "</div></div>";
