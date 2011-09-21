@@ -134,7 +134,7 @@ class GenyNotification {
 		}
 		$query = rtrim($query, ",");
 		$query .= " WHERE notification_id=".$this->id;
-// 		if( $this->config->debug )
+		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyNotification MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
