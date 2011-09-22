@@ -60,13 +60,16 @@ try {
 				$geny_project->loadProjectById( $geny_assignement->project_id );
 				$geny_task->loadTaskById( $geny_activity->task_id );
 				$geny_profile->loadProfileById( $geny_assignement->profile_id );
-// 				echo "Removing unvalidated CRA : ".$geny_profile->login." / ".$geny_project->name." / ".$geny_task->name." / ".$geny_activity->activity_date."\n";
+				// Notification à l'utilisateur
 				$geny_notification->insertNewNotification($geny_profile->id,"Votre CRA/congés du ".$geny_activity->activity_date." a été automatiquement supprimé par le système il concernait : ".$geny_project->name." / ".$geny_task->name.".","nok");
-				$geny_notification->insertNewGroupNotification($geny_profile->id,"CRA/congé de ".GenyTools." du ".$geny_activity->activity_date." a été automatiquement supprimé par le système il concernait : ".$geny_project->name." / ".$geny_task->name.".","nok");
+				// Notification au groupe admin
+				$geny_notification->insertNewGroupNotification(1,"CRA/congé de ".GenyTools::getProfileDisplayName($geny_profile)." du ".$geny_activity->activity_date." a été automatiquement supprimé par le système il concernait : ".$geny_project->name." / ".$geny_task->name.".","nok");
+				// Notification au groupe SuperUsers
+				$geny_notification->insertNewGroupNotification(2,"CRA/congé de ".GenyTools::getProfileDisplayName($geny_profile)." du ".$geny_activity->activity_date." a été automatiquement supprimé par le système il concernait : ".$geny_project->name." / ".$geny_task->name.".","nok");
 				if( $geny_activity->deleteActivity() > 0 )
-					$json_messages[] = array("status" => "success", "status_message" => "Activity ".$geny_activity->id."and ActivityReport ".$geny_ar->id." successfully removed." );
+					$json_messages[] = array("status" => "success", "status_message" => "Activity ".$geny_activity->id." successfully removed." );
 				else
-					$json_messages[] = array("status" => "error", "status_message" => "Error while removing Activity ".$geny_activity->id." and ActivityReport ".$ar->id."." );
+					$json_messages[] = array("status" => "error", "status_message" => "Error while removing Activity ".$geny_activity->id."." );
 			}
 		}
 		echo json_encode($json_messages);

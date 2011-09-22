@@ -23,6 +23,8 @@ function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }
 
+date_default_timezone_set('Europe/Paris');
+
 try {
 	$checkId_obj = new CheckIdentity();
 	$api_key = "";
