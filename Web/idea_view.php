@@ -84,7 +84,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$negative = $geny_idea_vote->idea_negative_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 1 );
-				if( $geny_idea_vote->commitUpdates() ) {
+				if( $geny_idea_vote->commitUpdates() >= 1 ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes pour!");
 				}
 				else {
@@ -113,7 +113,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$positive = $geny_idea_vote->idea_positive_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 0 );
-				if( $geny_idea_vote->commitUpdates() ) {
+				if( $geny_idea_vote->commitUpdates() >= 1 ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes contre...");
 				}
 				else {
@@ -154,7 +154,10 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
 			}
 		}
-		if( !$geny_idea->commitUpdates() ) {
+		if( $geny_idea->commitUpdates() >= 1 ) {
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
+		}
+		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de l'idée.");
 		}
 	}
