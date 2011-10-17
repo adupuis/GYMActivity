@@ -32,6 +32,7 @@ class GenyIdeaMessage {
 		mysql_query( "SET NAMES 'utf8'" );
 		$this->id = -1;
 		$this->content = '';
+		$this->submission_date = '';
 		$this->profile_id = -1;
 		$this->idea_id = -1;
 		if( $id > -1 ) {
@@ -39,7 +40,7 @@ class GenyIdeaMessage {
 		}
 	}
 
-	public function insertNewIdeaMessage( $id, $idea_message_content, $profile_id, $idea_id ) {
+	public function insertNewIdeaMessage( $id, $idea_message_content, $submission_date, $profile_id, $idea_id ) {
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;
 		}
@@ -49,7 +50,7 @@ class GenyIdeaMessage {
 		if( !is_numeric( $idea_id ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO IdeaMessages VALUES($id,'".mysql_real_escape_string( $idea_message_content )."','".$profile_id."','".$idea_id."')";
+		$query = "INSERT INTO IdeaMessages VALUES($id,'".mysql_real_escape_string( $idea_message_content )."','".$submission_date."','".$profile_id."','".$idea_id."')";
 		if( $this->config->debug ) {
 			error_log("[GYMActivity::DEBUG] GenyIdeaMessage MySQL query : $query",0);
 		}
@@ -75,7 +76,7 @@ class GenyIdeaMessage {
 	public function getIdeaMessagesListWithRestrictions( $restrictions ) {
 		// $restrictions is in the form of array("idea_id=1","idea_status_id=2")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT idea_message_id,idea_message_content,profile_id,idea_id FROM IdeaMessages";
+		$query = "SELECT idea_message_id,idea_message_content,idea_message_submission_date,profile_id,idea_id FROM IdeaMessages";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			foreach( $restrictions as $key => $value ) {
@@ -95,8 +96,9 @@ class GenyIdeaMessage {
 				$tmp_idea_message = new GenyIdeaMessage();
 				$tmp_idea_message->id = $row[0];
 				$tmp_idea_message->content = $row[1];
-				$tmp_idea_message->profile_id = $row[2];
-				$tmp_idea_message->idea_id = $row[3];
+				$tmp_idea_message->submission_date = $row[2];
+				$tmp_idea_message->profile_id = $row[3];
+				$tmp_idea_message->idea_id = $row[4];
 				$idea_message_list[] = $tmp_idea_message;
 			}
 		}
@@ -138,6 +140,7 @@ class GenyIdeaMessage {
 		if( isset( $idea_message ) && $idea_message->id > -1 ) {
 			$this->id = $idea_message->id;
 			$this->content = $idea_message->content;
+			$this->submission_date = $idea_message->submission_date;
 			$this->profile_id = $idea_message->profile_id;
 			$this->idea_id = $idea_message->idea_id;
 		}

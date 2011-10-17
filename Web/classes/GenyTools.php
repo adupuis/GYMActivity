@@ -53,10 +53,10 @@ class GenyTools {
 		return $worked_days;
 	}
 	
-	static function getProfileDisplayName($profile){
-		$name = $profile->login;
-		if( $profile->firstname && $profile->lastname){
-			$name = $profile->firstname." ".$profile->lastname;
+	static function getProfileDisplayName($profile_object){
+		$name = $profile_object->login;
+		if( $profile_object->firstname && $profile_object->lastname){
+			$name = $profile_object->firstname." ".$profile_object->lastname;
 		}
 		return $name;
 	}
