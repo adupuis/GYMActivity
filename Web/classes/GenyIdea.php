@@ -36,14 +36,15 @@ class GenyIdea {
 		$this->votes = -1;
 		$this->status_id = -1;
 		$this->submitter = -1;
+		$this->submission_date = '';
 		if( $id > -1 ) {
 			$this->loadIdeaById( $id );
 		}
 	}
 	
-	public function insertNewIdea( $id, $idea_title, $idea_description, $idea_votes, $idea_status_id, $idea_submitter ) {
+	public function insertNewIdea( $id, $idea_title, $idea_description, $idea_votes, $idea_status_id, $idea_submitter, $idea_submission_date ) {
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyIdea new idea insertion - id: $id - idea_title: $idea_title - idea_description: $idea_description - idea_votes: $idea_votes - idea_status_id: $idea_status_id - idea_submitter: $idea_submitter -->\n";
+			echo "<!-- DEBUG: GenyIdea new idea insertion - id: $id - idea_title: $idea_title - idea_description: $idea_description - idea_votes: $idea_votes - idea_status_id: $idea_status_id - idea_submitter: $idea_submitter - submission_date: $idea_submission_date -->\n";
 		}
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;
@@ -54,7 +55,7 @@ class GenyIdea {
 		if( !is_numeric( $idea_submitter ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO Ideas VALUES($id,'".mysql_real_escape_string( $idea_title )."','".mysql_real_escape_string( $idea_description )."','".$idea_votes."','".$idea_status_id."','".$idea_submitter."')";
+		$query = "INSERT INTO Ideas VALUES($id,'".mysql_real_escape_string( $idea_title )."','".mysql_real_escape_string( $idea_description )."','".$idea_votes."','".$idea_status_id."','".$idea_submitter."','".$idea_submission_date."')";
 		if( $this->config->debug ) {
 			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
@@ -77,7 +78,7 @@ class GenyIdea {
 	public function getIdeasListWithRestrictions( $restrictions ) {
 		// $restrictions is in the form of array("idea_id=1","idea_status_id=2")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter FROM Ideas";
+		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter,idea_submission_date FROM Ideas";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			foreach( $restrictions as $key => $value ) {
@@ -101,6 +102,7 @@ class GenyIdea {
 				$tmp_idea->votes = $row[3];
 				$tmp_idea->status_id = $row[4];
 				$tmp_idea->submitter = $row[5];
+				$tmp_idea->submission_date = $row[6];
 				$idea_list[] = $tmp_idea;
 			}
 		}
@@ -113,7 +115,7 @@ class GenyIdea {
 	}
 
 	public function getAllIdeasSortedByVotes() {
-		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter FROM Ideas ORDER BY idea_votes DESC";
+		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter,idea_submission_date FROM Ideas ORDER BY idea_votes DESC";
 		if( $this->config->debug ) {
 			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
 		}
@@ -128,6 +130,7 @@ class GenyIdea {
 				$tmp_idea->votes = $row[3];
 				$tmp_idea->status_id = $row[4];
 				$tmp_idea->submitter = $row[5];
+				$tmp_idea->submission_date = $row[6];
 				$idea_list[] = $tmp_idea;
 			}
 		}
@@ -164,6 +167,7 @@ class GenyIdea {
 			$this->votes = $idea->votes;
 			$this->status_id = $idea->status_id;
 			$this->submitter = $idea->submitter;
+			$this->submission_date = $idea->submission_date;
 		}
 	}
 
@@ -180,6 +184,7 @@ class GenyIdea {
 			$this->votes = $idea->votes;
 			$this->status_id = $idea->status_id;
 			$this->submitter = $idea->submitter;
+			$this->submission_date = $idea->submission_date;
 		}
 	}
 

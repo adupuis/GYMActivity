@@ -3,7 +3,7 @@
 //  Copyright (C) 2011 by GENYMOBILE & Quentin Désert
 //  qdesert@genymobile.com
 //  http://www.genymobile.com
-// 
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 3 of the License, or
@@ -40,9 +40,11 @@ $geny_profile = new GenyProfile();
 $logged_in_profile = new GenyProfile();
 $logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
+$current_datetime = date("Y-m-d H:i:s");
+
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		if( $geny_idea->insertNewIdea( 'NULL', $_POST['idea_title'], $_POST['idea_description'], $_POST['idea_votes'], 1, $logged_in_profile->id ) ) {
+		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $logged_in_profile->id, $current_datetime ) ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
 		}
@@ -82,7 +84,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$negative = $geny_idea_vote->idea_negative_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 1 );
-				if( $geny_idea_vote->commitUpdates() ) {
+				if( $geny_idea_vote->commitUpdates() >= 1 ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes pour!");
 				}
 				else {
@@ -111,7 +113,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$positive = $geny_idea_vote->idea_positive_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
 				$geny_idea_vote->updateInt( 'idea_positive_vote', 0 );
-				if( $geny_idea_vote->commitUpdates() ) {
+				if( $geny_idea_vote->commitUpdates() >= 1 ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Finalement vous êtes contre...");
 				}
 				else {
@@ -152,7 +154,10 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
 			}
 		}
-		if( !$geny_idea->commitUpdates() ) {
+		if( $geny_idea->commitUpdates() >= 1 ) {
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
+		}
+		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de l'idée.");
 		}
 	}
@@ -164,7 +169,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', $_POST['idea_message_content'], $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $current_datetime, $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 			}
 			else {
@@ -273,16 +278,11 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		</center>
 
 		<br><br>
-		
-		<table cellspacing="0" cellpadding="4" class="idea_table">
-		<tbody>
-			<tr>
-				<th id="idea_table_header_author" class="idea_table_header">Auteur</th>
-				<th id="idea_table_header_content" class="idea_table_header">Contenu</th>
-			</tr>
-			<tr id="idea_table_idea">
-				<td>
-				<?php
+
+		<div class='idea'>
+			<div class="idea_submitter">
+			Idée de 
+			<?php
 				foreach( $geny_profile->getAllProfiles() as $profile ) {
 					if( $geny_idea->submitter == $profile->id ) {
 						if( $profile->firstname && $profile->lastname ) {
@@ -294,47 +294,54 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 						break;
 					}
 				}
-				?>
-				</td>
-				<td>
-				<?php echo $geny_idea->description ?>
-				</td>
-			</tr>
-		</tbody>
-		</table>
-
-		<br>
-		
-		<table cellspacing="0" cellpadding="4" class="idea_message_table">
-		<tbody>
-			<tr>
-			<th id="idea_message_table_header_author" class="idea_message_table_header">Auteurs</th>
-			<th id="idea_message_table_header_content" class="idea_message_table_header">Commentaires</th>
-			</tr>
-			<?php
-			$geny_idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $geny_idea->id );
-			foreach( $geny_idea_messages as $idea_message ) {
-				foreach( $geny_profile->getAllProfiles() as $profile ) {
-					if( $idea_message->profile_id == $profile->id ) {
-						if( $profile->firstname && $profile->lastname ) {
-							$message_author = $profile->firstname." ".$profile->lastname;
-						}
-						else {
-							$message_author = $profile->login;
-						}
-						break;
-					}
-				}
-				echo "<tr id=\"idea_message_table_idea\"><td>".$message_author."</td><td>".$idea_message->content."</td></tr>";
-			}
-			if( $geny_idea->id < 0 ) {
-				$geny_idea->loadIdeaById( $ideas[0]->id );
-			}
 			?>
-		</tbody>
-		</table>
+			</div>
+			<div class="idea_submission_date">
+			<?php
+ 				echo date("j-m-Y G:i", strtotime( $geny_idea->submission_date ) );
+			?>
+			</div>
+			<div class='idea_description'>
+				<?php echo $geny_idea->description ?>
+				<br />
+			</div>
+		</div>
 
-		<br>
+		<div id='idea_messages'>
+
+		<?php
+		$geny_idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $geny_idea->id );
+		foreach( $geny_idea_messages as $idea_message ) {
+			foreach( $geny_profile->getAllProfiles() as $profile ) {
+				if( $idea_message->profile_id == $profile->id ) {
+					if( $profile->firstname && $profile->lastname ) {
+						$message_author = $profile->firstname." ".$profile->lastname;
+					}
+					else {
+						$message_author = $profile->login;
+					}
+					break;
+				}
+			}
+			echo "<div class=\"idea_message\">";
+			echo "<div class=\"idea_message_author\">";
+			echo $message_author;
+			echo "</div>";
+			echo "<div class=\"idea_message_submission_date\">";
+			echo date("j-m-Y G:i", strtotime( $idea_message->submission_date ) );
+			echo "</div>";
+			echo "<div class=\"idea_message_description\">";
+			echo $idea_message->content;
+ 			echo "</div></div>";
+		}
+		if( $geny_idea->id < 0 ) {
+			$geny_idea->loadIdeaById( $ideas[0]->id );
+		}
+		?>
+
+		</div>
+		
+		<br><br><br>
 
 		<form id="idea_message_create_form" action="idea_view.php" method="post">
  			<input type="hidden" name="idea_message_create" value="true" />

@@ -326,6 +326,7 @@ CREATE TABLE Ideas (
 	idea_votes int not null default 0,
 	idea_status_id int not null,
 	idea_submitter int not null,
+	idea_submission_date datetime not null,
 	primary key(idea_id),
 	foreign key(idea_submitter) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_status_id) references IdeaStatus(idea_status_id) ON DELETE CASCADE
@@ -335,6 +336,7 @@ ALTER TABLE Ideas AUTO_INCREMENT=1;
 CREATE TABLE IdeaMessages (
 	idea_message_id int auto_increment,
 	idea_message_content text not null,
+	idea_message_submission_date datetime not null,
 	profile_id int not null,
 	idea_id int not null,
 	primary key(idea_message_id),
