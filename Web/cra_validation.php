@@ -74,7 +74,16 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 				$list = GenyTools::getWorkedDaysList($time_assignement_start_date, $time_assignement_end_date );
 			}
 			else if( $_POST['date_selection_type'] == "days_list" ){
-				$list = $time_assignement_days_list;
+				// Fixe le problème de la vérification des dates projet dans le cas de liste de jours.
+// 				$list = $time_assignement_days_list;
+				foreach($time_assignement_days_list as $day){
+					if( strtotime($day) >= $time_project_start_date && strtotime($day) <= $time_project_end_date ){
+						$list[] = $day;
+					}
+					else{
+						$gritter_notifications[] = array('status'=>'warning', 'title' => 'Erreur','msg'=>"le $day est en dehors des bornes temporelles du projet (du $time_project_start_date au $time_project_end_date).");
+					}
+				}
 			}
 			$created_reports = 0;
 			foreach( $list as $day ){
@@ -142,7 +151,7 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 // 			}
 		}
 		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"les dates saisies sont en dehors des bornes du projet.");
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Au moins une des dates saisies est en dehors des bornes du projet.");
 		}
 	}
 	else{
