@@ -30,6 +30,7 @@ class GenyProjectStatus {
 		mysql_query("SET NAMES 'utf8'");
 		$this->id = -1;
 		$this->name = '';
+		$this->description = '';
 		if($id > -1)
 			$this->loadProjectStatusById($id);
 	}
