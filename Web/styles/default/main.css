@@ -577,7 +577,7 @@ div#bottomdock a span.dock_item_content {
 
 .notifications_count {
 	position: absolute;
-	margin-left: 50px;
+	margin-left: -115px;
 	margin-top: 10px;
 	color: white;
 	background-color: red;
