@@ -97,16 +97,10 @@ class GenyPropertyValue {
 		$q = mysql_real_escape_string($term);
 		return $this->getPropertyValuesListWithRestrictions array("property_value_content LIKE '%$q%'") );
 	}
-	public function loadPropertyValuesByPropertyId($id){
+	public function getPropertyValuesByPropertyId($id){
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
-		$p_vs = $this->getPropertyValuesListWithRestrictions(array("property_id=$id"));
-		$p_v = $p_vs[0];
-		if(isset($p_v) && $p_v->id > -1){
-			$this->id = $p_v->id;
-			$this->content = $p_v->content;
-			$this->property_id = $p_v->property_id;
-		}
+		return $this->getPropertyValuesListWithRestrictions(array("property_id=$id"));
 	}
 	public function loadPropertyValueById($id){
 		if( ! is_numeric($id) )
