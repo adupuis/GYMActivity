@@ -101,26 +101,26 @@ class GenyPropertyType {
 		$p_t = $p_ts[0];
 		if(isset($p_t) && $p_t->id > -1){
 			$this->id = $p_t->id;
-			$this->content = $p_t->content;
-			$this->property_id = $p_t->property_id;
+			$this->shortname = $p_t->shortname;
+			$this->name = $p_t->name;
 		}
 	}
-	public function loadPropertyTypeByShortName($id){
-		if( ! is_numeric($id) )
-			return GENYMOBILE_FALSE;
-		$p_ts = $this->getPropertyTypesListWithRestrictions(array("property_value_id=$id"));
+	public function loadPropertyTypeByShortName($shortname){
+		$p_ts = $this->getPropertyTypesListWithRestrictions(array("property_type_shortname=".mysql_real_escape_string($shortname)));
 		$p_t = $p_ts[0];
 		if(isset($p_t) && $p_t->id > -1){
 			$this->id = $p_t->id;
-			$this->content = $p_t->content;
-			$this->property_id = $p_t->property_id;
+			$this->shortname = $p_t->shortname;
+			$this->name = $p_t->name;
 		}
 	}
 	public function updateString($key,$value){
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
 	}
 	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		if( ! is_numeric($value) )
+			return GENYMOBILE_FALSE;
+		$this->updates[] = "$key=$value";
 	}
 	public function updateBool($key,$value){
 		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
