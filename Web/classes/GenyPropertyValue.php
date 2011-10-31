@@ -64,15 +64,16 @@ class GenyPropertyValue {
 			return GENYMOBILE_FALSE;
 		}
 	}
-	public function getPropertyValuesListWithRestrictions($restrictions){
+	public function getPropertyValuesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		$last_index = count($restrictions)-1;
-		$query = "SELECT property_value_id,property_value_content,property_id FROM PropertyValues";
+		$query = "SELECT property_id,property_name,property_label,property_type_id FROM Properties";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string($restriction_type);
 			foreach($restrictions as $key => $value) {
 				$query .= $value;
 				if($key != $last_index){
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}

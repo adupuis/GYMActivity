@@ -62,15 +62,16 @@ class GenyPropertyType {
 			return GENYMOBILE_FALSE;
 		}
 	}
-	public function getPropertyTypesListWithRestrictions($restrictions){
+	public function getPropertyTypesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		$last_index = count($restrictions)-1;
-		$query = "SELECT property_type_id,property_type_shortname,property_type_name FROM PropertyTypes";
+		$query = "SELECT property_id,property_name,property_label,property_type_id FROM Properties";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string($restriction_type);
 			foreach($restrictions as $key => $value) {
 				$query .= $value;
 				if($key != $last_index){
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -131,7 +132,7 @@ class GenyPropertyType {
 			$query .= "$up,";
 		}
 		$query = rtrim($query, ",");
-		$query .= " WHERE property_value_id=".$this->id;
+		$query .= " WHERE property_type_id=".$this->id;
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyPropertyType MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
