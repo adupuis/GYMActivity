@@ -97,16 +97,10 @@ class GenyPropertyOption {
 		$q = mysql_real_escape_string($term);
 		return $this->getPropertyOptionsListWithRestrictions( array("property_option_content LIKE '%$q%'") );
 	}
-	public function loadPropertyOptionsByPropertyId($id){
+	public function getPropertyOptionsByPropertyId($id){
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
-		$p_os = $this->getPropertyOptionsListWithRestrictions(array("property_id=$id"));
-		$p_o = $p_os[0];
-		if(isset($p_o) && $p_o->id > -1){
-			$this->id = $p_o->id;
-			$this->content = $p_o->content;
-			$this->property_id = $p_o->property_id;
-		}
+		return $this->getPropertyOptionsListWithRestrictions(array("property_id=$id"));
 	}
 	public function loadPropertyOptionById($id){
 		if( ! is_numeric($id) )
