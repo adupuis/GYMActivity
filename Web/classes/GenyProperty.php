@@ -41,7 +41,18 @@ class GenyProperty {
 				$id = $this->id;
 			if($id <= 0)
 				return -1;
-				
+			
+			// Avant de supprimer la property il faut supprimer toute les options et valeurs
+			foreach( $this->getPropertyOptions() as $opt ){
+				if( $opt->deletePropertyOption() != GENYMOBILE_TRUE )
+					return GENYMOBILE_FALSE;
+			}
+			
+			foreach( $this->getPropertyValues() as $val ){
+				if( $val->deletePropertyValue() != GENYMOBILE_TRUE )
+					return GENYMOBILE_FALSE;
+			}
+			
 			$query = "DELETE FROM Properties WHERE property_id=$id";
 			if( $this->config->debug )
 				error_log("[GYMActivity::DEBUG] GenyProperty MySQL DELETE query : $query",0);
@@ -121,6 +132,37 @@ class GenyProperty {
 			$this->type_id = $prop->type_id;
 		}
 	}
+	
+	// Méthodes de récupération des options et valeurs
+	
+	public function getPropertyOptions(){
+		// id doit être défini
+		if( $this->id <= 0 )
+			return GENYMOBILE_ERROR;
+		
+		$option = new GenyPropertyOption();
+		return $option->getPropertyOptionsByPropertyId( $this->id );
+	}
+	
+	public function getPropertyValues(){
+		// id doit être défini
+		if( $this->id <= 0 )
+			return GENYMOBILE_ERROR;
+		
+		$value = new GenyPropertyValue();
+		return $value->getPropertyValuesByPropertyId( $this->id );
+	}
+	
+	public function getPropertyType(){
+		// type_id doit être défini
+		if( $this->type_id <= 0 )
+			return GENYMOBILE_ERROR;
+		
+		$type = new GenyPropertyType( $this->type_id );
+		return $type;
+	}
+	
+	// Méthodes d'updates
 	public function updateString($key,$value){
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
 	}
