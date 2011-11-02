@@ -66,7 +66,7 @@ class GenyPropertyOption {
 	}
 	public function getPropertyOptionsListWithRestrictions($restrictions,$restriction_type = "AND"){
 		$last_index = count($restrictions)-1;
-		$query = "SELECT property_id,property_name,property_label,property_type_id FROM Properties";
+		$query = "SELECT property_option_id,property_option_content,property_id FROM PropertyOptions";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);

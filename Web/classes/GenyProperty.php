@@ -108,7 +108,7 @@ class GenyProperty {
 	}
 	public function searchProperties($term){
 		$q = mysql_real_escape_string($term);
-		return $this->getPropertiesListWithRestrictions array("property_name LIKE '%$q%'", "property_label LIKE '%$q%'"), 'OR' );
+		return $this->getPropertiesListWithRestrictions( array("property_name LIKE '%$q%'", "property_label LIKE '%$q%'"), 'OR' );
 	}
 	public function loadPropertyById($id){
 		if( ! is_numeric($id) )

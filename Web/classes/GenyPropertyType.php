@@ -64,7 +64,7 @@ class GenyPropertyType {
 	}
 	public function getPropertyTypesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		$last_index = count($restrictions)-1;
-		$query = "SELECT property_id,property_name,property_label,property_type_id FROM Properties";
+		$query = "SELECT property_type_id,property_type_shortname,property_type_name FROM PropertyTypes";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -93,9 +93,9 @@ class GenyPropertyType {
 	}
 	public function searchPropertyTypes($term){
 		$q = mysql_real_escape_string($term);
-		return $this->getPropertyTypesListWithRestrictions array("property_type_name LIKE '%$q%'") );
+		return $this->getPropertyTypesListWithRestrictions( array("property_type_name LIKE '%$q%'") );
 	}
-	public function loadPropertyTypesById($id){
+	public function loadPropertyTypeById($id){
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
 		$p_ts = $this->getPropertyTypesListWithRestrictions(array("property_type_id=$id"));
