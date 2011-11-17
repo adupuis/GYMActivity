@@ -65,10 +65,11 @@ UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=5;
 
 CREATE TABLE ProfileManagementData (
 	profile_management_data_id int auto_increment,
-	profile_id int not null,
+	profile_id int not null unique,
 	profile_management_data_salary float not null,
 	profile_management_data_recruitement_date date not null,
-	profile_is_billable boolean not null default true,
+	profile_management_data_is_billable boolean not null default true,
+	profile_management_data_availability_date date not null,
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
