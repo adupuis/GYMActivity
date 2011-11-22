@@ -77,6 +77,7 @@ CREATE TABLE PropertyValues (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 
+-- Le schéma de la base de données est en version 4
 INSERT INTO PropertyValues VALUES(0,2,'4');
 
 COMMIT;
