@@ -19,6 +19,8 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyProfile.php';
+
 class GenyProfileManagementData {
 	private $updates = array();
 	public function __construct($id = -1){
@@ -32,6 +34,7 @@ class GenyProfileManagementData {
 		$this->recruitement_date = '1979-01-01';
 		$this->is_billable = false;
 		$this->availability_date = '1979-01-01';
+		$this->profile_object = -1;
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
@@ -42,7 +45,7 @@ class GenyProfileManagementData {
 		if( ! is_numeric($pmd_salary) )
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,'".mysql_real_escape_string($profile_login)."','".mysql_real_escape_string($profile_firstname)."','".mysql_real_escape_string($profile_lastname)."','".md5(mysql_real_escape_string($profile_password))."','".mysql_real_escape_string($profile_email)."',".mysql_real_escape_string($profile_is_active).",".mysql_real_escape_string($profile_needs_password_reset).",".mysql_real_escape_string($rights_group_id).")";
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,'".mysql_real_escape_string($pmd_salary)."','".mysql_real_escape_string($pmd_recruitement_date)."','".mysql_real_escape_string($pmd_is_billable)."','".md5(mysql_real_escape_string($pmd_availability_date))."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
@@ -55,7 +58,7 @@ class GenyProfileManagementData {
 	public function getProfileManagementDataListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM ProfileManagementData";
+		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date FROM ProfileManagementData";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -69,47 +72,50 @@ class GenyProfileManagementData {
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
-		$profile_list = array();
+		$pmd_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
-				$tmp_profile = new GenyProfileManagementData();
-				$tmp_profile->id = $row[0];
-				$tmp_profile->login = $row[1];
-				$tmp_profile->firstname = $row[2];
-				$tmp_profile->lastname = $row[3];
-				$tmp_profile->email = $row[4];
-				$tmp_profile->is_active = $row[5];
-				$tmp_profile->needs_password_reset = $row[6];
-				$tmp_profile->rights_group_id = $row[7];
-				$profile_list[] = $tmp_profile;
+				$tmp_pmd = new GenyProfileManagementData();
+				$tmp_pmd->id = $row[0];
+				$tmp_pmd->profile_id = $row[1];
+				$tmp_pmd->salary = $row[2];
+				$tmp_pmd->recruitement_date = $row[3];
+				$tmp_pmd->is_billable = $row[4];
+				$tmp_pmd->availability_date = $row[5];
+				$tmp_pmd->profile_object = new GenyProfile( $tmp_pmd->profile_id );
+				$pmd_list[] = $tmp_pmd;
 			}
 		}
 // 		mysql_close();
-		return $profile_list;
+		return $pmd_list;
 	}
 	public function searchProfileManagementData($term){
 		$q = mysql_real_escape_string($term);
-		return $this->getProfileManagementDataListWithRestrictions( array("profile_login LIKE '%$q%'","profile_firstname LIKE '%$q%'","profile_lastname LIKE '%$q%'"), "OR" );
+		return $this->getProfileManagementDataListWithRestrictions( array("profile_management_data_salary LIKE '%$q%'","profile_management_data_recruitement_date LIKE '%$q%'","profile_management_data_availability_date LIKE '%$q%'"), "OR" );
 	}
 	public function getAllProfileManagementData(){
 		return $this->getProfileManagementDataListWithRestrictions( array() );
 	}
-	public function getProfileManagementDataByLogin($login){
-		return $this->getProfileManagementDataListWithRestrictions( array("profile_login='".mysql_real_escape_string($login)."'") );
-	}
 	public function loadProfileManagementDataById($id){
-		$profiles = $this->getProfileManagementDataListWithRestrictions(array("profile_id=".mysql_real_escape_string($id)));
+		if( ! is_numeric($id) )
+			return GENYMOBILE_FALSE;
+		$profiles = $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_id=$id"));
 		$profile = $profiles[0];
 		if(isset($profile) && $profile->id > -1){
 			$this->id = $profile->id;
-			$this->login = $profile->login;
-			$this->firstname = $profile->firstname;
-			$this->lastname = $profile->lastname;
-			$this->email = $profile->email;
-			$this->is_active = $profile->is_active;
-			$this->needs_password_reset = $profile->needs_password_reset;
-			$this->rights_group_id = $profile->rights_group_id;
+			$this->profile_id = $profile->profile_id;
+			$this->salary = $profile->salary;
+			$this->recruitement_date = $profile->recruitement_date;
+			$this->is_billable = $profile->is_billable;
+			$this->availability_date = $profile->availability_date;
 		}
+	}
+	public function getProfile(){
+		if( $this->id <= 0 )
+			return GENYMOBILE_FALSE;
+		if( $this->profile_object == -1 )
+			$this->profile_object = new $GenyProfile( $this->profile_id );
+		return $this->profile_object ;
 	}
 	public function updateString($key,$value){
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
@@ -126,7 +132,7 @@ class GenyProfileManagementData {
 			$query .= "$up,";
 		}
 		$query = rtrim($query, ",");
-		$query .= " WHERE profile_id=".$this->id;
+		$query .= " WHERE profile_management_data_id=".$this->id;
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
