@@ -113,6 +113,20 @@ class GenyProfileManagementData {
 			$this->availability_date = $profile->availability_date;
 		}
 	}
+	public function loadProfileManagementDataByProfileId($id){
+		if( ! is_numeric($id) )
+			return GENYMOBILE_FALSE;
+		$profiles = $this->getProfileManagementDataListWithRestrictions(array("profile_id=$id"));
+		$profile = $profiles[0];
+		if(isset($profile) && $profile->id > -1){
+			$this->id = $profile->id;
+			$this->profile_id = $profile->profile_id;
+			$this->salary = $profile->salary;
+			$this->recruitement_date = $profile->recruitement_date;
+			$this->is_billable = $profile->is_billable;
+			$this->availability_date = $profile->availability_date;
+		}
+	}
 	public function getProfile(){
 		if( $this->id <= 0 )
 			return GENYMOBILE_FALSE;
