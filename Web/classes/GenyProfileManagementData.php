@@ -96,6 +96,9 @@ class GenyProfileManagementData {
 	public function getAllProfileManagementData(){
 		return $this->getProfileManagementDataListWithRestrictions( array() );
 	}
+	public function getAllBillableProfileManagementData(){
+		return $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_is_billable=true"));
+	}
 	public function loadProfileManagementDataById($id){
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
@@ -116,6 +119,10 @@ class GenyProfileManagementData {
 		if( $this->profile_object == -1 )
 			$this->profile_object = new $GenyProfile( $this->profile_id );
 		return $this->profile_object ;
+	}
+	public function getAllAvailableProfileManagementData(){
+		$today = date('Y-m-d');
+		return $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_availability_date >= $today"));
 	}
 	public function updateString($key,$value){
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
