@@ -21,8 +21,22 @@
 SET NAMES 'utf8';
 START TRANSACTION;
 
--- Properties
+-- Profile management data
+DROP TABLE ProfileManagementData;
+CREATE TABLE ProfileManagementData (
+	profile_management_data_id int auto_increment,
+	profile_id int not null unique,
+	profile_management_data_salary int not null,
+	profile_management_data_recruitement_date date not null,
+	profile_management_data_is_billable boolean not null default true,
+	profile_management_data_availability_date date not null,
+	primary key(profile_management_data_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
+-- Properties
+DROP TABLE PropertyTypes;
 CREATE TABLE PropertyTypes (
 	property_type_id int auto_increment,
 	property_type_shortname varchar(250) not null default 'P_TYPE',
@@ -38,6 +52,7 @@ INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_SHORT_TEXT','Une propriété conte
 INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_LONG_TEXT','Une propriété contenant un text long.');
 INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_DATE','Une propriété contenant une date.');
 
+DROP TABLE Properties;
 CREATE TABLE Properties (
 	property_id int auto_increment,
 	property_name varchar(250) not null default 'PNAME',
@@ -53,7 +68,7 @@ INSERT INTO Properties VALUES(0,'PROP_LIVE_DEBUG','Activer/desactiver le debug e
 
 -- Version du schéma de la base de donnée
 INSERT INTO Properties VALUES(0,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
-
+DROP TABLE PropertyOptions;
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
 	property_option_content text not null,
@@ -68,6 +83,7 @@ INSERT INTO PropertyOptions VALUES(0,'Activé',1);
 INSERT INTO PropertyOptions VALUES(0,'Désactivé',1);
 
 -- C'est dans cette table que vont les valeurs séléctionnées. Dans l'exemple ci-dessus il y aurait 1 ou 2 (les id d'une des deux options possible)
+DROP TABLE PropertyValues;
 CREATE TABLE PropertyValues (
 	property_value_id int auto_increment,
 	property_id int not null,
