@@ -32,6 +32,9 @@
 					"onlyNumber":{
 						"regex":"/^[0-9\ ]+$/",
 						"alertText":"* Chiffres seulement accepté"},	
+					"reallyOnlyNumber":{
+						"regex":"/^[0-9]+$/",
+						"alertText":"* Chiffres seulement accepté (pas d'espace)"},
 					"noSpecialCaracters":{
 						"regex":"/^[0-9a-zA-Z]+$/",
 						"alertText":"* Aucune caractère spécial accepté"},	
