@@ -76,7 +76,7 @@ class GenyRightsGroup {
 		return $this->getRightsGroupsListWithRestrictions( array() );
 	}
 	public function loadRightsGroupByName($name){
-		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_name='".mysql_real_escape_string($id)."'"));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_name='".mysql_real_escape_string($name)."'"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
