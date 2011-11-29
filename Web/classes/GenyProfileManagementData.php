@@ -45,7 +45,10 @@ class GenyProfileManagementData {
 		if( ! is_numeric($pmd_salary) )
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,'".mysql_real_escape_string($pmd_salary)."','".mysql_real_escape_string($pmd_recruitement_date)."','".mysql_real_escape_string($pmd_is_billable)."','".md5(mysql_real_escape_string($pmd_availability_date))."')";
+		if( $pmd_is_billable != 'true' && $pmd_is_billable != 'false' && $pmd_is_billable != 0 && $pmd_is_billable != 1)
+			return GENYMOBILE_FALSE;
+		
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,'".mysql_real_escape_string($pmd_salary)."','".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
@@ -142,7 +145,8 @@ class GenyProfileManagementData {
 		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
 	}
 	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		if( is_numeric($value) )
+			$this->updates[] = "$key=$value";
 	}
 	public function updateBool($key,$value){
 		$this->updates[] = "$key=".mysql_real_escape_string($value)."";

@@ -112,6 +112,49 @@ $geny_profile = new GenyProfile();
 					?>
 				</select>
 			</p>
+			<p>
+				<label for="pmd_is_billable">Profil facturable</label>
+				<select name="pmd_is_billable" id="pmd_is_billable" >
+					<option value="true" selected>Oui</option>
+					<option value="false">Non</option>
+				</select>
+			</p>
+			<p>
+				<label for="pmd_salary">Salaire (€ brut/an)</label>
+				<input name="pmd_salary" id="pmd_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
+			</p>
+			 
+			<script type="text/javascript">
+				$(function() {
+					$( "#pmd_recruitement_date" ).datepicker();
+					$( "#pmd_recruitement_date" ).datepicker('setDate', new Date());
+					$( "#pmd_recruitement_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "firstDay", 1 );
+					
+					$( "#pmd_availability_date" ).datepicker();
+					$( "#pmd_availability_date" ).datepicker('setDate', new Date());
+					$( "#pmd_availability_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#pmd_availability_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "firstDay", 1 );
+				});
+			</script>
+			<p>
+				<label for="pmd_recruitement_date">Date d'embauche</label>
+				<input name="pmd_recruitement_date" id="pmd_recruitement_date" type="text" class="validate[required,custom[date]] text-input" />
+			</p>
+			<p>
+				<label for="pmd_availability_date">Date de disponibilité</label>
+				<input name="pmd_availability_date" id="pmd_availability_date" type="text" class="validate[required,custom[date]] text-input" />
+			</p>
 			
 			<p>
 				<input type="submit" value="Créer" /> ou <a href="profile_list.php">annuler</a>

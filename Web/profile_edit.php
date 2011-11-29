@@ -34,9 +34,10 @@ $profile_is_active = "true";
 $profile_needs_password_reset = "true";
 $rights_group_id = 3;
 $geny_profile = new GenyProfile();
+$geny_pmd = new GenyProfileManagementData();
 
 if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
-	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) ){
+	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) ){
 		$profile_login = $_POST['profile_login'];
 		$profile_firstname = $_POST['profile_firstname'];
 		$profile_lastname = $_POST['profile_lastname'];
@@ -45,9 +46,22 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$profile_is_active = $_POST['profile_is_active'];
 		$profile_needs_password_reset = $_POST['profile_needs_password_reset'];
 		$rights_group_id = $_POST['rights_group_id'];
+		$pmd_availability_date = $_POST['pmd_availability_date'];
+		$pmd_is_billable = $_POST['pmd_is_billable'];
+		$pmd_recruitement_date = $_POST['pmd_recruitement_date'];
+		$pmd_salary = $_POST['pmd_salary'];
 		if( $geny_profile->insertNewProfile('NULL',$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id) ){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil créé avec succès.");
 			$geny_profile->loadProfileByLogin($profile_login);
+			if($geny_profile->id > 0){
+				$pmd_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,$pmd_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date);
+				GenyTools::debug("profile_edit.php pmd_id=$pmd_id after a call to insertNewProfileManagementData.");
+				if( $pmd_id <= 0)
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur chargement','msg'=>"Erreur lors du chargement des données de management du profil.");
+				else
+					$geny_pmd->loadProfileManagementDataById($pmd_id);
+			} else
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur chargement','msg'=>"Erreur lors du chargement des données du profil.");
 		}
 		else{
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création du profil.");
@@ -57,9 +71,25 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
+
 else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
 	if(isset($_POST['profile_id'])){
 		$geny_profile->loadProfileById($_POST['profile_id']);
+		GenyTools::debug("profile_edit.php: \$_POST['profile_id']=".$_POST['profile_id']." \$geny_profile->id=".$geny_profile->id);
+		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
+		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
+			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
+			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,"1979-01-01","true","1979-01-01");
+			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
+			$grg = new GenyRightsGroup();
+			$gn = new GenyNotification();
+			$grg->loadRightsGroupByName('Admins');
+			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+			$grg->loadRightsGroupByName('SuperUsers');
+			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+			// Enfin il faut recharger les données de management avec le groupe qui vient d'être créé
+			$geny_pmd->loadProfileManagementDataById( $geny_pmd_new_id );
+		}
 	}
 	else  {
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
@@ -68,6 +98,21 @@ else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
 else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
 	if(isset($_GET['profile_id'])){
 		$geny_profile->loadProfileById($_GET['profile_id']);
+		GenyTools::debug("profile_edit.php: \$_GET['profile_id']=".$_GET['profile_id']." \$geny_profile->id=".$geny_profile->id);
+		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
+		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
+			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
+			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,"1979-01-01","true","1979-01-01");
+			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
+			$grg = new GenyRightsGroup();
+			$gn = new GenyNotification();
+			$grg->loadRightsGroupByName('Admins');
+			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+			$grg->loadRightsGroupByName('SuperUsers');
+			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+			// Enfin il faut recharger les données de management avec le groupe qui vient d'être créé
+			$geny_pmd->loadProfileManagementDataById( $geny_pmd_new_id );
+		}
 	}
 	else  {
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
@@ -76,6 +121,7 @@ else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
 else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 	if(isset($_POST['profile_id'])){
 		$geny_profile->loadProfileById($_POST['profile_id']);
+		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
 		if( isset($_POST['profile_login']) && $_POST['profile_login'] != "" && $geny_profile->login != $_POST['profile_login'] ){
 			$geny_profile->updateString('profile_login',$_POST['profile_login']);
 		}
@@ -103,9 +149,30 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 		if($geny_profile->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil mis à jour avec succès.");
 			$geny_profile->loadProfileById($_POST['profile_id']);
+			$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
 		}
 		else{
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du profil.");
+		}
+		// isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary'])
+		if( isset($_POST['pmd_availability_date']) && $_POST['pmd_availability_date'] != "" && $geny_pmd->availability_date != $_POST['pmd_availability_date'] ){
+			$geny_pmd->updateString('profile_management_data_availability_date',$_POST['pmd_availability_date']);
+		}
+		if( isset($_POST['pmd_is_billable']) && $_POST['pmd_is_billable'] != "" && $geny_pmd->is_billable != $_POST['pmd_is_billable'] ){
+			$geny_pmd->updateBool('profile_management_data_is_billable',$_POST['pmd_is_billable']);
+		}
+		if( isset($_POST['pmd_recruitement_date']) && $_POST['pmd_recruitement_date'] != "" && $geny_pmd->recruitement_date != $_POST['pmd_recruitement_date'] ){
+			$geny_pmd->updateString('profile_management_data_recruitement_date',$_POST['pmd_recruitement_date']);
+		}
+		if( isset($_POST['pmd_salary']) && $_POST['pmd_salary'] != "" && $geny_pmd->salary != $_POST['pmd_salary'] ){
+			$geny_pmd->updateInt('profile_management_data_salary',$_POST['pmd_salary']);
+		}
+		if($geny_pmd->commitUpdates()){
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Données de management du profil mis à jour avec succès.");
+			$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
+		}
+		else{
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour des données de management du profil.");
 		}
 	}
 	else  {
@@ -236,7 +303,59 @@ else{
 					?>
 				</select>
 			</p>
-			
+			<p>
+				<label for="pmd_is_billable">Profil facturable</label>
+				<select name="pmd_is_billable" id="pmd_is_billable" >
+					<?php
+						if( $geny_pmd->is_billable ){
+							echo "<option value=\"true\" selected>Oui</option>\n<option value=\"false\">Non</option>\n";
+						}
+						else{
+							echo "<option value=\"true\">Oui</option>\n<option value=\"false\" selected>Non</option>\n";
+						}
+					?>
+				</select>
+			</p>
+			<p>
+				<label for="pmd_salary">Salaire (€ brut/an)</label>
+				<input name="pmd_salary" id="pmd_salary" value="<?php echo $geny_pmd->salary ?>" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
+			</p>
+			 
+			<script type="text/javascript">
+				$(function() {
+					$( "#pmd_recruitement_date" ).datepicker();
+					$( "#pmd_recruitement_date" ).datepicker('setDate', new Date());
+					$( "#pmd_recruitement_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "defaultDate", "<?php echo $geny_pmd->recruitement_date ?>" );
+					$( "#pmd_recruitement_date" ).datepicker( "setDate", "<?php echo $geny_pmd->recruitement_date ?>" );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#pmd_recruitement_date" ).datepicker( "option", "firstDay", 1 );
+					
+					$( "#pmd_availability_date" ).datepicker();
+					$( "#pmd_availability_date" ).datepicker('setDate', new Date());
+					$( "#pmd_availability_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#pmd_availability_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#pmd_availability_date" ).datepicker( "option", "defaultDate", "<?php echo $geny_pmd->availability_date ?>" );
+					$( "#pmd_availability_date" ).datepicker( "setDate", "<?php echo $geny_pmd->availability_date ?>" );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#pmd_availability_date" ).datepicker( "option", "firstDay", 1 );
+				});
+			</script>
+			<p>
+				<label for="pmd_recruitement_date">Date d'embauche</label>
+				<input name="pmd_recruitement_date" id="pmd_recruitement_date" type="text" class="validate[required,custom[date]] text-input" />
+			</p>
+			<p>
+				<label for="pmd_availability_date">Date de disponibilité</label>
+				<input name="pmd_availability_date" id="pmd_availability_date" type="text" class="validate[required,custom[date]] text-input" />
+			</p>
 			<p>
 				<input type="submit" value="Modifier" /> ou <a href="profile_list.php">annuler</a>
 			</p>
