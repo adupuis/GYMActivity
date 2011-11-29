@@ -89,6 +89,9 @@ class GenyTools {
 		$end_date="$year-$month-$lastday";
 		return $end_date;
 	}
+	static function debug($str){
+		error_log("[GYMActivity::DEBUG] $str",0);
+	}
 }
 
 ?>
