@@ -49,4 +49,5 @@ DROP TABLE PropertyTypes;
 DROP TABLE Properties;
 DROP TABLE PropertyOptions;
 DROP TABLE PropertyValues;
+DROP TABLE CareerEvents;
 COMMIT;
