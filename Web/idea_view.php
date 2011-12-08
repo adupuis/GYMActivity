@@ -302,7 +302,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			?>
 			</div>
 			<div class='idea_description'>
-				<?php echo $geny_idea->description ?>
+				<?php echo nl2br( $geny_idea->description ) ?>
 				<br />
 			</div>
 		</div>
