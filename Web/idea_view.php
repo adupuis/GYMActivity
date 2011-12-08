@@ -331,7 +331,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 			echo date("j-m-Y G:i", strtotime( $idea_message->submission_date ) );
 			echo "</div>";
 			echo "<div class=\"idea_message_description\">";
-			echo $idea_message->content;
+			echo nl2br( $idea_message->content );
  			echo "</div></div>";
 		}
 		if( $geny_idea->id < 0 ) {
