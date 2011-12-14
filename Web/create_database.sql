@@ -422,6 +422,7 @@ CREATE TABLE CareerEvents (
 	career_event_type varchar(50) not null,
 	career_event_title varchar(200) not null,
 	career_event_text text not null,
+	career_event_attachement varchar(250),
 	career_event_manager_agreement boolean not null default false,
 	career_event_employee_agreement boolean not null default false,
 	primary key(career_event_id),
