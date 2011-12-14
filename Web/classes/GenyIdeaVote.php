@@ -154,14 +154,27 @@ class GenyIdeaVote {
 
 	public function updateString( $key, $value ) {
 		$this->updates[] = "$key='".mysql_real_escape_string( $value )."'";
+		return true;
 	}
 
 	public function updateInt( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
+		if( is_numeric( $value ) ) {
+			$this->updates[] = "$key=$value";
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public function updateBool( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
+		if( is_bool( $value ) ) {
+			$this->updates[] = "$key=$value";
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public function commitUpdates() {

@@ -32,8 +32,6 @@ include_once 'menu.php';
 $gritter_notifications = array();
 
 $geny_idea = new GenyIdea();
-$geny_idea->config->debug = true;
-
 $geny_idea_status = new GenyIdeaStatus();
 $geny_idea_message = new GenyIdeaMessage();
 $geny_idea_vote = new GenyIdeaVote();
