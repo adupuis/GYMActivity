@@ -196,6 +196,10 @@ class GenyIdea {
 		if( $this->config->debug ) {
 			error_log("[GYMActivity::DEBUG] updateInt key: $key - value : $value", 0);
 		}
+		$escaped = mysql_real_escape_string( $value );
+		if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] escaped: $escaped", 0);
+		}
 		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
 		$update = $this->updates[0];
 		if( $this->config->debug ) {
