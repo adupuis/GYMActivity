@@ -194,9 +194,13 @@ class GenyIdea {
 
 	public function updateInt( $key, $value ) {
 		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] updateInt value : $value",0);
+			error_log("[GYMActivity::DEBUG] updateInt key: $key - value : $value", 0);
 		}
 		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
+		$update = $this->updates[0];
+		if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] update: $update", 0);
+		}
 	}
 
 	public function updateBool( $key, $value ) {
