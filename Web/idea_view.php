@@ -77,9 +77,12 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 	$positive = 0;
 	if( isset( $_GET['idea_vote_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_GET['idea_vote_idea_id'] );
+
 		if( isset( $_GET['idea_vote_positive'] ) && $_GET['idea_vote_positive'] == "true" ) {
+			// Positive vote
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
+				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
 				$negative = $geny_idea_vote->idea_negative_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 0 );
@@ -92,6 +95,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				}
 			}
 			else {
+				// I didn't vote for this idea before (or was neutral)
 				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté pour !");
 				}
@@ -99,6 +103,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du vote positif.");
 				}
 			}
+			// Updating idea
 			if( $negative == 1 ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 2 );
 			}
@@ -107,8 +112,10 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 		}
 		else if( isset( $_GET['idea_vote_negative'] ) && $_GET['idea_vote_negative'] == "true" ) {
+			// Negative vote
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
+				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
 				$positive = $geny_idea_vote->idea_positive_vote;
 				$geny_idea_vote->updateInt( 'idea_negative_vote', 1 );
@@ -121,6 +128,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				}
 			}
 			else {
+				// I didn't vote for this idea before (or was neutral)
 				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté contre...");
 				}
@@ -128,6 +136,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du vote négatif.");
 				}
 			}
+			// Updating idea
 			if( $positive == 1 ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 2 );
 			}
@@ -136,8 +145,10 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 		}
 		else if( isset( $_GET['idea_vote_neutral'] ) && $_GET['idea_vote_neutral'] == "true" ) {
+			// Neutral vote
 			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
+				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
 				$positive = $geny_idea_vote->idea_positive_vote;
 				if( $geny_idea_vote->removeIdeaVote( $geny_idea_vote->id ) ) {
@@ -147,6 +158,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la suppression du vote.");
 				}
 			}
+			// Updating idea
 			if( $positive == 1 ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 1 );
 			}
@@ -154,6 +166,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
 			}
 		}
+		// Committing idea update
 		if( $geny_idea->commitUpdates() >= 1 ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
 		}
