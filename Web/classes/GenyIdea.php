@@ -193,6 +193,9 @@ class GenyIdea {
 	}
 
 	public function updateInt( $key, $value ) {
+		if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] updateInt value : $value",0);
+		}
 		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
 	}
 
