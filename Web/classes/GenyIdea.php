@@ -190,25 +190,27 @@ class GenyIdea {
 
 	public function updateString( $key, $value ) {
 		$this->updates[] = "$key='".mysql_real_escape_string( $value )."'";
+		return true;
 	}
 
 	public function updateInt( $key, $value ) {
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] updateInt key: $key - value : $value", 0);
+		if( is_numeric( $value ) ) {
+			$this->updates[] = "$key=$value";
+			return true;
 		}
-		$escaped = mysql_real_escape_string( $value );
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] escaped: $escaped", 0);
-		}
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
-		$update = $this->updates[0];
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] update: $update", 0);
+		else {
+			return false;
 		}
 	}
 
 	public function updateBool( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
+		if( is_bool( $value ) ) {
+			$this->updates[] = "$key=$value";
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public function commitUpdates() {
