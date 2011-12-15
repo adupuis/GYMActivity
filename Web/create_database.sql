@@ -157,9 +157,9 @@ CREATE TABLE Projects (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Projects AUTO_INCREMENT = 1;
 INSERT INTO Projects VALUES(1,'Administratif 2011','Tâches administratives (travaux internes, management, etc.).',1,'Paris','2011-01-01','2011-12-31',2,1);
-INSERT INTO Projects VALUES(2,'Congés 2011','Tous les congés.',1,'None','2011-01-01','2011-12-31',2,1);
+INSERT INTO Projects VALUES(2,'Congés 2011','Tous les congés.',1,'None','2011-01-01','2011-12-31',5,1);
 INSERT INTO Projects VALUES(3,'Administratif 2012','Tâches administratives (travaux internes, management, etc.).',1,'Paris','2012-01-01','2012-12-31',2,1);
-INSERT INTO Projects VALUES(4,'Congés 2012','Tous les congés.',1,'None','2012-01-01','2012-12-31',2,1);
+INSERT INTO Projects VALUES(4,'Congés 2012','Tous les congés.',1,'None','2012-01-01','2012-12-31',5,1);
 
 CREATE TABLE Tasks (
 	task_id int auto_increment,
