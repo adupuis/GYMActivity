@@ -64,7 +64,7 @@ $geny_client = new GenyClient();
 				<textarea name="idea_description" id="idea_description" class="validate[required] text-input"></textarea>
 			</p>
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="idea_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

@@ -119,7 +119,7 @@ else {
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression de l'idée. <strong>La suppression est définitive et ne pourra pas être annulée.</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="#form">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="idea_list.php">annuler</a>
 			</p>
 		</form>
 	</p>

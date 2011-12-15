@@ -162,7 +162,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 				</select>
 			</p>
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="#formID">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="idea_list.php">annuler</a>
 			</p>
 		</form>
 	</p>
