@@ -45,13 +45,27 @@ class GenyDatabaseTools {
 	}
 
 	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
+		if( is_string($value) ) {
+			$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
+		} else if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] $value is not a string");
+		}
 	}
 	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		if( is_numeric($value) ) {
+			$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		}else if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] $value is not numeric");
+		}
 	}
 	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		if (is_bool($value)    ||
+		    $value == "true"   ||
+		    $value == "false") {
+			$this->updates[] = "$key=".mysql_real_escape_string($value)."";
+		}else if( $this->config->debug ) {
+			error_log("[GYMActivity::DEBUG] $value is not boolean");
+		}
 	}
 
 	public function commitUpdates(){
