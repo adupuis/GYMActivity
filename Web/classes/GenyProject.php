@@ -20,15 +20,11 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyProject {
-	private $updates = array();
+class GenyProject extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("Projects",  "project_id", $id);
 		$this->name = '';
 		$this->description = '';
 		$this->client_id = -1;
@@ -129,26 +125,6 @@ class GenyProject {
 		}
 // 		mysql_close();
 		return $project_location_list;
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE Projects SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE project_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 	public function getAllProjects(){
 		return $this->getProjectsListWithRestrictions( array() );

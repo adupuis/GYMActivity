@@ -20,15 +20,11 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyAssignement {
-	private $updates = array();
+class GenyAssignement extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("Assignements",  "assignement_id", $id);
 		$this->profile_id = -1;
 		$this->project_id = -1;
 		$this->overtime_allowed = false;
@@ -127,24 +123,6 @@ class GenyAssignement {
 			return 1;
 		else
 			return -1;
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE Assignements SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE assignement_id=".$this->id;
-		return mysql_query($query, $this->handle);
 	}
 	public function deleteAssignement($id=0){
 		if(is_numeric($id)){

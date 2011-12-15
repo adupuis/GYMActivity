@@ -20,15 +20,11 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyProjectStatus {
-	private $updates = array();
+class GenyProjectStatus extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("ProjectStatus",  "project_status_id", $id);
 		$this->name = '';
 		$this->description = '';
 		if($id > -1)
@@ -94,26 +90,6 @@ class GenyProjectStatus {
 			$this->name = $object->name;
 			$this->description = $object->description;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ProjectStatus SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE project_status_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProjectStatus MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

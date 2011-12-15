@@ -20,15 +20,11 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyPropertyType {
-	private $updates = array();
+class GenyPropertyType extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("PropertyTypes",  "property_type_id", $id);
 		$this->shortname = '';
 		$this->name = '';
 		if($id > -1)
@@ -114,28 +110,6 @@ class GenyPropertyType {
 			$this->shortname = $p_t->shortname;
 			$this->name = $p_t->name;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		if( ! is_numeric($value) )
-			return GENYMOBILE_FALSE;
-		$this->updates[] = "$key=$value";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE PropertyTypes SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE property_type_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyPropertyType MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

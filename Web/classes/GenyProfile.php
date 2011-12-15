@@ -19,8 +19,9 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
-class GenyProfile {
-	public $profile_id = -1;
+include_once 'GenyDatabaseTools.php';
+
+class GenyProfile extends GenyDatabaseTools {
 	public $profile_login = '';
 	public $profile_firstname = '';
 	public $profile_lastname = '';
@@ -30,11 +31,7 @@ class GenyProfile {
 	public $rights_group_id = -1;
 	private $updates = array();
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("Profiles",  "profile_id", $id);
 		$this->login = '';
 		$this->firstname = '';
 		$this->lastname = '';
@@ -148,26 +145,6 @@ class GenyProfile {
 			$this->needs_password_reset = $profile->needs_password_reset;
 			$this->rights_group_id = $profile->rights_group_id;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE Profiles SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE profile_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

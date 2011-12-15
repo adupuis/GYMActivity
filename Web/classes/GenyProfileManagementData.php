@@ -20,15 +20,13 @@
 
 include_once 'GenyWebConfig.php';
 include_once 'GenyProfile.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyProfileManagementData {
-	private $updates = array();
+class GenyProfileManagementData extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = GENYMOBILE_FALSE;
+		parent::__construct("ProfileManagementData",
+				    "profile_management_data_id",
+				    $id);
 		$this->profile_id = GENYMOBILE_FALSE;
 		$this->salary = GENYMOBILE_FALSE;
 		$this->recruitement_date = '1979-01-01';
@@ -140,27 +138,6 @@ class GenyProfileManagementData {
 	public function getAllAvailableProfileManagementData(){
 		$today = date('Y-m-d');
 		return $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_availability_date >= $today"));
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		if( is_numeric($value) )
-			$this->updates[] = "$key=$value";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ProfileManagementData SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE profile_management_data_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

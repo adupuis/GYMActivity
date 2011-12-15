@@ -20,20 +20,16 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
 define("UNAUTHORIZED_ACCESS", "UNAUTHORIZED_ACCESS");
 define("BAD_CREDENTIALS","BAD_CREDENTIALS");
 define("BAD_USERNAME_FORMAT","BAD_USERNAME_FORMAT");
 define("AUTH_REQUIRED","AUTH_REQUIRED");
 
-class GenyAccessLog {
-	private $updates = array();
+class GenyAccessLog extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("AccessLogs",  "access_log_id", $id);
 		$this->timestamp = 0;
 		$this->profile_id = -1;
 		$this->ip = "0.0.0.0";
@@ -158,26 +154,6 @@ class GenyAccessLog {
 			$this->type = $access_log->type;
 			$this->extra = $access_log->extra;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE AccessLogs SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE access_log_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyAccessLog MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

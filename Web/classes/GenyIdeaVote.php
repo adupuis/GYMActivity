@@ -20,17 +20,11 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyIdeaVote {
-
-	private $updates = array();
-
+class GenyIdeaVote extends GenyDatabaseTools {
 	public function __construct( $id = -1 ) {
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect( $this->config->db_host, $this->config->db_user, $this->config->db_password );
-		mysql_select_db($this->config->db_name);
-		mysql_query( "SET NAMES 'utf8'" );
-		$this->id = -1;
+		parent::__construct("IdeaVotes",  "idea_vote_id", $id);
 		$this->positive_vote = -1;
 		$this->negative_vote = -1;
 		$this->profile_id = -1;
@@ -151,45 +145,6 @@ class GenyIdeaVote {
 			$this->idea_id = $idea_vote->idea_id;
 		}
 	}
-
-	public function updateString( $key, $value ) {
-		$this->updates[] = "$key='".mysql_real_escape_string( $value )."'";
-		return true;
-	}
-
-	public function updateInt( $key, $value ) {
-		if( is_numeric( $value ) ) {
-			$this->updates[] = "$key=$value";
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	public function updateBool( $key, $value ) {
-		if( is_bool( $value ) ) {
-			$this->updates[] = "$key=$value";
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	public function commitUpdates() {
-		$query = "UPDATE IdeaVotes SET ";
-		foreach( $this->updates as $up ) {
-			$query .= "$up,";
-		}
-		$query = rtrim( $query, "," );
-		$query .= " WHERE idea_vote_id=".$this->id;
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] GenyIdeaVote MySQL query : $query",0);
-		}
-		return mysql_query( $query, $this->handle );
-	}
-
 }
 
 ?>

@@ -20,15 +20,10 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
-
-class GenyRightsGroup {
-	private $updates = array();
+include_once 'GenyDatabaseTools.php';
+class GenyRightsGroup extends GenyDatabaseTools{
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
-		$this->id = -1;
+		parent::__construct("RightsGroups",  "rights_group_id", $id);
 		$this->name = '';
 		$this->description = '';
 		if($id > -1)
@@ -92,26 +87,6 @@ class GenyRightsGroup {
 			$this->name = $object->name;
 			$this->description = $object->description;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE RightsGroups SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE rights_group_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyRightsGroup MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>
