@@ -96,4 +96,30 @@ ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 -- Le schéma de la base de données est en version 4
 INSERT INTO PropertyValues VALUES(0,2,'4');
 
+-- Evènements de carrière
+DROP TABLE CareerEvents;
+CREATE TABLE CareerEvents (
+	career_event_id int auto_increment,
+	profile_id int not null,
+	career_event_type varchar(50) not null,
+	career_event_title varchar(200) not null,
+	career_event_text text not null,
+	career_event_attachement varchar(250),
+	career_event_manager_agreement boolean not null default false,
+	career_event_employee_agreement boolean not null default false,
+	primary key(career_event_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE CareerEvents AUTO_INCREMENT=1;
+
+DROP TRIGGER ce_check_type;
+DELIMITER $$
+create trigger ce_check_type before insert on CareerEvents for each row
+begin
+  if new.career_event_type != "positive" and new.career_event_type != "neutral" and new.career_event_type != "negative" then
+    set new.career_event_type := "neutral";
+  end if;
+end $$
+DELIMITER ;
+
 COMMIT;
