@@ -56,19 +56,25 @@ if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur .','msg'=>"Le $day, vous déclaré plus de 8 heures journalière et vous n'êtes pas autorisé à saisir des heures supplémentaires sur des jours de congés.");
 				}
 				if( $create_report ){
-					$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-					if( $geny_activity_id > -1 ){
-						$geny_ars = new GenyActivityReportStatus();
-						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-						if( $geny_ar_id > -1 )
-							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Congés enregistrés pour le $day (en attente de validation utilisateur).");
-						else
-							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement des congés du $day.");
-					}
-					else {
-						$geny_activity->deleteActivity($geny_activity_id);
-						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
+					$ass_id = $_POST['assignement_id'];
+					$tmp_ass = new GenyAssignement();
+					$tmp_ass->loadAssignementById($ass_id);
+					if($tmp_ass->profile_id == $profile->id) {
+						#TODO check if task is consistent with assignement
+						$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$ass_id,$_POST['task_id']);
+						if( $geny_activity_id > -1 ){
+							$geny_ars = new GenyActivityReportStatus();
+							$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+							$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
+							if( $geny_ar_id > -1 )
+								$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Congés enregistrés pour le $day (en attente de validation utilisateur).");
+							else
+								$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement des congés du $day.");
+						}
+						else {
+							$geny_activity->deleteActivity($geny_activity_id);
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
+						}
 					}
 				}
 			}

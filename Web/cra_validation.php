@@ -123,20 +123,26 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					}
 				}
 				if( $create_report ){
-					$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$_POST['assignement_id'],$_POST['task_id']);
-					if( $geny_activity_id > -1 ){
-						$geny_ars = new GenyActivityReportStatus();
-						$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-						$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
-						if( $geny_ar_id > -1 )
-							$created_reports++;
-						else
-							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement du rapport du $day.");
-						$ok_count++;
-					}
-					else {
-						$geny_activity->deleteActivity($geny_activity_id);
-						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
+					$ass_id = $_POST['assignement_id'];
+					$tmp_ass = new GenyAssignement();
+					$tmp_ass->loadAssignementById($ass_id);
+					if($tmp_ass->profile_id == $profile->id) {
+						#TODO check if task is consistent with assignement
+						$geny_activity_id = $geny_activity->insertNewActivity('NULL',$day,$_POST['assignement_load'],date('Y-m-j'),$ass_id,$_POST['task_id']);
+						if( $geny_activity_id > -1 ){
+							$geny_ars = new GenyActivityReportStatus();
+							$geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+							$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$profile->id,$geny_ars->id );
+							if( $geny_ar_id > -1 )
+								$created_reports++;
+							else
+								$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'enregistrement du rapport du $day.");
+							$ok_count++;
+						}
+						else {
+							$geny_activity->deleteActivity($geny_activity_id);
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout d'une activité pour le $day.");
+						}
 					}
 				}
 			}
@@ -166,12 +172,14 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 			$ok_count=0;
 			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-				if($tmp_ass->commitUpdates()){
-					$ok_count++;
-				}
-				else{
-					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
+				if( $tmp_ass->profile_id == $profile->id ) {
+					$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+					if($tmp_ass->commitUpdates()){
+						$ok_count++;
+					}
+					else{
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
+					}
 				}
 			}
 			if($ok_count > 0 ){
@@ -193,11 +201,13 @@ else if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "validate_cra" |
 			$tmp_activity = new GenyActivity();
 			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 				$tmp_ar = new GenyActivityReport($tmp_ar_id);
-				if($tmp_activity->deleteActivity($tmp_ar->activity_id) == 1){
-					$ok_count++;
-				}
-				else{
-					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de supprimer le rapport ".$tmp_ar_id.".");
+				if($tmp_ar->profile_id == $profile->id) {
+					if($tmp_activity->deleteActivity($tmp_ar->activity_id) == 1){
+						$ok_count++;
+					}
+					else{
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de supprimer le rapport ".$tmp_ar_id.".");
+					}
 				}
 			}
 			if($ok_count > 0 ){
@@ -221,12 +231,14 @@ else if(isset($_POST['validate_cra']) && $_POST['validate_cra'] == "true"){
 		$ok_count=0;
 		foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 			$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-			$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-			if($tmp_ass->commitUpdates()){
-				$ok_count++;
-			}
-			else{
-				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
+			if($tmp_ass->profile_id == $profile->id) {
+				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+				if($tmp_ass->commitUpdates()){
+					$ok_count++;
+				}
+				else{
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de valider le rapport ".$tmp_ass->id.".");
+				}
 			}
 		}
 		if($ok_count > 0 ){

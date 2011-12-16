@@ -38,12 +38,22 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 			$ok_count=0;
 			foreach( $_POST['activity_report_id'] as $tmp_ar_id ){
 				$tmp_ass = new GenyActivityReport( $tmp_ar_id );
-				$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
-				if($tmp_ass->commitUpdates()){
-					$ok_count++;
-				}
-				else{
-					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de demander la suppression du rapport ".$tmp_ass->id.".");
+				if( $tmp_ass->profile_id == $profile->id ) {
+					$tmp_ass->updateInt('activity_report_status_id',$tmp_ars->id);
+					if($tmp_ass->commitUpdates()){
+						$ok_count++;
+					}
+					else{
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de demander la suppression du rapport ".$tmp_ass->id.".");
+					}
+				}else{
+					$access_loger->insertNewAccessLog(
+						$profile->id,
+						$_SERVER['REMOTE_ADDR'],
+						'false',
+						"cra_deletion.php",
+						UNAUTHORIZED_ACCESS,
+						",user_agent=".$_SERVER['HTTP_USER_AGENT']);
 				}
 			}
 			if($ok_count > 0 ){

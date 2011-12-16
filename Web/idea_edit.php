@@ -30,11 +30,6 @@ $gritter_notifications = array();
 $geny_idea = new GenyIdea();
 $geny_idea_status = new GenyIdeaStatus();
 
-$logged_in_profile = new GenyProfile();
-$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
-
-
-
 if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 	if( isset( $_POST['idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_id'] );
@@ -54,20 +49,21 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 	if( isset( $_POST['idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_id'] );
-		if( isset( $_POST['idea_title'] ) && $_POST['idea_title'] != "" && $geny_idea->title != $_POST['idea_title'] ) {
-			$geny_idea->updateString( 'idea_title', $_POST['idea_title'] );
-		}
-		if( isset( $_POST['idea_description'] ) && $_POST['idea_description'] != "" && $geny_idea->description != $_POST['idea_description'] ) {
-			$geny_idea->updateString( 'idea_description', $_POST['idea_description'] );
-		}
-		if( isset( $_POST['idea_votes'] ) && $_POST['idea_votes'] != "" ) {
-			$geny_idea->updateInt( 'idea_votes', $_POST['idea_votes'] );
-		}
-		if( isset( $_POST['idea_status'] ) && $_POST['idea_status'] != "" ) {
-			$geny_idea->updateInt( 'idea_status_id', $_POST['idea_status'] );
-		}
-		if( isset( $logged_in_profile->id ) && $logged_in_profile->id != "" ) {
-			$geny_idea->updateInt( 'idea_submitter', $logged_in_profile->id );
+		if($geny_idea->submitter == $profile->id            ||
+		   $profile->rights_group_id == 1 /* admin */       ||
+		   $profile->rights_group_id == 2 /* superuser */)  {
+			if( isset( $_POST['idea_title'] ) && $_POST['idea_title'] != "" && $geny_idea->title != $_POST['idea_title'] ) {
+				$geny_idea->updateString( 'idea_title', $_POST['idea_title'] );
+			}
+			if( isset( $_POST['idea_description'] ) && $_POST['idea_description'] != "" && $geny_idea->description != $_POST['idea_description'] ) {
+				$geny_idea->updateString( 'idea_description', $_POST['idea_description'] );
+			}
+			if( isset( $_POST['idea_votes'] ) && $_POST['idea_votes'] != "" ) {
+				$geny_idea->updateInt( 'idea_votes', $_POST['idea_votes'] );
+			}
+			if( isset( $_POST['idea_status'] ) && $_POST['idea_status'] != "" ) {
+				$geny_idea->updateInt( 'idea_status_id', $_POST['idea_status'] );
+			}
 		}
 		if( $geny_idea->commitUpdates() ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
@@ -96,7 +92,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet d'éditer une idée existante. Tous les champs doivent être remplis.
+		Ce formulaire permet d''éditer une idée existante. Tous les champs doivent être remplis.
 		</p>
 		<script>
 			jQuery(document).ready(function(){
@@ -116,7 +112,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 
 				<select name="idea_id" id="idea_id" onChange="submit()">
 					<?php
-					$ideas = $geny_idea->getIdeasListBySubmitter( $logged_in_profile->id );
+					$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
 					foreach( $ideas as $idea ) {
 						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
@@ -146,6 +142,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 				<label for="idea_description">Description</label>
 				<textarea name="idea_description" id="idea_description" class="validate[required] text-input"><?php echo $geny_idea->description ?></textarea>
 			</p>
+<?php if($profile->id == 1): ?>
 			<p>
 				<label for="idea_status">Statut</label>
 				<select name="idea_status" id="idea_status">
@@ -161,6 +158,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 					?>
 				</select>
 			</p>
+<?php endif; ?>
 			<p>
 				<input type="submit" value="Modifier" /> ou <a href="idea_list.php">annuler</a>
 			</p>

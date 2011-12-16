@@ -64,12 +64,18 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
 	$view = "<a href=\"idea_view.php?load_idea=true&idea_id=$tmp->id\" title=\"Voir l'idée\"><img src=\"images/$web_config->theme/idea_view_small.png\" alt=\"Voir l'idée\"></a>";
 
-	if( $tmp->submitter == $logged_in_profile->id ) {
+	if( $tmp->submitter == $logged_in_profile->id ||
+	    $logged_in_profile->rights_group_id == 1  || /* admin */
+	    $logged_in_profile->rights_group_id == 2     /* superuser */ ) {
 		$edit = "<a href=\"idea_edit.php?load_idea=true&idea_id=$tmp->id\" title=\"Editer l'idée\"><img src=\"images/$web_config->theme/idea_edit_small.png\" alt=\"Editer l'idée\"></a>";
+	} else {
+		$edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";
+	}
+
+	if( $tmp->submitter == $logged_in_profile->id ) {
 		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {
-		$edit = $edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";;
 		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" title=\"Vous ne pouvez pas supprimer cette idée\" alt=\"Supprimer définitivement l'idée\">";
 	}
 

@@ -39,12 +39,18 @@ if( isset($_POST['remove_idea']) && $_POST['remove_idea'] == "true" ) {
 	if(isset($_POST['idea_id'])) {
 		if( isset($_POST['force_remove']) && $_POST['force_remove'] == "true" ) {
 			$id = $_POST['idea_id'];
-			$query = "DELETE FROM Ideas WHERE idea_id=$id";
-			if(! mysql_query($query)) {
-				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de l'idée de la table Ideas.");
+			$geny_idea = new GenyIdea();
+			$geny_idea->loadIdeaById($id);
+			if($geny_idea->submitter == $profile->id            ||
+			   $profile->rights_group_id == 1 /* admin */       ||
+			   $profile->rights_group_id == 2 /* superuser */)  {
+				$query = "DELETE FROM Ideas WHERE idea_id=$id";
+				if(! mysql_query($query)) {
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de l'idée de la table Ideas.");
+				}
+				else
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée supprimée avec succès.");
 			}
-			else
-				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée supprimée avec succès.");
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");

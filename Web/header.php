@@ -44,18 +44,29 @@ try {
 			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
 			$access_loger->insertNewAccessLog($tmp_profile->id,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",UNAUTHORIZED_ACCESS,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
 			header("Location: index.php?reason=forbidden");
+			exit;
 		}
 	}
 	else {
-		$access_loger->insertNewAccessLog(GENYMOBILE_ERROR,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",AUTH_REQUIRED,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+		$referer = array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : "";
+		$access_loger->insertNewAccessLog(
+			GENYMOBILE_ERROR,
+			$_SERVER['REMOTE_ADDR'],
+			'false',
+			"check_login.php",
+			AUTH_REQUIRED,
+			",referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']);
 		header("Location: index.php?reason=authrequired");
+		exit;
 	}
     $profile = new GenyProfile();
     $profile->loadProfileByUsername($_SESSION['USERID']);
     if( ! isset($disable_password_reset_redirection) )
 	$disable_password_reset_redirection = false;
-    if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
+    if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) ) {
 	header('Location: user_admin_password_change.php');
+	exit;
+    }
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";
 }
