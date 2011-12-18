@@ -40,7 +40,15 @@ if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
 }
 else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 	if( isset( $_GET['idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_GET['idea_id'] );
+		$tmp_geny_idea = new GenyIdea();
+		$tmp_geny_idea->loadIdeaById( $_GET['idea_id'] );
+		if( $tmp_geny_idea->submitter == $profile->id ) {
+			$geny_idea->loadIdeaById( $_GET['idea_id'] );
+		}
+		else {
+			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"Vous n'êtes pas autorisé.");
+			header( 'Location: idea_error.php' );
+		}
 	}
 	else  {
 		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
