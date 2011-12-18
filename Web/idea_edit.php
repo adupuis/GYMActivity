@@ -158,7 +158,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 				<label for="idea_description">Description</label>
 				<textarea name="idea_description" id="idea_description" class="validate[required] text-input"><?php echo $geny_idea->description ?></textarea>
 			</p>
-<?php if($profile->id == 1): ?>
+<?php if( $profile->rights_group_id == 1 ): ?>
 			<p>
 				<label for="idea_status">Statut</label>
 				<select name="idea_status" id="idea_status">
