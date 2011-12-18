@@ -45,18 +45,35 @@ foreach( $geny_profile->getAllProfiles() as $prof ) {
 }
 
 $geny_idea_vote = new GenyIdeaVote();
+$geny_idea_message = new GenyIdeaMessage();
 
 foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
-
-	$display_date = date("j-m-Y G:i", strtotime( $tmp->submission_date ) );
-	
 	$tmp_profile = $profiles["$tmp->submitter"];
 	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
 		$screen_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
 	}
 	else {
 		$screen_name = $tmp_profile->login;
+	}
+
+	$idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $tmp->id );
+
+	if( count( $idea_messages ) > 0 ) {
+		$last_idea_message = $geny_idea_message->getLastIdeaMessage();
+		$display_date = date("j-m-Y G:i", strtotime( $last_idea_message->submission_date ) );
+
+		$last_author = $profiles["$last_idea_message->profile_id"];
+		if( $last_author->firstname && $last_author->lastname ) {
+			$last_author_name = $last_author->firstname." ".$last_author->lastname;
+		}
+		else {
+			$last_author_name = $last_author->login;
+		}
+	}
+	else {
+		$display_date = date("j-m-Y G:i", strtotime( $tmp->submission_date ) );
+		$last_author_name = $screen_name;
 	}
 
 	$view = "<a href=\"idea_view.php?load_idea=true&idea_id=$tmp->id\" title=\"Voir l'idée\"><img src=\"images/$web_config->theme/idea_view_small.png\" alt=\"Voir l'idée\"></a>";
@@ -76,7 +93,8 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" title=\"Vous ne pouvez pas supprimer cette idée\" alt=\"Supprimer définitivement l'idée\">";
 	}
 
-	$data_array[] = array( $tmp->id, $display_date, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $view, $edit, $remove );
+	$date_field = $display_date.'<br/>par&nbsp;'.$last_author_name;
+	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $date_field, $view, $edit, $remove );
 
 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
@@ -176,11 +194,11 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 			<p>
 				<table id="idea_list_table" style="color: black; width: 100%;">
 					<thead>
-						<th>Date</th>
 						<th>Titre</th>
 						<th>Votes</th>
 						<th>Statut</th>
-						<th>Auteur</th>
+						<th>Auteur de l'idée</th>
+						<th>Date du dernier message</th>
 						<th>Voir</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
@@ -193,11 +211,11 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 					?>
 					</tbody>
 					<tfoot>
-						<th class="filtered">Date</th>
 						<th class="filtered">Titre</th>
 						<th class="filtered">Votes</th>
 						<th class="filtered">Statut</th>
-						<th class="filtered">Auteur</th>
+						<th class="filtered">Auteur de l'idée</th>
+						<th class="filtered">Date du dernier message</th>
 						<th class="filtered">Voir</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>

@@ -104,6 +104,25 @@ class GenyIdeaMessage extends GenyDatabaseTools {
 		return $this->getIdeaMessagesListWithRestrictions( array() );
 	}
 
+	public function getLastIdeaMessage() {
+		$query = "SELECT idea_message_id,idea_message_content,idea_message_submission_date,profile_id,idea_id FROM IdeaMessages ORDER BY idea_message_submission_date DESC LIMIT 1";
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIdeaMessage MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+
+		if( mysql_num_rows( $result ) != 0 ) {
+			$row = mysql_fetch_row( $result );
+			$tmp_idea_message = new GenyIdeaMessage();
+			$tmp_idea_message->id = $row[0];
+			$tmp_idea_message->content = $row[1];
+			$tmp_idea_message->submission_date = $row[2];
+			$tmp_idea_message->profile_id = $row[3];
+			$tmp_idea_message->idea_id = $row[4];
+		}
+		return $tmp_idea_message;
+	}
+
 	public function getIdeaMessagesListByProfileId( $id ) {
 		if( !is_numeric( $id ) ) {
 			return false;
