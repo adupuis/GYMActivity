@@ -40,12 +40,9 @@ foreach( $geny_idea_status->getAllIdeaStatus() as $idea_status ) {
 }
 
 $geny_profile = new GenyProfile();
-foreach( $geny_profile->getAllProfiles() as $profile ) {
-	$profiles[$profile->id] = $profile;
+foreach( $geny_profile->getAllProfiles() as $prof ) {
+	$profiles[$prof->id] = $prof;
 }
-
-$logged_in_profile = new GenyProfile();
-$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
 $geny_idea_vote = new GenyIdeaVote();
 
@@ -54,25 +51,25 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
 	$display_date = date("j-m-Y G:i", strtotime( $tmp->submission_date ) );
 	
-	$profile = $profiles["$tmp->submitter"];
-	if( $profile->firstname && $profile->lastname ) {
-		$screen_name = $profile->firstname." ".$profile->lastname;
+	$tmp_profile = $profiles["$tmp->submitter"];
+	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
+		$screen_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
 	}
 	else {
-		$screen_name = $profile->login;
+		$screen_name = $tmp_profile->login;
 	}
 
 	$view = "<a href=\"idea_view.php?load_idea=true&idea_id=$tmp->id\" title=\"Voir l'idée\"><img src=\"images/$web_config->theme/idea_view_small.png\" alt=\"Voir l'idée\"></a>";
 
-	if( $tmp->submitter == $logged_in_profile->id ||
-	    $logged_in_profile->rights_group_id == 1  || /* admin */
-	    $logged_in_profile->rights_group_id == 2     /* superuser */ ) {
+	if( $tmp->submitter == $profile->id ||
+	    $profile->rights_group_id == 1  || /* admin */
+	    $profile->rights_group_id == 2     /* superuser */ ) {
 		$edit = "<a href=\"idea_edit.php?load_idea=true&idea_id=$tmp->id\" title=\"Editer l'idée\"><img src=\"images/$web_config->theme/idea_edit_small.png\" alt=\"Editer l'idée\"></a>";
 	} else {
 		$edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";
 	}
 
-	if( $tmp->submitter == $logged_in_profile->id ) {
+	if( $tmp->submitter == $profile->id ) {
 		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {

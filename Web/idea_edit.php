@@ -42,7 +42,9 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 	if( isset( $_GET['idea_id'] ) ) {
 		$tmp_geny_idea = new GenyIdea();
 		$tmp_geny_idea->loadIdeaById( $_GET['idea_id'] );
-		if( $tmp_geny_idea->submitter == $profile->id ) {
+		if( $tmp_geny_idea->submitter == $profile->id ||
+		    $profile->rights_group_id == 1  || /* admin */
+		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_idea->loadIdeaById( $_GET['idea_id'] );
 		}
 		else {
@@ -120,7 +122,13 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 
 				<select name="idea_id" id="idea_id" onChange="submit()">
 					<?php
-					$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
+					if( $profile->rights_group_id == 1 /* admin */ ||
+					    $profile->rights_group_id == 2 /* superuser */ ) {
+						$ideas = $geny_idea->getAllIdeas();
+					}
+					else {
+						$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
+					}
 					foreach( $ideas as $idea ) {
 						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
