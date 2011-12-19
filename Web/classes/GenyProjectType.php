@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyProjectType extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("ProjectTypes",  "project_type_id", $id);
+		parent::__construct("ProjectTypes",  "project_type_id");
+		$this->id = -1;
 		$this->name = '';
 		if($id > -1)
 			$this->loadProjectTypeById($id);

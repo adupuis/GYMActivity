@@ -29,7 +29,8 @@ define("AUTH_REQUIRED","AUTH_REQUIRED");
 
 class GenyAccessLog extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("AccessLogs",  "access_log_id", $id);
+		parent::__construct("AccessLogs",  "access_log_id");
+		$this->id = -1;
 		$this->timestamp = 0;
 		$this->profile_id = -1;
 		$this->ip = "0.0.0.0";

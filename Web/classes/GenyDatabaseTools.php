@@ -21,9 +21,6 @@
 include_once 'GenyWebConfig.php';
 
 class GenyDatabaseTools {
-	// keep it public, it can be R/W from anywhere
-	public    $id;
-
 	protected $config;
 	protected $handle;
 
@@ -33,7 +30,6 @@ class GenyDatabaseTools {
 
 	public function __construct($tableName, $primKeyName, $id = -1) {
 		$this->updates = array();
-		$this->id = $id;
 		$this->tableName = $tableName;
 		$this->primKeyName = $primKeyName;
 		$this->config = new GenyWebConfig();

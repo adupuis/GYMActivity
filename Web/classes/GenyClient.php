@@ -24,7 +24,7 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyClient extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("Clients",  "client_id", $id);
+		parent::__construct("Clients",  "client_id");
 		$this->id = -1;
 		$this->name = '';
 		if($id > -1)

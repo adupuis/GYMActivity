@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyActivity extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("Activities",  "activity_id", $id);
+		parent::__construct("Activities",  "activity_id");
+		$this->id = -1;
 		$this->activity_date = '';
 		$this->load = -1;
 		$this->input_date = '';

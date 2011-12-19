@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyProjectStatus extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("ProjectStatus",  "project_status_id", $id);
+		parent::__construct("ProjectStatus",  "project_status_id");
+		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
 		if($id > -1)

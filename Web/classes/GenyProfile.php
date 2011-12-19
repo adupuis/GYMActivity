@@ -31,7 +31,8 @@ class GenyProfile extends GenyDatabaseTools {
 	public $rights_group_id = -1;
 	private $updates = array();
 	public function __construct($id = -1){
-		parent::__construct("Profiles",  "profile_id", $id);
+		parent::__construct("Profiles",  "profile_id");
+		$this->id = -1;
 		$this->login = '';
 		$this->firstname = '';
 		$this->lastname = '';

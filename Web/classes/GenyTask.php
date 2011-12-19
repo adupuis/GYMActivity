@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyTask extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("Tasks", "task_id", $id);
+		parent::__construct("Tasks", "task_id");
+		$this->id = -1;
 		$this->name = '';
 		if($id > -1)
 			$this->loadTaskById($id);
