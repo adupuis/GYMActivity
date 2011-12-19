@@ -37,14 +37,11 @@ $geny_idea_message = new GenyIdeaMessage();
 $geny_idea_vote = new GenyIdeaVote();
 $geny_profile = new GenyProfile();
 
-$logged_in_profile = new GenyProfile();
-$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
-
 $current_datetime = date("Y-m-d H:i:s");
 
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $logged_in_profile->id, $current_datetime ) ) {
+		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime ) ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
 		}
@@ -80,7 +77,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 
 		if( isset( $_GET['idea_vote_positive'] ) && $_GET['idea_vote_positive'] == "true" ) {
 			// Positive vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -96,7 +93,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 			else {
 				// I didn't vote for this idea before (or was neutral)
-				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $profile->id, $_GET['idea_vote_idea_id'] ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté pour !");
 				}
 				else {
@@ -113,7 +110,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 		}
 		else if( isset( $_GET['idea_vote_negative'] ) && $_GET['idea_vote_negative'] == "true" ) {
 			// Negative vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -129,7 +126,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 			else {
 				// I didn't vote for this idea before (or was neutral)
-				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $logged_in_profile->id, $_GET['idea_vote_idea_id'] ) ) {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $profile->id, $_GET['idea_vote_idea_id'] ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté contre...");
 				}
 				else {
@@ -146,7 +143,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 		}
 		else if( isset( $_GET['idea_vote_neutral'] ) && $_GET['idea_vote_neutral'] == "true" ) {
 			// Neutral vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $logged_in_profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -182,7 +179,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $current_datetime, $logged_in_profile->id, $_POST['idea_message_idea_id'] ) ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $current_datetime, $profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 			}
 			else {
@@ -266,7 +263,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		<?php
 		$bProfileHasVoted = false;
 		foreach( $geny_idea_vote->getIdeaVotesListByIdeaId( $geny_idea->id ) as $idea_vote ) {
-			if( $idea_vote->profile_id == $logged_in_profile->id ) {
+			if( $idea_vote->profile_id == $profile->id ) {
 				if( $idea_vote->idea_positive_vote == 1 ) {
 					$bProfileHasVoted = true;
 					echo "<a href=\"idea_view.php?idea_vote=true&idea_vote_negative=true&idea_vote_idea_id=".$geny_idea->id."\" title=\"Voter contre cette idée\"><img src=\"images/".$web_config->theme."/idea_vote_down_small.png\" alt=\"Voter contre cette idée\"></a>";

@@ -28,8 +28,6 @@ include_once 'menu.php';
 $gritter_notifications = array();
 
 $geny_idea = new GenyIdea();
-$logged_in_profile = new GenyProfile();
-$logged_in_profile->loadProfileByUsername( $_SESSION['USERID'] );
 
 $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
 mysql_select_db($web_config->db_name);
@@ -103,7 +101,7 @@ else {
 
 				<select name="idea_id" id="idea_id">
 					<?php
-					$ideas = $geny_idea->getIdeasListBySubmitter( $logged_in_profile->id );
+					$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
 					foreach( $ideas as $idea ) {
 						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
