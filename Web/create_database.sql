@@ -440,4 +440,28 @@ begin
 end $$
 DELIMITER ;
 
+
+CREATE TABLE HolydaySummaries (
+	holyday_summary_id int auto_increment,
+	profile_id int not null,
+	holyday_summary_type char(10) not null,
+	holyday_summary_period_start date not null,
+	holyday_summary_period_end date not null,
+	holyday_summary_count_acquis int not null default 0,
+	holyday_summary_count_pris int not null default 0,
+	holyday_summary_count_restant int not null default 0,
+	primary key(holyday_summary_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+);
+ALTER TABLE HolydaySummaries AUTO_INCREMENT=1;
+
+DELIMITER $$
+create trigger hs_check_type before insert on HolydaySummaries for each row
+begin
+  if new.holyday_summary_type != "RTT" and new.holyday_summary_type != "CP" then
+    set new.holyday_summary_type := "CP";
+  end if;
+end $$
+DELIMITER ;
+
 COMMIT;
