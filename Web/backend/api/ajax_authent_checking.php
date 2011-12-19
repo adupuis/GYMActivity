@@ -24,6 +24,8 @@ function __autoload($class_name) {
 }
 
 date_default_timezone_set('Europe/Paris');
+$access_loger = new GenyAccessLog();
+$profile = -1;
 
 try {
 	$checkId_obj = new CheckIdentity();
@@ -42,6 +44,9 @@ try {
 	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1 && ($authorized_auth_method == "session" || $authorized_auth_method=="all")){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
 			$auth_granted=true;
+			$tmp_profile = new GenyProfile();
+			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
+			$profile = $tmp_profile;
 		}
 		else{
 			$auth_granted=false;
@@ -57,6 +62,7 @@ try {
 // 				echo "Profile: ID=$tmp_profile->id, LOGIN=$tmp_profile->login, MD5(LOGIN)=".md5($tmp_profile->login).", REQUIRED_GROUPS_RIGHTS=$required_group_rights\n";
 				if( $tmp_profile->rights_group_id <= $required_group_rights ){
 					$auth_granted=true;
+					$profile = $tmp_profile;
 				}
 				else{
 					$auth_granted=false;
