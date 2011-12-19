@@ -36,7 +36,7 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 
 	if(!preg_match("/^[-a-z0-9 ']{4,12}+$/i",$_POST['geny_username'])){
 	    echo "Username error";
-	    $gal->insertNewAccessLog(GENYMOBILE_ERROR,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",BAD_USERNAME_FORMAT,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+	    $gal->insertSimpleAccessLog(BAD_USERNAME_FORMAT);
 	    exit();
 	}
 
@@ -66,7 +66,7 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 
 	//if the code reaches this part then the login failed
 	//wrong username/password
-	$gal->insertNewAccessLog(GENYMOBILE_ERROR,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",BAD_CREDENTIALS,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+	$gal->insertSimpleAccessLog(BAD_CREDENTIALS);
 	header("Location: index.php?reason=badcredentials");
 }
 else

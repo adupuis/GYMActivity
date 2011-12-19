@@ -47,13 +47,8 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur ','msg'=>"impossible de demander la suppression du rapport ".$tmp_ass->id.".");
 					}
 				}else{
-					$access_loger->insertNewAccessLog(
-						$profile->id,
-						$_SERVER['REMOTE_ADDR'],
-						'false',
-						"cra_deletion.php",
-						UNAUTHORIZED_ACCESS,
-						",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+					$access_loger->insertSimpleAccessLog(
+						UNAUTHORIZED_ACCESS);
 				}
 			}
 			if($ok_count > 0 ){

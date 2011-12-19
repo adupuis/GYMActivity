@@ -290,7 +290,7 @@ ALTER TABLE ActivityReports AUTO_INCREMENT = 1;
 CREATE TABLE AccessLogs (
 	access_log_id int auto_increment,
 	access_log_timestamp int not null,
-	profile_id int not null,
+	profile_id int,
 	access_log_ip varchar(200) not null,
 	access_log_status boolean not null default false,
 	access_log_page_requested varchar(200) not null default 'Undefined',
