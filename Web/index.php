@@ -29,6 +29,7 @@ $web_config = new GenyWebConfig();
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>GENYMOBILE - Apps</title>
 <link rel="stylesheet" type="text/css" href="styles/default/login-page.css" media="screen" title="bbxcss" />
+<link rel="stylesheet" href="js/chosen/chosen.css" />
 <style type="text/css">
 </style>
 </head>
@@ -47,7 +48,7 @@ $web_config = new GenyWebConfig();
 	</p>
 	<p>
 		<label for="geny_theme">Password</label>
-		<select name="geny_theme" id="geny_theme">
+		<select name="geny_theme" id="geny_theme" class="chzn-select">
 			<option value='default'>Thème par défaut</option>
 			<?php
 				$selected='';
@@ -78,6 +79,8 @@ $web_config = new GenyWebConfig();
 ?>
 </form>
 <p id="credits">&copy; 2011-2012 <strong>GENYMOBILE</strong>.</p>
-
+<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+<script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> $(".chzn-select").chosen();</script>
 </body>
 </html>

@@ -79,6 +79,10 @@ class GenyDatabaseTools {
 			error_log("[GYMActivity::DEBUG] GenyActivity MySQL query : $query",0);
 		return mysql_query($query, $this->handle);
 	}
+	public function setDebug($bool=false){
+		if( is_bool($bool) )
+			$this->config->debug = $bool;
+	}
 }
 
 ?>
