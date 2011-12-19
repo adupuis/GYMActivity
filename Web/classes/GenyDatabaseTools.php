@@ -65,6 +65,11 @@ class GenyDatabaseTools {
 	}
 
 	public function commitUpdates(){
+		if( empty($this->updates) ) {
+			if( $this->config->debug )
+				error_log("[GYMActivity::DEBUG] nothing to update" ,0);
+			return FALSE;
+		}
 		$query = "UPDATE ".$this->tableName." SET ";
 		foreach($this->updates as $up) {
 			$query .= "$up,";
