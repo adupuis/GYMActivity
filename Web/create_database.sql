@@ -419,6 +419,7 @@ INSERT INTO PropertyValues VALUES(0,2,'4');
 CREATE TABLE CareerEvents (
 	career_event_id int auto_increment,
 	profile_id int not null,
+	career_event_timestamp int not null,
 	career_event_type varchar(50) not null,
 	career_event_title varchar(200) not null,
 	career_event_text text not null,

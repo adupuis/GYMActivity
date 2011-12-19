@@ -21,6 +21,22 @@
 SET NAMES 'utf8';
 START TRANSACTION;
 
+-- Access logs
+DROP TABLE AccessLogs;
+CREATE TABLE AccessLogs (
+	access_log_id int auto_increment,
+	access_log_timestamp int not null,
+	profile_id int not null,
+	access_log_ip varchar(200) not null,
+	access_log_status boolean not null default false,
+	access_log_page_requested varchar(200) not null default 'Undefined',
+	access_log_type varchar(200) not null default 'UNAUTHORIZED_ACCESS',
+	access_log_extra varchar(200) not null default 'Nothing',
+	primary key(access_log_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE AccessLogs AUTO_INCREMENT=1;
+
 -- Profile management data
 DROP TABLE ProfileManagementData;
 CREATE TABLE ProfileManagementData (
@@ -101,6 +117,7 @@ DROP TABLE CareerEvents;
 CREATE TABLE CareerEvents (
 	career_event_id int auto_increment,
 	profile_id int not null,
+	career_event_timestamp int not null,
 	career_event_type varchar(50) not null,
 	career_event_title varchar(200) not null,
 	career_event_text text not null,
