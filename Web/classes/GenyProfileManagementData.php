@@ -25,8 +25,8 @@ include_once 'GenyDatabaseTools.php';
 class GenyProfileManagementData extends GenyDatabaseTools {
 	public function __construct($id = -1){
 		parent::__construct("ProfileManagementData",
-				    "profile_management_data_id",
-				    $id);
+				    "profile_management_data_id");
+		$this->id = -1;
 		$this->profile_id = GENYMOBILE_FALSE;
 		$this->salary = GENYMOBILE_FALSE;
 		$this->recruitement_date = '1979-01-01';

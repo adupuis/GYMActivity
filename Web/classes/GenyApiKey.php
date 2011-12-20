@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyApiKey extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("ApiKeys",  "api_key_id", $id);
+		parent::__construct("ApiKeys",  "api_key_id");
+		$this->id = -1;
 		$this->profile_id = -1;
 		$this->data = '';
 		$this->timestamp = -1;

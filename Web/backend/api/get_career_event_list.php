@@ -37,13 +37,7 @@ try {
 		$profile_id = getParam("profile_id",-1);
 		// Si le profile n'est pas définit et que le requester n'est pas admin ou superuser ou que le profile demandé ne correpsond pas au profile du requester => BANG! *headshot*
 		if( $profile->rights_group_id > 2 && ($profile_id <= 0 || $profile->id != $profile_id) ){
-			$access_loger->insertNewAccessLog(
-				$profile->id,
-				$_SERVER['REMOTE_ADDR'],
-				'false',
-				"backend/api/get_career_event_list.php",
-				UNAUTHORIZED_ACCESS,
-				"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
 			echo json_encode( array( "error" => "Fatal error: You are not allowed to retrieve this data. Access logged." ) );
 			exit;
 		}

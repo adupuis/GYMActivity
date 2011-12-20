@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyActivityReport extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("ActivityReports",  "activity_report_id", $id);
+		parent::__construct("ActivityReports",  "activity_report_id");
+		$this->id = -1;
 		$this->invoice_reference = '';
 		$this->activity_id = -1;
 		$this->profile_id = -1;

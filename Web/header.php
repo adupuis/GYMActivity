@@ -40,22 +40,16 @@ try {
 				$web_config->theme = $_SESSION['THEME'];
 		}
 		else{
-			$tmp_profile = new GenyProfile();
-			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
-			$access_loger->insertNewAccessLog($tmp_profile->id,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",UNAUTHORIZED_ACCESS,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+			$profile = new GenyProfile();
+			$profile->loadProfileByUsername($_SESSION['USERID']);
+			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
 			header("Location: index.php?reason=forbidden");
 			exit;
 		}
 	}
 	else {
 		$referer = array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : "";
-		$access_loger->insertNewAccessLog(
-			GENYMOBILE_ERROR,
-			$_SERVER['REMOTE_ADDR'],
-			'false',
-			"check_login.php",
-			AUTH_REQUIRED,
-			",referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+ 		$access_loger->insertSimpleAccessLog(AUTH_REQUIRED);
 		header("Location: index.php?reason=authrequired");
 		exit;
 	}

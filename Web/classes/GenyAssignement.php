@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyAssignement extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("Assignements",  "assignement_id", $id);
+		parent::__construct("Assignements",  "assignement_id");
+		$this->id = -1;
 		$this->profile_id = -1;
 		$this->project_id = -1;
 		$this->overtime_allowed = false;

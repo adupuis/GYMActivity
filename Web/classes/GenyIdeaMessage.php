@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyIdeaMessage extends GenyDatabaseTools {
 	public function __construct( $id = -1 ) {
-		parent::__construct("IdeaMessages",  "idea_message_id", $id);
+		parent::__construct("IdeaMessages",  "idea_message_id");
+		$this->id = -1;
 		$this->content = '';
 		$this->submission_date = '';
 		$this->profile_id = -1;

@@ -139,4 +139,6 @@ begin
 end $$
 DELIMITER ;
 
+ALTER TABLE AccessLogs MODIFY profile_id int;
+
 COMMIT;

@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyNotification extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("Notifications",  "notification_id", $id);
+		parent::__construct("Notifications",  "notification_id");
+		$this->id = -1;
 		$this->profile_id = -1;
 		$this->text = '';
 		$this->is_unread = false;

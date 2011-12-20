@@ -25,8 +25,8 @@ include_once 'GenyDatabaseTools.php';
 class GenyProjectTaskRelation extends GenyDatabaseTools {
 	public function __construct($id = -1){
 		parent::__construct("ProjectTaskRelations",  
-				    "project_task_relation_id",
-				    $id);
+				    "project_task_relation_id");
+		$this->id = -1;
 		$this->project_id = -1;
 		$this->task_id = -1;
 		if($id > -1)

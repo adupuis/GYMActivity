@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyIdeaVote extends GenyDatabaseTools {
 	public function __construct( $id = -1 ) {
-		parent::__construct("IdeaVotes",  "idea_vote_id", $id);
+		parent::__construct("IdeaVotes",  "idea_vote_id");
+		$this->id = -1;
 		$this->positive_vote = -1;
 		$this->negative_vote = -1;
 		$this->profile_id = -1;

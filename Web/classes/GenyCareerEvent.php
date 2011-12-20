@@ -25,8 +25,8 @@ include_once 'GenyDatabaseTools.php';
 class GenyCareerEvent extends GenyDatabaseTools {
 	public function __construct($id = -1){
 		parent::__construct("CareerEvents",
-				    "career_event_id",
-				    $id);
+				    "career_event_id");
+		$this->id = -1;
 		$this->profile_id = GENYMOBILE_FALSE;
 		$this->timestamp = -1;
 		$this->type = "neutral";

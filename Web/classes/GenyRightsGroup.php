@@ -23,7 +23,8 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 class GenyRightsGroup extends GenyDatabaseTools{
 	public function __construct($id = -1){
-		parent::__construct("RightsGroups",  "rights_group_id", $id);
+		parent::__construct("RightsGroups",  "rights_group_id");
+		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
 		if($id > -1)

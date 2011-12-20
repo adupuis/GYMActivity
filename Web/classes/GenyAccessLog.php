@@ -30,7 +30,8 @@ define("BAD_DATA","BAD_DATA");
 
 class GenyAccessLog extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("AccessLogs",  "access_log_id", $id);
+		parent::__construct("AccessLogs",  "access_log_id");
+		$this->id = -1;
 		$this->timestamp = 0;
 		$this->profile_id = -1;
 		$this->ip = "0.0.0.0";
@@ -59,7 +60,7 @@ class GenyAccessLog extends GenyDatabaseTools {
 	}
 	public function insertNewAccessLog($profile_id,$ip,$status,$page_requested,$type,$extra){
 // 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog entering function", 0);
-		if( ! is_numeric($profile_id) )
+		if( ! (is_numeric($profile_id) || $profile_id == "NULL") )
 			return -1;
 // 		error_log("DEBUG: GenyAccessLog::insertNewAccessLog profile_id ok", 0);
 		if( $status != "false" && $status != "true" )
@@ -79,6 +80,44 @@ class GenyAccessLog extends GenyDatabaseTools {
 			return -1;
 		}
 	}
+
+	/**
+	 * Use global defined profile (header.php).
+	 * @param _profile: use this value for profile if set, otherwise try
+	 * to find profile from header.php.
+	 */
+	public function insertSimpleAccessLog($reason) {
+		global $profile;
+		$profile_id = "NULL";
+		if( isset($profile) && is_object($profile) &&
+		    property_exists($profile, 'id')) {
+			$profile_id = $profile->id;
+		}
+		$page_requested = "unknown";
+		$debug_backtrace = debug_backtrace();
+		if( count($debug_backtrace) > 0 &&
+		    array_key_exists('file', $debug_backtrace[0]) ) {
+			$page_requested = basename($debug_backtrace[0]['file']);
+		}
+
+		$extra = "";
+		if(array_key_exists('HTTP_REFERER', $_SERVER)) {
+			$extra .= "referer=".$_SERVER['HTTP_REFERER'];
+		}
+		if(strlen($extra)) {
+			$extra .= ",";
+		}
+		if(array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+			$extra .= $_SERVER['HTTP_USER_AGENT'];
+		}
+		$this->insertNewAccessLog($profile_id,
+					  $_SERVER['REMOTE_ADDR'],
+					  'false',
+					  $page_requested,
+					  $reason,
+					  $extra);
+	}
+
 	public function getAccessLogsListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;

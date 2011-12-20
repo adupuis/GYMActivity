@@ -24,7 +24,8 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyPropertyType extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("PropertyTypes",  "property_type_id", $id);
+		parent::__construct("PropertyTypes",  "property_type_id");
+		$this->id = -1;
 		$this->shortname = '';
 		$this->name = '';
 		if($id > -1)
