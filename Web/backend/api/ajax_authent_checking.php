@@ -30,6 +30,8 @@ $profile = -1;
 try {
 	$checkId_obj = new CheckIdentity();
 	$api_key = "";
+	$referer = array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : "";
+	
 	if(isset($_POST['api_key']))
 		$api_key = $_POST['api_key'];
 	else if( isset($_GET['api_key']))
@@ -50,7 +52,15 @@ try {
 		}
 		else{
 			$auth_granted=false;
+			$access_loger->insertNewAccessLog(
+				$profile->id,
+				$_SERVER['REMOTE_ADDR'],
+				'false',
+				"backend/api/ajax_authent_checking.php",
+				UNAUTHORIZED_ACCESS,
+				"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=User not allowed.");
 			echo json_encode(array('error'=>'User not allowed.'));
+			exit();
 		}
 	}
 	else if( $api_key != "" && ($authorized_auth_method == "api_key" || $authorized_auth_method=="all")){
@@ -67,21 +77,53 @@ try {
 				else{
 					$auth_granted=false;
 					echo json_encode(array('error'=>'User not allowed (from API key authent).'));
+					$access_loger->insertNewAccessLog(
+						$profile->id,
+						$_SERVER['REMOTE_ADDR'],
+						'false',
+						"backend/api/ajax_authent_checking.php",
+						UNAUTHORIZED_ACCESS,
+						"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=User not allowed (from API key authent).");
+					exit();
 				}
 			}
 			else {
 				$auth_granted=false;
 				echo json_encode(array('error'=>'Invalid user.'));
+				$access_loger->insertNewAccessLog(
+					$profile->id,
+					$_SERVER['REMOTE_ADDR'],
+					'false',
+					"backend/api/ajax_authent_checking.php",
+					UNAUTHORIZED_ACCESS,
+					"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=Invalid user.");
+				exit();
 			}
 		}
 		else {
 			$auth_granted=false;
 			echo json_encode(array('error'=>'API key is invalid.'));
+			$access_loger->insertNewAccessLog(
+				$profile->id,
+				$_SERVER['REMOTE_ADDR'],
+				'false',
+				"backend/api/ajax_authent_checking.php",
+				UNAUTHORIZED_ACCESS,
+				"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=API key is invalid.");
+			exit();
 		}
 	}
 	else {
 		$auth_granted=false;
 		echo json_encode(array('error'=>'Authentication required.'));
+		$access_loger->insertNewAccessLog(
+			$profile->id,
+			$_SERVER['REMOTE_ADDR'],
+			'false',
+			"backend/api/ajax_authent_checking.php",
+			UNAUTHORIZED_ACCESS,
+			"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=Authentication required.");
+		exit();
 	}
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";
