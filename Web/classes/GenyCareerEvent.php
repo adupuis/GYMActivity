@@ -42,7 +42,7 @@ class GenyCareerEvent extends GenyDatabaseTools {
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
-		if( ! is_numeric($gce_salary) )
+		if( $type != "neutral" && $type != "positive" && $type != "negative" )
 			return GENYMOBILE_FALSE;
 		
 		if( $manager_agreement != 'true' && $manager_agreement != 'false' && $manager_agreement != 0 && $manager_agreement != 1)
@@ -51,7 +51,7 @@ class GenyCareerEvent extends GenyDatabaseTools {
 		if( $employee_agreement != 'true' && $employee_agreement != 'false' && $employee_agreement != 0 && $employee_agreement != 1)
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO CareerEvents VALUES(0,$profile_id,".time().",'".mysql_real_escape_string($type)."','".mysql_real_escape_string($title)."',".mysql_real_escape_string($text).",'".mysql_real_escape_string($attachement)."',$manager_agreement,$employee_agreement)";
+		$query = "INSERT INTO CareerEvents VALUES(0,$profile_id,".time().",'".mysql_real_escape_string($type)."','".mysql_real_escape_string($title)."','".mysql_real_escape_string($text)."','".mysql_real_escape_string($attachement)."',$manager_agreement,$employee_agreement)";
 		
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyCareerEvent MySQL query : $query",0);
