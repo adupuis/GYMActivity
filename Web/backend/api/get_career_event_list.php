@@ -57,7 +57,7 @@ try {
 		
 		foreach( $results as $ce ){
 			$tmp = array();
-			foreach( get_object_vars($tmp_ce) as $field ){
+			foreach( get_object_vars($tmp_ce) as $field => $value ){
 				$tmp[$field] = $ce->$field ;
 			}
 			$ces[] = $tmp;
