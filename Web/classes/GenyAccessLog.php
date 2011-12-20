@@ -26,6 +26,7 @@ define("UNAUTHORIZED_ACCESS", "UNAUTHORIZED_ACCESS");
 define("BAD_CREDENTIALS","BAD_CREDENTIALS");
 define("BAD_USERNAME_FORMAT","BAD_USERNAME_FORMAT");
 define("AUTH_REQUIRED","AUTH_REQUIRED");
+define("BAD_DATA","BAD_DATA");
 
 class GenyAccessLog extends GenyDatabaseTools {
 	public function __construct($id = -1){
