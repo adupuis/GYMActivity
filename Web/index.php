@@ -56,6 +56,7 @@ $web_config = new GenyWebConfig();
 					$selected = "selected='selected'";
 			?>
 			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>
+			<option value='genymobile-2012'>Genymobile 2012</option>
 		</select>
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->

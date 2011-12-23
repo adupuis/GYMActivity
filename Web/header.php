@@ -81,6 +81,8 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 
 loadClass('GenyTools');
 
+GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
+
 ?>
 
 <!DOCTYPE html>
@@ -109,6 +111,7 @@ echo $header_title
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css' />
 <link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 <link rel="stylesheet" href="js/DataTables/media/css/demo_table_jui.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="styles/<?php echo $web_config->theme ?>/main.css" media="screen" />
