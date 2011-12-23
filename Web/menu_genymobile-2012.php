@@ -26,8 +26,8 @@
 <style>
 	ul.sdt_menu{
 		position: relative;
-		margin-top:10px;
-		margin-right: 10px;
+		padding-top:10px;
+		padding-right: 10px;
 		margin-left: auto;
 	}
 </style>
