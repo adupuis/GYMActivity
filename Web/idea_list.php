@@ -86,7 +86,9 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";
 	}
 
-	if( $tmp->submitter == $profile->id ) {
+	if( $tmp->submitter == $profile->id ||
+	    $profile->rights_group_id == 1  || /* admin */
+	    $profile->rights_group_id == 2     /* superuser */ ) {
 		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {

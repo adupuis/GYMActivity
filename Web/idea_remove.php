@@ -101,7 +101,13 @@ else {
 
 				<select name="idea_id" id="idea_id">
 					<?php
-					$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
+					if( $profile->rights_group_id == 1 /* admin */ ||
+					    $profile->rights_group_id == 2 /* superuser */ ) {
+						$ideas = $geny_idea->getAllIdeas();
+					}
+					else {
+						$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
+					}
 					foreach( $ideas as $idea ) {
 						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
