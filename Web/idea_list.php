@@ -59,7 +59,9 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
 	$idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $tmp->id );
 
-	if( count( $idea_messages ) > 0 ) {
+	$nb_idea_messages = count( $idea_messages );
+
+	if( $nb_idea_messages > 0 ) {
 		$last_idea_message = $geny_idea_message->getLastIdeaMessage( $tmp->id );
 		$display_date = date("j-m-Y G:i", strtotime( $last_idea_message->submission_date ) );
 
@@ -96,7 +98,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 	}
 
 	$date_field = $display_date.'<br/>par&nbsp;'.$last_author_name;
-	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $date_field, $view, $edit, $remove );
+	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $nb_idea_messages, $date_field, $view, $edit, $remove );
 
 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
@@ -200,6 +202,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th>Votes</th>
 						<th>Statut</th>
 						<th>Auteur de l'idée</th>
+						<th>Commentaires</th>
 						<th>Date du dernier message</th>
 						<th>Voir</th>
 						<th>Editer</th>
@@ -208,7 +211,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -217,6 +220,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th class="filtered">Votes</th>
 						<th class="filtered">Statut</th>
 						<th class="filtered">Auteur de l'idée</th>
+						<th class="filtered">Commentaires</th>
 						<th class="filtered">Date du dernier message</th>
 						<th class="filtered">Voir</th>
 						<th class="filtered">Editer</th>
