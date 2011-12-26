@@ -212,7 +212,7 @@ foreach( $geny_idea->getAllIdeas() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td>".$da[3]."</td><td>".$da[4]."</td><td><center>".$da[5]."</center></td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
 						}
 					?>
 					</tbody>
