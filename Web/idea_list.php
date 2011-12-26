@@ -47,7 +47,7 @@ foreach( $geny_profile->getAllProfiles() as $prof ) {
 $geny_idea_vote = new GenyIdeaVote();
 $geny_idea_message = new GenyIdeaMessage();
 
-foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
+foreach( $geny_idea->getAllIdeas() as $tmp ) {
 
 	$tmp_profile = $profiles["$tmp->submitter"];
 	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
@@ -169,7 +169,8 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 							"sNext": "Suivant",
 							"sPrevious": "Précédent"
 						}
-					}
+					},
+					"aaSorting": [[ 5, "desc" ]]
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
