@@ -60,7 +60,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 	$idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $tmp->id );
 
 	if( count( $idea_messages ) > 0 ) {
-		$last_idea_message = $geny_idea_message->getLastIdeaMessage();
+		$last_idea_message = $geny_idea_message->getLastIdeaMessage( $tmp->id );
 		$display_date = date("j-m-Y G:i", strtotime( $last_idea_message->submission_date ) );
 
 		$last_author = $profiles["$last_idea_message->profile_id"];
