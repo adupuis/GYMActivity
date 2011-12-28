@@ -34,7 +34,7 @@ $web_config = new GenyWebConfig();
 </style>
 </head>
 <body>
-<p style="margin:10px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
+<p style="margin:60px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
 <form id="start" action="check_login.php" method="post">
 	<h1>Login GENYMOBILE - Apps</h1>
 
