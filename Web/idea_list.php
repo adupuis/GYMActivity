@@ -47,7 +47,7 @@ foreach( $geny_profile->getAllProfiles() as $prof ) {
 $geny_idea_vote = new GenyIdeaVote();
 $geny_idea_message = new GenyIdeaMessage();
 
-foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
+foreach( $geny_idea->getAllIdeas() as $tmp ) {
 
 	$tmp_profile = $profiles["$tmp->submitter"];
 	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
@@ -59,8 +59,10 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 
 	$idea_messages = $geny_idea_message->getIdeaMessagesListByIdeaId( $tmp->id );
 
-	if( count( $idea_messages ) > 0 ) {
-		$last_idea_message = $geny_idea_message->getLastIdeaMessage();
+	$nb_idea_messages = count( $idea_messages );
+
+	if( $nb_idea_messages > 0 ) {
+		$last_idea_message = $geny_idea_message->getLastIdeaMessage( $tmp->id );
 		$display_date = date("j-m-Y G:i", strtotime( $last_idea_message->submission_date ) );
 
 		$last_author = $profiles["$last_idea_message->profile_id"];
@@ -86,7 +88,9 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 		$edit = "<img src=\"images/$web_config->theme/idea_edit_small_disable.png\" title=\"Vous ne pouvez pas éditer cette idée\" alt=\"Editer l'idée\">";
 	}
 
-	if( $tmp->submitter == $profile->id ) {
+	if( $tmp->submitter == $profile->id ||
+	    $profile->rights_group_id == 1  || /* admin */
+	    $profile->rights_group_id == 2     /* superuser */ ) {
 		$remove = "<a href=\"idea_remove.php?idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
 	}
 	else {
@@ -94,7 +98,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 	}
 
 	$date_field = $display_date.'<br/>par&nbsp;'.$last_author_name;
-	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $date_field, $view, $edit, $remove );
+	$data_array[] = array( $tmp->id, $tmp->title, $tmp->votes, $idea_statuses["$tmp->status_id"]->name, $screen_name, $nb_idea_messages, $date_field, $view, $edit, $remove );
 
 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
@@ -165,7 +169,8 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 							"sNext": "Suivant",
 							"sPrevious": "Précédent"
 						}
-					}
+					},
+					"aaSorting": [[ 5, "desc" ]]
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
@@ -198,6 +203,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th>Votes</th>
 						<th>Statut</th>
 						<th>Auteur de l'idée</th>
+						<th>Commentaires</th>
 						<th>Date du dernier message</th>
 						<th>Voir</th>
 						<th>Editer</th>
@@ -206,7 +212,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td>".$da[4]."</td><td>".$da[5]."</td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td>".$da[3]."</td><td>".$da[4]."</td><td><center>".$da[5]."</center></td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -215,6 +221,7 @@ foreach( $geny_idea->getAllIdeasSortedByVotes() as $tmp ) {
 						<th class="filtered">Votes</th>
 						<th class="filtered">Statut</th>
 						<th class="filtered">Auteur de l'idée</th>
+						<th class="filtered">Commentaires</th>
 						<th class="filtered">Date du dernier message</th>
 						<th class="filtered">Voir</th>
 						<th class="filtered">Editer</th>

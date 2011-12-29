@@ -19,40 +19,60 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Idées - Erreur';
+$header_title = '%COMPANY_NAME% - Erreur';
 $required_group_rights = 5;
 
 include_once 'header.php';
 include_once 'menu.php';
+include_once 'backend/api/ajax_toolbox.php';
 
 $gritter_notifications = array();
+$error_msg = getParam( "error_msg", "Vous n'êtes pas autorisé à effectuer cette action." );
 
 ?>
 
 <div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/idea.png"/><p>Idée</p>
+	<?php
+	foreach( explode( ",", getParam( "category" ) ) as $category ) {
+		if( file_exists( "images/".$web_config->theme."/$category.png" ) ) {
+			$category_name = "";
+			if( $category == "idea" ) {
+				$category_name = "Idée";
+			}
+			echo "<img src=\"images/".$web_config->theme."/$category.png\"/><p>$category_name</p>";
+		}
+	}
+	?>
 </div>
 
 
 <div id="mainarea">
 	<p class="mainarea_title">
-		<span class="idea_remove">
+		<?php
+		foreach( explode( ",", getParam( "category" ) ) as $category ) {
+			// TODO: replace class remove by a class error (with appropriate icon for each category)
+			echo "<span class=\"".$category."_remove\">";
+		}
+		?>
 			Erreur !
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Vous n'êtes pas autorisé à effectuer cette action.
+		<?php echo $error_msg; ?>
 		</p>
 	</p>
 </div>
 <div id="bottomdock">
 	<ul>
-		<?php 
-			include 'backend/widgets/idea_list.dock.widget.php';
-			include 'backend/widgets/idea_add.dock.widget.php';
+		<?php
+		foreach( explode( ",", getParam( "backlinks" ) ) as $file ) {
+			if( file_exists( "backend/widgets/$file.dock.widget.php" ) ) {
+				include "backend/widgets/$file.dock.widget.php";
+			}
+		}
 		?>
-	</ul>
+    </ul>
 </div>
 
 <?php

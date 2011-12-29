@@ -49,7 +49,7 @@ else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"Vous n'êtes pas autorisé.");
-			header( 'Location: idea_error.php' );
+			header( 'Location: error.php?category=idea&backlinks=idea_list,idea_add' );
 		}
 	}
 	else  {

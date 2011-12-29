@@ -41,9 +41,10 @@ $current_datetime = date("Y-m-d H:i:s");
 
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		if( $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime ) ) {
+		$insert_id = $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime );
+		if( $insert_id ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
-			$geny_idea->loadIdeaByTitle( $_POST['idea_title'] );
+			$geny_idea->loadIdeaById( $insert_id );
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création de l'idée.");
