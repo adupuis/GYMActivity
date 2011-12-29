@@ -14,7 +14,9 @@ html {
 }
 body{
 /* 	background:#eee; */
-	background: gray;
+	background-color: #fbfbfb;
+	background-image:url("../../images/genymobile-2012/background_p.png");
+	background-repeat: repeat-y;
 	color:#333;
 	font-family: 'Droid Sans', arial, serif;
 	font-size:14px;
@@ -176,7 +178,244 @@ img#logo {
 	/*margin-top:20px;*/
 }
 
-#mainarea {
+#wrapper {
 	background-color: red;
-	margin-top: 180px;
+	margin-top: 100px;
+	margin-left: 10px;
+	margin-right: 10px;
+/* 	margin-bottom: 30px; */
 }
+
+#load {
+/* 	display: none; */
+	position: absolute;
+	right: 30px;
+	top: 30px;
+	background: url(../../images/genymobile-2012/ajax-loader.gif);
+	min-width: 66px;
+	min-height: 66px;
+	text-indent: -9999em;
+}
+
+div#maindock {
+	position: relative;
+	margin-top:-37px;
+	margin-left: 180px;
+	margin-right: auto;
+/* 	border: 1px solid black; */
+	/*height: auto;*/
+	/*width: 100%;*/
+}
+
+div#maindock ul {
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#maindock ul li {
+	display: inline;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#maindock ul li a {
+	text-align: center;
+	margin-left: 50px;
+	margin-bottom: 50px;
+	background-repeat:no-repeat;
+	background-position:10px 10px;
+}
+
+div#maindock ul li a {
+	display:block;
+	float: left;
+	width: 350px;
+	height: 150px;
+	text-decoration:none;
+	color: #6a6a6a;
+	background-color: #e7f3bd;
+	border: 1px solid #cedba2;
+	-moz-border-radius:10px 10px 10px 10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius: 10px;
+	text-align:center;
+	opacity: 0.85; 
+	padding: 5px;
+}
+
+div#maindock a:hover{
+	background-color:#cedc9e;
+}
+
+div#maindock a span.dock_item_title{
+	position: relative;
+	left: 30px;
+	top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size:30px;
+	font-weight: x-large;
+	color: #6a6a6a;
+	text-shadow: 0 -1px 1px #fff; 
+	text-align:center;
+}
+
+div#maindock a span.dock_item_content {
+	position: relative;
+	top: 60px;
+	font-size:14px;
+}
+
+li.cra_add a {
+	background-image: url(../../images/genymobile-2012/cra_add.png);
+}
+
+li.cra_edit a {
+	background-image: url(../../images/genymobile-2012/cra_edit.png);
+}
+
+li.cra_remove a {
+	background-image: url(../../images/genymobile-2012/cra_remove.png);
+}
+
+li.cra_list a {
+	background-image: url(../../images/genymobile-2012/cra_list.png);
+}
+
+li.conges_add a {
+	background-image: url(../../images/genymobile-2012/conges_add.png);
+}
+
+li.conges_edit a {
+	background-image: url(../../images/genymobile-2012/conges_edit.png);
+}
+
+li.conges_remove a {
+	background-image: url(../../images/genymobile-2012/conges_remove.png);
+}
+
+li.conges_list a {
+	background-image: url(../../images/genymobile-2012/conges_list.png);
+}
+
+li.cra_admin_generic a {
+	background-image: url(../../images/genymobile-2012/cra_admin_generic.png);
+}
+
+li.conges_admin_generic a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.project_add a {
+	background-image: url(../../images/genymobile-2012/project_add.png);
+}
+
+li.project_edit a {
+	background-image: url(../../images/genymobile-2012/project_edit.png);
+}
+
+li.project_remove a {
+	background-image: url(../../images/genymobile-2012/project_remove.png);
+}
+
+li.project_list a {
+	background-image: url(../../images/genymobile-2012/project_list.png);
+}
+
+li.profile_add a {
+	background-image: url(../../images/genymobile-2012/profile_add.png);
+}
+
+li.profile_edit a {
+	background-image: url(../../images/genymobile-2012/profile_edit.png);
+}
+
+li.profile_remove a {
+	background-image: url(../../images/genymobile-2012/profile_remove.png);
+}
+
+li.profile_list a {
+	background-image: url(../../images/genymobile-2012/profile_list.png);
+}
+
+li.profile_admin a {
+	background-image: url(../../images/genymobile-2012/profile_admin.png);
+}
+
+li.client_add a {
+	background-image: url(../../images/genymobile-2012/client_add.png);
+}
+
+li.client_edit a {
+	background-image: url(../../images/genymobile-2012/client_edit.png);
+}
+
+li.client_remove a {
+	background-image: url(../../images/genymobile-2012/client_remove.png);
+}
+
+li.client_list a {
+	background-image: url(../../images/genymobile-2012/client_list.png);
+}
+
+li.task_add a {
+	background-image: url(../../images/genymobile-2012/task_add.png);
+}
+
+li.task_edit a {
+	background-image: url(../../images/genymobile-2012/task_edit.png);
+}
+
+li.task_remove a {
+	background-image: url(../../images/genymobile-2012/task_remove.png);
+}
+
+li.task_list a {
+	background-image: url(../../images/genymobile-2012/task_list.png);
+}
+
+li.user_admin_password_change a {
+	background-image: url(../../images/genymobile-2012/security_generic.png);
+}
+
+li.notifications a {
+	background-image: url(../../images/genymobile-2012/notification.png);
+}
+
+li.reporting_monthly_view a {
+	background-image: url(../../images/genymobile-2012/reporting.png);
+}
+
+li.reporting_personal a {
+	background-image: url(../../images/genymobile-2012/reporting_personal.png);
+}
+
+li.reporting_cra a {
+	background-image: url(../../images/genymobile-2012/reporting_cra.png);
+}
+
+li.admin_generic a {
+	background-image: url(../../images/genymobile-2012/admin.png);
+}
+
+li.idea_add a {
+	background-image: url(../../images/genymobile-2012/idea_add.png);
+}
+
+li.idea_edit a {
+	background-image: url(../../images/genymobile-2012/idea_edit.png);
+}
+
+li.idea_remove a {
+	background-image: url(../../images/genymobile-2012/idea_remove.png);
+}
+
+li.idea_list a {
+	background-image: url(../../images/genymobile-2012/idea_list.png);
+}
+
+
+/* End of main dock style */

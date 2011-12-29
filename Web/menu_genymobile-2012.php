@@ -34,7 +34,8 @@
 
 <ul id="sdt_menu" class="sdt_menu">
 	<li>
-		<a href="profile_display.php">
+<!-- 		<a href="profile_display.php"> -->
+		<a href="loader.php?module=helloworld">
 			<img src="images/test.jpg" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
@@ -44,7 +45,8 @@
 		</a>
 	</li>
 	<li>
-		<a href="home.php">
+<!-- 		<a href="home.php"> -->
+		<a href="loader.php?module=home">
 			<img src="images/test.jpg" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
@@ -70,7 +72,7 @@
 		</div>
 	</li>
 	<li>
-		<a href="#">
+		<a href="loader.php?module=testjs">
 			<img src="images/1.jpg" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
