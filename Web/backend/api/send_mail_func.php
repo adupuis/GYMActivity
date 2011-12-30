@@ -69,12 +69,12 @@ function sendMail( $subject, $to, $body ) {
 			if (PEAR::isError($mail)) {
 				$json_messages[] = array("status" => "error", "status_message" => "Error while sending message to $to: ".$mail->getMessage() );
 			}
-// 			else {
-// 				$json_messages[] = array("status" => "success", "status_message" => "Message successfully sent to $to." );
-// 			}
+			else {
+				$json_messages[] = array("status" => "success", "status_message" => "Message successfully sent to $to." );
+			}
 		}
 
-		echo json_encode($json_messages);
+// 		echo jsons_encode($json_messages);
 	} catch (Exception $e) {
 		echo "Exception: ".$e->getMessage(), "\n";
 	}
