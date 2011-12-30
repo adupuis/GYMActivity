@@ -41,7 +41,7 @@ $current_datetime = date("Y-m-d H:i:s");
 
 if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 	if( isset( $_POST['idea_title'] ) ) {
-		$insert_id = $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_QUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_QUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime );
+		$insert_id = $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_NOQUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_NOQUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime );
 		if( $insert_id ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaById( $insert_id );
@@ -180,8 +180,9 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 	if( isset( $_POST['idea_message_idea_id'] ) ) {
 		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
 		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_QUOTES, "UTF-8" ), $current_datetime, $profile->id, $_POST['idea_message_idea_id'] ) ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_NOQUOTES, "UTF-8" ), $current_datetime, $profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
+				$geny_idea_message->sendMailForNewMessage( $profile->id, $_POST['idea_message_content'], $_POST['idea_message_idea_id'] );
 			}
 			else {
 				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du commentaire.");
