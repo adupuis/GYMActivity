@@ -35,19 +35,18 @@ try {
 		$tmp_profile = new GenyProfile();
 		$web_config = new GenyWebConfig();
 		
-		$from = getParam("from","CRA Admin <admin@genymobile.com>");
-		$subject = getParam("subject","empty subject");
+		$from = getParam("from","bot@genymobile.com");
+		$subject = html_entity_decode( getParam("subject","empty subject") );
 		$to_raw = getParam("to");
-		
 
-		$host = "ssl://smtp.gmail.com";
+		$host = 'ssl://smtp.gmail.com';
 		$port = "465";
 		$username = $web_config->gmail_username;
 		$password = $web_config->gmail_password;
 		
 		$json_messages = array();
 		
-		$body = "<html><body>".getParam("body","no body defined.")."</body></html>";
+		$body = "<html><body>".html_entity_decode( getParam("body","no body defined.") )."</body></html>";
 		foreach( explode(",",$to_raw) as $to ){
 			$headers = array ('From' => $from,
 				'To' => $to,
