@@ -25,7 +25,7 @@ $required_group_rights = 6;
 include_once 'header.php';
 include_once 'menu.php';
 
-include_once 'home_v1_submodule1.php';
+// include_once 'home_v1_submodule1.php';
 
 ?>
 
