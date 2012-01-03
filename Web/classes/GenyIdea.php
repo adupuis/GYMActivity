@@ -70,16 +70,17 @@ class GenyIdea extends GenyDatabaseTools  {
 		return mysql_query( $query, $this->handle );
 	}
 
-	public function getIdeasListWithRestrictions( $restrictions ) {
+	public function getIdeasListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("idea_id=1","idea_status_id=2")
 		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter,idea_submission_date FROM Ideas";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string( $restriction_type );
 			foreach( $restrictions as $key => $value ) {
 				$query .= $value;
 				if( $key != $last_index ) {
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
