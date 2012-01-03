@@ -1,0 +1,32 @@
+ul.status_message {
+	text-align: left;
+	font-size: 14px;
+}
+
+ul.status_message li.status_message_success {
+	background-repeat: no-repeat;
+	background-image: url(../../images/default/button_success.png);
+	height: 32px;
+	position: relative;
+	display: block;
+	color: #0459b7;
+	vertical-align: middle;
+	margin: auto;
+	padding-left: 40px;
+	padding-top: 10px;
+	width: 180px;
+}
+
+ul.status_message li.status_message_error {
+	background-repeat: no-repeat;
+	background-image: url(../../images/default/button_error.png);
+	height: 32px;
+	position: relative;
+	display: block;
+	color: red;
+	vertical-align: middle;
+	margin: auto;
+	padding-left: 40px;
+	padding-top: 10px;
+	width: 180px;
+}

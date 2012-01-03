@@ -30,21 +30,6 @@ $html .= '</ul>';
 	@import 'styles/<?php echo $web_config->theme ?>/notifications.css';
 </style>
 
-<li class="notifications">
-	<a href="#" onClick='$( "#notifications-dialog-message" ).dialog( "open" )'>
-		<span class="notifications_count"><span class="notification_count_content">0</span></span>
-		<span class="dock_item_title">Notifications</span><br/>
-		<span class="dock_item_content">La liste de toutes les notifications que le système vous a envoyé. Le cercle rouge contient le nombre de notifications non lus que vous avez.</span>
-	</a>
-</li>
-
-<div id="notifications-dialog-message" title="Notifications">
-	<p>
-		<?php echo $html; ?>
-	</p>
-</div>
-
-
 
 <script>
 // 	Récupération du nombre de notifications non lues
@@ -127,3 +112,20 @@ $html .= '</ul>';
 		});
 	});
 </script>
+
+<li class="notifications">
+	<a href="#" onClick='$( "#notifications-dialog-message" ).dialog( "open" )'>
+		<span class="notifications_count"><span class="notification_count_content">0</span></span>
+		<span class="dock_item_title">Notifications</span><br/>
+		<span class="dock_item_content">La liste de toutes les notifications que le système vous a envoyé. Le cercle rouge contient le nombre de notifications non lus que vous avez.</span>
+	</a>
+</li>
+
+<div id="notifications-dialog-message" title="Notifications">
+	<p>
+		<?php echo $html; ?>
+	</p>
+</div>
+
+
+

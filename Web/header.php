@@ -81,6 +81,8 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 
 loadClass('GenyTools');
 
+GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
+
 ?>
 
 <!DOCTYPE html>
@@ -109,6 +111,8 @@ echo $header_title
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
+<!-- <link href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css' /> -->
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 <link rel="stylesheet" href="js/DataTables/media/css/demo_table_jui.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="styles/<?php echo $web_config->theme ?>/main.css" media="screen" />
@@ -124,16 +128,16 @@ echo $header_title
 <body>
 <img id="logo" src="images/<?php echo $web_config->theme ?>/<?php echo $web_config->company_corner_logo ?>" alt="<?php echo $web_config->company_name ?> Logo"/>
 
-<p id="headband">
+<!-- <p id="headband"> -->
 	<?php
 		$screen_name = $_SESSION['USERID'];
 		if( $profile->firstname && $profile->lastname)
 			$screen_name = $profile->firstname." ".$profile->lastname;
 		else
 			$screen_name = $profile->login;
-		echo "<strong>Logged in as:</strong> ".$screen_name."";
+// 		echo "<strong>Logged in as:</strong> ".$screen_name."";
 	?>
-</p>
+<!-- </p> -->
 
 
 

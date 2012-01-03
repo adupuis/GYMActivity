@@ -92,6 +92,14 @@ class GenyTools {
 	static function debug($str){
 		error_log("[GYMActivity::DEBUG] $str",0);
 	}
+	static function getParam($param,$default=""){
+		$ret = $default;
+		if(isset($_POST[$param]))
+			$ret = $_POST[$param];
+		else if( isset($_GET[$param]))
+			$ret = $_GET[$param];
+		return htmlentities($ret,ENT_QUOTES,'UTF-8');
+	}
 }
 
 ?>
