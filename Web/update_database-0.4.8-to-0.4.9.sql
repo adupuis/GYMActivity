@@ -141,4 +141,19 @@ DELIMITER ;
 
 ALTER TABLE AccessLogs MODIFY profile_id int;
 
+DROP TABLE DailyFees ;
+CREATE TABLE DailyFees (
+	daily_fee_id int auto_increment,
+	project_id int not null,
+	task_id int not null,
+	profile_id int,
+	daily_fee_start_date date not null,
+	daily_fee_end_date date not null,
+	primary key(daily_fee_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
+	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
+	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE DailyFees AUTO_INCREMENT = 1;
+
 COMMIT;
