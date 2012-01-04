@@ -36,7 +36,7 @@
 	<li>
 <!-- 		<a href="profile_display.php"> -->
 		<a href="loader.php?module=helloworld">
-			<img src="images/test.jpg" alt=""/>
+			<img src="images/genymobile-2012/home_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
@@ -47,7 +47,7 @@
 	<li>
 <!-- 		<a href="home.php"> -->
 		<a href="loader.php?module=home">
-			<img src="images/test.jpg" alt=""/>
+			<img src="images/genymobile-2012/home_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">Home</span>
@@ -57,7 +57,7 @@
 	</li>
 	<li>
 		<a href="home_cra.php">
-			<img src="images/6.jpg" alt=""/>
+			<img src="images/genymobile-2012/cra_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">CRA</span>
@@ -73,7 +73,7 @@
 	</li>
 	<li>
 		<a href="loader.php?module=testjs">
-			<img src="images/1.jpg" alt=""/>
+			<img src="images/genymobile-2012/conges_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">Congés</span>
@@ -89,7 +89,7 @@
 	</li>
 	<li>
 		<a href="home_reporting.php">
-			<img src="images/3.jpg" alt=""/>
+			<img src="images/genymobile-2012/reporting_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">Reporting</span>
@@ -105,7 +105,7 @@
 	</li>
 	<li>
 		<a href="home_admin.php">
-			<img src="images/4.jpg" alt=""/>
+			<img src="images/genymobile-2012/admin_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">Admin</span>
@@ -115,7 +115,7 @@
 	</li>
 	<li>
 		<a href="logout.php">
-			<img src="images/5.jpg" alt=""/>
+			<img src="images/genymobile-2012/logout_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link">Logout</span>
