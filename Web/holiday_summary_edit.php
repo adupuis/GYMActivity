@@ -1,0 +1,226 @@
+<?php
+//  Copyright (C) 2011 by GENYMOBILE & Quentin Désert
+//  qdesert@genymobile.com
+//  http://www.genymobile.com
+// 
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 3 of the License, or
+//  (at your option) any later version.
+// 
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+// 
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the
+//  Free Software Foundation, Inc.,
+//  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+
+// Variable to configure global behaviour
+$header_title = '%COMPANY_NAME% - Edition Solde de congés';
+$required_group_rights = 2;
+
+include_once 'header.php';
+include_once 'menu.php';
+
+$gritter_notifications = array();
+
+$geny_holiday_summary = new GenyHolydaySummary();
+$geny_profile = new GenyProfile();
+
+if( isset( $_POST['create_holiday_summary'] ) && $_POST['create_holiday_summary'] == "true" ) {
+	if( isset( $_POST['holiday_summary_count_acquired'] ) && isset( $_POST['holiday_summary_count_taken'] ) && isset( $_POST['holiday_summary_count_remaining'] ) ) {
+		$insert_id = $geny_holiday_summary->insertNewHolydaySummary( 'NULL', $_POST['profile_id'], $_POST['holiday_summary_type'], $_POST['holiday_summary_period_start'], $_POST['holiday_summary_period_end'], $_POST['holiday_summary_count_acquired'], $_POST['holiday_summary_count_taken'], $_POST['holiday_summary_count_remaining'] );
+		if( $insert_id ) {
+			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés ajouté avec succès." );
+			$geny_holiday_summary->loadHolydaySummaryById( $insert_id );
+		}
+		else {
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du solde de congés." );
+		}
+	}
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir." );
+	}
+}
+else if( isset( $_POST['load_holiday_summary'] ) && $_POST['load_holiday_summary'] == "true" ) {
+	if( isset( $_POST['holiday_summary_id'] ) ) {
+		$geny_holiday_summary->loadHolydaySummaryById( $_POST['holiday_summary_id'] );
+	}
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger le solde de congés','msg'=>"id non spécifié." );
+	}
+}
+else if( isset( $_GET['load_holiday_summary'] ) && $_GET['load_holiday_summary'] == "true" ) {
+	if( isset( $_GET['holiday_summary_id'] ) ) {
+		$geny_holiday_summary->loadHolydaySummaryById( $_POST['holiday_summary_id'] );
+	}
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger le solde de congés','msg'=>"id non spécifié." );
+	}
+}
+else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary'] == "true" ) {
+	if( isset( $_POST['holiday_summary_id'] ) ) {
+		$geny_holiday_summary->loadHolydaySummaryById( $_POST['holiday_summary_id'] );
+		
+		//TODO: put edit code here
+
+	}
+	else  {
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de modifier le solde de congés ','msg'=>"id non spécifié.");
+	}
+}
+
+?>
+
+<div class="page_title">
+	<img src="images/<?php echo $web_config->theme ?>/conges_admin_generic.png"/><p>Solde de congés</p>
+</div>
+
+<div id="mainarea">
+	<p class="mainarea_title">
+		<span class="holiday_summary_edit">
+			Modifier un solde de congés
+		</span>
+	</p>
+	<p class="mainarea_content">
+		<p class="mainarea_content_intro">
+		Ce formulaire permet d'éditer un solde de congés existant. Tous les champs doivent être remplis.
+		</p>
+		
+		<form id="select_holiday_summary_form" action="holiday_summary_edit.php" method="post">
+			<input type="hidden" name="load_holiday_summary" value="true" />
+			<p>
+				<label for="holiday_summary_id">Sélection solde de congés</label>
+
+				<select name="holiday_summary_id" id="holiday_summary_id" onChange="submit()">
+					<?php
+						$holiday_summaries = $geny_holiday_summary->getAllHolydaySummaries();
+						foreach( $holiday_summaries as $holiday_summary ) {
+							if( $geny_holiday_summary->id == $holiday_summary->id ) {
+								echo "<option value=\"".$holiday_summary->id."\" selected>".$holiday_summary->id."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$holiday_summary->id."\">".$holiday_summary->id."</option>\n";
+							}
+						}
+						if( $geny_holiday_summary->id < 0 ) {
+							$geny_holiday_summary->loadHolydaySummaryById( $holiday_summaries[0]->id );
+						}
+					?>
+				</select>
+			</p>
+		</form>
+		<form id="formID" action="holiday_summary_edit.php" method="post">
+			<input type="hidden" name="edit_holiday_summary" value="true" />
+			<input type="hidden" name="holiday_summary_id" value="<?php echo $geny_holiday_summary->id ?>" />
+			
+
+			<p>
+				<label for="profile_id">Profil</label>
+				<select name="profile_id" id="profile_id">
+				<?php
+					foreach( $geny_profile->getAllProfiles() as $profile ) {
+						if( $geny_holiday_summary->profile_id == $profile->id ) {
+							if( $profile->firstname && $profile->lastname ) {
+								echo "<option value=\"".$profile->id."\" selected>".$profile->firstname." ".$profile->lastname."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$profile->id."\" selected>".$profile->login."</option>\n";
+							}
+						}
+						else {
+							if( $profile->firstname && $profile->lastname ) {
+								echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
+							}
+						}
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="holiday_summary_type">Type</label>
+				<select name="holiday_summary_type" id="holiday_summary_type">
+					<?php
+					if( $geny_holiday_summary->type == "RTT" ) {
+						echo "<option value=\"CP\">CP</option>";
+						echo "<option value=\"RTT\" selected>RTT</option>";
+					}
+					else {
+						echo "<option value=\"CP\">CP</option>";
+						echo "<option value=\"RTT\">RTT</option>";
+					}
+					?>
+				</select>
+			</p>
+			<script type="text/javascript">
+				$(function() {
+					$( "#holiday_summary_period_start" ).datepicker();
+					$( "#holiday_summary_period_start" ).datepicker('setDate', new Date());
+					$( "#holiday_summary_period_start" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "defaultDate", "<?php echo $geny_holiday_summary->period_start ?>" );
+					$( "#holiday_summary_period_start" ).datepicker( "setDate", "<?php echo $geny_holiday_summary->period_start ?>" );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#holiday_summary_period_start" ).datepicker( "option", "firstDay", 1 );
+					
+					$( "#holiday_summary_period_end" ).datepicker();
+					$( "#holiday_summary_period_end" ).datepicker('setDate', new Date() );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "defaultDate", "<?php echo $geny_holiday_summary->period_end ?>" );
+					$( "#holiday_summary_period_end" ).datepicker( "setDate", "<?php echo $geny_holiday_summary->period_end ?>" );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#holiday_summary_period_end" ).datepicker( "option", "firstDay", 1 );
+				});
+			</script>
+			<p>
+				<label for="holiday_summary_period_start">Début de période</label>
+				<input name="holiday_summary_period_start" id="holiday_summary_period_start" type="text" value="<?php echo $geny_holiday_summary->period_start ?>" class="validate[required,custom[date]] text-input" />
+			</p>
+			<p>
+				<label for="holiday_summary_period_end">Fin de période</label>
+				<input name="holiday_summary_period_end" id="holiday_summary_period_end" type="text" value="<?php echo $geny_holiday_summary->period_end ?>" class="validate[required,custom[date]] text-input" />
+			</p>
+			start: <?php echo $geny_holiday_summary->period_start ?>
+			<p>
+				<label for="holiday_summary_count_acquired">Acquis</label>
+				<input name="holiday_summary_count_acquired" id="holiday_summary_count_acquired" type="text" value="<?php echo $geny_holiday_summary->count_acquired ?>" class="validate[required,length[2,100]] text-input" />
+			</p>
+			<p>
+				<label for="holiday_summary_count_taken">Pris</label>
+				<input name="holiday_summary_count_taken" id="holiday_summary_count_taken" type="text" value="<?php echo $geny_holiday_summary->count_taken ?>" class="validate[required,length[2,100]] text-input" />
+			</p>
+			<p>
+				<label for="holiday_summary_count_remaining">Restant</label>
+				<input name="holiday_summary_count_remaining" id="holiday_summary_count_remaining" type="text" value="<?php echo $geny_holiday_summary->count_remaining ?>" class="validate[required,length[2,100]] text-input" />
+			</p>
+
+
+
+			<p>
+				<input type="submit" value="Modifier" /> ou <a href="holiday_summary_list.php">annuler</a>
+			</p>
+		</form>
+	</p>
+</div>
+<div id="bottomdock">
+	<ul>
+		<?php /*include 'backend/widgets/project_list.dock.widget.php';*/ ?>
+		<?php/* include 'backend/widgets/project_add.dock.widget.php'; */?>
+	</ul>
+</div>
+<?php
+include_once 'footer.php';
+?>
