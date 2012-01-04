@@ -37,16 +37,43 @@ class GenyIdeaMessage extends GenyDatabaseTools {
 	}
 
 	public function sendMailForNewMessage( $idea_message_profile_id, $idea_message_content, $idea_message_idea_id ) {
+// 		$idea_message_idea = new GenyIdea();
+// 		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
+// 		$subject = '[GYMActivity] Un commentaire a &eacute;t&eacute; ajout&eacute; &agrave; votre id&eacute;e : '.$idea_message_idea->title;
+// 		$message_submitter_profile = new GenyProfile();
+// 		$message_submitter_profile->loadProfileById( $idea_message_profile_id );
+// 		$body = "Commentaire de ".$message_submitter_profile->firstname." ".$message_submitter_profile->lastname." [".$message_submitter_profile->email."] :<br/><br/>".$idea_message_content."<br/><br/>Vous pouvez consulter cette idée et répondre à ce message en allant sur <a href='http://cra.genymobile.com'>http://cra.genymobile.com</a> dans la section Boîte à Idées.<br/><br/>---<br/><font color=\"#7f7f7f\" face=\"&#39;BN Year 2000&#39;\" size=\"6\"><span style=\"line-height:36px\"><img src=\"https://lh5.googleusercontent.com/-D4J1fAOyk8A/TgbxwOsSIjI/AAAAAAAAABE/zWEpLl0Q3ZM/s144/genymobile-24.png\"><br></span></font><br/><font color=\"#666666\">Gestion de CRA</font></p><br/>";
+// 		$idea_submitter_profile = new GenyProfile();
+// 		$idea_submitter_profile->loadProfileById( $idea_message_idea->submitter );
+// 		$to = $idea_submitter_profile->email;
+		
+		$subject = $this->makeMailSubject( $idea_message_idea_id );
+		$body = $this->makeMailBody( $idea_message_profile_id, $idea_message_content );
+		$to = $this->makeMailReceiver( $idea_message_idea_id );
+		sendMail( $subject, $to, $body );
+	}
+
+	public function makeMailSubject( $idea_message_idea_id ) {
 		$idea_message_idea = new GenyIdea();
 		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
-		$mail_subject = '[GYMActivity] Un commentaire a &eacute;t&eacute; ajout&eacute; &agrave; votre id&eacute;e : '.$idea_message_idea->title;
+		$subject = '[GYMActivity] Un commentaire a &eacute;t&eacute; ajout&eacute; &agrave; votre id&eacute;e : '.$idea_message_idea->title;
+		return $subject;
+	}
+
+	public function makeMailBody( $idea_message_profile_id, $idea_message_content ) {
 		$message_submitter_profile = new GenyProfile();
 		$message_submitter_profile->loadProfileById( $idea_message_profile_id );
 		$body = "Commentaire de ".$message_submitter_profile->firstname." ".$message_submitter_profile->lastname." [".$message_submitter_profile->email."] :<br/><br/>".$idea_message_content."<br/><br/>Vous pouvez consulter cette idée et répondre à ce message en allant sur <a href='http://cra.genymobile.com'>http://cra.genymobile.com</a> dans la section Boîte à Idées.<br/><br/>---<br/><font color=\"#7f7f7f\" face=\"&#39;BN Year 2000&#39;\" size=\"6\"><span style=\"line-height:36px\"><img src=\"https://lh5.googleusercontent.com/-D4J1fAOyk8A/TgbxwOsSIjI/AAAAAAAAABE/zWEpLl0Q3ZM/s144/genymobile-24.png\"><br></span></font><br/><font color=\"#666666\">Gestion de CRA</font></p><br/>";
+		return $body;
+	}
+
+	public function makeMailReceiver( $idea_message_idea_id ) {
+		$idea_message_idea = new GenyIdea();
+		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
 		$idea_submitter_profile = new GenyProfile();
 		$idea_submitter_profile->loadProfileById( $idea_message_idea->submitter );
 		$to = $idea_submitter_profile->email;
-		sendMail( $mail_subject, $to, $body );
+		return $to;
 	}
 
 	public function insertNewIdeaMessage( $id, $idea_message_content, $submission_date, $profile_id, $idea_id ) {
