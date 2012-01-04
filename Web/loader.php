@@ -40,6 +40,15 @@ include_once 'menu.php';
 		?>
 	</div>
 </div>
+<div id="separator_top"></div>
+<div id="bottomdock">
+<?php
+	include 'backend/widgets/cra_add.dock.widget.php';
+	include 'backend/widgets/cra_list.dock.widget.php';
+	include 'backend/widgets/conges_add.dock.widget.php';
+?>
+</div>
+<div id="separator_bottom"></div>
 <?php
 // include_once 'footer.php';
 ?>

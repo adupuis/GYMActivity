@@ -12,6 +12,7 @@ ul.sdt_menu a{
 	outline:none;
 }
 ul.sdt_menu li{
+	background:#868686;
 	float:left;
 	width:170px;
 	height:85px;
@@ -52,7 +53,7 @@ ul.sdt_menu li span.sdt_wrap{
 }
 ul.sdt_menu li span.sdt_active{
 	position:absolute;
-	background:#111;
+	background:#868686;
 	top:85px;
 	width:170px;
 	height:0px;
@@ -76,7 +77,7 @@ ul.sdt_menu li span span.sdt_link{
 	clear:both;
 }
 ul.sdt_menu li span span.sdt_descr{
-	color:#0B75AF;
+	color:#2C78B9;
 	float:left;
 	clear:both;
 	width:155px; /*For dumbass IE7*/
@@ -97,14 +98,14 @@ ul.sdt_menu li div.sdt_box{
 	top:85px;
 	left:0px;
 	display:none;
-	background:#000;
+	background:#868686;
 	z-index: 9;
 }
 ul.sdt_menu li div.sdt_box a{
 	float:left;
 	clear:both;
 	line-height:30px;
-	color:#0B75AF;
+	color:#2C78B9;
 }
 ul.sdt_menu li div.sdt_box a:first-child{
 	margin-top:15px;
