@@ -440,9 +440,9 @@ CREATE TABLE HolydaySummaries (
 	holyday_summary_type char(10) not null,
 	holyday_summary_period_start date not null,
 	holyday_summary_period_end date not null,
-	holyday_summary_count_acquis int not null default 0,
-	holyday_summary_count_pris int not null default 0,
-	holyday_summary_count_restant int not null default 0,
+	holyday_summary_count_acquired int not null default 0,
+	holyday_summary_count_taken int not null default 0,
+	holyday_summary_count_remaining int not null default 0,
 	primary key(holyday_summary_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
 );

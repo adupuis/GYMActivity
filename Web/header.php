@@ -128,16 +128,18 @@ echo $header_title
 <body>
 <img id="logo" src="images/<?php echo $web_config->theme ?>/<?php echo $web_config->company_corner_logo ?>" alt="<?php echo $web_config->company_name ?> Logo"/>
 
-<!-- <p id="headband"> -->
-	<?php
+<?php	
+	if( $web_config->theme == "default" ) {
+		echo "<p id=\"headband\">";
 		$screen_name = $_SESSION['USERID'];
 		if( $profile->firstname && $profile->lastname)
 			$screen_name = $profile->firstname." ".$profile->lastname;
 		else
 			$screen_name = $profile->login;
-// 		echo "<strong>Logged in as:</strong> ".$screen_name."";
-	?>
-<!-- </p> -->
+		echo "<strong>Logged in as:</strong> ".$screen_name."";
+		echo "</p>";
+	}
+?>
 
 
 

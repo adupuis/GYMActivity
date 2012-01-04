@@ -182,7 +182,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		if( isset( $_POST['idea_message_content'] ) ) {
 			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_NOQUOTES, "UTF-8" ), $current_datetime, $profile->id, $_POST['idea_message_idea_id'] ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
-				$geny_idea_message->sendMailForNewMessage( $profile->id, $_POST['idea_message_content'], $_POST['idea_message_idea_id'] );
+// 				$geny_idea_message->sendMailForNewMessage( $profile->id, $_POST['idea_message_content'], $_POST['idea_message_idea_id'] );
 			}
 			else {
 				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du commentaire.");
@@ -357,10 +357,10 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 
 		<form id="idea_message_create_form" action="idea_view.php" method="post">
  			<input type="hidden" name="idea_message_create" value="true" />
- 			<input type="hidden" name="idea_message_idea_id" value="<?php echo $geny_idea->id ?>" />
+ 			<input type="hidden" name="idea_message_idea_id" id="idea_message_idea_id" value="<?php echo $geny_idea->id ?>" />
  			<label for="idea_message_content">Poster un commentaire</label>
 			<textarea name="idea_message_content" id="idea_message_content" class="validate[required] text-input"></textarea>
-			<input type="submit" id="idea_message_create_form_submit" value="Poster" />
+			<input type="submit" id="idea_message_create_form_submit" value="Poster" onclick="send_idea_message_mail()" />
 		</form>
 	</p>
 </div>
@@ -372,6 +372,24 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		?>
 	</ul>
 </div>
+
+<script>
+
+	console.log( "javascript from idea_view." );
+
+	function send_idea_message_mail() {
+
+		var idea_message_idea_id = $('#idea_message_idea_id').val();
+		var idea_message_profile_id = <?php echo $profile->id; ?>;
+		var idea_message_content = $('#idea_message_content').val();
+		$.get( "backend/api/send_idea_message_mail.php", { idea_id: idea_message_idea_id,
+								   idea_message_profile_id: idea_message_profile_id,
+								   idea_message_content: idea_message_content }
+		);
+
+	}
+
+</script>
 
 <?php
 include_once 'footer.php';
