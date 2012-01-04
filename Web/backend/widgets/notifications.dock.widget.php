@@ -36,8 +36,16 @@ $html .= '</ul>';
 	function get_unread_notification_count(){
 		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=count_unread", function(data){
 			var init_count = $("span.notification_count_content").text();
-			$("span.notification_count_content").empty();
-			$("span.notification_count_content").append(data.count_unread);
+// 			$("span.notification_count_content").empty();
+// 			$("span.notification_count_content").append(data.count_unread);
+			if( data.count_unread > 0 ){
+				$("#notification_content").empty();
+				$("#notification_content").append("Vous avez "+data.count_unread+" nouvelle(s) notification(s).");
+			}
+			else {
+				$("#notification_content").empty();
+				$("#notification_content").append("Vous n'avez aucune nouvelle notification.");
+			}
 			var diff_count = data.count_unread - init_count;
 			if( diff_count > 0 ){
 				$.gritter.add({
@@ -115,9 +123,9 @@ $html .= '</ul>';
 
 <li class="notifications">
 	<a href="#" onClick='$( "#notifications-dialog-message" ).dialog( "open" )'>
-		<span class="notifications_count"><span class="notification_count_content">0</span></span>
+<!-- 		<span class="notifications_count"><span class="notification_count_content">0</span></span> -->
 		<span class="dock_item_title">Notifications</span><br/>
-		<span class="dock_item_content">La liste de toutes les notifications que le système vous a envoyé. Le cercle rouge contient le nombre de notifications non lus que vous avez.</span>
+		<span class="dock_item_content"><span id="notification_content">Vous n'avez aucune nouvelle notification.</span></span>
 	</a>
 </li>
 
