@@ -29,7 +29,7 @@ date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-$data_array_filters = array( 1 => array(), 2 => array() );
+$data_array_filters = array( 0 => array(), 1 => array() );
 
 
 $geny_holiday_summary = new GenyHolidaySummary();
@@ -55,10 +55,12 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 	
 	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );
 
-// 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
-// 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
-// 	if( ! in_array($screen_name, $data_array_filters[3]) )
-// 		$data_array_filters[3][] = $screen_name;
+	$holiday_summary_types = array( "CP"=>"CP", "RTT"=>"RTT" );
+
+	if( !in_array($screen_name, $data_array_filters[0]) )
+		$data_array_filters[0][] = $screen_name;
+	if( !in_array( $holiday_summary_types["$tmp->type"], $data_array_filters[1] ) )
+		$data_array_filters[1][] = $holiday_summary_types["$tmp->type"];
 }
 
 ?>
@@ -131,14 +133,14 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
-// 				$("tfoot th").each( function ( i ) {
-// 					if(i == 1 || i == 2){
-// 						this.innerHTML = indexData[i];
-// 						$('select', this).change( function () {
-// 							oTable.fnFilter( $(this).val(), i );
-// 						} );
-// 					}
-// 				} );
+				$("tfoot th").each( function ( i ) {
+					if( i == 0 || i == 1 ) {
+						this.innerHTML = indexData[i];
+						$('select', this).change( function () {
+							oTable.fnFilter( $(this).val(), i );
+						} );
+					}
+				} );
 			
 			});
 			
