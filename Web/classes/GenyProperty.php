@@ -119,8 +119,8 @@ class GenyProperty extends GenyDatabaseTools {
 			$this->type_id = $prop->type_id;
 		}
 	}
-	public function loadPropertyTypeByName($name){
-		$props = $this->getPropertiesListWithRestrictions(array("property_name=".mysql_real_escape_string($name)));
+	public function loadPropertyByName($name){
+		$props = $this->getPropertiesListWithRestrictions(array("property_name='".mysql_real_escape_string($name)."'"));
 		$prop = $props[0];
 		if(isset($prop) && $prop->id > -1){
 			$this->id = $prop->id;
