@@ -20,7 +20,7 @@
 
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Soldes de congés';
-$required_group_rights = 5;
+$required_group_rights = 2;
 
 include_once 'header.php';
 include_once 'menu.php';
@@ -29,26 +29,37 @@ date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-// $data_array_filters = array( 2 => array(), 3 => array() );
+$data_array_filters = array( 1 => array(), 2 => array() );
 
 
-$geny_holiday_summary = new GenyHolydaySummary();
+$geny_holiday_summary = new GenyHolidaySummary();
 
-// $geny_profile = new GenyProfile();
-// foreach( $geny_profile->getAllProfiles() as $prof ) {
-// 	$profiles[$prof->id] = $prof;
-// }
+$geny_profile = new GenyProfile();
+foreach( $geny_profile->getAllProfiles() as $prof ) {
+	$profiles[$prof->id] = $prof;
+}
 
-// foreach( $geny_holiday_summary->getAllHolydaySummaries() as $tmp ) {
+foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
+	
+	$tmp_profile = $profiles["$tmp->profile_id"];
+	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
+		$screen_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
+	}
+	else {
+		$screen_name = $tmp_profile->login;
+	}
 
-// 	$tmp_profile = $profiles["$tmp->profile_id"];
-// 	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
-// 		$screen_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
-// 	}
-// 	else {
-// 		$screen_name = $tmp_profile->login;
-// 	}
-// }
+	$edit = "<a href=\"holiday_summary_edit.php?load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/project_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
+
+	$remove = "<a href=\"holiday_summary_remove.php?holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
+	
+	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );
+
+// 	if( ! in_array($idea_statuses["$tmp->status_id"]->name, $data_array_filters[2]) )
+// 		$data_array_filters[2][] = $idea_statuses["$tmp->status_id"]->name;
+// 	if( ! in_array($screen_name, $data_array_filters[3]) )
+// 		$data_array_filters[3][] = $screen_name;
+}
 
 ?>
 
@@ -75,16 +86,18 @@ $geny_holiday_summary = new GenyHolydaySummary();
 				}
 				
 				$data_array_filters_html = array();
-// 				foreach( $data_array_filters as $idx => $data ){
-// 					$data_array_filters_html[$idx] = '<select><option value=""></option>';
-// 					foreach( $data as $d ){
-// 						if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-// 							$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-// 						else
-// 							$data_array_filters_html[$idx] .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
-// 					}
-// 					$data_array_filters_html[$idx] .= '</select>';
-// 				}
+				foreach( $data_array_filters as $idx => $data ) {
+					$data_array_filters_html[$idx] = '<select><option value=""></option>';
+					foreach( $data as $d ) {
+						if( isset( $cookie ) && htmlspecialchars_decode( urldecode( $cookie->aaSearchCols[$idx][0]), ENT_QUOTES ) == htmlspecialchars_decode( $d, ENT_QUOTES ) ) {
+							$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'">'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'</option>';
+						}
+						else {
+							$data_array_filters_html[$idx] .= '<option value="'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'">'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'</option>';
+						}
+					}
+					$data_array_filters_html[$idx] .= '</select>';
+				}
 				foreach( $data_array_filters_html as $idx => $html ){
 					echo "indexData[$idx] = '$html';\n";
 				}
@@ -119,7 +132,7 @@ $geny_holiday_summary = new GenyHolydaySummary();
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 // 				$("tfoot th").each( function ( i ) {
-// 					if(i == 2 || i == 3){
+// 					if(i == 1 || i == 2){
 // 						this.innerHTML = indexData[i];
 // 						$('select', this).change( function () {
 // 							oTable.fnFilter( $(this).val(), i );
@@ -180,7 +193,7 @@ $geny_holiday_summary = new GenyHolydaySummary();
 <div id="bottomdock">
 	<ul>
 		<?php 
-// 			include 'backend/widgets/idea_add.dock.widget.php';
+ 			include 'backend/widgets/holiday_summary_add.dock.widget.php';
 		?>
 	</ul>
 </div>

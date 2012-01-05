@@ -20,7 +20,7 @@
 
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Ajout Solde de congés';
-$required_group_rights = 5;
+$required_group_rights = 2;
 
 include_once 'header.php';
 include_once 'menu.php';
@@ -129,7 +129,7 @@ $geny_profile = new GenyProfile();
 <div id="bottomdock">
 	<ul>
 		<?php 
-// 			include 'backend/widgets/idea_list.dock.widget.php';
+ 			include 'backend/widgets/holiday_summary_list.dock.widget.php';
 		?>
 	</ul>
 </div>

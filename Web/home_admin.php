@@ -49,9 +49,11 @@ include_once 'menu.php';
 				include 'backend/widgets/task_list.dock.widget.php'; 
 				include 'backend/widgets/project_add.dock.widget.php'; 
 				include 'backend/widgets/project_list.dock.widget.php';
+				include 'backend/widgets/holiday_summary_add.dock.widget.php';
+				include 'backend/widgets/holiday_summary_list.dock.widget.php';
 			}
-			include 'backend/widgets/idea_add.dock.widget.php'; 
-			include 'backend/widgets/idea_list.dock.widget.php'; 
+			include 'backend/widgets/idea_add.dock.widget.php';
+			include 'backend/widgets/idea_list.dock.widget.php';
 		?>
 	</ul>
 </div>

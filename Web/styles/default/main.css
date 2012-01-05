@@ -502,6 +502,22 @@ li.idea_list a {
 	background-image: url(../../images/default/idea_list.png);
 }
 
+li.holiday_summary_add a {
+	background-image: url(../../images/default/conges_admin_generic.png);
+}
+
+li.holiday_summary_edit a {
+	background-image: url(../../images/default/conges_admin_generic.png);
+}
+
+li.holiday_summary_remove a {
+	background-image: url(../../images/default/conges_admin_generic.png);
+}
+
+li.holiday_summary_list a {
+	background-image: url(../../images/default/conges_admin_generic.png);
+}
+
 
 /* End of main dock style */
 
@@ -812,6 +828,22 @@ p.mainarea_title span.idea_list {
 	background-image: url(../../images/default/idea_list.png);
 }
 
+p.mainarea_title span.holiday_summary_add {
+	background-image: url(../../images/default/holiday_summary_add.png);
+}
+
+p.mainarea_title span.holiday_summary_edit {
+	background-image: url(../../images/default/holiday_summary_edit.png);
+}
+
+p.mainarea_title span.holiday_summary_remove {
+	background-image: url(../../images/default/holiday_summary_remove.png);
+}
+
+p.mainarea_title span.holiday_summary_list {
+	background-image: url(../../images/default/holiday_summary_list.png);
+}
+
 table.object_list {
 	border-collapse:collapse;
 	margin: auto;
@@ -977,4 +1009,20 @@ table.object_list > tr:nth-child(odd){
 	/*position: absolute;
 	right: 20px;
 	bottom: 30px;*/
+}
+
+
+.holiday_summary_edit {
+	line-height: 30px;
+}
+
+.holiday_summary {
+	background:#F5F5F5;
+	border: #333 solid 1px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+	-moz-box-shadow: 3px 3px 4px #333;
+	-webkit-box-shadow: 3px 3px 4px #333;
+	box-shadow: 3px 3px 4px #333;
 }

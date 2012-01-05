@@ -50,4 +50,5 @@ DROP TABLE Properties;
 DROP TABLE PropertyOptions;
 DROP TABLE PropertyValues;
 DROP TABLE CareerEvents;
+DROP TABLE HolidaySummaries;
 COMMIT;
