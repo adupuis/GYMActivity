@@ -104,7 +104,7 @@ class GenyPropertyType extends GenyDatabaseTools {
 		}
 	}
 	public function loadPropertyTypeByShortName($shortname){
-		$p_ts = $this->getPropertyTypesListWithRestrictions(array("property_type_shortname=".mysql_real_escape_string($shortname)));
+		$p_ts = $this->getPropertyTypesListWithRestrictions(array("property_type_shortname='".mysql_real_escape_string($shortname)."'"));
 		$p_t = $p_ts[0];
 		if(isset($p_t) && $p_t->id > -1){
 			$this->id = $p_t->id;
