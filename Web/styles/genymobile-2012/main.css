@@ -593,14 +593,18 @@ div#bottomdock a span.dock_item_content {
      		<div class='separator_bottom'></div>
     </div>*/
 #bottomdock {
+	display: block;
 	background: none;
 	max-width: 960px;
 	margin:auto;
 	line-height: 20px;
 	color: #535353;
+/* 	height: 273px; */
+/* 	position: relative; */
 }
 
 #bottomdock ul li {
+	display: block;
 	padding: 0;
 	margin:0 12px;
 	width: 273px;
@@ -610,20 +614,24 @@ div#bottomdock a span.dock_item_content {
 }
 
 #bottomdock li a {
+	display: block;
 	text-decoration: none;
 	background-repeat:no-repeat;
 	background-position:10px 10px;
 	line-height: 20px;
 	color: #535353;
 	height: 140px;
+	width: 273px;
 }
 
 #bottomdock li a span.dock_item_title {
 	font-weight: bold;
 	font-size: 21px;
 	font-family: 'Lato', sans-serif;
-	height: 80px;
+	height: 40px;
 	width: 203px;
+	position: absolute;
+	display: block;
 }
 
 #bottomdock li a span.dock_item_content {
@@ -631,6 +639,8 @@ div#bottomdock a span.dock_item_content {
 	font-family: 'Lato', sans-serif;
 	height: 80px;
 	width: 203px;
+	position: absolute;
+	display: block;
 }
 
 #bottomdock li a span.dock_item_title, #bottomdock li a span.dock_item_content {
@@ -638,13 +648,23 @@ div#bottomdock a span.dock_item_content {
 	padding-left: 70px;
 }
 
-/*#services ul li {
+#bottomdock ul {
 	display: inline;
-	padding: 0;
+/* 	height: 273px; */
+/* 	width: 960px; */
+/* 	min-width: 900px; */
+/* 	vertical-align: middle; */
+}
+
+#services ul li {
+	display: inline;
+	vertical-align: middle;
+	float: left;
+/*	padding: 0;
 	margin:0 12px;
 	width: 273px;
-	height: 140px;
-}*/
+	height: 140px;*/
+}
 
 h3.italic {
 font-style: italic;
@@ -660,11 +680,12 @@ p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset, figure
 margin-bottom: 20px;
 }
 
-/*#services {
+#services {
 	margin: 10px 10px 0;
 	overflow: hidden;
+/* 	height: 273px; */
 }
-#services h3, #services p {
+/*#services h3, #services p {
 	margin-bottom: 10px;
 	padding-left: 70px;
 }
