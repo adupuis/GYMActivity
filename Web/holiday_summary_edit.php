@@ -151,14 +151,53 @@ else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary
 				<select name="holiday_summary_id" id="holiday_summary_id" onChange="submit()">
 					<?php
 						$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
+
+						function sort_array( $array, $key ) {
+							for( $i = 0; $i < sizeof( $array ); $i++ ) {
+								$sort_values[$i] = $array[$i][$key];
+							}
+							natcasesort( $sort_values );
+							reset( $sort_values );
+
+							while( list( $arr_key, $arr_val ) = each( $sort_values ) ) {
+								$sorted_arr[] = $array[$arr_key];
+							}
+							return $sorted_arr;
+						}
+
+						$concat_array = array();
+						$i = 0;
 						foreach( $holiday_summaries as $holiday_summary ) {
+							foreach( $geny_profile->getAllProfiles() as $prof ) {
+								if( $holiday_summary->profile_id == $prof->id ) {
+									if( $prof->firstname && $prof->lastname ) {
+										$prof_scr_name = $prof->firstname.' '.$prof->lastname;
+									}
+									else {
+										$prof_scr_name = $prof->login;
+									}
+									break;
+								}
+							}
 							if( $geny_holiday_summary->id == $holiday_summary->id ) {
-								echo "<option value=\"".$holiday_summary->id."\" selected>".$holiday_summary->id."</option>\n";
+								$concat1 = "<option value=\"".$holiday_summary->id."\" selected>";
 							}
 							else {
-								echo "<option value=\"".$holiday_summary->id."\">".$holiday_summary->id."</option>\n";
+								$concat1 = "<option value=\"".$holiday_summary->id."\">";
 							}
+							$concat2 = $prof_scr_name.' - '.$holiday_summary->type.' - du '.$holiday_summary->period_start.' au '.$holiday_summary->period_end."</option>\n";
+							$concat_array2 = array();
+							$concat_array2["first"] = $concat1;
+							$concat_array2["second"] = $concat2;
+							$concat_array[$i] = $concat_array2;
+							$i++;
 						}
+						$concat_array = sort_array( $concat_array, "second" );
+
+						foreach( $concat_array as $concat ) {
+							echo $concat["first"].$concat["second"];
+						}
+
 						if( $geny_holiday_summary->id < 0 ) {
 							$geny_holiday_summary->loadHolidaySummaryById( $holiday_summaries[0]->id );
 						}
