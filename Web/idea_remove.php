@@ -37,7 +37,6 @@ if( isset($_POST['remove_idea']) && $_POST['remove_idea'] == "true" ) {
 	if(isset($_POST['idea_id'])) {
 		if( isset($_POST['force_remove']) && $_POST['force_remove'] == "true" ) {
 			$id = $_POST['idea_id'];
-			$geny_idea = new GenyIdea();
 			$geny_idea->loadIdeaById($id);
 			if($geny_idea->submitter == $profile->id            ||
 			   $profile->rights_group_id == 1 /* admin */       ||
