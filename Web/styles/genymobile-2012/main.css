@@ -431,7 +431,21 @@ li.idea_remove a {
 li.idea_list a {
 	background-image: url(../../images/genymobile-2012/idea_list.png);
 }
+li.holiday_summary_add a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
 
+li.holiday_summary_edit a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.holiday_summary_remove a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.holiday_summary_list a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
 
 /* End of main dock style */
 

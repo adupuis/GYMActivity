@@ -49,9 +49,9 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 		$screen_name = $tmp_profile->login;
 	}
 
-	$edit = "<a href=\"holiday_summary_edit.php?load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/project_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
+	$edit = "<a href=\"holiday_summary_edit.php?load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
 
-	$remove = "<a href=\"holiday_summary_remove.php?holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
+	$remove = "<a href=\"holiday_summary_remove.php?holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
 	
 	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );
 

@@ -829,19 +829,19 @@ p.mainarea_title span.idea_list {
 }
 
 p.mainarea_title span.holiday_summary_add {
-	background-image: url(../../images/default/holiday_summary_add.png);
+	background-image: url(../../images/default/conges_admin_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_edit {
-	background-image: url(../../images/default/holiday_summary_edit.png);
+	background-image: url(../../images/default/conges_admin_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_remove {
-	background-image: url(../../images/default/holiday_summary_remove.png);
+	background-image: url(../../images/default/conges_admin_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_list {
-	background-image: url(../../images/default/holiday_summary_list.png);
+	background-image: url(../../images/default/conges_admin_generic.png);
 }
 
 table.object_list {
