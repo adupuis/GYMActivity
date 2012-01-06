@@ -29,6 +29,7 @@ $gritter_notifications = array();
 
 $geny_holiday_summary = new GenyHolidaySummary();
 $geny_profile = new GenyProfile();
+$geny_tools = new GenyTools();
 
 $handle = mysql_connect( $web_config->db_host, $web_config->db_user, $web_config->db_password );
 mysql_select_db( $web_config->db_name );
@@ -63,7 +64,7 @@ else {
 
 
 ?>
-
+$concat_array = sort_array( $concat_array, "second" );
 <div class="page_title">
 	<img src="images/<?php echo $web_config->theme ?>/conges_admin_generic.png"/><p>Solde de congés</p>
 </div>
@@ -102,19 +103,6 @@ else {
 					<?php
 					$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
 
-					function sort_array( $array, $key ) {
-						for( $i = 0; $i < sizeof( $array ); $i++ ) {
-							$sort_values[$i] = $array[$i][$key];
-						}
-						natcasesort( $sort_values );
-						reset( $sort_values );
-
-						while( list( $arr_key, $arr_val ) = each( $sort_values ) ) {
-							$sorted_arr[] = $array[$arr_key];
-						}
-						return $sorted_arr;
-					}
-
 					$concat_array = array();
 					$i = 0;
 					foreach( $holiday_summaries as $holiday_summary ) {
@@ -142,7 +130,7 @@ else {
 						$concat_array[$i] = $concat_array2;
 						$i++;
 					}
-					$concat_array = sort_array( $concat_array, "second" );
+					$concat_array = $geny_tools->sortMultiArrayCaseInsensitive( $concat_array, "second" );
 
 					foreach( $concat_array as $concat ) {
 						echo $concat["first"].$concat["second"];

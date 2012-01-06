@@ -29,6 +29,7 @@ $gritter_notifications = array();
 
 $geny_holiday_summary = new GenyHolidaySummary();
 $geny_profile = new GenyProfile();
+$geny_tools = new GenyTools();
 
 if( isset( $_POST['create_holiday_summary'] ) && $_POST['create_holiday_summary'] == "true" ) {
 	if( isset( $_POST['holiday_summary_count_acquired'] ) && isset( $_POST['holiday_summary_count_taken'] ) && isset( $_POST['holiday_summary_count_remaining'] ) ) {
@@ -152,19 +153,6 @@ else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary
 					<?php
 						$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
 
-						function sort_array( $array, $key ) {
-							for( $i = 0; $i < sizeof( $array ); $i++ ) {
-								$sort_values[$i] = $array[$i][$key];
-							}
-							natcasesort( $sort_values );
-							reset( $sort_values );
-
-							while( list( $arr_key, $arr_val ) = each( $sort_values ) ) {
-								$sorted_arr[] = $array[$arr_key];
-							}
-							return $sorted_arr;
-						}
-
 						$concat_array = array();
 						$i = 0;
 						foreach( $holiday_summaries as $holiday_summary ) {
@@ -192,7 +180,7 @@ else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary
 							$concat_array[$i] = $concat_array2;
 							$i++;
 						}
-						$concat_array = sort_array( $concat_array, "second" );
+						$concat_array = $geny_tools->sortMultiArrayCaseInsensitive( $concat_array, "second" );
 
 						foreach( $concat_array as $concat ) {
 							echo $concat["first"].$concat["second"];

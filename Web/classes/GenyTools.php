@@ -100,6 +100,19 @@ class GenyTools {
 			$ret = $_GET[$param];
 		return htmlentities($ret,ENT_QUOTES,'UTF-8');
 	}
+	static function sortMultiArrayCaseInsensitive( $array, $key ) {
+		// example: $array = sortMultiArrayCaseInsensitive( $array, "key" );
+		for( $i = 0; $i < sizeof( $array ); $i++ ) {
+			$sort_values[$i] = $array[$i][$key];
+		}
+		natcasesort( $sort_values );
+		reset( $sort_values );
+
+		while( list( $arr_key, $arr_val ) = each( $sort_values ) ) {
+			$sorted_arr[] = $array[$arr_key];
+		}
+		return $sorted_arr;
+	}
 }
 
 ?>
