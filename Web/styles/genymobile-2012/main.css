@@ -156,8 +156,8 @@ form p:hover label{
 img#logo {
 	position: absolute;
 	display: block;
-	top: 0;
-	left: 5px;
+	top: 10px;
+	left: -10px;
 }
 #headband {
 	position: absolute;
