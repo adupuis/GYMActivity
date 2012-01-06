@@ -28,7 +28,7 @@ body{
 	background-repeat: repeat-x;
 	
 	color:#333;
-	font-family: 'Droid Sans', arial, serif;
+	font-family: 'Lato', sans-serif;
 	font-size:14px;
 	line-height:16px;
 	text-shadow:0 1px 0 #fff;
@@ -53,7 +53,7 @@ a.submit{
 	color:#fff;
 	cursor:pointer;
 /* 	font-family:Arial,sans-serif; */
-	font-family: 'Droid Sans', arial, serif;
+	font-family: 'Lato', sans-serif;
 	font-size:14px;
 	font-weight:bold;
 	margin-left:120px;
@@ -440,7 +440,7 @@ li.idea_list a {
 	display: block;
 	width:960px;
 	height:27px;
-	margin:0px auto;
+	margin:20px auto;
 	background:url('../../images/genymobile-2012/separator_top.png') no-repeat;
 	clear:both;
 }
@@ -448,11 +448,11 @@ li.idea_list a {
 	display: block;
 	width:960px;
 	height:33px;
-	margin:0px auto;
+	margin:20px auto;
 	background:url('../../images/genymobile-2012/separator_bottom.png') no-repeat;
 	clear:both;
 }
-div#bottomdock li {
+/*div#bottomdock li {
 	background-color: transparent;
 	background-image: none;
 	background-repeat: repeat;
@@ -467,7 +467,7 @@ div#bottomdock li {
 	color: #535353;
 	display: block;
 	float: left;
-	font-family: 'Droid Sans', arial, serif;
+	font-family: 'Lato', sans-serif;
 	font-size: 13px;
 	font-style: normal;
 	font-variant: normal;
@@ -530,7 +530,7 @@ div#bottomdock a span.dock_item_content {
 	border-top-width: 0px;
 	color: #535353;
 	display: block;
-	font-family: 'Droid Sans', arial, serif;
+	font-family: 'Lato', sans-serif;
 	font-size: 13px;
 	font-style: normal;
 	font-variant: normal;
@@ -546,6 +546,189 @@ div#bottomdock a span.dock_item_content {
 	padding-right: 0px;
 	padding-top: 0px;
 	width: 203px;
-}
+}  */
 
 /* End of bottom dock style */
+
+/* Footer */
+#footer {
+	font-size:10pt;
+	color:#59BA21;
+	text-align:center;
+	padding-bottom:35px;
+}
+#footer a{
+	color:#59BA21;
+	text-decoration:none!important;
+	margin:0px 20px;
+}
+#footer a:hover{
+	color:#6a6a6a;
+}
+/* End of footer */
+
+/* New bottomdock */
+
+/*<div id="bottomdock">
+<h3 class="italic">Liens rapides</h3>
+<div id='services' class='widget clearfix'>
+
+
+<li class="cra_add">
+	<a href="cra_add.php">
+		<span class="dock_item_title">Ajouter un CRA</span><br/>
+		<span class="dock_item_content">Ajouter un rapport d'activité pour une période donnée.</span>
+	</a>
+</li>
+</div>
+</div>*/
+
+/*<div id='container_wrapper'>
+    		<h3 class='italic'>En bref</h3>
+    		<div id='services' class='widget clearfix'>
+      		<div class='col'><img src="http://www-dev.genymobile.com/wp-content/uploads/2011/03/map.png" alt="Nos dernières références" /><h3>Nos dernières références</h3><p>- Socle technique Android - JCDecaux
+- Box opérateur - Orange Vallée
+- projet On - Orange Vallée</p></div>
+    		</div>
+     		<div class='separator_bottom'></div>
+    </div>*/
+#bottomdock {
+	background: none;
+	max-width: 960px;
+	margin:auto;
+	line-height: 20px;
+	color: #535353;
+}
+
+#bottomdock ul li {
+	padding: 0;
+	margin:0 12px;
+	width: 273px;
+	list-style: none;
+	display: inline;
+	height: 140px;
+}
+
+#bottomdock li a {
+	text-decoration: none;
+	background-repeat:no-repeat;
+	background-position:10px 10px;
+	line-height: 20px;
+	color: #535353;
+	height: 140px;
+}
+
+#bottomdock li a span.dock_item_title {
+	font-weight: bold;
+	font-size: 21px;
+	font-family: 'Lato', sans-serif;
+	height: 80px;
+	width: 203px;
+}
+
+#bottomdock li a span.dock_item_content {
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+	height: 80px;
+	width: 203px;
+}
+
+#bottomdock li a span.dock_item_title, #bottomdock li a span.dock_item_content {
+	margin-bottom: 10px;
+	padding-left: 70px;
+}
+
+/*#services ul li {
+	display: inline;
+	padding: 0;
+	margin:0 12px;
+	width: 273px;
+	height: 140px;
+}*/
+
+h3.italic {
+font-style: italic;
+}
+
+h3 {
+font-weight: bold;
+font-size: 21px;
+font-family: 'Lato', sans-serif;
+}
+
+p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, table, address, fieldset, figure {
+margin-bottom: 20px;
+}
+
+/*#services {
+	margin: 10px 10px 0;
+	overflow: hidden;
+}
+#services h3, #services p {
+	margin-bottom: 10px;
+	padding-left: 70px;
+}
+#services img {
+	float: left;
+}
+#services .col {
+	padding: 0;
+	margin:0 12px;
+	width: 273px;
+}
+
+#services .col1 {
+}
+
+#services .col2 {
+}
+
+#services .col3 {
+	margin-right: 0px;
+}
+
+
+
+.bouton{
+text-shadow:0px -1px 0px #6a6a6a;
+}*/
+
+
+
+/********************************/
+/* WIDGETS
+/********************************/
+/*.widget {
+	border-radius: 3px;
+}
+#middle_content .widget {
+	margin-bottom: 0px;
+}
+
+
+
+.widget ul {
+	margin: 0;
+}
+.widget ul li {
+	background: url(images/hr.jpg) repeat-x bottom;
+	list-style: none;
+	margin: 0 0 10px;
+	padding: 5px 0 10px;
+}
+.widget ul li:last-child {
+	background: none;
+}
+.widget ul li.clear {
+	background: none;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.widget ul li a {
+	display: inline;
+	float: none;
+	margin: 0px;
+	padding: 0px;
+}*/
+/* End of new bottomdock */

@@ -42,15 +42,20 @@ include_once 'menu.php';
 </div>
 <div id="separator_top"></div>
 <div id="bottomdock">
+<h3 class="italic">Liens rapides</h3>
+<div id='services' class='widget clearfix'>
+<ul>
 <?php
 	include 'backend/widgets/cra_add.dock.widget.php';
 	include 'backend/widgets/cra_list.dock.widget.php';
 	include 'backend/widgets/conges_add.dock.widget.php';
 ?>
+</ul>
+</div>
 </div>
 <div id="separator_bottom"></div>
 <?php
-// include_once 'footer.php';
+include_once 'footer.php';
 ?>
 <!--<script type="text/javascript">
 	$(document).ready(function() {
