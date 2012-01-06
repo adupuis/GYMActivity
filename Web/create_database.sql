@@ -221,19 +221,19 @@ CREATE TABLE Assignements (
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
 INSERT INTO `Assignements` VALUES (NULL,3,1,0),(NULL,4,1,0),(NULL,5,1,0),(NULL,3,4,0),(NULL,3,2,0),(NULL,4,2,0),(NULL,5,2,0),(NULL,3,3,0),(NULL,4,3,0),(NULL,5,3,0),(NULL,4,4,0),(NULL,5,4,0);
 
-CREATE TABLE DailyFees (
-	daily_fee_id int auto_increment,
+CREATE TABLE DailyRates (
+	daily_rate_id int auto_increment,
 	project_id int not null,
 	task_id int not null,
 	profile_id int,
-	daily_fee_start_date date not null,
-	daily_fee_end_date date not null,
-	primary key(daily_fee_id),
+	daily_rate_start_date date not null,
+	daily_rate_end_date date not null,
+	primary key(daily_rate_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-ALTER TABLE DailyFees AUTO_INCREMENT = 1;
+ALTER TABLE DailyRates AUTO_INCREMENT = 1;
 
 CREATE TABLE Activities (
 	activity_id int auto_increment,
