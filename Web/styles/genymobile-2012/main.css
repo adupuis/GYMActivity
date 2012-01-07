@@ -254,7 +254,7 @@ div#maindock ul li a {
 	-webkit-border-radius:10px;
 	-khtml-border-radius: 10px;*/
 	text-align:center;
-	opacity: 0.85; 
+/* 	opacity: 0.85;  */
 	padding: 5px;
 }
 
@@ -598,7 +598,7 @@ div#bottomdock a span.dock_item_content {
 	max-width: 960px;
 	margin:auto;
 	line-height: 20px;
-	color: #535353;
+	color: #6a6a6a;
 /* 	height: 273px; */
 /* 	position: relative; */
 }
@@ -610,17 +610,17 @@ div#bottomdock a span.dock_item_content {
 	width: 273px;
 	list-style: none;
 	display: inline;
-	height: 140px;
+	height: 120px;
 }
 
 #bottomdock li a {
 	display: block;
 	text-decoration: none;
 	background-repeat:no-repeat;
-	background-position:10px 10px;
+	background-position:0px 0px;
 	line-height: 20px;
-	color: #535353;
-	height: 140px;
+	color: #6a6a6a;
+	height: 120px;
 	width: 273px;
 }
 
@@ -632,6 +632,7 @@ div#bottomdock a span.dock_item_content {
 	width: 203px;
 	position: absolute;
 	display: block;
+	padding-top: 10px;
 }
 
 #bottomdock li a span.dock_item_content {
@@ -641,6 +642,7 @@ div#bottomdock a span.dock_item_content {
 	width: 203px;
 	position: absolute;
 	display: block;
+	padding-top: 15px;
 }
 
 #bottomdock li a span.dock_item_title, #bottomdock li a span.dock_item_content {
