@@ -19,6 +19,23 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+$month = date('m', time());
+$year=date('Y', time());
+$start_date="$year-$month-1";
+$end_date="$year-$month-31";
+
+$estimated_load = 0;
+$user_load = 0;
+
+$geny_ar = new GenyActivityReport();
+
+foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date)) as $day ){
+	$estimated_load += 8;
+	$user_load += $geny_ar->getDayLoad($profile->id,$day);
+}
+
+$completion = ($user_load*100)/$estimated_load;
+
 ?>
 <!-- Here is the genymobile-2012 menu -->
 
@@ -40,7 +57,7 @@
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
-				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: 80%<br/>Congés dispo : 12 j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
+				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<br/>Congés dispo : 12 j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
 			</span>
 		</a>
 	</li>
