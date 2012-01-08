@@ -35,12 +35,12 @@
 <ul id="sdt_menu" class="sdt_menu">
 	<li>
 <!-- 		<a href="profile_display.php"> -->
-		<a href="loader.php?module=helloworld">
+		<a href="loader.php?module=profile_viewer">
 			<img src="images/genymobile-2012/home_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
-				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: 80%<br/>Congés dispo : 12 j<br/>Notif. non lues : 7</span></span>
+				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: 80%<br/>Congés dispo : 12 j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
 			</span>
 		</a>
 	</li>
@@ -56,7 +56,7 @@
 		</a>
 	</li>
 	<li>
-		<a href="home_cra.php">
+		<a href="loader.php?module=home_cra">
 			<img src="images/genymobile-2012/cra_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
@@ -72,7 +72,7 @@
 		</div>
 	</li>
 	<li>
-		<a href="loader.php?module=testjs">
+		<a href="loader.php?module=home_conges">
 			<img src="images/genymobile-2012/conges_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
@@ -88,7 +88,7 @@
 		</div>
 	</li>
 	<li>
-		<a href="home_reporting.php">
+		<a href="loader.php?module=home_reporting">
 			<img src="images/genymobile-2012/reporting_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
@@ -104,7 +104,7 @@
 		</div>
 	</li>
 	<li>
-		<a href="home_admin.php">
+		<a href="loader.php?module=home_admin">
 			<img src="images/genymobile-2012/admin_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
