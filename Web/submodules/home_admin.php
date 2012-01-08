@@ -23,3 +23,6 @@
 		?>
 	</ul>
 </div>
+<?php
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php');
+?>

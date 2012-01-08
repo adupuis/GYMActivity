@@ -24,6 +24,34 @@
 $geny_client = new GenyClient();
 
 ?>
+<script>
+	jQuery(document).ready(function(){
+	
+		var oTable = $('#client_list').dataTable( {
+			"bJQueryUI": true,
+			"bStateSave": true,
+			"bAutoWidth": false,
+// 			"sScrollY": 400,
+// 			"bScrollCollapse": true,
+			"sCookiePrefix": "GYMActivity_",
+			"sPaginationType": "full_numbers",
+			"oLanguage": {
+				"sSearch": "Recherche :",
+				"sLengthMenu": "Clients par page _MENU_",
+				"sZeroRecords": "Aucun résultat",
+				"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
+				"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
+				"sInfoFiltered": "(filtré de _MAX_ enregistrements)",
+				"oPaginate":{ 
+					"sFirst":"Début",
+					"sLast": "Fin",
+					"sNext": "Suivant",
+					"sPrevious": "Précédent"
+				}
+			}
+		} );
+	});
+</script>
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="client_list">
@@ -56,5 +84,5 @@ $geny_client = new GenyClient();
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/client_add.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/client_add.dock.widget.php');
 ?>

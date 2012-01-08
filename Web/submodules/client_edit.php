@@ -132,5 +132,5 @@ else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/client_list.dock.widget.php','backend/widgets/client_add.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/client_list.dock.widget.php','backend/widgets/client_add.dock.widget.php');
 ?>
