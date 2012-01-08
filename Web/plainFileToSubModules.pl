@@ -7,15 +7,14 @@ sub processFile($){
 	my $f = shift;
 	print "pf: f=$f\n";
 	open(my $ifh,"<$f");
-	open(my $fh, ">submodules/$f.unvalidated");
-	open(my $fhm, ">submodules/$f.meta.unvalidated");
+	open(my $fh, ">submodules/$f");
+	open(my $fhm, ">submodules/$f.meta");
 	print $fhm "<?php\n";
 	my $write = 0;
 	my $phase = '';
 	my @bi = ();
 	while(<$ifh>){
 # 		print "\t\t>> $_";
-# TODO : faire le truc pour ne prendre que la liste des include dans le bottomdock et les mettre dans un tableau.
 		chomp;
 		if(/^<\?php/ && $phase ne 'noway'){
 			$write = 1;
@@ -54,6 +53,18 @@ sub processFile($){
 			print "\t[debug] push $1 on \@bi.\n";
 			push @bi, "'$1'";
 		}
+		elsif(/<script/ && !$write && $phase ne 'mainarea'){
+			$write=1;
+			$phase='lonely_script';
+			print "\t[debug] entering $phase phase.\n";
+			print "[debug] write ON\n";
+		}
+		elsif(/<\/script>/ && $write && $phase eq 'lonely_script'){
+			$write=0;
+			print $fh "$_\n";
+			print "\t[debug] out of $phase phase.\n";
+			print "[debug] write OFF\n";
+		}
 		
 		if(/^include_once 'header.php';/){
 			next;
@@ -81,7 +92,9 @@ sub processFile($){
 my $ls_cmd = "ls -1";
 $ls_cmd .= " $ARGV[0]" unless $ARGV[0] eq "";
 -e 'plainFilesMoved' || mkdir 'plainFilesMoved' ;
-foreach (`$ls_cmd`){
-	chomp;
-	processFile($_);
+foreach my $file (`$ls_cmd`){
+	chomp($file);
+	print "- About to process: $file\n";
+	processFile($file);
+	system("mv $file plainFilesMoved/") && die "Unable to move $file to plainFilesMoved/.\n";
 }
