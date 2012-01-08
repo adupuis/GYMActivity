@@ -19,7 +19,7 @@ Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA -->
 
 <div id="footer">
-	<a href="#">Copyright &copy; 2011 GENYMOBILE</a> | <a href="http://www.genymobile.com/?p=375">Nous contacter</a> | <a href="http://www.genymobile.com/?p=372">Mentions légales</a>
+	<a href="#">Copyright &copy; 2012 GENYMOBILE</a> | <a href="http://www.genymobile.com/?p=375">Nous contacter</a> | <a href="http://www.genymobile.com/?p=372">Mentions légales</a>
 </div>
 </body>
 </html>
