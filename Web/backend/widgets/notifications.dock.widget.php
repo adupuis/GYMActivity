@@ -32,10 +32,11 @@ $html .= '</ul>';
 
 
 <script>
+	var init_count=0;
 // 	Récupération du nombre de notifications non lues
 	function get_unread_notification_count(){
 		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=count_unread", function(data){
-			var init_count = $("span.notification_count_content").text();
+// 			var init_count = $("span.notification_count_content").text();
 // 			$("span.notification_count_content").empty();
 // 			$("span.notification_count_content").append(data.count_unread);
 			if( data.count_unread > 0 ){
@@ -46,6 +47,8 @@ $html .= '</ul>';
 				$("#notification_content").empty();
 				$("#notification_content").append("Vous n'avez aucune nouvelle notification.");
 			}
+			$("#menu_notification_count").empty();
+			$("#menu_notification_count").append(data.count_unread);
 			var diff_count = data.count_unread - init_count;
 			if( diff_count > 0 ){
 				$.gritter.add({
@@ -60,6 +63,10 @@ $html .= '</ul>';
 					// (int | optional) the time you want it to be alive for before fading out
 					time: ''
 				});
+				console.log("data.count_unread="+data.count_unread);
+				console.log("init_count="+init_count);
+				console.log("diff_count="+diff_count);
+				init_count=data.count_unread;
 			}
 		},"json");
 	}
