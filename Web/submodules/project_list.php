@@ -19,11 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Liste projets';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $geny_project = new GenyProject();
 $geny_client = new GenyClient();
@@ -42,12 +38,6 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 }
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Projet</p>
-</div>
-
-
 <script>
 	(function($) {
 		/*
@@ -151,7 +141,6 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 				} );
 			});
 </script>
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="project_list">
@@ -190,7 +179,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 						return 'images/'.$web_config->theme.'/button_error_small.png';
 				}
 				foreach( $geny_project->getAllProjects() as $tmp ){
-					echo "<tr><td>$tmp->name</td><td>".$clients["$tmp->client_id"]->name."</td><td>$tmp->location</td><td>$tmp->start_date</td><td>$tmp->end_date</td><td>".$pts["$tmp->type_id"]->name."</td><td>".$pss["$tmp->status_id"]->name."</td><td>$tmp->description</td><td><a href='project_edit.php?load_project=true&project_id=$tmp->id' title='Editer le project'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer le projet'></a></td><td><a href='project_remove.php?project_id=$tmp->id' title='Supprimer définitivement le project'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement le projet'></a></td></tr>";
+					echo "<tr><td>$tmp->name</td><td>".$clients["$tmp->client_id"]->name."</td><td>$tmp->location</td><td>$tmp->start_date</td><td>$tmp->end_date</td><td>".$pts["$tmp->type_id"]->name."</td><td>".$pss["$tmp->status_id"]->name."</td><td>$tmp->description</td><td><a href='loader.php?module=project_edit&load_project=true&project_id=$tmp->id' title='Editer le project'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer le projet'></a></td><td><a href='loader.php?module=project_remove&project_id=$tmp->id' title='Supprimer définitivement le project'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement le projet'></a></td></tr>";
 				}
 			?>
 			</tbody>
@@ -211,11 +200,6 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 		</div>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php include 'backend/widgets/project_add.dock.widget.php'; ?>
-	</ul>
-</div>
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/project_add.dock.widget.php');
 ?>

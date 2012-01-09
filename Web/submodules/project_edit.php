@@ -19,11 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Edition projet';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $gritter_notifications = array();
 
@@ -221,11 +217,6 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 }
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Projet</p>
-</div>
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="project_edit">
@@ -268,7 +259,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				displayStatusNotifications($gritter_notifications,$web_config->theme);
 			?>
 		</script>
-		<form id="select_project_form" action="project_edit.php" method="post">
+		<form id="select_project_form" action="loader.php?module=project_edit" method="post">
 			<input type="hidden" name="load_project" value="true" />
 			<p>
 				<label for="project_id">Séléction projet</label>
@@ -290,7 +281,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				</select>
 			</p>
 		</form>
-		<form id="formID" action="project_edit.php" method="post">
+		<form id="formID" action="loader.php?module=project_edit" method="post">
 			<input type="hidden" name="edit_project" value="true" />
 			<input type="hidden" name="project_id" value="<?php echo $geny_project->id ?>" />
 			 <p>
@@ -421,17 +412,11 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				</select>
 			</p>
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="project_list.php">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="loader.php?module=project_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php include 'backend/widgets/project_list.dock.widget.php'; ?>
-		<?php include 'backend/widgets/project_add.dock.widget.php'; ?>
-	</ul>
-</div>
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/project_list.dock.widget.php','backend/widgets/project_add.dock.widget.php');
 ?>

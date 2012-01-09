@@ -19,11 +19,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Suppression projet';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 $gritter_notifications = array();
 $geny_project = new GenyProject();
 
@@ -64,12 +60,6 @@ else{
 
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Profil</p>
-</div>
-
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="project_remove">
@@ -94,7 +84,7 @@ else{
 			});
 			
 		</script>
-		<form id="select_login_form" action="project_remove.php" method="post">
+		<form id="select_login_form" action="loader.php?module=project_remove" method="post">
 			<input type="hidden" name="remove_project" value="true" />
 			<p>
 				<label for="project_id">Séléction profil</label>
@@ -119,19 +109,11 @@ else{
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression du projet. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'un projet entraîne la suppression de toutes les associations avec des tâches ainsi que de tous les CRAs.</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="project_list.php">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="loader.php?module=project_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php include 'backend/widgets/project_list.dock.widget.php'; ?>
-		<?php include 'backend/widgets/project_add.dock.widget.php'; ?>
-	</ul>
-</div>
-
-
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/project_list.dock.widget.php','backend/widgets/project_add.dock.widget.php');
 ?>

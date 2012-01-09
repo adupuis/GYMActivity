@@ -19,21 +19,12 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Ajout projet';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $geny_client = new GenyClient();
 $geny_profile = new GenyProfile();
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/project_generic.png"/><p>Projet</p>
-</div>
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="project_add">
@@ -72,7 +63,7 @@ $geny_profile = new GenyProfile();
 				});
 			});
 		</script>
-		<form id="formID" action="project_edit.php" method="post">
+		<form id="formID" action="loader.php?module=project_edit" method="post">
 			<input type="hidden" name="create_project" value="true" />
 			<p>
 				<label for="project_name">Nom du projet</label>
@@ -174,16 +165,11 @@ $geny_profile = new GenyProfile();
 				<input type="checkbox" name="project_allow_overtime" value="true" /> Autoriser les heures supplémentaires pour tout les collaborateurs. Cette opération autorisera tous les collaborateurs ajoutés au projet à ce moment. C'est un mode de groupe afin de faciliter une opération de masse, pour autoriser les heures supplémentaires par collaborateur rendez vous sur la page de <a href="/assignement_list.php">gestion des affectactions</a>. 
 			</p>
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="project_list.php">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="loader.php?module=project_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php include 'backend/widgets/project_list.dock.widget.php'; ?>
-	</ul>
-</div>
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/project_list.dock.widget.php');
 ?>
