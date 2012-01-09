@@ -79,7 +79,8 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 	}
 }
 
-loadClass('GenyTools');
+// GenyTools est maintenant chargé par le loader
+// loadClass('GenyTools');
 
 GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
 
@@ -112,7 +113,8 @@ echo $header_title
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
 <!-- <link href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css' /> -->
-<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+<!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>-->
+<link href='http://fonts.googleapis.com/css?family=Lato:400,100,700italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 <link rel="stylesheet" href="js/DataTables/media/css/demo_table_jui.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="styles/<?php echo $web_config->theme ?>/main.css" media="screen" />

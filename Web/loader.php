@@ -18,9 +18,17 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include 'classes/GenyTools.php';
+
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Home';
 $required_group_rights = 6;
+
+// Here is the code for submodule metadata loading
+$submod = GenyTools::getParam("module","bork");
+if( file_exists( 'submodules/'.$submod.'.php.meta' ) ){
+	include_once('submodules/'.$submod.'.php.meta');
+}
 
 include_once 'header.php';
 include_once 'menu.php';
@@ -32,7 +40,6 @@ include_once 'menu.php';
 	<div id="content">
 		<?php
 			// Here is the code for submodule loading
-			$submod = GenyTools::getParam("module","home");
 			if( file_exists( 'submodules/'.$submod.'.php' ) )
 				include_once('submodules/'.$submod.'.php');
 			else
@@ -40,17 +47,29 @@ include_once 'menu.php';
 		?>
 	</div>
 </div>
-<div id="separator_top"></div>
-<div id="bottomdock">
+<!--<div id='separator_top'></div>
+<div id='bottomdock'>
+<h3 class='italic'>Liens rapides</h3>
+<div id='services' class='widget clearfix'>
+<ul>-->
 <?php
-	include 'backend/widgets/cra_add.dock.widget.php';
-	include 'backend/widgets/cra_list.dock.widget.php';
-	include 'backend/widgets/conges_add.dock.widget.php';
+	if( ! isset($bottomdock_items) )
+		$bottomdock_items = array();
+	
+	if($bottomdock_items[0] != 'backend/widgets/notifications.dock.widget.php')
+		array_unshift($bottomdock_items,'backend/widgets/notifications.dock.widget.php');
+	echo "<div id='separator_top'></div>\n<div id='bottomdock'>\n<h3 class='italic'>Liens rapides</h3>\n<div id='services'>\n<ul>";
+	foreach ($bottomdock_items as $item){
+		include "$item";
+	}
+	echo "</ul>\n</div>\n</div>\n<div id='separator_bottom'></div>";
 ?>
+<!--</ul>
 </div>
-<div id="separator_bottom"></div>
+</div>
+<div id='separator_bottom'></div>-->
 <?php
-// include_once 'footer.php';
+include_once 'footer.php';
 ?>
 <!--<script type="text/javascript">
 	$(document).ready(function() {

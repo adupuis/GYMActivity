@@ -22,7 +22,7 @@
 ?>
 
 <li class="client_list">
-	<a href="client_list.php">
+	<a href="loader.php?module=client_list">
 		<span class="dock_item_title">Liste des clients</span><br/>
 		<span class="dock_item_content">Lister tous les clients de <?php echo $web_config->company_name; ?>.</span>
 	</a>

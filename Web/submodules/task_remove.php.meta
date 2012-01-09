@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Suppression tâche';
+$required_group_rights = 2;
+?>
