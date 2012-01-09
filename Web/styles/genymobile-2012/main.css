@@ -475,8 +475,8 @@ div#mainarea p.mainarea_content_intro {
 div#mainarea p.mainarea_title {
 	position:relative;
 	font-weight: bold;
-	font-size: 21px;
-	font-size: xx-large;
+	font-size: 30px;
+	letter-spacing: 0.01em;
 	text-align: center;
 	vertical-align: middle;
 	width: 100%;
@@ -492,7 +492,7 @@ div#mainarea p.mainarea_title span {
 	background-repeat: no-repeat;
 	height: 100%;
 	margin: auto;
-	width: 400px;
+	width: 420px;
 	padding-top: 20px;
 }
 
