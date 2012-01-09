@@ -142,18 +142,43 @@ DELIMITER ;
 ALTER TABLE AccessLogs MODIFY profile_id int;
 
 DROP TABLE DailyFees ;
-CREATE TABLE DailyFees (
-	daily_fee_id int auto_increment,
+CREATE TABLE DailyRates (
+	daily_rate_id int auto_increment,
 	project_id int not null,
 	task_id int not null,
 	profile_id int,
-	daily_fee_start_date date not null,
-	daily_fee_end_date date not null,
-	primary key(daily_fee_id),
+	daily_rate_start_date date not null,
+	daily_rate_end_date date not null,
+	daily_rate_value float(4,2) not null default '0.00',
+	primary key(daily_rate_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-ALTER TABLE DailyFees AUTO_INCREMENT = 1;
+ALTER TABLE DailyRates AUTO_INCREMENT = 1;
+
+DROP TABLE HolidaySummaries;
+CREATE TABLE HolidaySummaries (
+	holiday_summary_id int auto_increment,
+	profile_id int not null,
+	holiday_summary_type char(10) not null,
+	holiday_summary_period_start date not null,
+	holiday_summary_period_end date not null,
+	holiday_summary_count_acquired float(4,2) not null default '0.00',
+	holiday_summary_count_taken float(4,2) not null default '0.00',
+	holiday_summary_count_remaining float(4,2) not null default '0.00',
+	primary key(holiday_summary_id),
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+);
+ALTER TABLE HolidaySummaries AUTO_INCREMENT=1;
+
+DELIMITER $$
+create trigger hs_check_type before insert on HolidaySummaries for each row
+begin
+  if new.holiday_summary_type != "RTT" and new.holiday_summary_type != "CP" then
+    set new.holiday_summary_type := "CP";
+  end if;
+end $$
+DELIMITER ;
 
 COMMIT;
