@@ -53,7 +53,7 @@ $completion = ($user_load*100)/$estimated_load;
 	<li>
 <!-- 		<a href="profile_display.php"> -->
 		<a href="loader.php?module=profile_viewer">
-			<img src="images/genymobile-2012/home_banner.png" alt=""/>
+			<img src="images/genymobile-2012/profile_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
