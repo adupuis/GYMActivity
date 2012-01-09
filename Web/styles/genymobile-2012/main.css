@@ -153,11 +153,17 @@ form p:hover label{
 	text-align: center;
 }
 
-img#logo {
-	position: absolute;
+a#home_logo {
 	display: block;
+	position: absolute;
+	width: 170px;
+	height: 80px;
 	top: 10px;
 	left: -10px;
+	background-image: url(../../images/genymobile-2012/logo_banner.png);
+}
+a#home_logo:hover {
+	background-image: url(../../images/genymobile-2012/logo_home_banner.png);
 }
 #headband {
 	position: absolute;
