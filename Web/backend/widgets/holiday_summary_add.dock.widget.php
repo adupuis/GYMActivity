@@ -22,7 +22,7 @@
 ?>
 
 <li class="holiday_summary_add">
-	<a href="holiday_summary_add.php">
+	<a href="loader.php?module=holiday_summary_add">
 		<span class="dock_item_title">Ajouter un solde de congés</span><br/>
 		<span class="dock_item_content">Ajouter un solde de congés.</span>
 	</a>

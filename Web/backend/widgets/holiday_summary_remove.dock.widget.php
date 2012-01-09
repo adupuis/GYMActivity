@@ -22,7 +22,7 @@
 ?>
 
 <li class="holiday_summary_remove">
-	<a href="holiday_summary_remove.php">
+	<a href="loader.php?module=holiday_summary_remove">
 		<span class="dock_item_title">Supprimer un solde de congés</span><br/>
 		<span class="dock_item_content">Supprimer un solde de congés existant.</span>
 	</a>

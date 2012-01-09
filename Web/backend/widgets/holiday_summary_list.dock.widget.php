@@ -22,7 +22,7 @@
 ?>
 
 <li class="holiday_summary_list">
-	<a href="holiday_summary_list.php">
+	<a href="loader.php?module=holiday_summary_list">
 		<span class="dock_item_title">Liste des soldes de congés</span><br/>
 		<span class="dock_item_content">Lister tous les soldes de congés.</span>
 	</a>
