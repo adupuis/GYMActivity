@@ -111,7 +111,7 @@ class GenyProfile extends GenyDatabaseTools {
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 
-		var_dump($result);
+// 		var_dump($result);
 		$profile_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
