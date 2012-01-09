@@ -60,7 +60,7 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 		if( $tmp_profile->needs_password_reset )
 			header('Location: user_admin_password_change.php');
 		else
-			header("Location: home.php");
+			header("Location: loader.php?module=home");
 		exit;
 	}
 
