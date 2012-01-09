@@ -56,7 +56,7 @@ include_once 'menu.php';
 	if( ! isset($bottomdock_items) )
 		$bottomdock_items = array();
 	
-	if($bottomdock_items[0] ne 'backend/widgets/notifications.dock.widget.php')
+	if($bottomdock_items[0] != 'backend/widgets/notifications.dock.widget.php')
 		array_unshift($bottomdock_items,'backend/widgets/notifications.dock.widget.php');
 	echo "<div id='separator_top'></div>\n<div id='bottomdock'>\n<h3 class='italic'>Liens rapides</h3>\n<div id='services'>\n<ul>";
 	foreach ($bottomdock_items as $item){
