@@ -20,7 +20,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 session_start();
-$required_group_rights = 6;
+$required_group_rights = 2;
 $auth_granted = false;
 
 header('Content-type:text/javascript;charset=UTF-8');
@@ -42,13 +42,12 @@ try {
 		}
 		
 		if( $project_id > 0 ) {
-			$geny_profile = new GenyProfile();
-			$results = $geny_profile->getAllProfilesByProjectId( $project_id );
+			$results = $tmp_profile->getAllProfilesByProjectId( $project_id );
 		}
 		
 		foreach( $results as $pr ){
 			$tmp = array();
-			foreach( get_object_vars( $tmp_pr ) as $field => $value ) {
+			foreach( get_object_vars( $tmp_profile ) as $field => $value ) {
 				$tmp[$field] = $pr->$field ;
 			}
 			$profiles[] = $tmp;
