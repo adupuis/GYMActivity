@@ -128,7 +128,9 @@ echo $header_title
 </style>
 </head>
 <body>
-<img id="logo" src="images/<?php echo $web_config->theme ?>/<?php echo $web_config->company_corner_logo ?>" alt="<?php echo $web_config->company_name ?> Logo"/>
+<a href="loader.php?module=home" id="home_logo">
+
+</a>
 
 <?php	
 	if( $web_config->theme == "default" ) {
