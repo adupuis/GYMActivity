@@ -20,11 +20,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Suppression tâche';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $gritter_notifications = array();
 $geny_task = new GenyTask();
@@ -66,12 +62,6 @@ else{
 
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/task_generic.png"/><p>Tâche</p>
-</div>
-
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="task_remove">
@@ -96,7 +86,7 @@ else{
 			});
 			
 		</script>
-		<form id="select_login_form" action="task_remove.php" method="post">
+		<form id="select_login_form" action="loader.php?module=task_remove" method="post">
 			<input type="hidden" name="remove_task" value="true" />
 			<p>
 				<label for="task_id">Séléction tâche</label>
@@ -118,20 +108,11 @@ else{
 			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression de la tâche. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'un tâche entraîne la suppression de toutes les affectations aux projets ainsi que tous les rapports d'activités !</strong>
 			</p>
 			<p>
-				<input type="submit" value="Supprimer" /> ou <a href="task_list.php">annuler</a>
+				<input type="submit" value="Supprimer" /> ou <a href="loader.php?module=task_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php 
-			include 'backend/widgets/task_list.dock.widget.php';
-			include 'backend/widgets/task_add.dock.widget.php';
-		?>
-	</ul>
-</div>
-
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/task_list.dock.widget.php','backend/widgets/task_add.dock.widget.php');
 ?>

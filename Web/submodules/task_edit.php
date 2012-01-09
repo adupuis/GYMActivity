@@ -20,11 +20,7 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Edition tâche';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $geny_task = new GenyTask();
 $gritter_notifications = array();
@@ -87,12 +83,6 @@ else{
 
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/task_generic.png"/><p>Tâche</p>
-</div>
-
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="task_edit">
@@ -110,7 +100,7 @@ else{
 			?>
 		</script>
 		
-		<form id="select_login_form" action="task_edit.php" method="post">
+		<form id="select_login_form" action="loader.php?module=task_edit" method="post">
 			<input type="hidden" name="load_task" value="true" />
 			<p>
 				<label for="task_id">Séléction tâche</label>
@@ -133,7 +123,7 @@ else{
 			</p>
 		</form>
 
-		<form id="start" action="task_edit.php" method="post">
+		<form id="start" action="loader.php?module=task_edit" method="post">
 			<input type="hidden" name="edit_task" value="true" />
 			<input type="hidden" name="task_id" value="<?php echo $geny_task->id ?>" />
 			<p>
@@ -145,20 +135,11 @@ else{
 				<textarea name="task_description" id="task_description" class="validate[required] text-input"><?php echo $geny_task->description ?></textarea>
 			</p>
 			<p>
-				<input type="submit" value="Modifier" /> ou <a href="task_list.php">annuler</a>
+				<input type="submit" value="Modifier" /> ou <a href="loader.php?module=task_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php 
-			include 'backend/widgets/task_list.dock.widget.php';
-			include 'backend/widgets/task_add.dock.widget.php';
-		?>
-	</ul>
-</div>
-
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/task_list.dock.widget.php','backend/widgets/task_add.dock.widget.php');
 ?>

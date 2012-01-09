@@ -20,16 +20,11 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Liste tâches';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 $geny_task = new GenyTask();
 
 ?>
-
 <script>
 	jQuery(document).ready(function(){
 	
@@ -56,12 +51,6 @@ $geny_task = new GenyTask();
 		} );
 	});
 </script>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/task_generic.png"/><p>Tâche</p>
-</div>
-
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="task_list">
@@ -89,7 +78,7 @@ $geny_task = new GenyTask();
 			<tbody>
 			<?php
 				foreach( $geny_task->getAllTasks() as $task ){
-					echo "<tr><td>$task->name</td><td>$task->description</td><td><a href='task_edit.php?load_task=true&task_id=$task->id' title='Éditer la tâche'><img src='images/$web_config->theme/task_edit_small.png' alt='Éditer la tâche' ></a></td><td><a href='task_remove.php?task_id=$task->id' title='Supprimer définitivement la tâche'><img src='images/$web_config->theme/task_remove_small.png' alt='Supprimer définitivement la tâche'></a></td></tr>";
+					echo "<tr><td>$task->name</td><td>$task->description</td><td><a href='loader.php?module=task_edit&load_task=true&task_id=$task->id' title='Éditer la tâche'><img src='images/$web_config->theme/task_edit_small.png' alt='Éditer la tâche' ></a></td><td><a href='loader.php?module=task_remove&task_id=$task->id' title='Supprimer définitivement la tâche'><img src='images/$web_config->theme/task_remove_small.png' alt='Supprimer définitivement la tâche'></a></td></tr>";
 				}
 			?>
 			</tbody>
@@ -98,14 +87,6 @@ $geny_task = new GenyTask();
 		</div>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php
-			include 'backend/widgets/task_add.dock.widget.php';
-		?>
-	</ul>
-</div>
-
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/task_add.dock.widget.php');
 ?>

@@ -19,19 +19,10 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 // Variable to configure global behaviour
-$header_title = '%COMPANY_NAME% - Ajout tâche';
-$required_group_rights = 2;
 
-include_once 'header.php';
-include_once 'menu.php';
 
 
 ?>
-
-<div class="page_title">
-	<img src="images/<?php echo $web_config->theme ?>/task_generic.png"/><p>Tâche</p>
-</div>
-
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="task_add">
@@ -50,7 +41,7 @@ include_once 'menu.php';
 			});
 			
 		</script>
-		<form id="formID" action="task_edit.php" method="post">
+		<form id="formID" action="loader.php?module=task_edit" method="post">
 			<input type="hidden" name="create_task" value="true" />
 			<p>
 				<label for="task_name">Nom</label>
@@ -62,19 +53,11 @@ include_once 'menu.php';
 			</p>
 			
 			<p>
-				<input type="submit" value="Créer" /> ou <a href="task_list.php">annuler</a>
+				<input type="submit" value="Créer" /> ou <a href="loader.php?module=task_list">annuler</a>
 			</p>
 		</form>
 	</p>
 </div>
-<div id="bottomdock">
-	<ul>
-		<?php 
-			include 'backend/widgets/task_list.dock.widget.php';
-		?>
-	</ul>
-</div>
-
 <?php
-include_once 'footer.php';
+	$bottomdock_items = array('backend/widgets/task_list.dock.widget.php');
 ?>
