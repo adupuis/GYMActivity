@@ -20,6 +20,7 @@
 			}
 			include 'backend/widgets/idea_add.dock.widget.php';
 			include 'backend/widgets/idea_list.dock.widget.php';
+			include 'backend/widgets/daily_rate_add.dock.widget.php';
 			include 'backend/widgets/daily_rate_list.dock.widget.php';
 		?>
 	</ul>

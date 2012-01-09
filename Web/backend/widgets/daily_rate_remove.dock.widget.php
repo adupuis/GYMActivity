@@ -1,7 +1,7 @@
 <?php
 
-//  Copyright (C) 2011 by GENYMOBILE
-
+//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
+//  adupuis@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -21,9 +21,9 @@
 
 ?>
 
-<li class="daily_rate_list">
-	<a href="loader.php?module=daily_rate_list">
-		<span class="dock_item_title">Liste des coûts journaliers</span><br/>
-		<span class="dock_item_content">Lister tous les coûts journaliers.</span>
+<li class="daily_rate_remove">
+	<a href="loader.php?module=daily_rate_remove">
+		<span class="dock_item_title">Supprimer un coût journalier</span><br/>
+		<span class="dock_item_content">Supprimer un coût journalier existant.</span>
 	</a>
 </li>
