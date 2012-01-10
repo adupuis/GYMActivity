@@ -133,13 +133,13 @@ echo $header_title
 </a>
 
 <?php	
-	if( $web_config->theme == "default" ) {
-		echo "<p id=\"headband\">";
-		$screen_name = $_SESSION['USERID'];
-		if( $profile->firstname && $profile->lastname)
+	$screen_name = $_SESSION['USERID'];
+	if( $profile->firstname && $profile->lastname)
 			$screen_name = $profile->firstname." ".$profile->lastname;
 		else
 			$screen_name = $profile->login;
+	if( $web_config->theme == "default" ) {
+		echo "<p id=\"headband\">";
 		echo "<strong>Logged in as:</strong> ".$screen_name."";
 		echo "</p>";
 	}
