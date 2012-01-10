@@ -127,10 +127,12 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 				// TODO: il reste à gérer les notifications pour les status P_REMOVAL.
 			}
 			foreach ($count_by_profile as $id => $value){
-				if( $value['conges'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être supprimés par votre manager.","warning");
-				if( $value['cra'] > 0 )
-					$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité viennent d'être supprimés par votre manager.","warning");
+				if( $new_ars->shortname == "REMOVED" ){
+					if( $value['conges'] > 0 )
+						$notif->insertNewNotification($id,"Vos ".$value['conges']." jour(s) de congés viennent d'être supprimés par votre manager.","warning");
+					if( $value['cra'] > 0 )
+						$notif->insertNewNotification($id,"Vos ".$value['cra']." rapport(s) d'activité viennent d'être supprimés par votre manager.","warning");
+				}
 			}
 			if($ok_count == 1){
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Rapport mis à jour avec succès','msg'=>"Le rapport a été correctement passé au status ".$new_ars->name);
