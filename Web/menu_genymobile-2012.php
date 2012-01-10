@@ -34,7 +34,7 @@ foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date
 	$user_load += $geny_ar->getDayLoad($profile->id,$day);
 }
 
-$completion = ($user_load*100)/$estimated_load;
+$completion = round(($user_load*100)/$estimated_load,1);
 
 ?>
 <!-- Here is the genymobile-2012 menu -->
@@ -82,10 +82,10 @@ $completion = ($user_load*100)/$estimated_load;
 			</span>
 		</a>
 		<div class="sdt_box">
-			<a href="cra_add.php">Ajouter un CRA</a>
-			<a href="cra_validation.php">Valider vos CRA</a>
-			<a href="cra_list.php">Lister vos CRA</a>
-			<a href="cra_deletion.php">Supprimer des CRA</a>
+			<a href="loader.php?module=cra_add">Ajouter un CRA</a>
+			<a href="loader.php?module=cra_validation">Valider vos CRA</a>
+			<a href="loader.php?module=cra_list">Lister vos CRA</a>
+			<a href="loader.php?module=cra_deletion">Supprimer des CRA</a>
 		</div>
 	</li>
 	<li>
@@ -114,10 +114,10 @@ $completion = ($user_load*100)/$estimated_load;
 			</span>
 		</a>
 		<div class="sdt_box">
-			<a href="reporting_personal_load.php">Rapport de charge</a>
-			<a href="reporting_load.php">Rapport charge mensuel</a>
-			<a href="reporting_cra_completion.php">Remplissage des CRA</a>
-			<a href="home_reporting.php">Plus...</a>
+			<a href="loader.php?module=reporting_personal_load">Rapport de charge</a>
+			<a href="loader.php?module=reporting_load">Rapport charge mensuel</a>
+			<a href="loader.php?module=reporting_cra_completion">Remplissage des CRA</a>
+			<a href="loader.php?module=home_reporting">Plus...</a>
 		</div>
 	</li>
 	<li>
