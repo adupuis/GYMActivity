@@ -22,7 +22,7 @@
 ?>
 
 <li class="reporting_personal">
-	<a href="reporting_personal_load.php">
+	<a href="loader.php?module=reporting_personal_load">
 		<span class="dock_item_title">Reporting de charge</span><br/>
 		<span class="dock_item_content">Reporting sur la répartition de votre propre activité durant une période de temps et en terme de charge.</span>
 	</a>

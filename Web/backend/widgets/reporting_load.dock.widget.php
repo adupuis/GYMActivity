@@ -22,7 +22,7 @@
 ?>
 
 <li class="reporting_monthly_view">
-	<a href="reporting_load.php">
+	<a href="loader.php?module=reporting_load">
 		<span class="dock_item_title">Reporting de charge</span><br/>
 		<span class="dock_item_content">Reporting sur l'activité durant une période de temps et en terme de charge.</span>
 	</a>

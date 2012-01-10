@@ -22,7 +22,7 @@
 ?>
 
 <li class="reporting_cra">
-	<a href="reporting_cra_status.php">
+	<a href="loader.php?module=reporting_cra_status">
 		<span class="dock_item_title">Status CRA</span><br/>
 		<span class="dock_item_content">Ventilation des CRA par status.</span>
 	</a>
