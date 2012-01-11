@@ -25,16 +25,18 @@ $gritter_notifications = array();
 
 $geny_holiday_summary = new GenyHolidaySummary();
 $geny_profile = new GenyProfile();
-$geny_tools = new GenyTools();
 
 $handle = mysql_connect( $web_config->db_host, $web_config->db_user, $web_config->db_password );
 mysql_select_db( $web_config->db_name );
 mysql_query( "SET NAMES 'utf8'" );
 
-if( isset( $_POST['remove_holiday_summary'] ) && $_POST['remove_holiday_summary'] == "true" ) {
-	if( isset( $_POST['holiday_summary_id'] ) ) {
-		if( isset( $_POST['force_remove'] ) && $_POST['force_remove'] == "true" ) {
-			$id = $_POST['holiday_summary_id'];
+$remove_holiday_summary = GenyTools::getParam( 'remove_holiday_summary', 'NULL' );
+if( $remove_holiday_summary == "true" ) {
+	$holiday_summary_id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
+	if( $holiday_summary_id != 'NULL' ) {
+		$force_remove_holiday_summary = GenyTools::getParam( 'force_remove', 'NULL' );
+		if( $force_remove_holiday_summary == "true" ) {
+			$id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
 			$geny_holiday_summary->loadHolidaySummaryById( $id );
 			if( $profile->rights_group_id == 1 /* admin */       ||
 			    $profile->rights_group_id == 2 /* superuser */)  {
@@ -93,6 +95,8 @@ else {
 					<?php
 					$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
 
+					$holiday_summary_id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
+
 					$concat_array = array();
 					$i = 0;
 					foreach( $holiday_summaries as $holiday_summary ) {
@@ -107,7 +111,7 @@ else {
 								break;
 							}
 						}
-						if( $geny_holiday_summary->id == $holiday_summary->id ) {
+						if( $holiday_summary_id == $holiday_summary->id ) {
 							$concat1 = "<option value=\"".$holiday_summary->id."\" selected>";
 						}
 						else {
@@ -120,7 +124,7 @@ else {
 						$concat_array[$i] = $concat_array2;
 						$i++;
 					}
-					$concat_array = $geny_tools->sortMultiArrayCaseInsensitive( $concat_array, "second" );
+					$concat_array = GenyTools::sortMultiArrayCaseInsensitive( $concat_array, "second" );
 
 					foreach( $concat_array as $concat ) {
 						echo $concat["first"].$concat["second"];
