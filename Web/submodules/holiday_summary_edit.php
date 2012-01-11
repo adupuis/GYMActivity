@@ -25,12 +25,24 @@ $gritter_notifications = array();
 
 $geny_holiday_summary = new GenyHolidaySummary();
 $geny_profile = new GenyProfile();
-$geny_tools = new GenyTools();
+// $geny_tools = new GenyTools();
 
-if( isset( $_POST['create_holiday_summary'] ) && $_POST['create_holiday_summary'] == "true" ) {
-	if( isset( $_POST['holiday_summary_count_acquired'] ) && isset( $_POST['holiday_summary_count_taken'] ) && isset( $_POST['holiday_summary_count_remaining'] ) ) {
-		$insert_id = $geny_holiday_summary->insertNewHolidaySummary( 'NULL', $_POST['profile_id'], $_POST['holiday_summary_type'], $_POST['holiday_summary_period_start'], $_POST['holiday_summary_period_end'], $_POST['holiday_summary_count_acquired'], $_POST['holiday_summary_count_taken'], $_POST['holiday_summary_count_remaining'] );
-		error_log( "[GYMActivity::DEBUG] holiday_summary_edit insert_id : $insert_id", 0 );
+$create_holiday_summary = GenyTools::getParam( 'create_holiday_summary', 'NULL' );
+$load_holiday_summary = GenyTools::getParam( 'load_holiday_summary', 'NULL' );
+$edit_holiday_summary = GenyTools::getParam( 'edit_holiday_summary', 'NULL' );
+
+if( $create_holiday_summary == "true" ) {
+	$profile_id = GenyTools::getParam( 'profile_id', 'NULL' );
+	$holiday_summary_type = GenyTools::getParam( 'holiday_summary_type', 'NULL' );
+	$holiday_summary_period_start = GenyTools::getParam( 'holiday_summary_period_start', 'NULL' );
+	$holiday_summary_period_end = GenyTools::getParam( 'holiday_summary_period_end', 'NULL' );
+	$holiday_summary_count_acquired = GenyTools::getParam( 'holiday_summary_count_acquired', 'NULL' );
+	$holiday_summary_count_taken = GenyTools::getParam( 'holiday_summary_count_taken', 'NULL' );
+	$holiday_summary_count_remaining = GenyTools::getParam( 'holiday_summary_count_remaining', 'NULL' );
+
+	if( $profile_id != 'NULL' && $holiday_summary_type != 'NULL' && $holiday_summary_period_start != 'NULL' && $holiday_summary_period_end != 'NULL' && $holiday_summary_count_acquired != 'NULL' && $holiday_summary_count_taken != 'NULL' && $holiday_summary_count_remaining != 'NULL' ) {
+		$insert_id = $geny_holiday_summary->insertNewHolidaySummary( 'NULL', $profile_id, $holiday_summary_type, $holiday_summary_period_start, $holiday_summary_period_end, $holiday_summary_count_acquired, $holiday_summary_count_taken, $holiday_summary_count_remaining );
+// 		error_log( "[GYMActivity::DEBUG] holiday_summary_edit insert_id : $insert_id", 0 );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés ajouté avec succès." );
 			$geny_holiday_summary->loadHolidaySummaryById( $insert_id );
@@ -43,70 +55,69 @@ if( isset( $_POST['create_holiday_summary'] ) && $_POST['create_holiday_summary'
 		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir." );
 	}
 }
-else if( isset( $_POST['load_holiday_summary'] ) && $_POST['load_holiday_summary'] == "true" ) {
-	if( isset( $_POST['holiday_summary_id'] ) ) {
-		$geny_holiday_summary->loadHolidaySummaryById( $_POST['holiday_summary_id'] );
-	}
-	else {
-		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger le solde de congés','msg'=>"id non spécifié." );
-	}
-}
-else if( isset( $_GET['load_holiday_summary'] ) && $_GET['load_holiday_summary'] == "true" ) {
-	if( isset( $_GET['holiday_summary_id'] ) ) {
+else if( $load_holiday_summary == 'true' ) {
+	$holiday_summary_id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
+	if( $holiday_summary_id != 'NULL' ) {
 		$tmp_geny_holiday_summary = new GenyHolidaySummary();
-		$tmp_geny_holiday_summary->loadHolidaySummaryById( $_GET['holiday_summary_id'] );
+		$tmp_geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2     /* superuser */ ) {
-			$geny_holiday_summary->loadHolidaySummaryById( $_GET['holiday_summary_id'] );
+			$geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger le solde de congés ",'msg'=>"Vous n'êtes pas autorisé.");
 			header( 'Location: error.php?category=holiday_summary&backlinks=holiday_summary_list,holiday_summary_add' );
 		}
 	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger le solde de congés",'msg'=>"id non spécifié.");
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger le solde de congés','msg'=>"id non spécifié." );
 	}
 }
-else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary'] == "true" ) {
-	if( isset( $_POST['holiday_summary_id'] ) ) {
-		$geny_holiday_summary->loadHolidaySummaryById( $_POST['holiday_summary_id'] );
+else if( $edit_holiday_summary == 'true' ) {
+	$holiday_summary_id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
+	if( $holiday_summary_id != 'NULL' ) {
+		$geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		
 		if( $profile->rights_group_id == 1 /* admin */       ||
 		    $profile->rights_group_id == 2 /* superuser */ ) {
-			if( isset( $_POST['profile_id'] ) && $_POST['profile_id'] != "" && $geny_holiday_summary->profile_id != $_POST['profile_id'] ) {
-				$geny_holiday_summary->updateInt( 'profile_id', $_POST['profile_id'] );
+
+			$profile_id = GenyTools::getParam( 'profile_id', 'NULL' );
+			$holiday_summary_type = GenyTools::getParam( 'holiday_summary_type', 'NULL' );
+			$holiday_summary_period_start = GenyTools::getParam( 'holiday_summary_period_start', 'NULL' );
+			$holiday_summary_period_end = GenyTools::getParam( 'holiday_summary_period_end', 'NULL' );
+			$holiday_summary_count_acquired = GenyTools::getParam( 'holiday_summary_count_acquired', 'NULL' );
+			$holiday_summary_count_taken = GenyTools::getParam( 'holiday_summary_count_taken', 'NULL' );
+			$holiday_summary_count_remaining = GenyTools::getParam( 'holiday_summary_count_remaining', 'NULL' );
+
+			if( $profile_id != 'NULL' && $geny_holiday_summary->profile_id != $profile_id ) {
+				$geny_holiday_summary->updateInt( 'profile_id', $profile_id );
 			}
-			if( isset( $_POST['holiday_summary_type'] ) && $_POST['holiday_summary_type'] != "" && $geny_holiday_summary->type != $_POST['holiday_summary_type'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_type', $_POST['holiday_summary_type'] );
+			if( $holiday_summary_type != 'NULL' && $geny_holiday_summary->type != $holiday_summary_type ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_type', $holiday_summary_type );
 			}
-			if( isset( $_POST['holiday_summary_period_start'] ) && $_POST['holiday_summary_period_start'] != "" && $geny_holiday_summary->period_start != $_POST['holiday_summary_period_start'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_period_start', $_POST['holiday_summary_period_start'] );
+			if( $holiday_summary_period_start != 'NULL' && $geny_holiday_summary->period_start != $holiday_summary_period_start ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_period_start', $holiday_summary_period_start );
 			}
-			if( isset( $_POST['holiday_summary_period_end'] ) && $_POST['holiday_summary_period_end'] != "" && $geny_holiday_summary->period_end != $_POST['holiday_summary_period_end'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_period_end', $_POST['holiday_summary_period_end'] );
+			if( $holiday_summary_period_end != 'NULL' && $geny_holiday_summary->period_end != $holiday_summary_period_end ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_period_end', $holiday_summary_period_end );
 			}
-			if( isset( $_POST['holiday_summary_count_acquired'] ) && $_POST['holiday_summary_count_acquired'] != "" && $geny_holiday_summary->count_acquired != $_POST['holiday_summary_count_acquired'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_count_acquired', $_POST['holiday_summary_count_acquired'] );
+			if( $holiday_summary_count_acquired != 'NULL' && $geny_holiday_summary->count_acquired != $holiday_summary_count_acquired ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_count_acquired', $holiday_summary_count_acquired );
 			}
-			if( isset( $_POST['holiday_summary_count_taken'] ) && $_POST['holiday_summary_count_taken'] != "" && $geny_holiday_summary->count_taken != $_POST['holiday_summary_count_taken'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_count_taken', $_POST['holiday_summary_count_taken'] );
+			if( $holiday_summary_count_taken != 'NULL' && $geny_holiday_summary->count_taken != $holiday_summary_count_taken ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_count_taken', $holiday_summary_count_taken );
 			}
-			if( isset( $_POST['holiday_summary_count_remaining'] ) && $_POST['holiday_summary_count_remaining'] != "" && $geny_holiday_summary->count_remaining != $_POST['holiday_summary_count_remaining'] ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_count_remaining', $_POST['holiday_summary_count_remaining'] );
+			if( $holiday_summary_count_remaining != 'NULL' && $geny_holiday_summary->count_remaining != $holiday_summary_count_remaining ) {
+				$geny_holiday_summary->updateString( 'holiday_summary_count_remaining', $holiday_summary_count_remaining );
 			}
 		}
 		if( $geny_holiday_summary->commitUpdates() ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés mis à jour avec succès.");
-			$geny_holiday_summary->loadHolidaySummaryById( $_POST['holiday_summary_id'] );
+			$geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du solde de congés.");
 		}
-
-	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de modifier le solde de congés ','msg'=>"id non spécifié.");
 	}
 }
 
@@ -171,7 +182,7 @@ else if( isset( $_POST['edit_holiday_summary'] ) && $_POST['edit_holiday_summary
 							$concat_array[$i] = $concat_array2;
 							$i++;
 						}
-						$concat_array = $geny_tools->sortMultiArrayCaseInsensitive( $concat_array, "second" );
+						$concat_array = GenyTools::sortMultiArrayCaseInsensitive( $concat_array, "second" );
 
 						foreach( $concat_array as $concat ) {
 							echo $concat["first"].$concat["second"];
