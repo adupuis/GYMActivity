@@ -27,7 +27,7 @@ $geny_profile = new GenyProfile();
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="holiday_summary_add">
-			Ajouter un solde de congés
+			Ajouter solde congés
 		</span>
 	</p>
 	<p class="mainarea_content">

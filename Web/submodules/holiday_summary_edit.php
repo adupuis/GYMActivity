@@ -123,7 +123,7 @@ else if( $edit_holiday_summary == 'true' ) {
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="holiday_summary_edit">
-			Modifier un solde de congés
+			Modifier solde congés
 		</span>
 	</p>
 	<p class="mainarea_content">

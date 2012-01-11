@@ -70,7 +70,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="holiday_summary_list">
-			Liste des soldes de congés
+			Soldes de congés
 		</span>
 	</p>
 	<p class="mainarea_content">
