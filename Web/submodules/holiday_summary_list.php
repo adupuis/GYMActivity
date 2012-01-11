@@ -168,7 +168,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td>".$da[3]."</td><td>".$da[4]."</td><td><center>".$da[5]."</center></td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."<center></td><td><center>".$da[4]."<center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -190,5 +190,5 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 </div>
 
 <?php
-	$bottomdock_items = array('backend/widgets/holiday_summary_add.dock.widget.php','backend/widgets/holiday_summary_list.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/holiday_summary_add.dock.widget.php');
 ?>
