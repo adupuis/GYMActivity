@@ -86,7 +86,7 @@ else{
 			<p>
 				<label for="client_id">Séléction client</label>
 
-				<select name="client_id" id="client_id">
+				<select name="client_id" id="client_id" class="chzn-select">
 					<?php
 						foreach( $geny_client->getAllClients() as $client ){
 							if( (isset($_POST['client_id']) && $_POST['client_id'] == $client->id) || (isset($_GET['client_id']) && $_GET['client_id'] == $client->id) )

@@ -109,6 +109,7 @@ echo $header_title
 <script type="text/javascript" src="js/Gritter/js/jquery.gritter.min.js"></script>
 <script type="text/javascript" src="js/jquery.datepick.js"></script>
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
+<script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
@@ -121,6 +122,7 @@ echo $header_title
 <link rel="stylesheet" href="js/formValidator/css/validationEngine.jquery.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="js/formValidator/css/template.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="styles/default/jquery-ui.css" type="text/css" media="all" />
+<link rel="stylesheet" href="js/chosen/chosen.css" />
 
 <style type="text/css">
 	@import "styles/default/jquery.datepick.css";

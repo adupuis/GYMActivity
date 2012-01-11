@@ -99,7 +99,7 @@ else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 			<p>
 				<label for="client_id">Séléction client</label>
 
-				<select name="client_id" id="client_id" onChange="submit()">
+				<select name="client_id" id="client_id" onChange="submit()" class="chzn-select">
 					<?php
 						$clients = $geny_client->getAllClients();
 						foreach( $clients as $client ){

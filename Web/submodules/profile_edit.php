@@ -203,7 +203,7 @@ else{
 			<p>
 				<label for="profile_id">Séléction profil</label>
 
-				<select name="profile_id" id="profile_id" onChange="submit()">
+				<select name="profile_id" id="profile_id" onChange="submit()" class="chzn-select">
 					<?php
 						$profiles = $geny_profile->getAllProfiles();
 						foreach( $profiles as $profile ){
@@ -273,7 +273,7 @@ else{
 			</p>
 			<p>
 				<label for="rights_group_id">Groupe</label>
-				<select name="rights_group_id" id="rights_group_id">
+				<select name="rights_group_id" id="rights_group_id" class="chzn-select">
 					<?php
 						$geny_rg = new GenyRightsGroup();
 						foreach( $geny_rg->getAllRightsGroups() as $group ){

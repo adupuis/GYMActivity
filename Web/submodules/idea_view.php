@@ -200,7 +200,7 @@ else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create']
 		<p>
 			<label for="idea_id">Sélection idée</label>
 
-			<select name="idea_id" id="idea_id" onChange="submit()">
+			<select name="idea_id" id="idea_id" onChange="submit()" class="chzn-select">
 			<?php
 			$ideas = $geny_idea->getAllIdeas();
 			foreach( $ideas as $idea ) {

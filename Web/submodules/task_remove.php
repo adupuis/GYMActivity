@@ -91,7 +91,7 @@ else{
 			<p>
 				<label for="task_id">Séléction tâche</label>
 
-				<select name="task_id" id="task_id">
+				<select name="task_id" id="task_id" class="chzn-select">
 					<?php
 						foreach( $geny_task->getAllTasks() as $client ){
 							if( (isset($_POST['task_id']) && $_POST['task_id'] == $client->id) || (isset($_GET['task_id']) && $_GET['task_id'] == $client->id) )

@@ -89,7 +89,7 @@ else {
 			<p>
 				<label for="idea_id">Séléction idée</label>
 
-				<select name="idea_id" id="idea_id">
+				<select name="idea_id" id="idea_id" class="chzn-select">
 					<?php
 					if( $profile->rights_group_id == 1 /* admin */ ||
 					    $profile->rights_group_id == 2 /* superuser */ ) {

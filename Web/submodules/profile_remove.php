@@ -105,7 +105,7 @@ else{
 			<p>
 				<label for="profile_id">Séléction profil</label>
 
-				<select name="profile_id" id="profile_id">
+				<select name="profile_id" id="profile_id" class="chzn-select">
 					<?php
 						$query = "SELECT profile_id,profile_login FROM Profiles";
 						$result = mysql_query($query, $handle);

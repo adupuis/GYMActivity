@@ -264,7 +264,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			<p>
 				<label for="project_id">Séléction projet</label>
 
-				<select name="project_id" id="project_id" onChange="submit()">
+				<select name="project_id" id="project_id" onChange="submit()" class="chzn-select">
 					<?php
 						$projects = $geny_project->getAllProjects();
 						foreach( $projects as $project ){
@@ -290,7 +290,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p> 
 			<p>
 				<label for="project_client">Client</label>
-				<select name="project_client" id="project_client">
+				<select name="project_client" id="project_client" class="chzn-select">
 				<?php
 					$geny_client = new GenyClient();
 					foreach( $geny_client->getAllClients() as $client ){
@@ -304,7 +304,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p>
 			<p>
 				<label for="project_type">Type</label>
-				<select name="project_type" id="project_type">
+				<select name="project_type" id="project_type" class="chzn-select">
 				<?php
 					$geny_pt = new GenyProjectType();
 					foreach ($geny_pt->getAllProjectTypes() as $pt){
@@ -318,7 +318,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p>
 			<p>
 				<label for="project_status">Status</label>
-				<select name="project_status" id="project_status">
+				<select name="project_status" id="project_status" class="chzn-select">
 				<?php
 					$geny_ps = new GenyProjectStatus();
 					foreach ($geny_ps->getAllProjectStatus() as $ps){

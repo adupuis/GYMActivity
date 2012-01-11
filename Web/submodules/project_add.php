@@ -71,7 +71,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="project_client">Client</label>
-				<select name="project_client" id="project_client">
+				<select name="project_client" id="project_client" class="chzn-select">
 				<?php
 					foreach( $geny_client->getAllClients() as $client ){
 						echo "<option value=\"".$client->id."\">".$client->name."</option>\n";
@@ -81,7 +81,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="project_type">Type</label>
-				<select name="project_type" id="project_type">
+				<select name="project_type" id="project_type" class="chzn-select">
 				<?php
 					$geny_pt = new GenyProjectType();
 					foreach ($geny_pt->getAllProjectTypes() as $pt){
@@ -92,7 +92,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="project_status">Status</label>
-				<select name="project_status" id="project_status">
+				<select name="project_status" id="project_status" class="chzn-select">
 				<?php
 					$geny_ps = new GenyProjectStatus();
 					foreach ($geny_ps->getAllProjectStatus() as $ps){

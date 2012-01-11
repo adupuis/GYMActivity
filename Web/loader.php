@@ -71,6 +71,9 @@ include_once 'menu.php';
 <?php
 include_once 'footer.php';
 ?>
+
+<script type="text/javascript"> $(".chzn-select").chosen();</script>
+
 <!--<script type="text/javascript">
 	$(document).ready(function() {
 		$('#sdt_menu li a').click(function(){

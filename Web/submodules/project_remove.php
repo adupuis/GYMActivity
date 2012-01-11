@@ -89,7 +89,7 @@ else{
 			<p>
 				<label for="project_id">Séléction profil</label>
 
-				<select name="project_id" id="project_id">
+				<select name="project_id" id="project_id" class="chzn-select">
 					<?php
 						$query = "SELECT project_id,project_name FROM Projects";
 						$result = mysql_query($query, $handle);

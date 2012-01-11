@@ -105,7 +105,7 @@ else{
 			<p>
 				<label for="task_id">Séléction tâche</label>
 
-				<select name="task_id" id="task_id" onChange="submit()">
+				<select name="task_id" id="task_id" onChange="submit()" class="chzn-select">
 					<?php
 						$tasks = $geny_task->getAllTasks();
 						foreach( $tasks as $task ){

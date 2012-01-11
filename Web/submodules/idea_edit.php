@@ -111,7 +111,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 			<p>
 				<label for="idea_id">Sélection idée</label>
 
-				<select name="idea_id" id="idea_id" onChange="submit()">
+				<select name="idea_id" id="idea_id" onChange="submit()" class="chzn-select">
 					<?php
 					if( $profile->rights_group_id == 1 /* admin */ ||
 					    $profile->rights_group_id == 2 /* superuser */ ) {
@@ -152,7 +152,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 <?php if( $profile->rights_group_id == 1 ): ?>
 			<p>
 				<label for="idea_status">Statut</label>
-				<select name="idea_status" id="idea_status">
+				<select name="idea_status" id="idea_status" class="chzn-select">
 					<?php
 					foreach( $geny_idea_status->getAllIdeaStatus() as $idea_status ) {
 						if( $geny_idea->status_id == $idea_status->id ) {
