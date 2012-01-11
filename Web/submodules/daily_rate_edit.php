@@ -280,9 +280,11 @@ else if( $edit_daily_rate == "true" ) {
 				function getProfiles(){
 					var project_id = $("#project_id").val();
 					var geny_daily_rate_profile_id = <?php echo ( $geny_daily_rate->profile_id ) ? $geny_daily_rate->profile_id : -1 ?>;
+					// TODO: pas bon !!! car la liste n'est pas rechargée en ajax !
 					if( geny_daily_rate_profile_id != -1 ) {
 						$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
 							$('.profiles_options').remove();
+							$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
 							$.each( data, function( key, val ) {
 								if( val.id == geny_daily_rate_profile_id ) {
 									if( val.firstname && val.lastname ) {
@@ -303,6 +305,10 @@ else if( $edit_daily_rate == "true" ) {
 							});
 
 						},'json');
+					}
+					else {
+						$('.profiles_options').remove();
+						$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
 					}
 				}
 				$("#project_id").change( getProfiles );

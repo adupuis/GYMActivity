@@ -87,6 +87,7 @@ $geny_profile = new GenyProfile();
 					var project_id = $("#project_id").val();
 					$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
 						$('.profiles_options').remove();
+						$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
 						$.each( data, function( key, val ) {
 							if( val.firstname && val.lastname ) {
 								$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.firstname +' '+ val.lastname + '</option>' );
