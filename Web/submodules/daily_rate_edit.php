@@ -274,29 +274,31 @@ else if( $edit_daily_rate == "true" ) {
 
 				function getProfiles(){
 					var project_id = $("#project_id").val();
-					var geny_daily_rate_profile_id = <?php echo $geny_daily_rate->profile_id ?>;
-					$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
-						$('.profiles_options').remove();
-						$.each( data, function( key, val ) {
-							if( val.id == geny_daily_rate_profile_id ) {
-								if( val.firstname && val.lastname ) {
-									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '"selected>' + val.firstname +' '+ val.lastname + '</option>' );
+					var geny_daily_rate_profile_id = <?php echo ( $geny_daily_rate->profile_id ) ? $geny_daily_rate->profile_id : -1 ?>;
+					if( geny_daily_rate_profile_id != -1 ) {
+						$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
+							$('.profiles_options').remove();
+							$.each( data, function( key, val ) {
+								if( val.id == geny_daily_rate_profile_id ) {
+									if( val.firstname && val.lastname ) {
+										$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '"selected>' + val.firstname +' '+ val.lastname + '</option>' );
+									}
+									else {
+										$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '"selected>' + val.login + '</option>' );
+									}
 								}
 								else {
-									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '"selected>' + val.login + '</option>' );
+									if( val.firstname && val.lastname ) {
+										$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.firstname +' '+ val.lastname + '</option>' );
+									}
+									else {
+										$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.login + '</option>' );
+									}
 								}
-							}
-							else {
-								if( val.firstname && val.lastname ) {
-									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.firstname +' '+ val.lastname + '</option>' );
-								}
-								else {
-									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.login + '</option>' );
-								}
-							}
-						});
+							});
 
-					},'json');
+						},'json');
+					}
 				}
 				$("#project_id").change( getProfiles );
 				getProfiles();
