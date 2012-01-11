@@ -40,7 +40,7 @@ class GenyDailyRate extends GenyDatabaseTools {
 	
 	public function insertNewDailyRate( $id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value ) {
 		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value",0);
+			error_log( "[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value", 0 );
 		}
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;

@@ -25,7 +25,6 @@ $gritter_notifications = array();
 
 $geny_holiday_summary = new GenyHolidaySummary();
 $geny_profile = new GenyProfile();
-// $geny_tools = new GenyTools();
 
 $create_holiday_summary = GenyTools::getParam( 'create_holiday_summary', 'NULL' );
 $load_holiday_summary = GenyTools::getParam( 'load_holiday_summary', 'NULL' );
@@ -42,7 +41,6 @@ if( $create_holiday_summary == "true" ) {
 
 	if( $profile_id != 'NULL' && $holiday_summary_type != 'NULL' && $holiday_summary_period_start != 'NULL' && $holiday_summary_period_end != 'NULL' && $holiday_summary_count_acquired != 'NULL' && $holiday_summary_count_taken != 'NULL' && $holiday_summary_count_remaining != 'NULL' ) {
 		$insert_id = $geny_holiday_summary->insertNewHolidaySummary( 'NULL', $profile_id, $holiday_summary_type, $holiday_summary_period_start, $holiday_summary_period_end, $holiday_summary_count_acquired, $holiday_summary_count_taken, $holiday_summary_count_remaining );
-// 		error_log( "[GYMActivity::DEBUG] holiday_summary_edit insert_id : $insert_id", 0 );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés ajouté avec succès." );
 			$geny_holiday_summary->loadHolidaySummaryById( $insert_id );

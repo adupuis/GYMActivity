@@ -40,7 +40,7 @@ class GenyHolidaySummary extends GenyDatabaseTools  {
 	
 	public function insertNewHolidaySummary( $id, $profile_id, $holiday_summary_type, $holiday_summary_period_start, $holiday_summary_period_end, $holiday_summary_count_acquired, $holiday_summary_count_taken, $holiday_summary_count_remaining ) {
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyHolidaySummary new holiday_summary insertion - id: $id - profile_id: $profile_id - holiday_summary_type: $holiday_summary_type - holiday_summary_period_start: $holiday_summary_period_start - holiday_summary_period_end: $holiday_summary_period_end - holiday_summary_count_acquired: $holiday_summary_count_acquired - holiday_summary_count_taken: $holiday_summary_count_taken - holiday_summary_count_remaining: $holiday_summary_count_remaining -->\n";
+			error_log( "[GYMActivity::DEBUG] GenyHolidaySummary new holiday_summary insertion - id: $id - profile_id: $profile_id - holiday_summary_type: $holiday_summary_type - holiday_summary_period_start: $holiday_summary_period_start - holiday_summary_period_end: $holiday_summary_period_end - holiday_summary_count_acquired: $holiday_summary_count_acquired - holiday_summary_count_taken: $holiday_summary_count_taken - holiday_summary_count_remaining: $holiday_summary_count_remaining", 0 );
 		}
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;

@@ -40,11 +40,8 @@ if( $create_daily_rate == "true" ) {
 	$daily_rate_end_date = GenyTools::getParam( 'daily_rate_end_date', 'NULL' );
 	$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
 
-	error_log( "[GYMActivity::DEBUG] holiday_summary_edit project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value", 0 );
-
 	if( $project_id != 'NULL' && $task_id != 'NULL' && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
 		$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
-// 		error_log( "[GYMActivity::DEBUG] holiday_summary_edit insert_id : $insert_id", 0 );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
 			$geny_daily_rate->loadDailyRateById( $insert_id );
