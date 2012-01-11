@@ -157,15 +157,6 @@ else if( $edit_daily_rate == "true" ) {
 					<?php
 						$daily_rates = $geny_daily_rate->getAllDailyRates();
 
-// 						foreach( $daily_rates as $daily_rate ) {
-// 							if( $geny_daily_rate->id == $daily_rate->id ) {
-// 								echo "<option value=\"".$daily_rate->id."\" selected>".$daily_rate->id."</option>\n";
-// 							}
-// 							else {
-// 								echo "<option value=\"".$daily_rate->id."\">".$daily_rate->id."</option>\n";
-// 							}
-// 						}
-
 						$concat_array = array();
 						$i = 0;
 						foreach( $daily_rates as $daily_rate ) {
