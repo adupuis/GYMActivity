@@ -120,6 +120,11 @@ else if( $edit_holiday_summary == 'true' ) {
 }
 
 ?>
+
+<style>
+	@import "styles/genymobile-2012/chosen_override.css";
+</style>
+
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="holiday_summary_edit">
@@ -149,7 +154,7 @@ else if( $edit_holiday_summary == 'true' ) {
 			<p>
 				<label for="holiday_summary_id">Sélection solde de congés</label>
 
-				<select name="holiday_summary_id" id="holiday_summary_id" onChange="submit()">
+				<select name="holiday_summary_id" id="holiday_summary_id" class="chzn-select" onChange="submit()">
 					<?php
 						$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
 

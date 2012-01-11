@@ -62,6 +62,11 @@ else {
 
 
 ?>
+
+<style>
+	@import "styles/genymobile-2012/chosen_override.css";
+</style>
+
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="holiday_summary_remove">
@@ -91,7 +96,7 @@ else {
 			<p>
 				<label for="holiday_summary_id">Séléction solde de congés</label>
 
-				<select name="holiday_summary_id" id="holiday_summary_id">
+				<select name="holiday_summary_id" id="holiday_summary_id" class="chzn-select">
 					<?php
 					$holiday_summaries = $geny_holiday_summary->getAllHolidaySummaries();
 

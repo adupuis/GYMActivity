@@ -64,6 +64,11 @@ else {
 
 
 ?>
+
+<style>
+	@import "styles/genymobile-2012/chosen_override.css";
+</style>
+
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="daily_rate_remove">
@@ -93,7 +98,7 @@ else {
 			<p>
 				<label for="daily_rate_id">Séléction TJM</label>
 
-				<select name="daily_rate_id" id="daily_rate_id">
+				<select name="daily_rate_id" id="daily_rate_id" class="chzn-select">
 					<?php
 					$daily_rates = $geny_daily_rate->getAllDailyRates();
 
