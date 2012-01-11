@@ -23,7 +23,7 @@
 
 <li class="daily_rate_edit">
 	<a href="loader.php?module=daily_rate_edit">
-		<span class="dock_item_title">Modifier un coût journalier</span><br/>
-		<span class="dock_item_content">Modifier un coût journalier existant.</span>
+		<span class="dock_item_title">Modifier un TJM</span><br/>
+		<span class="dock_item_content">Modifier un TJM existant.</span>
 	</a>
 </li>

@@ -446,6 +446,21 @@ li.holiday_summary_remove a {
 li.holiday_summary_list a {
 	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
 }
+li.daily_rate_add a {
+	background-image: url(../../images/genymobile-2012/daily_rate_add.png);
+}
+
+li.daily_rate_edit a {
+	background-image: url(../../images/genymobile-2012/daily_rate_edit.png);
+}
+
+li.daily_rate_remove a {
+	background-image: url(../../images/genymobile-2012/daily_rate_remove.png);
+}
+
+li.daily_rate_list a {
+	background-image: url(../../images/genymobile-2012/daily_rate_list.png);
+}
 
 /* End of main dock style */
 
@@ -651,6 +666,22 @@ p.mainarea_title span.holiday_summary_remove {
 
 p.mainarea_title span.holiday_summary_list {
 	background-image: url(../../images/genymobile-2012/holiday_summary_list.png);
+}
+
+p.mainarea_title span.daily_rate_add {
+	background-image: url(../../images/genymobile-2012/daily_rate_add.png);
+}
+
+p.mainarea_title span.daily_rate_edit {
+	background-image: url(../../images/genymobile-2012/daily_rate_edit.png);
+}
+
+p.mainarea_title span.daily_rate_remove {
+	background-image: url(../../images/genymobile-2012/daily_rate_remove.png);
+}
+
+p.mainarea_title span.daily_rate_list {
+	background-image: url(../../images/genymobile-2012/daily_rate_list.png);
 }
 
 table.object_list {

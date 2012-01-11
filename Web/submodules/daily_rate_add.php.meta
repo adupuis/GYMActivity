@@ -1,4 +1,4 @@
 <?php
-$header_title = '%COMPANY_NAME% - Ajout Coût journalier';
+$header_title = '%COMPANY_NAME% - Ajout TJM';
 $required_group_rights = 2;
 ?>

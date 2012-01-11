@@ -28,12 +28,12 @@ $geny_profile = new GenyProfile();
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="daily_rate_add">
-			Ajouter un coût journalier
+			Ajouter un TJM
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet d'ajouter un coût journalier. Tous les champs doivent être remplis.
+		Ce formulaire permet d'ajouter un TJM. Tous les champs doivent être remplis.
 		</p>
 		<script>
 			jQuery(document).ready(function(){
@@ -46,7 +46,7 @@ $geny_profile = new GenyProfile();
 			});
 		</script>
 		<form id="formID" action="loader.php?module=daily_rate_edit" method="post">
-			<input type="hidden" name="create_daily_rate_summary" value="true" />
+			<input type="hidden" name="create_daily_rate" value="true" />
 			<p>
 				<label for="project_id">Projet</label>
 				<select name="project_id" id="project_id">
@@ -102,38 +102,38 @@ $geny_profile = new GenyProfile();
 				getProfiles();
 
 				$(function() {
-					$( "#daily_rate_period_start" ).datepicker();
-					$( "#daily_rate_period_start" ).datepicker('setDate', new Date());
-					$( "#daily_rate_period_start" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#daily_rate_period_start" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#daily_rate_period_start" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#daily_rate_period_start" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#daily_rate_period_start" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#daily_rate_period_start" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#daily_rate_period_start" ).datepicker( "option", "firstDay", 1 );
+					$( "#daily_rate_start_date" ).datepicker();
+					$( "#daily_rate_start_date" ).datepicker('setDate', new Date());
+					$( "#daily_rate_start_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#daily_rate_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#daily_rate_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#daily_rate_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#daily_rate_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#daily_rate_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#CREATE TABLE DailyRatesdaily_rate_start_date" ).datepicker( "option", "firstDay", 1 );
 					
-					$( "#daily_rate_period_end" ).datepicker();
-					$( "#daily_rate_period_end" ).datepicker('setDate', new Date());
-					$( "#daily_rate_period_end" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#daily_rate_period_end" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#daily_rate_period_end" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#daily_rate_period_end" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#daily_rate_period_end" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#daily_rate_period_end" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#daily_rate_period_end" ).datepicker( "option", "firstDay", 1 );
+					$( "#daily_rate_end_date" ).datepicker();
+					$( "#daily_rate_end_date" ).datepicker('setDate', new Date());
+					$( "#daily_rate_end_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#daily_rate_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#daily_rate_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#daily_rate_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#daily_rate_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#daily_rate_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#daily_rate_end_date" ).datepicker( "option", "firstDay", 1 );
 				});
 			</script>
 			<p>
-				<label for="daily_rate_period_start">Début de période</label>
-				<input name="daily_rate_period_start" id="daily_rate_period_start" type="text" class="validate[required,custom[date]] text-input" />
+				<label for="daily_rate_start_date">Début de période</label>
+				<input name="daily_rate_start_date" id="daily_rate_start_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
 			<p>
-				<label for="daily_rate_period_end">Fin de période</label>
-				<input name="daily_rate_period_end" id="daily_rate_period_end" type="text" class="validate[required,custom[date]] text-input" />
+				<label for="daily_rate_end_date">Fin de période</label>
+				<input name="daily_rate_end_date" id="daily_rate_end_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
 			<p>
-				<label for="value">Valeur</label>
-				<input name="value_id" id="value_id"/>
+				<label for="daily_rate_value">Valeur</label>
+				<input name="daily_rate_value" id="daily_rate_value" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 
 				<input type="submit" value="Ajouter" /> ou <a href="loader.php?module=daily_rate_list">annuler</a>

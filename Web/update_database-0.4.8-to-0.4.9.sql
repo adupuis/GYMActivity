@@ -141,7 +141,7 @@ DELIMITER ;
 
 ALTER TABLE AccessLogs MODIFY profile_id int;
 
-DROP TABLE DailyFees ;
+DROP TABLE DailyFees;
 CREATE TABLE DailyRates (
 	daily_rate_id int auto_increment,
 	project_id int not null,
@@ -149,7 +149,7 @@ CREATE TABLE DailyRates (
 	profile_id int,
 	daily_rate_start_date date not null,
 	daily_rate_end_date date not null,
-	daily_rate_value float(4,2) not null default '0.00',
+	daily_rate_value int not null default '0.00',
 	primary key(daily_rate_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,

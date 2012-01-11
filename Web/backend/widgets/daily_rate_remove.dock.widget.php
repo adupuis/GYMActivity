@@ -23,7 +23,7 @@
 
 <li class="daily_rate_remove">
 	<a href="loader.php?module=daily_rate_remove">
-		<span class="dock_item_title">Supprimer un coût journalier</span><br/>
-		<span class="dock_item_content">Supprimer un coût journalier existant.</span>
+		<span class="dock_item_title">Supprimer un TJM</span><br/>
+		<span class="dock_item_content">Supprimer un TJM existant.</span>
 	</a>
 </li>

@@ -23,6 +23,7 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyDailyRate extends GenyDatabaseTools {
+
 	public function __construct( $id = -1 ) {
 		parent::__construct("DailyRates",  "daily_rate_id");
 		$this->id = -1;
@@ -31,14 +32,15 @@ class GenyDailyRate extends GenyDatabaseTools {
 		$this->profile_id = -1;
 		$this->start_date = '';
 		$this->end_date = '';
+		$this->value = -1;
 		if( $id > -1 ) {
  			$this->loadDailyRateById( $id );
 		}
 	}
 	
-	public function insertNewDailyRate( $id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date ) {
+	public function insertNewDailyRate( $id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value ) {
 		if( $this->config->debug ) {
-			echo "<!-- DEBUG: GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date -->\n";
+			error_log("[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value",0);
 		}
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;
@@ -49,10 +51,16 @@ class GenyDailyRate extends GenyDatabaseTools {
 		if( !is_numeric( $task_id ) ) {
 			return -1;
 		}
-		if( !is_numeric( $profile_id ) ) {
+		if( !is_numeric( $profile_id ) && $profile_id != 'NULL' ) {
 			return -1;
 		}
-		$query = "INSERT INTO DailyRates VALUES($id,'".$profile_id."','".$project_id."','".$task_id."','".$daily_rate_start_date."','".$daily_rate_end_date."')";
+		if( !is_numeric( $daily_rate_value ) ) {
+			return -1;
+		}
+		if( $profile_id != 'NULL' ) {
+			$profile_id = "'".$profile_id."'";
+		}
+		$query = "INSERT INTO DailyRates VALUES($id,'".$project_id."','".$task_id."',".$profile_id.",'".$daily_rate_start_date."','".$daily_rate_end_date."','".$daily_rate_value."')";
 		if( $this->config->debug ) {
 			error_log("[GYMActivity::DEBUG] GenyDailyRate MySQL query : $query",0);
 		}
@@ -75,7 +83,7 @@ class GenyDailyRate extends GenyDatabaseTools {
 	public function getDailyRatesListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("daily_rate_id=1","profile_id=1")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT daily_rate_id,project_id,task_id,profile_id,daily_rate_start_date,daily_rate_end_date FROM DailyRates";
+		$query = "SELECT daily_rate_id,project_id,task_id,profile_id,daily_rate_start_date,daily_rate_end_date,daily_rate_value FROM DailyRates";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string( $restriction_type );
@@ -93,14 +101,15 @@ class GenyDailyRate extends GenyDatabaseTools {
 		$daily_rate_list = array();
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
-				$tmp_$daily_rate = new GenyDailyRate();
-				$tmp_$daily_rate->id = $row[0];
-				$tmp_$daily_rate->project_id = $row[1];
-				$tmp_$daily_rate->task_id = $row[2];
-				$tmp_$daily_rate->profile_id = $row[3];
-				$tmp_$daily_rate->start_date = $row[4];
-				$tmp_$daily_rate->end_date = $row[5];
-				$daily_rate_list[] = $tmp_$daily_rate;
+				$tmp_daily_rate = new GenyDailyRate();
+				$tmp_daily_rate->id = $row[0];
+				$tmp_daily_rate->project_id = $row[1];
+				$tmp_daily_rate->task_id = $row[2];
+				$tmp_daily_rate->profile_id = $row[3];
+				$tmp_daily_rate->start_date = $row[4];
+				$tmp_daily_rate->end_date = $row[5];
+				$tmp_daily_rate->value = $row[6];
+				$daily_rate_list[] = $tmp_daily_rate;
 			}
 		}
 // 		mysql_close();
@@ -124,6 +133,7 @@ class GenyDailyRate extends GenyDatabaseTools {
 			$this->profile_id = $daily_rate->profile_id;
 			$this->start_date = $daily_rate->start_date;
 			$this->end_date = $daily_rate->end_date;
+			$this->value = $daily_rate->value;
 		}
 	}
 }

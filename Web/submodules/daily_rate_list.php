@@ -25,10 +25,20 @@ date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 1 => array() );
+$data_array_filters = array( 0 => array(), 1 => array(), 2 => array() );
 
 
-$daily_rate_summary = new DailyRateSummary();
+$geny_daily_rate = new GenyDailyRate();
+
+$geny_project = new GenyProject();
+foreach( $geny_project->getAllProjects() as $proj ) {
+	$projects[$proj->id] = $proj;
+}
+
+$geny_task = new GenyTask();
+foreach( $geny_task->getAllTasks() as $tsk ) {
+	$tasks[$tsk->id] = $tsk;
+}
 
 $geny_profile = new GenyProfile();
 foreach( $geny_profile->getAllProfiles() as $prof ) {
@@ -37,44 +47,51 @@ foreach( $geny_profile->getAllProfiles() as $prof ) {
 
 foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 	
-	$tmp_profile = $profiles["$tmp->profile_id"];
-	if( $tmp_profile->firstname && $tmp_profile->lastname ) {
-		$screen_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
-	}
-	else {
-		$screen_name = $tmp_profile->login;
+	$project_name = $projects["$tmp->project_id"]->name;
+
+	$task_name = $tasks["$tmp->task_id"]->name;
+
+	$profile_name = '';
+	if( isset( $tmp->profile_id ) ) {
+		$tmp_profile = $profiles["$tmp->profile_id"];
+		if( $tmp_profile->firstname && $tmp_profile->lastname ) {
+			$profile_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
+		}
+		else {
+			$profile_name = $tmp_profile->login;
+		}
 	}
 
-	$edit = "<a href=\"daily_rate_edit.php?load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
+	$edit = "<a href=\"loader.php?module=daily_rate_edit&load_daily_rate=true&daily_rate_id=$tmp->id\" title=\"Editer le TJM\"><img src=\"images/$web_config->theme/daily_rate_edit_small.png\" alt=\"Editer le TJM\"></a>";
 
-	$remove = "<a href=\"holiday_summary_remove.php?holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
+	$remove = "<a href=\"loader.php?module=daily_rate_remove&daily_rate_id=$tmp->id\" title=\"Supprimer définitivement le TJM\"><img src=\"images/$web_config->theme/daily_rate_remove_small.png\" alt=\"Supprimer définitiement le TJM\"></a>";
 	
-	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );
+	$data_array[] = array( $tmp->id, $project_name, $task_name, $profile_name, $tmp->start_date, $tmp->end_date, $tmp->value, $edit, $remove );
 
-	$holiday_summary_types = array( "CP"=>"CP", "RTT"=>"RTT" );
-
-	if( !in_array($screen_name, $data_array_filters[0]) )
-		$data_array_filters[0][] = $screen_name;
-	if( !in_array( $holiday_summary_types["$tmp->type"], $data_array_filters[1] ) )
-		$data_array_filters[1][] = $holiday_summary_types["$tmp->type"];
+	if( !in_array($project_name, $data_array_filters[0]) )
+		$data_array_filters[0][] = $project_name;
+	if( !in_array($task_name, $data_array_filters[1]) )
+		$data_array_filters[1][] = $task_name;
+	if( !in_array($profile_name, $data_array_filters[2]) )
+		$data_array_filters[2][] = $profile_name;
 }
 
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<span class="holiday_summary_list">
-			Soldes de congés
+		<span class="daily_rate_list">
+			Liste des TJM
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des soldes de congés.
+		Voici la liste des TJM.
 		</p>
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_holiday_summary_list_php", $_COOKIE)) {
-					$cookie = json_decode($_COOKIE["GYMActivity_holiday_summary_list_php"]);
+				if(array_key_exists("GYMActivity_daily_rate_list_php", $_COOKIE)) {
+					$cookie = json_decode($_COOKIE["GYMActivity_daily_rate_list_php"]);
 				}
 				
 				$data_array_filters_html = array();
@@ -99,7 +116,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#holiday_summary_list_table').dataTable( {
+				var oTable = $('#daily_rate_list_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -107,7 +124,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
-						"sLengthMenu": "Soldes de congés par page _MENU_",
+						"sLengthMenu": "TJM par page _MENU_",
 						"sZeroRecords": "Aucun résultat",
 						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
 						"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
@@ -124,7 +141,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 0 || i == 1 ) {
+					if( i == 0 || i == 1 || i == 2 ) {
 						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -141,38 +158,36 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				displayStatusNotifications($gritter_notifications,$web_config->theme);
 			?>
 		</script>
-		<form id="formID" action="holiday_summary_list.php" method="post" class="table_container">
+		<form id="formID" action="loader.php?module=daily_rate_list" method="post" class="table_container">
 			<style>
-				@import 'styles/<?php echo $web_config->theme ?>/holiday_summary_list.css';
+				@import 'styles/<?php echo $web_config->theme ?>/daily_rate_list.css';
 			</style>
 			<p>
-				<table id="holiday_summary_list_table" style="color: black; width: 100%;">
+				<table id="daily_rate_list_table" style="color: black; width: 100%;">
 					<thead>
+						<th>Projet</th>
+						<th>Tâche</th>
 						<th>Profil</th>
-						<th>Type</th>
 						<th>Début</th>
 						<th>Fin</th>
-						<th>Acquis</th>
-						<th>Pris</th>
-						<th>Restant</th>
+						<th>Valeur</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td>".$da[3]."</td><td>".$da[4]."</td><td><center>".$da[5]."</center></td><td>".$da[6]."</td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
+						<th class="filtered">Projet</th>
+						<th class="filtered">Tâche</th>
 						<th class="filtered">Profil</th>
-						<th class="filtered">Type</th>
 						<th class="filtered">Début</th>
 						<th class="filtered">Fin</th>
-						<th class="filtered">Acquis</th>
-						<th class="filtered">Pris</th>
-						<th class="filtered">Restant</th>
+						<th class="filtered">Valeur</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>
 					</tfoot>
@@ -183,5 +198,5 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 </div>
 
 <?php
-	$bottomdock_items = array('backend/widgets/holiday_summary_add.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/daily_rate_add.dock.widget.php');
 ?>

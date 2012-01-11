@@ -23,7 +23,7 @@
 
 <li class="daily_rate_list">
 	<a href="loader.php?module=daily_rate_list">
-		<span class="dock_item_title">Liste des coûts journaliers</span><br/>
-		<span class="dock_item_content">Lister tous les coûts journaliers.</span>
+		<span class="dock_item_title">Liste des TJM</span><br/>
+		<span class="dock_item_content">Lister tous les TJM.</span>
 	</a>
 </li>

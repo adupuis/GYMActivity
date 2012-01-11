@@ -23,7 +23,7 @@
 
 <li class="daily_rate_add">
 	<a href="loader.php?module=daily_rate_add">
-		<span class="dock_item_title">Ajouter un coût journalier</span><br/>
-		<span class="dock_item_content">Ajouter un coût journalier.</span>
+		<span class="dock_item_title">Ajouter un TJM</span><br/>
+		<span class="dock_item_content">Ajouter un TJM.</span>
 	</a>
 </li>
