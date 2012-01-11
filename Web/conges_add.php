@@ -82,6 +82,7 @@ date_default_timezone_set('Europe/Paris');
 							$.each(data, function(key, val) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
 							});
+							$("#task_id").trigger("liszt:updated");
 
 						},'json');
 					}

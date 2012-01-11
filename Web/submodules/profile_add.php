@@ -91,7 +91,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="rights_group_id">Groupe</label>
-				<select name="rights_group_id" id="rights_group_id"/>
+				<select name="rights_group_id" id="rights_group_id" class="chzn-select">
 					<?php
 						$geny_rg = new GenyRightsGroup();
 						foreach( $geny_rg->getAllRightsGroups() as $group ){
