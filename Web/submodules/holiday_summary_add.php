@@ -48,7 +48,7 @@ $geny_profile = new GenyProfile();
 			<input type="hidden" name="create_holiday_summary" value="true" />
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id">
+				<select name="profile_id" id="profile_id" class="chzn-select">
 				<?php
 					foreach( $geny_profile->getAllProfiles() as $profile ) {
 						if( $profile->firstname && $profile->lastname ) {
@@ -63,7 +63,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="holiday_summary_type">Type</label>
-				<select name="holiday_summary_type" id="holiday_summary_type">
+				<select name="holiday_summary_type" id="holiday_summary_type" class="chzn-select">
 					<option value="CP">CP</option>
 					<option value="RTT">RTT</option>
 				</select>

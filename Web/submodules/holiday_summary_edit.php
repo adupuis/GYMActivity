@@ -200,7 +200,7 @@ else if( $edit_holiday_summary == 'true' ) {
 
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id">
+				<select name="profile_id" id="profile_id" class="chzn-select">
 				<?php
 					foreach( $geny_profile->getAllProfiles() as $profile ) {
 						if( $geny_holiday_summary->profile_id == $profile->id ) {
@@ -225,7 +225,7 @@ else if( $edit_holiday_summary == 'true' ) {
 			</p>
 			<p>
 				<label for="holiday_summary_type">Type</label>
-				<select name="holiday_summary_type" id="holiday_summary_type">
+				<select name="holiday_summary_type" id="holiday_summary_type" class="chzn-select">
 					<?php
 					if( $geny_holiday_summary->type == "RTT" ) {
 						echo "<option value=\"CP\">CP</option>";
