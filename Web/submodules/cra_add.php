@@ -71,18 +71,20 @@ date_default_timezone_set('Europe/Paris');
 				<script>
 					function getTasks(){
 						var project_id = $("#assignement_id").val();
-						$.get('backend/api/get_project_tasks_list.php?assignement_id='+project_id, function(data){
-							$('.tasks_options').remove();
-							$("#task_id").append('<option value="" class="tasks_options"></option>');
-							$.each(data, function(key, val) {
-								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
-							});
-							$("#task_id").attr('data-placeholder','Choisissez une tâche...');
-							$("#task_id").trigger("liszt:updated");
-							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
-							
+						if( project_id > 0 ) {
+							$.get('backend/api/get_project_tasks_list.php?assignement_id='+project_id, function(data){
+								$('.tasks_options').remove();
+								$("#task_id").append('<option value="" class="tasks_options"></option>');
+								$.each(data, function(key, val) {
+									$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
+								});
+								$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+								$("#task_id").trigger("liszt:updated");
+								$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
+								
 
-						},'json');
+							},'json');
+						}
 					}
 					$("#assignement_id").change(getTasks);
 					getTasks();
