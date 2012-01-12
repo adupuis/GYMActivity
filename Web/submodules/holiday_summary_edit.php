@@ -206,26 +206,26 @@ else if( $edit_holiday_summary == 'true' ) {
 			<p>
 				<label for="profile_id">Profil</label>
 				<select name="profile_id" id="profile_id" class="chzn-select">
-				<?php
-					foreach( $geny_profile->getAllProfiles() as $profile ) {
-						if( $geny_holiday_summary->profile_id == $profile->id ) {
-							if( $profile->firstname && $profile->lastname ) {
-								echo "<option value=\"".$profile->id."\" selected>".$profile->firstname." ".$profile->lastname."</option>\n";
+					<?php
+						foreach( $geny_profile->getAllProfiles() as $profile ) {
+							if( $geny_holiday_summary->profile_id == $profile->id ) {
+								if( $profile->firstname && $profile->lastname ) {
+									echo "<option value=\"".$profile->id."\" selected>".$profile->firstname." ".$profile->lastname."</option>\n";
+								}
+								else {
+									echo "<option value=\"".$profile->id."\" selected>".$profile->login."</option>\n";
+								}
 							}
 							else {
-								echo "<option value=\"".$profile->id."\" selected>".$profile->login."</option>\n";
+								if( $profile->firstname && $profile->lastname ) {
+									echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
+								}
+								else {
+									echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
+								}
 							}
 						}
-						else {
-							if( $profile->firstname && $profile->lastname ) {
-								echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
-							}
-							else {
-								echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
-							}
-						}
-					}
-				?>
+					?>
 				</select>
 			</p>
 			<p>
@@ -300,5 +300,5 @@ else if( $edit_holiday_summary == 'true' ) {
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/holiday_summary_list.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/holiday_summary_list.dock.widget.php','backend/widgets/holiday_summary_add.dock.widget.php');
 ?>
