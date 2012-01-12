@@ -48,7 +48,7 @@ date_default_timezone_set('Europe/Paris');
 			<input type="hidden" name="create_conges" value="true" />
 			<p>
 				<label for="assignement_id">Projet</label>
-				<select name="assignement_id" id="assignement_id" />
+				<select name="assignement_id" id="assignement_id" class="chzn-select" />
 					<?php
 						$geny_assignements = new GenyAssignement();
 						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
@@ -62,7 +62,7 @@ date_default_timezone_set('Europe/Paris');
 			</p>
 			<p>
 				<label for="task_id">Type</label>
-				<select name="task_id" id="task_id" />
+				<select name="task_id" id="task_id" class="chzn-select" />
 				</select>
 				<script>
 					function getTasks(){
@@ -113,7 +113,7 @@ date_default_timezone_set('Europe/Paris');
 			</p>
 			<p>
 				<label for="assignement_load">Charge journalière</label>
-				<select name="assignement_load" id="assignement_load">
+				<select name="assignement_load" id="assignement_load" class="chzn-select">
 					<option value="4">4 Heures (1/2 journée)</option>
 					<option value="8" selected="selected">8 Heures (1 journée)</option>
 					
