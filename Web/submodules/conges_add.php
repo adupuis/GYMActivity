@@ -48,7 +48,8 @@ date_default_timezone_set('Europe/Paris');
 			<input type="hidden" name="create_conges" value="true" />
 			<p>
 				<label for="assignement_id">Projet</label>
-				<select name="assignement_id" id="assignement_id" class="chzn-select" />
+				<select name="assignement_id" id="assignement_id" class="chzn-select" data-placeholder="Choisissez un projet..." >
+					<option val=""></option>
 					<?php
 						$geny_assignements = new GenyAssignement();
 						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
@@ -62,17 +63,21 @@ date_default_timezone_set('Europe/Paris');
 			</p>
 			<p>
 				<label for="task_id">Type</label>
-				<select name="task_id" id="task_id" class="chzn-select" />
+				<select name="task_id" id="task_id" class="chzn-select" data-placeholder="Choisissez d'abord un projet..." >
+					<option val=""></option>
 				</select>
 				<script>
 					function getTasks(){
 						var project_id = $("#assignement_id").val();
 						$.get('backend/api/get_project_tasks_list.php?assignement_id='+project_id, function(data){
 							$('.tasks_options').remove();
+							$("#task_id").append('<option value="" class="tasks_options"></option>');
 							$.each(data, function(key, val) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
 							});
+							$("#task_id").attr('data-placeholder','Choisissez une tâche...');
 							$("#task_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
 
 						},'json');
 					}
@@ -126,6 +131,3 @@ date_default_timezone_set('Europe/Paris');
 	</p>
 </div>
 
-<?php
-include_once 'footer.php';
-?>

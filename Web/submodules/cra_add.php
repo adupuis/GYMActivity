@@ -179,6 +179,4 @@ date_default_timezone_set('Europe/Paris');
 	</p>
 </div>
 
-<?php
-include_once 'footer.php';
-?>
+
