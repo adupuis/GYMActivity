@@ -23,7 +23,7 @@
 ?>
 
 <li class="conges_remove">
-	<a href="conges_deletion.php">
+	<a href="loader.php?module=conges_deletion">
 		<span class="dock_item_title">Suppression congés</span><br/>
 		<span class="dock_item_content">Demander la suppression d'un ou plusieurs jour(s) de congés <strong>après qu'ils aient été validé par le management</strong>.</span>
 	</a>

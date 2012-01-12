@@ -98,10 +98,10 @@ $completion = round(($user_load*100)/$estimated_load,1);
 			</span>
 		</a>
 		<div class="sdt_box">
-			<a href="conges_add.php">Poser des congés</a>
-			<a href="conges_validation.php">Valider vos congés</a>
-			<a href="conges_list.php">Lister vos congés</a>
-			<a href="conges_deletion.php">Supprimer des congés</a>
+			<a href="loader.php?module=conges_add">Poser des congés</a>
+			<a href="loader.php?module=conges_validation">Valider vos congés</a>
+			<a href="loader.php?module=conges_list">Lister vos congés</a>
+			<a href="loader.php?module=conges_deletion">Supprimer des congés</a>
 		</div>
 	</li>
 	<li>
