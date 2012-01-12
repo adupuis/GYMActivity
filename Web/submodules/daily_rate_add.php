@@ -49,22 +49,25 @@ $geny_profile = new GenyProfile();
 			<input type="hidden" name="create_daily_rate" value="true" />
 			<p>
 				<label for="project_id">Projet</label>
-				<select name="project_id" id="project_id">
-				<?php
-					foreach( $geny_project->getAllProjects() as $project ) {
-						echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
-					}
-				?>
+				<select name="project_id" id="project_id" class="chzn-select" data-placeholder="Choisissez un projet...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_project->getAllProjects() as $project ) {
+							echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
+						}
+					?>
 				</select>
 			</p>
 			<p>
 				<label for="task_id">Tâche</label>
-				<select name="task_id" id="task_id">
+				<select name="task_id" id="task_id" class="chzn-select" data-placeholder="Choisissez d'abord un projet...">
+					<option value=""></option>
 				</select>
 			</p>
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id">
+				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez un profil...">
+					<option value=""></option>
 				</select>
 			</p>
 
@@ -77,6 +80,9 @@ $geny_profile = new GenyProfile();
 						$.each( data, function( key, val ) {
 							$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
 						});
+						$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+						$("#task_id").trigger("liszt:updated");
+						$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
 
 					},'json');
 				}
@@ -96,6 +102,9 @@ $geny_profile = new GenyProfile();
 								$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.login + '</option>' );
 							}
 						});
+// 						$("#profile_id").attr('data-placeholder','Choisissez un profil...');
+						$("#profile_id").trigger("liszt:updated");
+// 						$("span:contains('Choisissez encore un projet...')").text('Choisissez un profil...');
 
 					},'json');
 				}

@@ -230,34 +230,39 @@ else if( $edit_daily_rate == "true" ) {
 
 			<p>
 				<label for="project_id">Projet</label>
-				<select name="project_id" id="project_id">
-				<?php
-					foreach( $geny_project->getAllProjects() as $project ) {
-						if( $geny_daily_rate->project_id == $project->id ) {
-							echo "<option value=\"".$project->id."\" selected>".$project->name."</option>\n";
+				<select name="project_id" id="project_id" class="chzn-select" data-placeholder="Choisissez un projet...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_project->getAllProjects() as $project ) {
+							if( $geny_daily_rate->project_id == $project->id ) {
+								echo "<option value=\"".$project->id."\" selected>".$project->name."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
+							}
 						}
-						else {
-							echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
-						}
-					}
-				?>
+					?>
 				</select>
 			</p>
 
 			<p>
 				<label for="task_id">Tâche</label>
-				<select name="task_id" id="task_id">
+				<select name="task_id" id="task_id" class="chzn-select" data-placeholder="Choisissez d'abord un projet...">
+					<option value=""></option>
 				</select>
 			</p>
 
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id">
+				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez aussi un projet...">
 				</select>
 			</p>
 
 			<script type="text/javascript">
 				
+				// WARNING: the default value of the task list and project should not be updated when we modify the project
+				// TODO: we could have a global variable telling if the 'selected' tag must be inserted.
+
 				function getTasks() {
 					var project_id = $("#project_id").val();
 					var geny_daily_rate_task_id = <?php echo $geny_daily_rate->task_id ?>;
@@ -271,7 +276,9 @@ else if( $edit_daily_rate == "true" ) {
 								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
 							}
 						});
-
+						$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+						$("#task_id").trigger("liszt:updated");
+						$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
 					},'json');
 				}
 				$("#project_id").change( getTasks );
@@ -303,7 +310,9 @@ else if( $edit_daily_rate == "true" ) {
 									}
 								}
 							});
-
+							$("#profile_id").attr('data-placeholder','Choisissez un profil...');
+							$("#profile_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez un profil...');
 						},'json');
 					}
 					else {
@@ -361,5 +370,5 @@ else if( $edit_daily_rate == "true" ) {
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/daily_rate_list.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/daily_rate_list.dock.widget.php','backend/widgets/daily_rate_add.dock.widget.php');
 ?>
