@@ -136,7 +136,25 @@ $geny_profile = new GenyProfile();
 					$( "#daily_rate_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
 					$( "#daily_rate_end_date" ).datepicker( "option", "firstDay", 1 );
 				});
+
+				$(function() {
+					var availableTags = [
+						<?php
+							$tags = '';
+							$daily_rate = new GenyDailyRate();
+							foreach( $daily_rate->getValuesList() as $value ) {
+								$tags .= '"'.$value.'",';
+							}
+							echo rtrim( $tags, "," );
+						?>
+					];
+					$( "#daily_rate_value" ).autocomplete({
+						source: availableTags
+					});
+				});
+
 			</script>
+
 			<p>
 				<label for="daily_rate_start_date">Début de période</label>
 				<input name="daily_rate_start_date" id="daily_rate_start_date" type="text" class="validate[required,custom[date]] text-input" />

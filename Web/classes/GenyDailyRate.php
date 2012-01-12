@@ -120,6 +120,22 @@ class GenyDailyRate extends GenyDatabaseTools {
 		return $this->getDailyRatesListWithRestrictions( array() );
 	}
 
+	public function getValuesList() {
+		$query = "SELECT DISTINCT daily_rate_value FROM DailyRates";
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] DailyRates MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+		$values_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$values_list[] = $row[0];
+			}
+		}
+// 		mysql_close();
+		return $values_list;
+	}
+
 	public function loadDailyRateById( $id ) {
 		if( !is_numeric( $id ) ) {
 			return false;
