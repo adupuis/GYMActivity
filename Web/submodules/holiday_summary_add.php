@@ -48,22 +48,24 @@ $geny_profile = new GenyProfile();
 			<input type="hidden" name="create_holiday_summary" value="true" />
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id" class="chzn-select">
-				<?php
-					foreach( $geny_profile->getAllProfiles() as $profile ) {
-						if( $profile->firstname && $profile->lastname ) {
-							echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
+				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez un profil...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_profile->getAllProfiles() as $profile ) {
+							if( $profile->firstname && $profile->lastname ) {
+								echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
+							}
 						}
-						else {
-							echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
-						}
-					}
-				?>
+					?>
 				</select>
 			</p>
 			<p>
 				<label for="holiday_summary_type">Type</label>
-				<select name="holiday_summary_type" id="holiday_summary_type" class="chzn-select">
+				<select name="holiday_summary_type" id="holiday_summary_type" class="chzn-select" data-placeholder="Choisissez un type de congé...">
+					<option value=""></option>
 					<option value="CP">CP</option>
 					<option value="RTT">RTT</option>
 				</select>
