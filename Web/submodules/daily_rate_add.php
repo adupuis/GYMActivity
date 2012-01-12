@@ -66,7 +66,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez un profil...">
+				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez d'abord un projet...">
 					<option value=""></option>
 				</select>
 			</p>
@@ -75,38 +75,42 @@ $geny_profile = new GenyProfile();
 
 				function getTasks(){
 					var project_id = $("#project_id").val();
-					$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function( data ) {
-						$('.tasks_options').remove();
-						$.each( data, function( key, val ) {
-							$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
-						});
-						$("#task_id").attr('data-placeholder','Choisissez une tâche...');
-						$("#task_id").trigger("liszt:updated");
-						$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
+					if( project_id > 0 ) {
+						$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function( data ) {
+							$('.tasks_options').remove();
+							$.each( data, function( key, val ) {
+								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
+							});
+							$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+							$("#task_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
 
-					},'json');
+						},'json');
+					}
 				}
 				$("#project_id").change( getTasks );
 				getTasks();
 
 				function getProfiles(){
 					var project_id = $("#project_id").val();
-					$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
-						$('.profiles_options').remove();
-						$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
-						$.each( data, function( key, val ) {
-							if( val.firstname && val.lastname ) {
-								$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.firstname +' '+ val.lastname + '</option>' );
-							}
-							else {
-								$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.login + '</option>' );
-							}
-						});
-// 						$("#profile_id").attr('data-placeholder','Choisissez un profil...');
-						$("#profile_id").trigger("liszt:updated");
-// 						$("span:contains('Choisissez encore un projet...')").text('Choisissez un profil...');
+					if( project_id > 0 ) {
+						$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
+							$('.profiles_options').remove();
+							$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
+							$.each( data, function( key, val ) {
+								if( val.firstname && val.lastname ) {
+									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.firstname +' '+ val.lastname + '</option>' );
+								}
+								else {
+									$( "#profile_id" ).append( '<option class="profiles_options" value="' + val.id + '" title="' + val.id + '">' + val.login + '</option>' );
+								}
+							});
+							$("#profile_id").attr('data-placeholder','Choisissez un profil...');
+							$("#profile_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez un profil...');
 
-					},'json');
+						},'json');
+					}
 				}
 				$("#project_id").change( getProfiles );
 				getProfiles();

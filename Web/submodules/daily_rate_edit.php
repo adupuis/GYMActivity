@@ -254,7 +254,7 @@ else if( $edit_daily_rate == "true" ) {
 
 			<p>
 				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez aussi un projet...">
+				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Vous devez choisir un projet...">
 				</select>
 			</p>
 
@@ -265,30 +265,31 @@ else if( $edit_daily_rate == "true" ) {
 
 				function getTasks() {
 					var project_id = $("#project_id").val();
-					var geny_daily_rate_task_id = <?php echo $geny_daily_rate->task_id ?>;
-					$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function( data ) {
-						$('.tasks_options').remove();
-						$.each( data, function( key, val ) {
-							if( val[0] == geny_daily_rate_task_id ) {
-								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '" selected>' + val[1] + '</option>');
-							}
-							else {
-								$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
-							}
-						});
-						$("#task_id").attr('data-placeholder','Choisissez une tâche...');
-						$("#task_id").trigger("liszt:updated");
-						$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
-					},'json');
+					if( project_id > 0 ) {
+						var geny_daily_rate_task_id = <?php echo $geny_daily_rate->task_id ?>;
+						$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function( data ) {
+							$('.tasks_options').remove();
+							$.each( data, function( key, val ) {
+								if( val[0] == geny_daily_rate_task_id ) {
+									$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '" selected>' + val[1] + '</option>');
+								}
+								else {
+									$("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
+								}
+							});
+							$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+							$("#task_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
+						},'json');
+					}
 				}
 				$("#project_id").change( getTasks );
 				getTasks();
 
 				function getProfiles(){
 					var project_id = $("#project_id").val();
-					var geny_daily_rate_profile_id = <?php echo ( $geny_daily_rate->profile_id ) ? $geny_daily_rate->profile_id : -1 ?>;
-					// TODO: pas bon !!! car la liste n'est pas rechargée en ajax !
-					if( geny_daily_rate_profile_id != -1 ) {
+					if( project_id > 0 ) {
+						var geny_daily_rate_profile_id = <?php echo ( $geny_daily_rate->profile_id ) ? $geny_daily_rate->profile_id : -1 ?>;
 						$.get('backend/api/get_project_profiles_list.php?project_id='+project_id, function( data ) {
 							$('.profiles_options').remove();
 							$( "#profile_id" ).append( '<option class="profiles_options" value="NULL">- Pas de profil associé -</option>' );
@@ -312,7 +313,7 @@ else if( $edit_daily_rate == "true" ) {
 							});
 							$("#profile_id").attr('data-placeholder','Choisissez un profil...');
 							$("#profile_id").trigger("liszt:updated");
-							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez un profil...');
+							$("span:contains('Vous devez choisir un projet...')").text('Choisissez un profil...');
 						},'json');
 					}
 					else {
