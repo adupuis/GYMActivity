@@ -90,7 +90,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 		$cat_list = array();
 		if (mysql_num_rows($result) != 0){
 			while ($row = mysql_fetch_row($result)){
-				$tmp_cat = new GenyIntranetCategories();
+				$tmp_cat = new GenyIntranetCategory();
 				$tmp_cat->id = $row[0];
 				$tmp_cat->name = $row[1];
 				$tmp_cat->description = $row[2];
