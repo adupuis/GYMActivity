@@ -45,10 +45,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 		if( !is_numeric( $category_id ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO IntranetTypes VALUES($id,'".mysql_real_escape_string( $intranet_type_name )."','".mysql_real_escape_string( $intranet_type_description )."','".$category_id
-			$this->start_date = $daily_rate->start_date;
-			$this->end_date = $daily_rate->end_date;
-			$this->value = $daily_rate->value;."')";
+		$query = "INSERT INTO IntranetTypes VALUES($id,'".mysql_real_escape_string( $intranet_type_name )."','".mysql_real_escape_string( $intranet_type_description )."','".$category_id."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetType MySQL query : $query", 0 );
 		}
@@ -71,7 +68,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 	public function getIntranetTypesListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("intranet_type_id=1","category_id=1")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT intranet_type_id,intranet_type_name,intranet_type_description,category_id FROM IntranetTypes";
+		$query = "SELECT intranet_type_id,intranet_type_name,intranet_type_description,intranet_category_id FROM IntranetTypes";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string( $restriction_type );
@@ -106,7 +103,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 	}
 
 	public function getAllIntranetTypesByCategoryId( $category_id ) {
-		return $this->getIntranetTypesListWithRestrictions( array( "category_id=".$category_id ) );
+		return $this->getIntranetTypesListWithRestrictions( array( "intranet_category_id=".$category_id ) );
 	}
 
 	public function loadIntranetTypeById( $id ) {
