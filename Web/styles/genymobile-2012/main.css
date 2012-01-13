@@ -132,16 +132,20 @@ form select {
 	font-weight:bold;
 	line-height:28px;
 	margin-bottom:5px;
-	width:245px;
+/* 	width:245px; */
+	width: 400px;
 	text-align: center;
 }
 
-form input[type=text] {
-	width: 245px;
+form input[type=text],input[type=password] {
+/* 	width: 245px; */
+	width: 400px;
 }
 
+
 form textarea {
-	width: 245px;
+/* 	width: 245px; */
+	width: 400px;
 }
 
 form p:hover label{
@@ -164,34 +168,6 @@ a#home_logo {
 }
 a#home_logo:hover {
 	background-image: url(../../images/genymobile-2012/logo_home_banner.png);
-}
-#headband {
-	position: absolute;
-	display: block;
-	height: 22px;
-	text-align: left;
-	vertical-align: middle;
-	color: #6a6a6a;
-	/*background:#f7f7f7;
-	background:-moz-linear-gradient(90deg, #ccc, #fff);*/ /* Firefox */
-	/*background:-webkit-gradient(linear, left top, left bottom, from(#fff), to(#ccc));*/ /* Webkit */
-	background-color: #e7f3bd;
-	border-bottom:1px solid #cedba2;
-	border-left:1px solid #cedba2;
-	border-right:1px solid #cedba2;
-	-moz-border-radius:0px 0px 10px 10px;
-	-webkit-border-bottom-right-radius: 10px;
-	-webkit-border-bottom-left-radius: 10px;
-	-khtml-border-bottom-right-radius: 10px;
-	-khtml-border-bottom-left-radius: 10px;
-	margin:auto auto 0 auto;
-	padding:4px;
-/* 	padding-bottom:15px; */
-	width:auto;
-	top:0px;
-	font-size:14px;
-	left:160px;
-	/*margin-top:20px;*/
 }
 
 #wrapper {
@@ -485,36 +461,51 @@ div#mainarea {
 	background-repeat: repeat-x;
 	border: 1px solid #D8D8D8;
 	text-decoration:none;
-	padding: 5px;
+/* 	padding: 5px; */
 }
 
 div#mainarea p.mainarea_content_intro {
-	text-align: center;
+	text-align: left;
 	padding:5px;
+	margin: 10px auto 0;
+	padding: 20px;
+	width: 660px;
 }
 
 div#mainarea p.mainarea_title {
 	position:relative;
+	display: inline-block;
 	font-weight: bold;
 	font-size: 30px;
 	letter-spacing: 0.01em;
 	text-align: center;
 	vertical-align: middle;
-	width: 100%;
+/* 	width: 100%; */
+	width: auto;
 	padding: 5px;
 	height: 64px;
 	text-shadow: none;
+	background-color: #D8D8D8;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #D8D8D8;
 }
 
 div#mainarea p.mainarea_title span {
 	position: relative;
-	display: block;
+	display: inline-block;
 	vertical-align: middle;
 	background-repeat: no-repeat;
 	height: 100%;
 	margin: auto;
-	width: 420px;
+	width: auto;
 	padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 5px;
+/* 	background-color: green; */
+}
+div#mainarea p.mainarea_title img {
+	float: left;
 }
 
 p.mainarea_title span.project_add {
@@ -585,9 +576,9 @@ p.mainarea_title span.task_list {
 	background-image: url(../../images/genymobile-2012/task_list.png);
 }
 
-p.mainarea_title span.cra_add {
+/*p.mainarea_title span.cra_add {
 	background-image: url(../../images/genymobile-2012/cra_add.png);
-}
+}*/
 
 p.mainarea_title span.cra_edit {
 	background-image: url(../../images/genymobile-2012/cra_edit.png);
