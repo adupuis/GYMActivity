@@ -458,4 +458,62 @@ begin
 end $$
 DELIMITER ;
 
+CREATE TABLE IntranetCategories (
+	intranet_category_id int auto_increment,
+	intranet_category_name varchar(25) not null default 'Undefined',
+	intranet_category_description varchar(140) not null default 'Undefined',
+	primary key(intranet_category_id)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetCategories AUTO_INCREMENT=1;
+
+CREATE TABLE IntranetTypes (
+	intranet_type_id int auto_increment,
+	intranet_type_name varchar(25) not null default 'Undefined',
+	intranet_type_description varchar(140) not null default 'Undefined',
+	intranet_category_id int not null,
+	primary key(intranet_type_id),
+	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetTypes AUTO_INCREMENT=1;
+
+CREATE TABLE IntranetTags (
+	intranet_tag_id int auto_increment,
+	intranet_tag_name varchar(25) not null default 'Undefined',
+	primary key(intranet_tag_id)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetTags AUTO_INCREMENT=1;
+
+CREATE TABLE IntranetPages (
+	intranet_page_id int auto_increment,
+	intranet_page_title varchar(25) not null default 'Undefined',
+	intranet_category_id int not null,
+	intranet_type_id int not null,
+	intranet_page_content text not null,
+	primary key(intranet_page_id),
+	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE,
+	foreign key(intranet_type_id) references IntranetTypes(intranet_type_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetPages AUTO_INCREMENT=1;
+
+CREATE TABLE IntranetTagPageRelations (
+	intranet_tag_page_relation_id int auto_increment,
+	intranet_tag_id int not null,
+	intranet_page_id int not null,
+	primary key(intranet_tag_page_relation_id),
+	foreign key(intranet_tag_id) references IntranetTags(intranet_tag_id) ON DELETE CASCADE,
+	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetTagPageRelations AUTO_INCREMENT=1;
+
+CREATE TABLE IntranetHistories (
+	intranet_history_id int auto_increment,
+	intranet_page_id int not null,
+	profile_id int not null,
+	intranet_history_date datetime not null,
+	intranet_history_content text not null,
+	primary key(intranet_history_id),
+	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE IntranetHistories AUTO_INCREMENT=1;
+
 COMMIT;
