@@ -24,7 +24,7 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetCategory extends GenyDatabaseTools {
 	public function __construct($id = -1){
-		parent::__construct("InternetCategories",  "intranet_category_id");
+		parent::__construct("IntranetCategories",  "intranet_category_id");
 		$this->id = -1;
 		$this->name = '';
 		$this->description = '';

@@ -126,7 +126,7 @@ public function insertNewIntranetPage($id,$title,$categorie_id,$type_id,
 		}
 		return $page_list;
 	}
-	public function loadIntranetPagesByCategorie($cat_id){
+	public function loadIntranetPagesByCategory($cat_id){
 		$pages = $this->getIntranetPagesListWithRestrictions(array("intranet_category_id='".mysql_real_escape_string($cat_id)."'"));
 		$page_list = array();
 		foreach($pages as $page) {
