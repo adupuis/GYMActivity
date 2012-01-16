@@ -23,6 +23,7 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetCategory extends GenyDatabaseTools {
+	
 	public function __construct($id = -1){
 		parent::__construct("IntranetCategories",  "intranet_category_id");
 		$this->id = -1;
@@ -31,7 +32,20 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadIntranetCategoryById($id);
 	}
-	public function deleteIntranetCategory($id=0){
+	
+	public function insertNewIntranetCategory($id,$name,$desc){
+		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($desc)."')";
+		if( $this->config->debug )
+			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
+		if( mysql_query( $query, $this->handle ) ) {
+			return mysql_insert_id( $this->handle );
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	public function removeIntranetCategory($id=0){
 		if(is_numeric($id)){
 			if( $id == 0 && $this->id > 0 )
 				$id = $this->id;
@@ -39,14 +53,14 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 				return -1;
 			//delete type
 			$p_object = new GenyIntranetType();
-			foreach( $p_object->getIntranetTypeByCategory($id) as $p ){
-				if( $p->deleteIntranetType() <= 0 )
+			foreach( $p_object->getIntranetTypesByCategory($id) as $p ){
+				if( $p->removeIntranetType() <= 0 )
 					return -1;
 			}
 			//delete page
 			$p_object = new GenyIntranetPage();
-			foreach( $p_object->getIntranetPageByCategory($id) as $p ){
-				if( $p->deleteIntranetPage() <= 0 )
+			foreach( $p_object->getIntranetPagesByCategory($id) as $p ){
+				if( $p->removeIntranetPage() <= 0 )
 					return -1;
 			}
 
@@ -60,17 +74,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 		}
 		return -1;
 	}
-	public function insertNewIntranetCategory($id,$name,$desc){
-		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($desc)."')";
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
-		if( mysql_query( $query, $this->handle ) ) {
-			return mysql_insert_id( $this->handle );
-		}
-		else {
-			return -1;
-		}
-	}
+	
 	public function getIntranetCategoryListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
@@ -100,18 +104,18 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 // 		mysql_close();
 		return $cat_list;
 	}
-	public function getAllIntranetCategory(){
+	
+	public function getAllIntranetCategories(){
 		return $this->getIntranetCategoryListWithRestrictions( array() );
 	}
+	
 	public function searchIntranetCategory($term){
 		$q = mysql_real_escape_string($term);
 		return $this->getIntranetCategoryListWithRestrictions( array("intranet_category_name LIKE '%$q%' or intranet_category_description LIKE '%$q%'") );
 	}
-	public function loadIntranetCategoryByName($name){
-		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_name='".mysql_real_escape_string($name)."'"));
-
-		if(count($cats) == 0)
-			return;
+	
+	public function loadCategoryById($id){
+		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_id=".mysql_real_escape_string($id)));
 		$cat = $cats[0];
 		if(isset($cat) && $cat->id > -1){
 			$this->id = $cat->id;
@@ -119,8 +123,12 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 			$this->description = $cat->description;
 		}
 	}
-	public function loadCategoryById($id){
-		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_id=".mysql_real_escape_string($id)));
+	
+	public function loadIntranetCategoryByName($name){
+		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_name='".mysql_real_escape_string($name)."'"));
+
+		if(count($cats) == 0)
+			return;
 		$cat = $cats[0];
 		if(isset($cat) && $cat->id > -1){
 			$this->id = $cat->id;
