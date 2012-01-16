@@ -23,6 +23,7 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetHistory extends GenyDatabaseTools {
+	
 	public function __construct($id = -1){
 		parent::__construct("InternetHistories",  "intranet_history_id");
 		$this->id = -1;
@@ -33,7 +34,20 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadIntranetHistoryById($id);
 	}
-	public function deleteIntranetHistory($id=0){
+	
+	public function insertNewIntranetHistory($id,$page_id,$profile_id,$date,$content){
+		$query = "INSERT INTO IntranetHistories VALUES($id,$page_id,$profile_id,$date'".mysql_real_escape_string($content)."')";
+		if( $this->config->debug )
+			error_log("[GYMActivity::DEBUG] GenyIntranetHistory MySQL query : $query",0);
+		if( mysql_query( $query, $this->handle ) ) {
+			return mysql_insert_id( $this->handle );
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	public function removeIntranetHistory($id=0){
 		if(is_numeric($id)){
 			if( $id == 0 && $this->id > 0 )
 				$id = $this->id;
@@ -50,17 +64,7 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		}
 		return -1;
 	}
-	public function insertNewIntranetHistory($id,$page_id,$profile_id,$date,$content){
-		$query = "INSERT INTO IntranetHistories VALUES($id,$page_id,$profile_id,$date'".mysql_real_escape_string($content)."')";
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyIntranetHistory MySQL query : $query",0);
-		if( mysql_query( $query, $this->handle ) ) {
-			return mysql_insert_id( $this->handle );
-		}
-		else {
-			return -1;
-		}
-	}
+	
 	public function getIntranetHistoriesListWithRestrictions($restrictions){
 		$last_index = count($restrictions)-1;
 		$query = "SELECT intranet_history_id,intranet_page_id,profile_id,intranet_history_date,intranet_history_content FROM IntranetHistories";
@@ -91,9 +95,15 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 // 		mysql_close();
 		return $histo_list;
 	}
+	
 	public function getAllIntranetHistories(){
 		return $this->getIntranetHistoriesListWithRestrictions( array() );
 	}
+	
+	public function getIntranetHistoriesByProfileId($id) {
+		return $this->getIntranetHistoriesListWithRestrictions(array("profile_id=".$id));
+	}
+	
 	public function loadHistoryById($id){
 		$histos = $this->getIntranetHistoriesListWithRestrictions(array("intranet_history_id=".$id));
 		if(count($histos) == 0)
@@ -106,9 +116,6 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 			$this->history_date = $histo->history_date;
 			$this->history_content = $histo->history_content;
 		}
-	}
-	public function getIntranetHistoriesByProfileId($id) {
-		return $this->getIntranetHistoriesListWithRestrictions(array("profile_id=".$id));
 	}
 }
 ?>

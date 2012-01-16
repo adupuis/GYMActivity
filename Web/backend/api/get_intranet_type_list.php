@@ -37,7 +37,7 @@ try {
 		$results = NULL;
 		$category_id = getParam( "category_id", -1 );
 		if($category_id > 0) {
-			$results = $tmp_types->getAllIntranetTypesByCategoryId($category_id);
+			$results = $tmp_types->getIntranetTypesByCategoryId($category_id);
 		}else{
 			$results = $tmp_types->getAllIntranetTypes();
 		}

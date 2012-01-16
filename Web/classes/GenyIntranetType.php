@@ -102,7 +102,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 		return $this->getIntranetTypesListWithRestrictions( array() );
 	}
 
-	public function getAllIntranetTypesByCategoryId( $category_id ) {
+	public function getIntranetTypesByCategoryId( $category_id ) {
 		return $this->getIntranetTypesListWithRestrictions( array( "intranet_category_id=".$category_id ) );
 	}
 
