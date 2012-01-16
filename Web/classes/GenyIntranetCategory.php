@@ -114,7 +114,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 		return $this->getIntranetCategoryListWithRestrictions( array("intranet_category_name LIKE '%$q%' or intranet_category_description LIKE '%$q%'") );
 	}
 	
-	public function loadCategoryById($id){
+	public function loadIntranetCategoryById($id){
 		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_id=".mysql_real_escape_string($id)));
 		$cat = $cats[0];
 		if(isset($cat) && $cat->id > -1){
