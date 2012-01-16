@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Ajout Type de Catégorie Intranet';
+$required_group_rights = array(1,2);
+?>
