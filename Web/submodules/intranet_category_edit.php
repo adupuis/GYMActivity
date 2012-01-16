@@ -50,8 +50,6 @@ if( $create_intranet_category == "true" ) {
 else if( $load_intranet_category == 'true' ) {
 	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 	if( $intranet_category_id != 'NULL' ) {
-// 		$tmp_geny_intranet_category = new GenyIntranetCategory();
-// 		$tmp_geny_intranet_category->loadIntranetCategoryById( $intranet_category_id );
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_intranet_category->loadIntranetCategoryById( $intranet_category_id );
@@ -130,7 +128,7 @@ else if( $edit_intranet_category == 'true' ) {
 
 						foreach( $intranet_categories as $intranet_category ) {
 							
-							if( $intranet_category_id == $intranet_category->id ) {
+							if( $geny_intranet_category->id == $intranet_category->id ) {
 								echo "<option value=\"".$intranet_category->id."\" selected>".$intranet_category->name."</option>\n";
 							}
 							else {
