@@ -31,33 +31,33 @@ include_once 'ajax_toolbox.php';
 try {
 	$pages = array();
 	if( $auth_granted ) {
-		$tmp_page = new GenyIntranetPage();
+		$tmp_intranet_page = new GenyIntranetPage();
 		$results = array();
 		$intranet_category_id = getParam( "intranet_category_id", -1 );
 		$intranet_type_id = getParam( "intranet_type_id", -1 );
 		$intranet_tag_id = getParam( "intranet_tag_id", -1 );
 
 		if( $intranet_tag_id > 0 ) {
-			$results = $tmp_page->getIntranetPagesByTag( $intranet_tag_id );
+			$results = $tmp_intranet_page->getIntranetPagesByTag( $intranet_tag_id );
 		}
 		if( $intranet_type_id > 0 ) {
-			$results = $tmp_page->getIntranetPagesByType( $intranet_type_id );
+			$results = $tmp_intranet_page->getIntranetPagesByType( $intranet_type_id );
 		}
 		else if( $intranet_category_id > 0 ) {
-			$results = $tmp_page->getIntranetPagesByCategory( $intranet_category_id );
+			$results = $tmp_intranet_page->getIntranetPagesByCategory( $intranet_category_id );
 		}
 		else {
-			$results = $tmp_page->getAllIntranetPages();
+			$results = $tmp_intranet_page->getAllIntranetPages();
 		}
 		
 		foreach( $results as $pg ){
 			$tmp = array();
-			foreach( get_object_vars( $tmp_page ) as $field => $value ) {
+			foreach( get_object_vars( $tmp_intranet_page ) as $field => $value ) {
 				$tmp[$field] = $pg->$field ;
 			}
-			$pages[] = $tmp;
+			$intranet_pages[] = $tmp;
 		}
-		$data = json_encode( $pages );
+		$data = json_encode( $intranet_pages );
 		echo $data;
 	}
 } catch (Exception $e) {
