@@ -50,6 +50,7 @@ try {
 			$results = $tmp_intranet_page->getAllIntranetPages();
 		}
 		
+		$intranet_pages = array();
 		foreach( $results as $pg ){
 			$tmp = array();
 			foreach( get_object_vars( $tmp_intranet_page ) as $field => $value ) {

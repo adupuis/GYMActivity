@@ -34,7 +34,7 @@ try {
 		$tmp_categorie = new GenyIntranetCategory();
 		$results = array();
 
-		$cats = $tmp_categorie->getAllIntranetCategory();
+		$cats = $tmp_categorie->getAllIntranetCategories();
 		$categories = array();
 		foreach( $cats as $cat ){
 			$tmp = array();

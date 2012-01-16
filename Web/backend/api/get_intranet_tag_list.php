@@ -50,6 +50,7 @@ try {
 			$results = $tmp_intranet_tag->getAllIntranetTags();
 		}
 		
+		$intranet_tags = array();
 		foreach( $results as $tag ){
 			$tmp = array();
 			foreach( get_object_vars( $tmp_intranet_tag ) as $field => $value ) {
