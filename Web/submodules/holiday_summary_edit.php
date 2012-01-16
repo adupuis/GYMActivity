@@ -56,14 +56,12 @@ if( $create_holiday_summary == "true" ) {
 else if( $load_holiday_summary == 'true' ) {
 	$holiday_summary_id = GenyTools::getParam( 'holiday_summary_id', 'NULL' );
 	if( $holiday_summary_id != 'NULL' ) {
-		$tmp_geny_holiday_summary = new GenyHolidaySummary();
-		$tmp_geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_holiday_summary->loadHolidaySummaryById( $holiday_summary_id );
 		}
 		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger le solde de congés ",'msg'=>"Vous n'êtes pas autorisé.");
+			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger le solde de congés",'msg'=>"Vous n'êtes pas autorisé.");
 			header( 'Location: error.php?category=holiday_summary&backlinks=holiday_summary_list,holiday_summary_add' );
 		}
 	}

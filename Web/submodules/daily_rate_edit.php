@@ -57,9 +57,6 @@ if( $create_daily_rate == "true" ) {
 else if( $load_daily_rate == 'true' ) {
 	$daily_rate_id = GenyTools::getParam( 'daily_rate_id', 'NULL' );
 	if( $daily_rate_id != 'NULL' ) {
-		$tmp_geny_daily_rate = new GenyDailyRate();
-		$tmp_geny_daily_rate->loadDailyRateById( $daily_rate_id );
-		// TODO: restrict admin or not ?
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2  || /* superuser */
 		    $profile->rights_group_id == 4     /* superreporter */ ) {
