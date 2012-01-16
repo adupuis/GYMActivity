@@ -438,6 +438,23 @@ li.daily_rate_list a {
 	background-image: url(../../images/genymobile-2012/daily_rate_list.png);
 }
 
+li.intranet_category_add a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.intranet_category_edit a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.intranet_category_remove a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+li.intranet_category_list a {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+
 /* End of main dock style */
 
 /* Mainarea */
@@ -673,6 +690,22 @@ p.mainarea_title span.daily_rate_remove {
 
 p.mainarea_title span.daily_rate_list {
 	background-image: url(../../images/genymobile-2012/daily_rate_list.png);
+}
+
+p.mainarea_title span.intranet_category_add {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+p.mainarea_title span.intranet_category_edit {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+p.mainarea_title span.intranet_category_remove {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
+}
+
+p.mainarea_title span.intranet_category_list {
+	background-image: url(../../images/genymobile-2012/conges_admin_generic.png);
 }
 
 table.object_list {
