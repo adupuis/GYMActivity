@@ -32,6 +32,31 @@ $create_daily_rate = GenyTools::getParam( 'create_daily_rate', 'NULL' );
 $load_daily_rate = GenyTools::getParam( 'load_daily_rate', 'NULL' );
 $edit_daily_rate = GenyTools::getParam( 'edit_daily_rate', 'NULL' );
 
+// This function is used for checking if for daily rates with same project, same task and same profile, there is no time overlap
+function checkDailyRateOverlap( $project_id, $task_id, $profile_id, $daily_rate_start_date_timestamp, $daily_rate_end_date_timestamp ) {
+	$can_insert = true;
+	$tmp_daily_rate = new GenyDailyRate();
+	foreach( $tmp_daily_rate->getAllDailyRates() as $tmp ) {
+		$tmp_project_id = $tmp->project_id;
+		$tmp_task_id = $tmp->task_id;
+		$tmp_profile_id = $tmp->profile_id;
+		$tmp_daily_rate_start_date = $tmp->start_date;
+		$tmp_daily_rate_end_date = $tmp->end_date;
+		$tmp_daily_rate_start_date_timestamp = strtotime( $tmp_daily_rate_start_date );
+		$tmp_daily_rate_end_date_timestamp = strtotime( $tmp_daily_rate_end_date );
+
+		if( $project_id == $tmp_project_id && $task_id == $tmp_task_id && $profile_id == $tmp_profile_id ) {
+			if( ( $daily_rate_start_date_timestamp >= $tmp_daily_rate_start_date_timestamp && $daily_rate_start_date_timestamp <= $tmp_daily_rate_end_date_timestamp )
+			|| ( $daily_rate_end_date_timestamp >= $tmp_daily_rate_start_date_timestamp && $daily_rate_end_date_timestamp <= $tmp_daily_rate_end_date_timestamp )
+			) {
+				$can_insert = false;
+				break;
+			}
+		}
+	}
+	return $can_insert;
+}
+
 if( $create_daily_rate == "true" ) {
 	$project_id = GenyTools::getParam( 'project_id', 'NULL' );
 	$task_id = GenyTools::getParam( 'task_id', 'NULL' );
@@ -41,31 +66,36 @@ if( $create_daily_rate == "true" ) {
 	$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
 
 	if( $project_id != 'NULL' && $task_id != 'NULL' && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
-
-
-		$tmp_project = new GenyProject( $project_id );
-		$project_start_date = $tmp_project->start_date;
-		$project_start_date_timestamp = strtotime( $project_start_date );
-		$project_end_date = $tmp_project->end_date;
-		$project_end_date_timestamp = strtotime( $project_end_date );
-
+		
 		$daily_rate_start_date_timestamp = strtotime( $daily_rate_start_date );
 		$daily_rate_end_date_timestamp = strtotime( $daily_rate_end_date );
 
+		$tmp_project = new GenyProject( $project_id );
+		$project_start_date = $tmp_project->start_date;
+		$project_end_date = $tmp_project->end_date;
+		$project_start_date_timestamp = strtotime( $project_start_date );
+		$project_end_date_timestamp = strtotime( $project_end_date );
+
+		// The daily rate cannot start or end before the beginning or after the end of the project
 		if( $daily_rate_start_date_timestamp < $project_start_date_timestamp || $daily_rate_start_date_timestamp > $project_end_date_timestamp ) {
-			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM: le $daily_rate_start_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM : le $daily_rate_start_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
 		}
 		else if( $daily_rate_end_date_timestamp < $project_start_date_timestamp || $daily_rate_end_date_timestamp > $project_end_date_timestamp ) {
-			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM: le $daily_rate_end_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM : le $daily_rate_end_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
 		}
 		else {
-			$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
-			if( $insert_id != -1 ) {
-				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
-				$geny_daily_rate->loadDailyRateById( $insert_id );
+			if( checkDailyRateOverlap( $project_id, $task_id, $profile_id, $daily_rate_start_date_timestamp, $daily_rate_end_date_timestamp ) ) {
+				$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
+				if( $insert_id != -1 ) {
+					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
+					$geny_daily_rate->loadDailyRateById( $insert_id );
+				}
+				else {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM." );
+				}
 			}
 			else {
-				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM." );
+				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM : Un TJM existe déjà dans cet intervalle de dates pour ce projet, cette tâche et ce profil." );
 			}
 		}
 	}
@@ -106,6 +136,15 @@ else if( $edit_daily_rate == "true" ) {
 			$daily_rate_end_date = GenyTools::getParam( 'daily_rate_end_date', 'NULL' );
 			$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
 
+			$daily_rate_start_date_timestamp = strtotime( $daily_rate_start_date );
+			$daily_rate_end_date_timestamp = strtotime( $daily_rate_end_date );
+
+			$tmp_project = new GenyProject( $project_id );
+			$project_start_date = $tmp_project->start_date;
+			$project_end_date = $tmp_project->end_date;
+			$project_start_date_timestamp = strtotime( $project_start_date );
+			$project_end_date_timestamp = strtotime( $project_end_date );
+
 			if( $project_id != 'NULL' && $geny_daily_rate->project_id != $project_id ) {
 				$geny_daily_rate->updateInt( 'project_id', $project_id );
 			}
@@ -116,10 +155,38 @@ else if( $edit_daily_rate == "true" ) {
 				$geny_daily_rate->updateInt( 'profile_id', $profile_id );
 			}
 			if( $daily_rate_start_date != 'NULL' && $geny_daily_rate->start_date != $daily_rate_start_date ) {
-				$geny_daily_rate->updateString( 'daily_rate_start_date', $daily_rate_start_date );
+				// The daily rate cannot start or end before the beginning or after the end of the project
+				if( $daily_rate_start_date_timestamp < $project_start_date_timestamp || $daily_rate_start_date_timestamp > $project_end_date_timestamp ) {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification du début de période : le $daily_rate_start_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+				}
+				else if( $daily_rate_end_date_timestamp < $project_start_date_timestamp || $daily_rate_end_date_timestamp > $project_end_date_timestamp ) {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification du début de période : le $daily_rate_end_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+				}
+				else {
+					if( checkDailyRateOverlap( $project_id, $task_id, $profile_id, $daily_rate_start_date_timestamp, $daily_rate_end_date_timestamp ) ) {
+						$geny_daily_rate->updateString( 'daily_rate_end_date', $daily_rate_end_date );
+					}
+					else {
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification du début de période : Un TJM existe déjà dans cet intervalle de dates pour ce projet, cette tâche et ce profil." );
+					}
+				}
 			}
 			if( $daily_rate_end_date != 'NULL' && $geny_daily_rate->end_date != $daily_rate_end_date ) {
-				$geny_daily_rate->updateString( 'daily_rate_end_date', $daily_rate_end_date );
+				// The daily rate cannot start or end before the beginning or after the end of the project
+				if( $daily_rate_start_date_timestamp < $project_start_date_timestamp || $daily_rate_start_date_timestamp > $project_end_date_timestamp ) {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification de la fin de période : le $daily_rate_start_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+				}
+				else if( $daily_rate_end_date_timestamp < $project_start_date_timestamp || $daily_rate_end_date_timestamp > $project_end_date_timestamp ) {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification de la fin de période : le $daily_rate_end_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+				}
+				else {
+					if( checkDailyRateOverlap( $project_id, $task_id, $profile_id, $daily_rate_start_date_timestamp, $daily_rate_end_date_timestamp ) ) {
+						$geny_daily_rate->updateString( 'daily_rate_start_date', $daily_rate_start_date );
+					}
+					else {
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la modification de la fin de période : Un TJM existe déjà dans cet intervalle de dates pour ce projet, cette tâche et ce profil." );
+					}
+				}
 			}
 			if( $daily_rate_value != 'NULL' && $geny_daily_rate->value != $daily_rate_value ) {
 				$geny_daily_rate->updateString( 'daily_rate_value', $daily_rate_value );
