@@ -41,13 +41,32 @@ if( $create_daily_rate == "true" ) {
 	$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
 
 	if( $project_id != 'NULL' && $task_id != 'NULL' && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
-		$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
-		if( $insert_id != -1 ) {
-			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
-			$geny_daily_rate->loadDailyRateById( $insert_id );
+
+
+		$tmp_project = new GenyProject( $project_id );
+		$project_start_date = $tmp_project->start_date;
+		$project_start_date_timestamp = strtotime( $project_start_date );
+		$project_end_date = $tmp_project->end_date;
+		$project_end_date_timestamp = strtotime( $project_end_date );
+
+		$daily_rate_start_date_timestamp = strtotime( $daily_rate_start_date );
+		$daily_rate_end_date_timestamp = strtotime( $daily_rate_end_date );
+
+		if( $daily_rate_start_date_timestamp < $project_start_date_timestamp || $daily_rate_start_date_timestamp > $project_end_date_timestamp ) {
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM: le $daily_rate_start_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
+		}
+		else if( $daily_rate_end_date_timestamp < $project_start_date_timestamp || $daily_rate_end_date_timestamp > $project_end_date_timestamp ) {
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM: le $daily_rate_end_date est en dehors des bornes temporelles du projet (du $project_start_date au $project_end_date)." );
 		}
 		else {
-			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM." );
+			$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
+			if( $insert_id != -1 ) {
+				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
+				$geny_daily_rate->loadDailyRateById( $insert_id );
+			}
+			else {
+				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du TJM." );
+			}
 		}
 	}
 	else {
@@ -162,7 +181,6 @@ else if( $edit_daily_rate == "true" ) {
 						$concat_array = array();
 						$i = 0;
 						foreach( $daily_rates as $daily_rate ) {
-
 
 							foreach( $geny_project->getAllProjects() as $proj ) {
 								if( $daily_rate->project_id == $proj->id ) {
