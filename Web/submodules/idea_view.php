@@ -24,7 +24,6 @@ ini_set( 'display_errors', 1 );
 
 // Variable to configure global behaviour
 
-
 $gritter_notifications = array();
 
 $geny_idea = new GenyIdea();
@@ -35,9 +34,19 @@ $geny_profile = new GenyProfile();
 
 $current_datetime = date("Y-m-d H:i:s");
 
-if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
-	if( isset( $_POST['idea_title'] ) ) {
-		$insert_id = $geny_idea->insertNewIdea( 'NULL', htmlentities( $_POST['idea_title'], ENT_NOQUOTES, "UTF-8" ), htmlentities( $_POST['idea_description'], ENT_NOQUOTES, "UTF-8" ), $_POST['idea_votes'], 1, $profile->id, $current_datetime );
+$create_idea = GenyTools::getParam( 'create_idea', 'NULL' );
+$load_idea = GenyTools::getParam( 'load_idea', 'NULL' );
+$edit_idea = GenyTools::getParam( 'edit_idea', 'NULL' );
+$idea_vote = GenyTools::getParam( 'idea_vote', 'NULL' );
+$idea_message_create = GenyTools::getParam( 'idea_message_create', 'NULL' );
+
+if( $create_idea == "true" ) {
+	$idea_title = GenyTools::getParam( 'idea_title', 'NULL' );
+	$idea_description = GenyTools::getParam( 'idea_description', 'NULL' );
+	$idea_status = GenyTools::getParam( 'idea_status', 'NULL' );
+
+	if( $idea_title != 'NULL' && $idea_description != 'NULL' ) {
+		$insert_id = $geny_idea->insertNewIdea( 'NULL', $idea_title, $idea_description, $idea_vote, 1, $profile->id, $current_datetime );
 		if( $insert_id ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée créée avec succès.");
 			$geny_idea->loadIdeaById( $insert_id );
@@ -50,31 +59,28 @@ if( isset( $_POST['create_idea'] ) && $_POST['create_idea'] == "true" ) {
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
-else if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
-	if( isset( $_POST['idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_POST['idea_id'] );
+else if( $load_intranet_category == "true" ) {
+	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
+	if( $intranet_category_id != 'NULL' ) {
+		$geny_idea->loadIdeaById( $intranet_category_id );
 	}
 	else {
 		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
-else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
-	if( isset( $_GET['idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_GET['idea_id'] );
-	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
-	}
-}
-else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
+else if( $idea_vote == "true" ) {
 	$negative = 0;
 	$positive = 0;
-	if( isset( $_GET['idea_vote_idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_GET['idea_vote_idea_id'] );
-
-		if( isset( $_GET['idea_vote_positive'] ) && $_GET['idea_vote_positive'] == "true" ) {
+	$idea_vote_idea_id = GenyTools::getParam( 'idea_vote_idea_id', 'NULL' );
+	if( $idea_vote_idea_id != 'NULL' ) {
+		$geny_idea->loadIdeaById( $idea_vote_idea_id );
+		$idea_vote_positive = GenyTools::getParam( 'idea_vote_positive', 'NULL' );
+		$idea_vote_negative = GenyTools::getParam( 'idea_vote_negative', 'NULL' );
+		$idea_vote_neutral = GenyTools::getParam( 'idea_vote_neutral', 'NULL' );
+		
+		if( $idea_vote_positive == "true" ) {
 			// Positive vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $idea_vote_idea_id );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -90,7 +96,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 			else {
 				// I didn't vote for this idea before (or was neutral)
-				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $profile->id, $_GET['idea_vote_idea_id'] ) ) {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 1, 0, $profile->id, $idea_vote_idea_id ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté pour !");
 				}
 				else {
@@ -105,9 +111,9 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes + 1 );
 			}
 		}
-		else if( isset( $_GET['idea_vote_negative'] ) && $_GET['idea_vote_negative'] == "true" ) {
+		else if( $idea_vote_negative == "true" ) {
 			// Negative vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $idea_vote_idea_id );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -123,7 +129,7 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 			}
 			else {
 				// I didn't vote for this idea before (or was neutral)
-				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $profile->id, $_GET['idea_vote_idea_id'] ) ) {
+				if( $geny_idea_vote->insertNewIdeaVote( 'NULL', 0, 1, $profile->id, $idea_vote_idea_id ) ) {
 					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Vous avez voté contre...");
 				}
 				else {
@@ -138,9 +144,9 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 				$geny_idea->updateInt( 'idea_votes', $geny_idea->votes - 1 );
 			}
 		}
-		else if( isset( $_GET['idea_vote_neutral'] ) && $_GET['idea_vote_neutral'] == "true" ) {
+		else if( $idea_vote_neutral == "true" ) {
 			// Neutral vote
-			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $_GET['idea_vote_idea_id'] );
+			$my_votes_for_this_idea = $geny_idea_vote->getIdeaVotesListByProfileAndIdeaId( $profile->id, $idea_vote_idea_id );
 			if( count( $my_votes_for_this_idea ) > 0 ) {
 				// I already voted for this idea
 				$geny_idea_vote = $my_votes_for_this_idea[0];
@@ -172,11 +178,13 @@ else if( isset( $_GET['idea_vote'] ) && $_GET['idea_vote'] == "true" ) {
 		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
-else if( isset( $_POST['idea_message_create'] ) && $_POST['idea_message_create'] == "true" ) {
-	if( isset( $_POST['idea_message_idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_POST['idea_message_idea_id'] );
-		if( isset( $_POST['idea_message_content'] ) ) {
-			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', htmlentities( $_POST['idea_message_content'], ENT_NOQUOTES, "UTF-8" ), $current_datetime, $profile->id, $_POST['idea_message_idea_id'] ) ) {
+else if( $idea_message_create == "true" ) {
+	$idea_message_idea_id = GenyTools::getParam( 'idea_message_idea_id', 'NULL' );
+	if( $idea_message_idea_id != 'NULL' ) {
+		$geny_idea->loadIdeaById( $idea_message_idea_id );
+		$idea_message_content = GenyTools::getParam( 'idea_message_content', 'NULL' );
+		if( $idea_message_content != 'NULL' ) {
+			if( $geny_idea_message->insertNewIdeaMessage( 'NULL', $idea_message_content, $current_datetime, $profile->id, $idea_message_idea_id ) ) {
 				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Commentaire ajouté avec succès.");
 // 				$geny_idea_message->sendMailForNewMessage( $profile->id, $_POST['idea_message_content'], $_POST['idea_message_idea_id'] );
 			}

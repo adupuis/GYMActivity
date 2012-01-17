@@ -26,54 +26,57 @@ $gritter_notifications = array();
 $geny_idea = new GenyIdea();
 $geny_idea_status = new GenyIdeaStatus();
 
-if( isset( $_POST['load_idea'] ) && $_POST['load_idea'] == "true" ) {
-	if( isset( $_POST['idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_POST['idea_id'] );
+// $create_idea = GenyTools::getParam( 'create_idea', 'NULL' );
+$load_idea = GenyTools::getParam( 'load_idea', 'NULL' );
+$edit_idea = GenyTools::getParam( 'edit_idea', 'NULL' );
+
+if( $load_idea == "true" ) {
+	$idea_id = GenyTools::getParam( 'idea_id', 'NULL' );
+	if( $idea_id != 'NULL' ) {
+		$tmp_geny_idea = new GenyIdea();
+		$tmp_geny_idea->loadIdeaById( $idea_id );
+		if( $tmp_geny_idea->submitter == $profile->id ||
+		    $profile->rights_group_id == 1  || /* admin */
+		    $profile->rights_group_id == 2     /* superuser */ ) {
+			$geny_idea->loadIdeaById( $idea_id );
+		}
+		else {
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"Vous n'êtes pas autorisé." );
+			header( 'Location: error.php?category=idea&backlinks=idea_list,idea_add' );
+		}
 	}
 	else {
 		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
 	}
 }
-else if( isset( $_GET['load_idea'] ) && $_GET['load_idea'] == "true" ) {
-	if( isset( $_GET['idea_id'] ) ) {
-		$tmp_geny_idea = new GenyIdea();
-		$tmp_geny_idea->loadIdeaById( $_GET['idea_id'] );
-		if( $tmp_geny_idea->submitter == $profile->id ||
-		    $profile->rights_group_id == 1  || /* admin */
-		    $profile->rights_group_id == 2     /* superuser */ ) {
-			$geny_idea->loadIdeaById( $_GET['idea_id'] );
-		}
-		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"Vous n'êtes pas autorisé.");
-			header( 'Location: error.php?category=idea&backlinks=idea_list,idea_add' );
-		}
-	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
-	}
-}
-else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
-	if( isset( $_POST['idea_id'] ) ) {
-		$geny_idea->loadIdeaById( $_POST['idea_id'] );
+else if( $edit_idea == "true" ) {
+	$idea_id = GenyTools::getParam( 'idea_id', 'NULL' );
+	if( $idea_id != 'NULL' ) {
+		$geny_idea->loadIdeaById( $idea_id );
 		if($geny_idea->submitter == $profile->id            ||
 		   $profile->rights_group_id == 1 /* admin */       ||
 		   $profile->rights_group_id == 2 /* superuser */)  {
-			if( isset( $_POST['idea_title'] ) && $_POST['idea_title'] != "" && $geny_idea->title != $_POST['idea_title'] ) {
-				$geny_idea->updateString( 'idea_title', $_POST['idea_title'] );
+			$idea_title = GenyTools::getParam( 'idea_title', 'NULL' );
+			$idea_description = GenyTools::getParam( 'idea_description', 'NULL' );
+// 			$idea_vote = GenyTools::getParam( 'idea_vote', 'NULL' );
+			$idea_status = GenyTools::getParam( 'idea_status', 'NULL' );
+
+			if( $idea_title != 'NULL' && $geny_idea->title != $idea_title ) {
+				$geny_idea->updateString( 'idea_title', $idea_title );
 			}
-			if( isset( $_POST['idea_description'] ) && $_POST['idea_description'] != "" && $geny_idea->description != $_POST['idea_description'] ) {
-				$geny_idea->updateString( 'idea_description', $_POST['idea_description'] );
+			if( $idea_description != 'NULL' && $geny_idea->description != $idea_description ) {
+				$geny_idea->updateString( 'idea_description', $idea_description );
 			}
-			if( isset( $_POST['idea_votes'] ) && $_POST['idea_votes'] != "" ) {
-				$geny_idea->updateInt( 'idea_votes', $_POST['idea_votes'] );
-			}
-			if( isset( $_POST['idea_status'] ) && $_POST['idea_status'] != "" ) {
-				$geny_idea->updateInt( 'idea_status_id', $_POST['idea_status'] );
+// 			if( $idea_vote != 'NULL' && $geny_idea->votes != $idea_vote ) {
+// 				$geny_idea->updateInt( 'idea_vote', $idea_vote );
+// 			}
+			if( $idea_status != 'NULL' && $geny_idea->status != $idea_status ) {
+				$geny_idea->updateInt( 'idea_status', $idea_status );
 			}
 		}
 		if( $geny_idea->commitUpdates() ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Idée mise à jour avec succès.");
-			$geny_idea->loadIdeaById( $_POST['idea_id'] );
+			$geny_idea->loadIdeaById( $idea_id );
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de l'idée.");
@@ -121,10 +124,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 						$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
 					}
 					foreach( $ideas as $idea ) {
-						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
-							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
-						}
-						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->title ) {
+						if( $geny_idea->id == $idea->id ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
 						}
 						else {
@@ -138,7 +138,7 @@ else if( isset( $_POST['edit_idea'] ) && $_POST['edit_idea'] == "true" ) {
 				</select>
 			</p>
 		</form>
-		<form id="formID" action="idea_edit.php" method="post">
+		<form id="formID" action="loader.php?module=idea_edit" method="post">
 			<input type="hidden" name="edit_idea" value="true" />
 			<input type="hidden" name="idea_id" value="<?php echo $geny_idea->id ?>" />
 			 <p>

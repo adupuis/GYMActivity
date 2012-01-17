@@ -29,15 +29,19 @@ $handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->d
 mysql_select_db($web_config->db_name);
 mysql_query("SET NAMES 'utf8'");
 
-if( isset($_POST['remove_idea']) && $_POST['remove_idea'] == "true" ) {
-	if(isset($_POST['idea_id'])) {
-		if( isset($_POST['force_remove']) && $_POST['force_remove'] == "true" ) {
-			$id = $_POST['idea_id'];
-			$geny_idea = new GenyIdea();
-			$geny_idea->loadIdeaById($id);
-			if($geny_idea->submitter == $profile->id            ||
-			   $profile->rights_group_id == 1 /* admin */       ||
-			   $profile->rights_group_id == 2 /* superuser */)  {
+$remove_idea = GenyTools::getParam( 'remove_idea', 'NULL' );
+
+if( $remove_idea == "true" ) {
+	$idea_id = GenyTools::getParam( 'idea_id', 'NULL' );
+	if( $idea_id != 'NULL' ) {
+		$force_remove_idea = GenyTools::getParam( 'force_remove', 'NULL' );
+		if( $force_remove_idea == "true" ) {
+			$id = GenyTools::getParam( 'idea_id', 'NULL' );
+			$geny_idea->loadIdeaById( $id );
+			error_log("[GYMActivity::DEBUG] after load geny_idea id : ".$geny_idea->id, 0 );
+			if( $geny_idea->submitter == $profile->id		||
+			    $profile->rights_group_id == 1 /* admin */		||
+			    $profile->rights_group_id == 2 /* superuser */ ) {
 				$query = "DELETE FROM Ideas WHERE idea_id=$id";
 				if(! mysql_query($query)) {
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de l'idée de la table Ideas.");
@@ -98,11 +102,9 @@ else {
 					else {
 						$ideas = $geny_idea->getIdeasListBySubmitter( $profile->id );
 					}
+					$idea_id = GenyTools::getParam( 'idea_id', 'NULL' );
 					foreach( $ideas as $idea ) {
-						if( ( isset( $_POST['idea_id'] ) && $_POST['idea_id'] == $idea->id ) || ( isset( $_GET['idea_id'] ) && $_GET['idea_id'] == $idea->id ) ) {
-							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
-						}
-						else if( isset($_POST['idea_name']) && $_POST['idea_name'] == $idea->title) {
+						if( $idea_id == $idea->id ) {
 							echo "<option value=\"".$idea->id."\" selected>".$idea->title."</option>\n";
 						}
 						else {
