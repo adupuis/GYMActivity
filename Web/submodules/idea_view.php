@@ -59,10 +59,10 @@ if( $create_idea == "true" ) {
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
 	}
 }
-else if( $load_intranet_category == "true" ) {
-	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
-	if( $intranet_category_id != 'NULL' ) {
-		$geny_idea->loadIdeaById( $intranet_category_id );
+else if( $load_idea == "true" ) {
+	$idea_id = GenyTools::getParam( 'idea_id', 'NULL' );
+	if( $idea_id != 'NULL' ) {
+		$geny_idea->loadIdeaById( $idea_id );
 	}
 	else {
 		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger l'idée ",'msg'=>"id non spécifié.");
