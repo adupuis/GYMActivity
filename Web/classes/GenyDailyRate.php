@@ -136,6 +136,21 @@ class GenyDailyRate extends GenyDatabaseTools {
 		return $values_list;
 	}
 
+	// This function is used for checking if for daily rates with same project, same task and same profile, there is no time overlap
+	function checkDailyRateOverlap( $daily_rate_id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date ) {
+		$query = "SELECT * FROM DailyRates WHERE daily_rate_id!=".$daily_rate_id." AND project_id=".$project_id." AND task_id=".$task_id." AND profile_id=".$profile_id.
+			" AND ( daily_rate_start_date <= '".$daily_rate_start_date."' AND daily_rate_end_date >= '".$daily_rate_start_date."' OR daily_rate_start_date > '".$daily_rate_start_date."' AND daily_rate_start_date <= '".$daily_rate_end_date."' )";
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] DailyRates MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+		$nb_rows = mysql_num_rows( $result );
+		if( $nb_rows != 0 ) {
+			return false;
+		}
+		return true;
+	}
+
 	public function loadDailyRateById( $id ) {
 		if( !is_numeric( $id ) ) {
 			return false;
