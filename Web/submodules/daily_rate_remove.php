@@ -20,7 +20,6 @@
 
 // Variable to configure global behaviour
 
-
 $gritter_notifications = array();
 
 $geny_daily_rate = new GenyDailyRate();
@@ -44,10 +43,10 @@ if( $remove_daily_rate == "true" ) {
 			    $profile->rights_group_id == 2 /* superuser */)  {
 				$query = "DELETE FROM DailyRates WHERE daily_rate_id=$id";
 				if( !mysql_query( $query ) ) {
-					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du solde de congés de la table DailyRates." );
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du TJM de la table DailyRates." );
 				}
 				else
-					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés supprimé avec succès." );
+					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM supprimé avec succès." );
 			}
 		}
 		else {
@@ -55,7 +54,7 @@ if( $remove_daily_rate == "true" ) {
 		}
 	}
 	else {
-		$gritter_notifications[] = array( 'status'=>'error', 'title' => "Impossible de supprimer le solde de congés ",'msg'=>"id non spécifié." );
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => "Impossible de supprimer le TJM",'msg'=>"id non spécifié." );
 	}
 }
 else {
