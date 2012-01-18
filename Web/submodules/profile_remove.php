@@ -103,7 +103,7 @@ else{
 		<form id="select_login_form" action="loader.php?module=profile_remove" method="post">
 			<input type="hidden" name="remove_profile" value="true" />
 			<p>
-				<label for="profile_id">Séléction profil</label>
+				<label for="profile_id">Sélection profil</label>
 
 				<select name="profile_id" id="profile_id" class="chzn-select">
 					<?php

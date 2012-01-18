@@ -89,7 +89,7 @@ else{
 		<form id="select_login_form" action="loader.php?module=task_remove" method="post">
 			<input type="hidden" name="remove_task" value="true" />
 			<p>
-				<label for="task_id">Séléction tâche</label>
+				<label for="task_id">Sélection tâche</label>
 
 				<select name="task_id" id="task_id" class="chzn-select">
 					<?php

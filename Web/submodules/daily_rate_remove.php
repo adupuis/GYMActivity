@@ -95,7 +95,7 @@ else {
 		<form id="select_login_form" action="loader.php?module=daily_rate_remove" method="post">
 			<input type="hidden" name="remove_daily_rate" value="true" />
 			<p>
-				<label for="daily_rate_id">Séléction TJM</label>
+				<label for="daily_rate_id">Sélection TJM</label>
 
 				<select name="daily_rate_id" id="daily_rate_id" class="chzn-select">
 					<?php

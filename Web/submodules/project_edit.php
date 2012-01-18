@@ -262,7 +262,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 		<form id="select_project_form" action="loader.php?module=project_edit" method="post">
 			<input type="hidden" name="load_project" value="true" />
 			<p>
-				<label for="project_id">Séléction projet</label>
+				<label for="project_id">Sélection projet</label>
 
 				<select name="project_id" id="project_id" onChange="submit()" class="chzn-select">
 					<?php

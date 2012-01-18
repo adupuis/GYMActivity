@@ -97,7 +97,7 @@ else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 		<form id="select_login_form" action="loader.php?module=client_edit" method="post">
 			<input type="hidden" name="load_client" value="true" />
 			<p>
-				<label for="client_id">Séléction client</label>
+				<label for="client_id">Sélection client</label>
 
 				<select name="client_id" id="client_id" onChange="submit()" class="chzn-select">
 					<?php

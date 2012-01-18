@@ -87,7 +87,7 @@ else{
 		<form id="select_login_form" action="loader.php?module=project_remove" method="post">
 			<input type="hidden" name="remove_project" value="true" />
 			<p>
-				<label for="project_id">Séléction profil</label>
+				<label for="project_id">Sélection profil</label>
 
 				<select name="project_id" id="project_id" class="chzn-select">
 					<?php

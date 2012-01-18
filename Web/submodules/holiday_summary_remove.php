@@ -94,7 +94,7 @@ else {
 		<form id="select_login_form" action="loader.php?module=holiday_summary_remove" method="post">
 			<input type="hidden" name="remove_holiday_summary" value="true" />
 			<p>
-				<label for="holiday_summary_id">Séléction solde de congés</label>
+				<label for="holiday_summary_id">Sélection solde de congés</label>
 
 				<select name="holiday_summary_id" id="holiday_summary_id" class="chzn-select">
 					<?php

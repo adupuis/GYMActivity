@@ -89,7 +89,7 @@ else {
 		<form id="select_login_form" action="loader.php?module=intranet_category_remove" method="post">
 			<input type="hidden" name="remove_intranet_category" value="true" />
 			<p>
-				<label for="intranet_category_id">Séléction catégorie Intranet</label>
+				<label for="intranet_category_id">Sélection catégorie Intranet</label>
 
 				<select name="intranet_category_id" id="intranet_category_id" class="chzn-select">
 					<?php

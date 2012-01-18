@@ -91,7 +91,7 @@ else {
 		<form id="select_login_form" action="loader.php?module=idea_remove" method="post">
 			<input type="hidden" name="remove_idea" value="true" />
 			<p>
-				<label for="idea_id">Séléction idée</label>
+				<label for="idea_id">Sélection idée</label>
 
 				<select name="idea_id" id="idea_id" class="chzn-select">
 					<?php

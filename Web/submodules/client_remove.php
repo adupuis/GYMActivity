@@ -84,7 +84,7 @@ else{
 		<form id="select_login_form" action="loader.php?module=client_remove" method="post">
 			<input type="hidden" name="remove_client" value="true" />
 			<p>
-				<label for="client_id">Séléction client</label>
+				<label for="client_id">Sélection client</label>
 
 				<select name="client_id" id="client_id" class="chzn-select">
 					<?php

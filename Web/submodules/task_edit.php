@@ -103,7 +103,7 @@ else{
 		<form id="select_login_form" action="loader.php?module=task_edit" method="post">
 			<input type="hidden" name="load_task" value="true" />
 			<p>
-				<label for="task_id">Séléction tâche</label>
+				<label for="task_id">Sélection tâche</label>
 
 				<select name="task_id" id="task_id" onChange="submit()" class="chzn-select">
 					<?php
