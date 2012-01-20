@@ -100,6 +100,7 @@ else if( $edit_intranet_type == 'true' ) {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_edit.png"></img>
 		<span class="intranet_type_edit">
 			Modifier type de catégorie Intranet
 		</span>

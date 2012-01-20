@@ -59,6 +59,7 @@ else{
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/client_remove.png"></img>
 		<span class="client_remove">
 			Supprimer un client
 		</span>

@@ -25,6 +25,7 @@
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/task_add.png"></img>
 		<span class="task_add">
 			Ajouter une tâche
 		</span>

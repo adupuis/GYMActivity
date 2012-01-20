@@ -65,6 +65,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/conges_remove.png"></img>
 		<span class="conges_remove">
 			Suppression congés
 		</span>

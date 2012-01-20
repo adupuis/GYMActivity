@@ -90,6 +90,7 @@ else if( $edit_idea == "true" ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_edit.png"></img>
 		<span class="idea_edit">
 			Modifier une idée
 		</span>

@@ -78,6 +78,7 @@ else{
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/profile_remove.png"></img>
 		<span class="profile_remove">
 			Supprimer un profil
 		</span>

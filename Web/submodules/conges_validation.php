@@ -170,6 +170,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/conges_add.png"></img>
 		<span class="conges_add">
 			Valider des congés
 		</span>

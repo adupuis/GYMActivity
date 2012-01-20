@@ -69,6 +69,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+	<img src="images/<?php echo $web_config->theme; ?>/holiday_summary_list.png"></img>
 		<span class="holiday_summary_list">
 			Soldes de congés
 		</span>

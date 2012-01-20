@@ -219,6 +219,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/project_edit.png"></img>
 		<span class="project_edit">
 			Modifier un projet
 		</span>

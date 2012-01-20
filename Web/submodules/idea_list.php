@@ -105,6 +105,7 @@ foreach( $geny_idea->getAllIdeas() as $tmp ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_list.png"></img>
 		<span class="idea_list">
 			Boîte à idées
 		</span>

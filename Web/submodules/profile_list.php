@@ -132,6 +132,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/profile_list.png"></img>
 		<span class="profile_list">
 			Liste des profils
 		</span>

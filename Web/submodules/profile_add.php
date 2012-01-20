@@ -26,6 +26,7 @@ $geny_profile = new GenyProfile();
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/profile_add.png"></img>
 		<span class="profile_add">
 			Ajouter un profil
 		</span>

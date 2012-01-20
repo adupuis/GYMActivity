@@ -85,6 +85,7 @@ else{
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/task_edit.png"></img>
 		<span class="task_edit">
 			Modifier une tâche
 		</span>

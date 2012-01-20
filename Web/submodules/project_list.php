@@ -143,6 +143,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/project_list.png"></img>
 		<span class="project_list">
 			Liste des projets
 		</span>

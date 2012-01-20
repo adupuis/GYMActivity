@@ -26,6 +26,7 @@ $geny_client = new GenyClient();
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_add.png"></img>
 		<span class="idea_add">
 			Ajouter une idée
 		</span>

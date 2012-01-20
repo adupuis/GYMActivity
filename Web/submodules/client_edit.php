@@ -78,6 +78,7 @@ else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/client_edit.png"></img>
 		<span class="client_edit">
 			Modifier un client
 		</span>

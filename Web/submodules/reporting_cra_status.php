@@ -174,7 +174,8 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<span class="reporting_monthly_view" style="width: 600px;">
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
+		<span class="reporting_monthly_view">
 			Repartition des CRA par status
 		</span>
 	</p>

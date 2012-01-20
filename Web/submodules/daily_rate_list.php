@@ -79,6 +79,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/daily_rate_list.png"></img>
 		<span class="daily_rate_list">
 			Liste des TJM
 		</span>
