@@ -167,7 +167,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 		return $this->getIntranetPagesListWithRestrictions( array( "intranet_page_title LIKE '%$q%' or intranet_page_content '%$q%'" ) );
 	}
 
-	public function loadIntranetPagesById( $id ) {
+	public function loadIntranetPageById( $id ) {
 		$intranet_pages = $this->getIntranetPagesListWithRestrictions( array( "intranet_page_id=".mysql_real_escape_string( $id ) ) );
 		$intranet_page = $intranet_pages[0];
 		if( isset( $intranet_page ) && $intranet_page->id > -1 ) {
