@@ -62,9 +62,9 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 // 		}
 // 	}
 
-	$edit = "<a href=\"loader.php?module=intranet_category_edit&load_intranet_category=true&intranet_category_id=$tmp->id\" title=\"Editer la catégorie Intranet\"><img src=\"images/$web_config->theme/conges_admin_edit_small.png\" alt=\"Editer la catégorie Intranet\"></a>";
+	$edit = "<a href=\"loader.php?module=intranet_category_edit&load_intranet_category=true&intranet_category_id=$tmp->id\" title=\"Editer la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer la catégorie Intranet\"></a>";
 
-	$remove = "<a href=\"loader.php?module=intranet_category_remove&intranet_category_id=$tmp->id\" title=\"Supprimer définitivement la catégorie Intranet\"><img src=\"images/$web_config->theme/conges_admin_remove_small.png\" alt=\"Supprimer définitiement la catégorie Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_category_remove&intranet_category_id=$tmp->id\" title=\"Supprimer définitivement la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitiement la catégorie Intranet\"></a>";
 	
 	$data_array[] = array( $tmp->id, $tmp->name, $tmp->description, $edit, $remove );
 }
