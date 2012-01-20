@@ -470,6 +470,18 @@ li.intranet_type_list a {
 	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
 }
 
+li.intranet_tag_edit a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.intranet_tag_remove a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.intranet_tag_list a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
 
 /* End of main dock style */
 
@@ -737,6 +749,18 @@ p.mainarea_title span.intranet_type_remove {
 }
 
 p.mainarea_title span.intranet_type_list {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.intranet_tag_edit {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.intranet_tag_remove {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.intranet_tag_list {
 	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
 }
 
