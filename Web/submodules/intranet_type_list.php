@@ -40,7 +40,7 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 
 	$edit = "<a href=\"loader.php?module=intranet_type_edit&load_intranet_type=true&intranet_type_id=$tmp->id\" title=\"Editer le type de catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer le type de catégorie Intranet\"></a>";
 
-	$remove = "<a href=\"loader.php?module=intranet_type_remove&intranet_type_id=$tmp->id\" title=\"Supprimer définitivement le type de catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitiement le type de catégorie Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_type_remove&intranet_type_id=$tmp->id\" title=\"Supprimer définitivement le type de catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement le type de catégorie Intranet\"></a>";
 	
 	$data_array[] = array( $tmp->id, $tmp->name, $tmp->description, $intranet_category_name, $edit, $remove );
 	

@@ -64,7 +64,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 
 	$edit = "<a href=\"loader.php?module=daily_rate_edit&load_daily_rate=true&daily_rate_id=$tmp->id\" title=\"Editer le TJM\"><img src=\"images/$web_config->theme/daily_rate_edit_small.png\" alt=\"Editer le TJM\"></a>";
 
-	$remove = "<a href=\"loader.php?module=daily_rate_remove&daily_rate_id=$tmp->id\" title=\"Supprimer définitivement le TJM\"><img src=\"images/$web_config->theme/daily_rate_remove_small.png\" alt=\"Supprimer définitiement le TJM\"></a>";
+	$remove = "<a href=\"loader.php?module=daily_rate_remove&daily_rate_id=$tmp->id\" title=\"Supprimer définitivement le TJM\"><img src=\"images/$web_config->theme/daily_rate_remove_small.png\" alt=\"Supprimer définitivement le TJM\"></a>";
 	
 	$data_array[] = array( $tmp->id, $project_name, $task_name, $profile_name, $tmp->start_date, $tmp->end_date, $tmp->value, $edit, $remove );
 
