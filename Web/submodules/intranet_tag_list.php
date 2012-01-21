@@ -20,72 +20,50 @@
 
 // Variable to configure global behaviour
 
-
 date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-// $data_array_filters = array( 0 => array(), 1 => array(), 2 => array() );
+// $data_array_filters = array( 2 => array() );
 
 
-$geny_intranet_category = new GenyIntranetCategory();
+$geny_intranet_tag = new GenyIntranetTag();
 
-// $geny_project = new GenyProject();
-// foreach( $geny_project->getAllProjects() as $proj ) {
-// 	$projects[$proj->id] = $proj;
-// }
-// 
-// $geny_task = new GenyTask();
-// foreach( $geny_task->getAllTasks() as $tsk ) {
-// 	$tasks[$tsk->id] = $tsk;
-// }
-// 
-// $geny_profile = new GenyProfile();
-// foreach( $geny_profile->getAllProfiles() as $prof ) {
-// 	$profiles[$prof->id] = $prof;
+// $geny_intranet_category = new GenyIntranetCategory();
+// foreach( $geny_intranet_category->getAllIntranetCategories() as $cat ) {
+// 	$intranet_categories[$cat->id] = $cat;
 // }
 
-foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
+foreach( $geny_intranet_tag->getAllIntranetTags() as $tmp ) {
 	
-// 	$project_name = $projects["$tmp->project_id"]->name;
+// 	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
 
-// 	$task_name = $tasks["$tmp->task_id"]->name;
+	$edit = "<a href=\"loader.php?module=intranet_tag_edit&load_intranet_tag=true&intranet_tag_id=$tmp->id\" title=\"Editer le tag Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer le tag Intranet\"></a>";
 
-// 	$profile_name = '';
-// 	if( isset( $tmp->profile_id ) ) {
-// 		$tmp_profile = $profiles["$tmp->profile_id"];
-// 		if( $tmp_profile->firstname && $tmp_profile->lastname ) {
-// 			$profile_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
-// 		}
-// 		else {
-// 			$profile_name = $tmp_profile->login;
-// 		}
-// 	}
-
-	$edit = "<a href=\"loader.php?module=intranet_category_edit&load_intranet_category=true&intranet_category_id=$tmp->id\" title=\"Editer la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer la catégorie Intranet\"></a>";
-
-	$remove = "<a href=\"loader.php?module=intranet_category_remove&intranet_category_id=$tmp->id\" title=\"Supprimer définitivement la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement la catégorie Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_tag_remove&intranet_tag_id=$tmp->id\" title=\"Supprimer définitivement le tag Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement le tag Intranet\"></a>";
 	
-	$data_array[] = array( $tmp->id, $tmp->name, $tmp->description, $edit, $remove );
+	$data_array[] = array( $tmp->id, $tmp->name, $edit, $remove );
+	
+// 	if( !in_array( $intranet_category_name, $data_array_filters[2]) )
+// 		$data_array_filters[2][] = $intranet_category_name;
 }
 
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/intranet_category_list.png"></img>
-		<span class="intranet_category_list">
-			Liste des catégories Intranet
+		<span class="intranet_tag_list">
+			Liste des tags Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des catégories de l'Intranet.
+		Voici la liste des tags de l'Intranet.
 		</p>
 		<script>
 			var indexData = new Array();
 			<?php
-				if( array_key_exists( "GYMActivity_intranet_category_list_php", $_COOKIE ) ) {
-					$cookie = json_decode( $_COOKIE["GYMActivity_intranet_category_list_php"] );
+				if( array_key_exists( "GYMActivity_intranet_tag_list_php", $_COOKIE ) ) {
+					$cookie = json_decode( $_COOKIE["GYMActivity_intranet_tag_list_php"] );
 				}
 				
 // 				$data_array_filters_html = array();
@@ -110,7 +88,7 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#intranet_category_list_table').dataTable( {
+				var oTable = $('#intranet_tag_list_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -118,7 +96,7 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
-						"sLengthMenu": "Catégorie Intranet par page _MENU_",
+						"sLengthMenu": "Tags par page _MENU_",
 						"sZeroRecords": "Aucun résultat",
 						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
 						"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
@@ -132,16 +110,16 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 					},
 // 					"aaSorting": [[ 5, "desc" ]]
 				} );
-// 				/* Add a select menu for each TH element in the table footer */
-// 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
-// 				$("tfoot th").each( function ( i ) {
-// 					if( i == 0 || i == 1 || i == 2 ) {
-// 						this.innerHTML = indexData[i];
-// 						$('select', this).change( function () {
-// 							oTable.fnFilter( $(this).val(), i );
-// 						} );
-// 					}
-// 				} );
+				/* Add a select menu for each TH element in the table footer */
+				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
+				$("tfoot th").each( function ( i ) {
+					if( i == 2 ) {
+						this.innerHTML = indexData[i];
+						$('select', this).change( function () {
+							oTable.fnFilter( $(this).val(), i );
+						} );
+					}
+				} );
 			
 			});
 			
@@ -152,28 +130,26 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 				displayStatusNotifications( $gritter_notifications, $web_config->theme );
 			?>
 		</script>
-		<form id="formID" action="loader.php?module=intranet_category_list" method="post" class="table_container">
+		<form id="formID" action="loader.php?module=intranet_tag_list" method="post" class="table_container">
 			<style>
-				@import 'styles/<?php echo $web_config->theme ?>/intranet_category_list.css';
+				@import 'styles/<?php echo $web_config->theme ?>/intranet_tag_list.css';
 			</style>
 			<p>
-				<table id="intranet_category_list_table" style="color: black; width: 100%;">
+				<table id="intranet_tag_list_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Nom</th>
-						<th>Description</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."</center></td></tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
 						<th class="filtered">Nom</th>
-						<th class="filtered">Description</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>
 					</tfoot>
@@ -184,5 +160,6 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 </div>
 
 <?php
-	$bottomdock_items = array('backend/widgets/intranet_category_add.dock.widget.php');
+// 	$bottomdock_items = array('backend/widgets/intranet_tag_add.dock.widget.php');
+	$bottomdock_items = array();
 ?>

@@ -390,8 +390,8 @@ li.cra_admin_generic a {
 	background-image: url(../../images/default/cra_admin_generic.png);
 }
 
-li.conges_admin_generic a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+li.holiday_summary_generic a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.project_add a {
@@ -503,19 +503,19 @@ li.idea_list a {
 }
 
 li.holiday_summary_add a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.holiday_summary_edit a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.holiday_summary_remove a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.holiday_summary_list a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 
@@ -829,19 +829,19 @@ p.mainarea_title span.idea_list {
 }
 
 p.mainarea_title span.holiday_summary_add {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_edit {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_remove {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 p.mainarea_title span.holiday_summary_list {
-	background-image: url(../../images/default/conges_admin_generic.png);
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 table.object_list {

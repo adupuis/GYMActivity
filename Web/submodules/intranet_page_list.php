@@ -20,79 +20,56 @@
 
 // Variable to configure global behaviour
 
-
 date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 1 => array(), 2 => array() );
+$data_array_filters = array( 1 => array(), 2 => array() );
 
 
-$geny_daily_rate = new GenyDailyRate();
+$geny_intranet_page = new GenyIntranetPage();
 
-$geny_project = new GenyProject();
-foreach( $geny_project->getAllProjects() as $proj ) {
-	$projects[$proj->id] = $proj;
+$geny_intranet_category = new GenyIntranetCategory();
+foreach( $geny_intranet_category->getAllIntranetCategories() as $cat ) {
+	$intranet_categories[$cat->id] = $cat;
 }
 
-$geny_task = new GenyTask();
-foreach( $geny_task->getAllTasks() as $tsk ) {
-	$tasks[$tsk->id] = $tsk;
+$geny_intranet_type = new GenyIntranetType();
+foreach( $geny_intranet_type->getAllIntranetTypes() as $type ) {
+	$intranet_types[$type->id] = $type;
 }
 
-$geny_profile = new GenyProfile();
-foreach( $geny_profile->getAllProfiles() as $prof ) {
-	$profiles[$prof->id] = $prof;
-}
-
-foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
+foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	
-	$project_name = $projects["$tmp->project_id"]->name;
+	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
+	$intranet_type_name = $intranet_types["$tmp->type_id"]->name." (".$intranet_category_name.")";
 
-	$task_name = $tasks["$tmp->task_id"]->name;
-
-	$profile_name = '';
-	if( isset( $tmp->profile_id ) ) {
-		$tmp_profile = $profiles["$tmp->profile_id"];
-		if( $tmp_profile->firstname && $tmp_profile->lastname ) {
-			$profile_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
-		}
-		else {
-			$profile_name = $tmp_profile->login;
-		}
-	}
-
-	$edit = "<a href=\"loader.php?module=daily_rate_edit&load_daily_rate=true&daily_rate_id=$tmp->id\" title=\"Editer le TJM\"><img src=\"images/$web_config->theme/daily_rate_edit_small.png\" alt=\"Editer le TJM\"></a>";
-
-	$remove = "<a href=\"loader.php?module=daily_rate_remove&daily_rate_id=$tmp->id\" title=\"Supprimer définitivement le TJM\"><img src=\"images/$web_config->theme/daily_rate_remove_small.png\" alt=\"Supprimer définitivement le TJM\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
 	
-	$data_array[] = array( $tmp->id, $project_name, $task_name, $profile_name, $tmp->start_date, $tmp->end_date, $tmp->value, $edit, $remove );
-
-	if( !in_array($project_name, $data_array_filters[0]) )
-		$data_array_filters[0][] = $project_name;
-	if( !in_array($task_name, $data_array_filters[1]) )
-		$data_array_filters[1][] = $task_name;
-	if( !in_array($profile_name, $data_array_filters[2]) )
-		$data_array_filters[2][] = $profile_name;
+	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $remove );
+	
+	if( !in_array( $intranet_category_name, $data_array_filters[1]) )
+		$data_array_filters[1][] = $intranet_category_name;
+	if( !in_array( $intranet_type_name, $data_array_filters[2]) )
+		$data_array_filters[2][] = $intranet_type_name;
 }
 
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/daily_rate_list.png"></img>
-		<span class="daily_rate_list">
-			Liste des TJM
+		<span class="intranet_page_list">
+			Liste des pages Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des TJM.
+		Voici la liste des pages de l'Intranet.
 		</p>
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_daily_rate_list_php", $_COOKIE)) {
-					$cookie = json_decode($_COOKIE["GYMActivity_daily_rate_list_php"]);
+				if( array_key_exists( "GYMActivity_intranet_page_list_php", $_COOKIE ) ) {
+					$cookie = json_decode( $_COOKIE["GYMActivity_intranet_page_list_php"] );
 				}
 				
 				$data_array_filters_html = array();
@@ -117,15 +94,15 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#daily_rate_list_table').dataTable( {
+				var oTable = $('#intranet_page_list_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
-					"sPaginationType": "full_numbers",
+					"sPaginationPage": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
-						"sLengthMenu": "TJM par page _MENU_",
+						"sLengthMenu": "Pages par page _MENU_",
 						"sZeroRecords": "Aucun résultat",
 						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
 						"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
@@ -142,7 +119,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 0 || i == 1 || i == 2 ) {
+					if( i == 1 || i == 2 ) {
 						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -156,40 +133,32 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 		<script>
 			<?php
 				// Cette fonction est définie dans header.php
-				displayStatusNotifications($gritter_notifications,$web_config->theme);
+				displayStatusNotifications( $gritter_notifications, $web_config->theme );
 			?>
 		</script>
-		<form id="formID" action="loader.php?module=daily_rate_list" method="post" class="table_container">
+		<form id="formID" action="loader.php?module=intranet_page_list" method="post" class="table_container">
 			<style>
-				@import 'styles/<?php echo $web_config->theme ?>/daily_rate_list.css';
+				@import 'styles/<?php echo $web_config->theme ?>/intranet_page_list.css';
 			</style>
 			<p>
-				<table id="daily_rate_list_table" style="color: black; width: 100%;">
+				<table id="intranet_page_list_table" style="color: black; width: 100%;">
 					<thead>
-						<th>Projet</th>
-						<th>Tâche</th>
-						<th>Profil</th>
-						<th>Début</th>
-						<th>Fin</th>
-						<th>Valeur</th>
-						<th>Editer</th>
+						<th>Titre</th>
+						<th>Catégorie</th>
+						<th>Type</th>
 						<th>Supprimer</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td></tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
-						<th class="filtered">Projet</th>
-						<th class="filtered">Tâche</th>
-						<th class="filtered">Profil</th>
-						<th class="filtered">Début</th>
-						<th class="filtered">Fin</th>
-						<th class="filtered">Valeur</th>
-						<th class="filtered">Editer</th>
+						<th class="filtered">Titre</th>
+						<th class="filtered">Catégorie</th>
+						<th class="filtered">Type</th>
 						<th class="filtered">Supprimer</th>
 					</tfoot>
 				</table>
@@ -199,5 +168,5 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 </div>
 
 <?php
-	$bottomdock_items = array('backend/widgets/daily_rate_add.dock.widget.php');
+	$bottomdock_items = array();
 ?>

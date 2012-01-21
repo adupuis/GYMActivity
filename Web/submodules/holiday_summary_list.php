@@ -46,14 +46,14 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 	}
 
 	if( $web_config->theme == "genymobile-2012" ) {
-		$edit = "<a href=\"loader.php?module=holiday_summary_edit&load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
+		$edit = "<a href=\"loader.php?module=holiday_summary_edit&load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
 
-		$remove = "<a href=\"loader.php?module=holiday_summary_remove&holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/conges_admin_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
+		$remove = "<a href=\"loader.php?module=holiday_summary_remove&holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement le solde de congés\"></a>";
 	}
 	else {
 		$edit = "<a href=\"loader.php?module=holiday_summary_edit&load_holiday_summary=true&holiday_summary_id=$tmp->id\" title=\"Editer le solde de congés\"><img src=\"images/$web_config->theme/project_edit_small.png\" alt=\"Editer le solde de congés\"></a>";
 
-		$remove = "<a href=\"loader.php?module=holiday_summary_remove&holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitiement le solde de congés\"></a>";
+		$remove = "<a href=\"loader.php?module=holiday_summary_remove&holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitivement le solde de congés\"></a>";
 	}
 	
 	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );

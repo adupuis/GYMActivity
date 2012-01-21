@@ -26,6 +26,8 @@
 			include 'backend/widgets/intranet_category_list.dock.widget.php';
 			include 'backend/widgets/intranet_type_add.dock.widget.php';
 			include 'backend/widgets/intranet_type_list.dock.widget.php';
+			include 'backend/widgets/intranet_tag_list.dock.widget.php';
+			include 'backend/widgets/intranet_page_list.dock.widget.php';
 		?>
 	</ul>
 </div>

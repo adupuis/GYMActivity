@@ -92,11 +92,11 @@ class GenyIntranetPage extends GenyDatabaseTools {
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_page = new GenyIntranetPage();
-				$tmp_intranet_page->id = $intranet_page->id;
-				$tmp_intranet_page->title = $intranet_page->title;
-				$tmp_intranet_page->category_id = $intranet_page->category_id;
-				$tmp_intranet_page->type_id = $intranet_page->type_id;
-				$tmp_intranet_page->content = $intranet_page->content;
+				$tmp_intranet_page->id = $row[0];
+				$tmp_intranet_page->title = $row[1];
+				$tmp_intranet_page->category_id = $row[2];
+				$tmp_intranet_page->type_id = $row[3];
+				$tmp_intranet_page->content = $row[4];
 				$intranet_pages_list[] = $tmp_intranet_page;
 			}
 		}
@@ -167,7 +167,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 		return $this->getIntranetPagesListWithRestrictions( array( "intranet_page_title LIKE '%$q%' or intranet_page_content '%$q%'" ) );
 	}
 
-	public function loadIntranetPagesById( $id ) {
+	public function loadIntranetPageById( $id ) {
 		$intranet_pages = $this->getIntranetPagesListWithRestrictions( array( "intranet_page_id=".mysql_real_escape_string( $id ) ) );
 		$intranet_page = $intranet_pages[0];
 		if( isset( $intranet_page ) && $intranet_page->id > -1 ) {

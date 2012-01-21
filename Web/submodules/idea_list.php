@@ -87,7 +87,7 @@ foreach( $geny_idea->getAllIdeas() as $tmp ) {
 	if( $tmp->submitter == $profile->id ||
 	    $profile->rights_group_id == 1  || /* admin */
 	    $profile->rights_group_id == 2     /* superuser */ ) {
-		$remove = "<a href=\"loader.php?module=idea_remove&idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitiement l'idée\"></a>";
+		$remove = "<a href=\"loader.php?module=idea_remove&idea_id=$tmp->id\" title=\"Supprimer définitivement l'idée\"><img src=\"images/$web_config->theme/idea_remove_small.png\" alt=\"Supprimer définitivement l'idée\"></a>";
 	}
 	else {
 		$remove = "<img src=\"images/$web_config->theme/idea_remove_small_disable.png\" title=\"Vous ne pouvez pas supprimer cette idée\" alt=\"Supprimer définitivement l'idée\">";
