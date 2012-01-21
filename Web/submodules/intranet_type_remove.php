@@ -64,6 +64,7 @@ else {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_remove.png"></img>
 		<span class="intranet_type_remove">
 			Supprimer un type de catégorie Intranet
 		</span>

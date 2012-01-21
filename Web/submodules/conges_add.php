@@ -28,6 +28,7 @@ date_default_timezone_set('Europe/Paris');
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/conges_add.png"></img>
 		<span class="conges_add">
 			Poser des congés
 		</span>

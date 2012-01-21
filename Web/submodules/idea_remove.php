@@ -66,6 +66,7 @@ else {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_remove.png"></img>
 		<span class="idea_remove">
 			Supprimer une idée
 		</span>

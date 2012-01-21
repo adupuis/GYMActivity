@@ -277,6 +277,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/cra_add.png"></img>
 		<span class="cra_add">
 			Valider des CRA
 		</span>

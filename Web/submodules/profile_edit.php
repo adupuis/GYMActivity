@@ -183,6 +183,7 @@ else{
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/profile_edit.png"></img>
 		<span class="profile_edit">
 			Modifier un profil
 		</span>

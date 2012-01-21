@@ -239,6 +239,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/cra_admin_generic.png"></img>
 		<span class="cra_admin_generic">
 			Validation d'activité
 		</span>

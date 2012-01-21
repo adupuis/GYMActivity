@@ -65,6 +65,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/cra_remove.png"></img>
 		<span class="cra_remove">
 			Suppression CRA
 		</span>

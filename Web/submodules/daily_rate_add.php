@@ -27,6 +27,7 @@ $geny_profile = new GenyProfile();
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/daily_rate_add.png"></img>
 		<span class="daily_rate_add">
 			Ajouter un TJM
 		</span>

@@ -54,6 +54,7 @@ $geny_client = new GenyClient();
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/client_list.png"></img>
 		<span class="client_list">
 			Liste des clients
 		</span>

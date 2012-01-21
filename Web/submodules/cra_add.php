@@ -28,7 +28,7 @@ date_default_timezone_set('Europe/Paris');
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/genymobile-2012/cra_add.png"></img>
+		<img src="images/<?php echo $web_config->theme; ?>/cra_add.png"></img>
 		<span class="cra_add">
 			Ajouter un CRA
 		</span>

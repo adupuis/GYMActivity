@@ -125,6 +125,7 @@ else if( $edit_holiday_summary == 'true' ) {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/holiday_summary_edit.png"></img>
 		<span class="holiday_summary_edit">
 			Modifier solde congés
 		</span>
