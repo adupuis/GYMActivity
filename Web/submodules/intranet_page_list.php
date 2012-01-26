@@ -57,6 +57,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_page_list.png"></img>
 		<span class="intranet_page_list">
 			Liste des pages Intranet
 		</span>

@@ -63,6 +63,7 @@ else {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_page_remove.png"></img>
 		<span class="intranet_page_remove">
 			Supprimer une page Intranet
 		</span>

@@ -71,6 +71,7 @@ else if( $edit_intranet_tag == 'true' ) {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_tag_edit.png"></img>
 		<span class="intranet_tag_edit">
 			Modifier tag Intranet
 		</span>
