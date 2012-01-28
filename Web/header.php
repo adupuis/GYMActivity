@@ -53,14 +53,20 @@ try {
 		header("Location: index.php?reason=authrequired");
 		exit;
 	}
-    $profile = new GenyProfile();
-    $profile->loadProfileByUsername($_SESSION['USERID']);
-    if( ! isset($disable_password_reset_redirection) )
-	$disable_password_reset_redirection = false;
-    if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) ) {
-	header('Location: user_admin_password_change.php');
-	exit;
-    }
+	$profile = new GenyProfile();
+	$profile->loadProfileByUsername($_SESSION['USERID']);
+	$screen_name = $_SESSION['USERID'];
+	if( $profile->firstname && $profile->lastname)
+		$screen_name = $profile->firstname." ".$profile->lastname;
+	else
+		$screen_name = $profile->login;
+	
+	if( ! isset($disable_password_reset_redirection) )
+		$disable_password_reset_redirection = false;
+	if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) ) {
+		header('Location: user_admin_password_change.php');
+		exit;
+	}
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";
 }
@@ -96,6 +102,7 @@ GYMActivity v<?php echo $web_config->version ?> by GENYMOBILE - http://www.genym
 <title>
 <?php 
 $header_title = str_replace("%COMPANY_NAME%",$web_config->company_name,$header_title);
+$header_title = str_replace("%SCREEN_NAME%",$screen_name,$header_title);
 echo $header_title 
 ?>
 </title>
@@ -134,12 +141,7 @@ echo $header_title
 
 </a>
 
-<?php	
-	$screen_name = $_SESSION['USERID'];
-	if( $profile->firstname && $profile->lastname)
-			$screen_name = $profile->firstname." ".$profile->lastname;
-		else
-			$screen_name = $profile->login;
+<?php
 	if( $web_config->theme == "default" ) {
 		echo "<p id=\"headband\">";
 		echo "<strong>Logged in as:</strong> ".$screen_name."";
