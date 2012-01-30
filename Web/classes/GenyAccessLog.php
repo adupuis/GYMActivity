@@ -29,6 +29,14 @@ define("AUTH_REQUIRED","AUTH_REQUIRED");
 define("BAD_DATA","BAD_DATA");
 
 class GenyAccessLog extends GenyDatabaseTools {
+	public $id = -1;
+	public $timestamp = 0;
+	public $profile_id = -1;
+	public $ip = "0.0.0.0";
+	public $status = false;
+	public $page_requested = "";
+	public $type = "";
+	public $extra = "";
 	public function __construct($id = -1){
 		parent::__construct("AccessLogs",  "access_log_id");
 		$this->id = -1;

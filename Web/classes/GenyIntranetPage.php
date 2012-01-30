@@ -23,7 +23,11 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetPage extends GenyDatabaseTools {
-
+	public $id = -1;
+	public $title = '';
+	public $category_id = -1;
+	public $type_id = -1;
+	public $page_content = '';
 	public function __construct( $id = -1 ) {
 		parent::__construct( "IntranetPages", "intranet_page_id" );
 		$this->id = -1;

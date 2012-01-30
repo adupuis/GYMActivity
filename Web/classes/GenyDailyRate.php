@@ -23,7 +23,13 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyDailyRate extends GenyDatabaseTools {
-
+	public $id = -1;
+	public $project_id = -1;
+	public $task_id = -1;
+	public $profile_id = -1;
+	public $start_date = '';
+	public $end_date = '';
+	public $value = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("DailyRates",  "daily_rate_id");
 		$this->id = -1;

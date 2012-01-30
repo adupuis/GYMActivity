@@ -23,6 +23,14 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyHolidaySummary extends GenyDatabaseTools  {
+	public $id = -1;
+	public $profile_id = -1;
+	public $type = '';
+	public $period_start = '';
+	public $period_end = '';
+	public $count_acquired = -1;
+	public $count_taken = -1;
+	public $count_remaining = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("HolidaySummaries",  "holiday_summary_id");
 		$this->id = -1;

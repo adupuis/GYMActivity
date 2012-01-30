@@ -23,6 +23,18 @@ define("GENYMOBILE_FALSE",-1);
 define("GENYMOBILE_ERROR",-2);
 
 class GenyWebConfig {
+	public $db_host = "";
+	public $db_user = "";
+	public $db_password = "";
+	public $theme = "";
+	public $debug = false;
+	public $db_name = "";
+	public $company_name = "";
+	public $version = "";
+	public $company_corner_logo = "";
+	public $company_index_logo = "";
+	public $gmail_username = "";
+	public $gmail_password = "";
 	public function __construct(){
 		$this->db_host = "localhost";
 		$this->db_user = "genymobile";

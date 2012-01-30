@@ -23,6 +23,15 @@ include_once 'GenyProfile.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyCareerEvent extends GenyDatabaseTools {
+	public $id = -1;
+	public $profile_id = GENYMOBILE_FALSE;
+	public $timestamp = -1;
+	public $type = "neutral";
+	public $title = "";
+	public $text = "";
+	public $attachement = "";
+	public $manager_agreement = false;
+	public $employee_agreement = false;
 	public function __construct($id = -1){
 		parent::__construct("CareerEvents",
 				    "career_event_id");

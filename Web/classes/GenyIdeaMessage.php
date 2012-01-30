@@ -24,6 +24,11 @@ include_once 'GenyDatabaseTools.php';
 include_once 'backend/api/send_mail_func.php';
 
 class GenyIdeaMessage extends GenyDatabaseTools {
+	public $id = -1;
+	public $content = '';
+	public $submission_date = '';
+	public $profile_id = -1;
+	public $idea_id = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("IdeaMessages",  "idea_message_id");
 		$this->id = -1;

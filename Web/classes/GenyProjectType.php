@@ -23,6 +23,8 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyProjectType extends GenyDatabaseTools {
+	public $id = -1;
+	public $name = '';
 	public function __construct($id = -1){
 		parent::__construct("ProjectTypes",  "project_type_id");
 		$this->id = -1;

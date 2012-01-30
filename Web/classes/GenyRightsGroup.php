@@ -22,6 +22,9 @@
 include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 class GenyRightsGroup extends GenyDatabaseTools{
+	public $id = -1;
+	public $name = '';
+	public $description = '';
 	public function __construct($id = -1){
 		parent::__construct("RightsGroups",  "rights_group_id");
 		$this->id = -1;
