@@ -30,8 +30,8 @@ class GenyWebConfig {
 		$this->theme = "default";
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
-		$this->company_name = "GENYMOBILE";
-		$this->version = "0.4.9-dev";
+		$this->company_name = "Genymobile";
+		$this->version = "0.9.99";
 		$this->company_corner_logo = "logo_banner.png";
 		$this->company_index_logo = "logo_genymobile.jpg";
 		$this->gmail_username = "yourusername";

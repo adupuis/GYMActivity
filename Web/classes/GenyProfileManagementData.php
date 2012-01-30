@@ -23,6 +23,13 @@ include_once 'GenyProfile.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyProfileManagementData extends GenyDatabaseTools {
+	public $id = GENYMOBILE_FALSE;
+	public $profile_id = GENYMOBILE_FALSE;
+	public $salary = GENYMOBILE_FALSE;
+	public $recruitement_date = '1979-01-01';
+	public $is_billable = false;
+	public $availability_date = '1979-01-01';
+	public $profile_object = GENYMOBILE_FALSE;
 	public function __construct($id = -1){
 		parent::__construct("ProfileManagementData",
 				    "profile_management_data_id");

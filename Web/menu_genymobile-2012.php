@@ -52,7 +52,7 @@ $completion = round(($user_load*100)/$estimated_load,1);
 <ul id="sdt_menu" class="sdt_menu">
 	<li>
 <!-- 		<a href="profile_display.php"> -->
-		<a href="loader.php?module=profile_viewer">
+		<a href="loader.php?module=profile_summary">
 			<img src="images/genymobile-2012/profile_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">

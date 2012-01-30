@@ -81,7 +81,7 @@ class GenyRightsGroup extends GenyDatabaseTools{
 		}
 	}
 	public function loadRightsGroupById($id){
-		$objects = $this->getRightsGroupListWithRestrictions(array("rights_group_id=".mysql_real_escape_string($id)));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_id=".mysql_real_escape_string($id)));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
