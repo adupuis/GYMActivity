@@ -23,6 +23,11 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyAssignement extends GenyDatabaseTools {
+	public $id = -1;
+	public $profile_id = -1;
+	public $project_id = -1;
+	public $overtime_allowed = false;
+	public $is_active = false;
 	public function __construct($id = -1){
 		parent::__construct("Assignements",  "assignement_id");
 		$this->id = -1;

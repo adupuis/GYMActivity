@@ -23,7 +23,11 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetHistory extends GenyDatabaseTools {
-	
+	public $id = -1;
+	public $page_id = '';
+	public $profile_id = '';
+	public $history_date = '';
+	public $history_content = '';
 	public function __construct($id = -1){
 		parent::__construct("InternetHistories",  "intranet_history_id");
 		$this->id = -1;

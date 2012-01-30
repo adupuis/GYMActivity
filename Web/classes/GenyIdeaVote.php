@@ -23,6 +23,11 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyIdeaVote extends GenyDatabaseTools {
+	public $id = -1;
+	public $positive_vote = -1;
+	public $negative_vote = -1;
+	public $profile_id = -1;
+	public $idea_id = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("IdeaVotes",  "idea_vote_id");
 		$this->id = -1;

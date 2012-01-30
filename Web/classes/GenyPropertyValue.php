@@ -23,6 +23,9 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyPropertyValue extends GenyDatabaseTools {
+	public $id = -1;
+	public $content = '';
+	public $property_id = -1;
 	public function __construct($id = -1){
 		parent::__construct("PropertyValues",  "property_value_id");
 		$this->id = -1;

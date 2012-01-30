@@ -23,6 +23,12 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyActivity extends GenyDatabaseTools {
+	public $id = -1;
+	public $activity_date = '';
+	public $load = -1;
+	public $input_date = '';
+	public $assignement_id = -1;
+	public $task_id = -1;
 	public function __construct($id = -1){
 		parent::__construct("Activities",  "activity_id");
 		$this->id = -1;
