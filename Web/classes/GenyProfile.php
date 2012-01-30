@@ -22,12 +22,13 @@ include_once 'GenyWebConfig.php';
 include_once 'GenyDatabaseTools.php';
 
 class GenyProfile extends GenyDatabaseTools {
-	public $profile_login = '';
-	public $profile_firstname = '';
-	public $profile_lastname = '';
-	public $profile_email = '';
-	public $profile_is_active = false;
-	public $profile_needs_password_reset = false;
+	public $id = -1;
+	public $login = '';
+	public $firstname = '';
+	public $lastname = '';
+	public $email = '';
+	public $is_active = false;
+	public $needs_password_reset = false;
 	public $rights_group_id = -1;
 	private $updates = array();
 	public function __construct($id = -1){

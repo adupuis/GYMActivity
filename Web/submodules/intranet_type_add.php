@@ -25,6 +25,7 @@ $geny_intranet_category = new GenyIntranetCategory();
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_add.png"></img>
 		<span class="intranet_type_add">
 			Ajouter type de catégorie Intranet
 		</span>

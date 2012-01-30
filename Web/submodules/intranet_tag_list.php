@@ -51,6 +51,7 @@ foreach( $geny_intranet_tag->getAllIntranetTags() as $tmp ) {
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_tag_list.png"></img>
 		<span class="intranet_tag_list">
 			Liste des tags Intranet
 		</span>

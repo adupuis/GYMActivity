@@ -69,6 +69,7 @@ else {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+	<img src="images/<?php echo $web_config->theme; ?>/holiday_summary_remove.png"></img>
 		<span class="holiday_summary_remove">
 			Supprimer un solde de congés
 		</span>

@@ -53,6 +53,7 @@ $geny_task = new GenyTask();
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/task_list.png"></img>
 		<span class="task_list">
 			Liste des tâches
 		</span>

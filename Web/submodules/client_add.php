@@ -25,6 +25,7 @@
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/client_add.png"></img>
 		<span class="client_add">
 			Ajouter un client
 		</span>

@@ -60,6 +60,7 @@ foreach( $geny_ar->getActivityReportsByProfileId( $profile->id ) as $ar ){
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/cra_list.png"></img>
 		<span class="cra_list">
 			Liste des CRA
 		</span>

@@ -227,6 +227,7 @@ else if( $idea_message_create == "true" ) {
 		</p>
 	</form>
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_edit.png"></img>
 		<span class="idea_edit">
 		<?php echo $geny_idea->title ?>
 		</span>

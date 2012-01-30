@@ -27,6 +27,7 @@ $geny_profile = new GenyProfile();
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/project_add.png"></img>
 		<span class="project_add">
 			Ajouter un projet
 		</span>

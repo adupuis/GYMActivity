@@ -336,6 +336,7 @@ $load_by_tasks_js_data = implode(",",$tmp_array);
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
 		<span class="reporting_monthly_view">
 			Reporting de charge
 		</span>
