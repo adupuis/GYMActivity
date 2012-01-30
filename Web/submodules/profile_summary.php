@@ -21,7 +21,9 @@
 // Variable to configure global behaviour
 
 
-$geny_profile = new GenyProfile();
+$geny_rights_group = new GenyRightsGroup( $profile->rights_group_id );
+$geny_pmd = new GenyProfileManagementData();
+$geny_pmd->loadProfileManagementDataByProfileId($profile->id);
 
 ?>
 <div id="mainarea">
@@ -35,125 +37,21 @@ $geny_profile = new GenyProfile();
 		<p class="mainarea_content_intro">
 		Dans cette page vous trouverez toutes les informations relatives à votre profil chez <?php echo $web_config->company_name ?>. Vous trouverez aussi la liste complètes des évènements de carrière au sein de l'entreprise.
 		</p>
-		 <script>
-			jQuery(document).ready(function(){
-				$("#formID").validationEngine('init');
-				// binds form submission and fields to the validation engine
-				$("#formID").validationEngine('attach');
-			});
-			
-		</script>
-		<form id="formID" action="loader.php?module=profile_edit" method="post">
-			<input type="hidden" name="create_profile" value="true" />
-			<p>
-				<label for="profile_login">Login</label>
-				<input name="profile_login" id="profile_login" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
-			</p>
-			<script>
-				function updateVals() {
-					var text = $("#profile_login").val();
-					$("#profile_email").val("");
-					$("#profile_email").val(text+"@genymobile.com");
-				}
-
-				$("#profile_login").change(updateVals);
-				updateVals();
-
-			</script>
-			<p>
-				<label for="profile_firstname">Prénom</label>
-				<input name="profile_firstname" id="profile_firstname" type="text" class="validate[required,length[2,100]] text-input" />
-			</p>
-			<p>
-				<label for="profile_lastname">Nom de famille</label>
-				<input name="profile_lastname" id="profile_lastname" type="text" class="validate[required,length[2,100]] text-input" />
-			</p>
-			<p>
-				<label for="profile_password">Mot de passe</label>
-				<input name="profile_password" id="profile_password" type="password" class="validate[required,length[8,100]] text-input" />
-			</p>
-			<p>
-				<label for="profile_email">E-Mail</label>
-				<input name="profile_email" class="validate[required,custom[email]] text-input" id="profile_email" type="text" />
-			</p>
-			<p>
-				<label for="profile_is_active">Profil actif</label>
-				<select name="profile_is_active" id="profile_is_active" />
-					<option value="true">Oui</option>
-					<option value="false">Non</option>
-				</select>
-			</p>
-			<p>
-				<label for="profile_needs_password_reset">R-à-Z password</label>
-				<select name="profile_needs_password_reset" id="profile_needs_password_reset"/>
-					<option value="true">Oui</option>
-					<option value="false">Non</option>
-				</select>
-			</p>
-			<p>
-				<label for="rights_group_id">Groupe</label>
-				<select name="rights_group_id" id="rights_group_id" class="chzn-select">
-					<?php
-						$geny_rg = new GenyRightsGroup();
-						foreach( $geny_rg->getAllRightsGroups() as $group ){
-							if($geny_profile->rights_group_id == $group->id)
-								echo "<option value=\"".$group->id."\" title=\"".$group->description."\" selected>".$group->name."</option>\n";
-							else
-								echo "<option value=\"".$group->id."\" title=\"".$group->description."\">".$group->name."</option>\n";
-						}
-					?>
-				</select>
-			</p>
-			<p>
-				<label for="pmd_is_billable">Profil facturable</label>
-				<select name="pmd_is_billable" id="pmd_is_billable" >
-					<option value="true" selected>Oui</option>
-					<option value="false">Non</option>
-				</select>
-			</p>
-			<p>
-				<label for="pmd_salary">Salaire (€ brut/an)</label>
-				<input name="pmd_salary" id="pmd_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
-			</p>
-			 
-			<script type="text/javascript">
-				$(function() {
-					$( "#pmd_recruitement_date" ).datepicker();
-					$( "#pmd_recruitement_date" ).datepicker('setDate', new Date());
-					$( "#pmd_recruitement_date" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#pmd_recruitement_date" ).datepicker( "option", "firstDay", 1 );
-					
-					$( "#pmd_availability_date" ).datepicker();
-					$( "#pmd_availability_date" ).datepicker('setDate', new Date());
-					$( "#pmd_availability_date" ).datepicker( "option", "showAnim", "slideDown" );
-					$( "#pmd_availability_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-					$( "#pmd_availability_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-					$( "#pmd_availability_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-					$( "#pmd_availability_date" ).datepicker( "option", "firstDay", 1 );
-				});
-			</script>
-			<p>
-				<label for="pmd_recruitement_date">Date d'embauche</label>
-				<input name="pmd_recruitement_date" id="pmd_recruitement_date" type="text" class="validate[required,custom[date]] text-input" />
-			</p>
-			<p>
-				<label for="pmd_availability_date">Date de disponibilité</label>
-				<input name="pmd_availability_date" id="pmd_availability_date" type="text" class="validate[required,custom[date]] text-input" />
-			</p>
-			
-			<p>
-				<input type="submit" value="Créer" /> ou <a href="loader.php?module=profile_list">annuler</a>
-			</p>
-		</form>
+		<ul id="profile_general_info">
+			<li><strong>Nom : </strong> <?php echo $profile->lastname ; ?></li>
+			<li><strong>Prénom : </strong> <?php echo $profile->firstname ; ?></li>
+			<li><strong>Login : </strong> <?php echo $profile->login ; ?></li>
+			<li><strong>Email : </strong> <?php echo $profile->email ; ?></li>
+			<li><strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?></li>
+		</ul>
+		<ul id="profile_management_info">
+			<li><strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?></li>
+			<li><strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?></li>
+			<li><strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;</li>
+			<li><strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?></li>
+		</ul>
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/profile_list.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php');
 ?>
