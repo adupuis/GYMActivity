@@ -83,11 +83,11 @@ else if( $edit_intranet_type == 'true' ) {
 				$geny_intranet_type->updateString( 'intranet_type_description', $intranet_type_description );
 			}
 			if( $intranet_category_id != 'NULL' && $geny_intranet_type->category_id != $intranet_category_id ) {
-				$geny_intranet_type->updateString( 'intranet_category_id', $intranet_category_id );
+				$geny_intranet_type->updateInt( 'intranet_category_id', $intranet_category_id );
 			}
 		}
 		if( $geny_intranet_type->commitUpdates() ) {
-			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Type de catégorie Intranet mise à jour avec succès.");
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Type de catégorie Intranet mis à jour avec succès.");
 			$geny_intranet_type->loadIntranetTypeById( $intranet_type_id );
 		}
 		else {
