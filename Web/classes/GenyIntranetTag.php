@@ -100,26 +100,42 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		return $this->getIntranetTagsListWithRestrictions( array() );
 	}
 	
-	public function getIntranetTagsType( $type_id ) {
-		$intranet_tags = $this->getIntranetTagsListWithRestrictions( array( "intranet_type_id='".$type_id."'" ) );
+	public function getIntranetTagsByType( $intranet_type_id ) {
+		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_type_id = ".$intranet_type_id;
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetTag MySQL query : $query", 0 );
+		}
+		
 		$intranet_tags_list = array();
-		foreach( $intranet_tags as $intranet_tag ) {
-			$tmp_intranet_tag = new GenyIntranetTag();
-			$tmp_intranet_tag->id = $intranet_tag->id;
-			$tmp_intranet_tag->name = $intranet_tag->name;
-			$intranet_tags_list[] = $tmp_intranet_tag;
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_tag = new GenyIntranetTag();
+				$tmp_intranet_tag->id = $intranet_tag->id;
+				$tmp_intranet_tag->name = $intranet_tag->name;
+				$intranet_tags_list[] = $tmp_intranet_tag;
+			}
 		}
 		return $intranet_tags_list;
 	}
 
-	public function getIntranetTagsByCategory( $category_id ) {
-		$intranet_tags = $this->getIntranetTagsListWithRestrictions( array( "intranet_category_id='".$category_id."'" ) );
+	public function getIntranetTagsByCategory( $intranet_category_id ) {
+		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_category_id = ".$intranet_category_id;
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetTag MySQL query : $query", 0 );
+		}
+		
 		$intranet_tags_list = array();
-		foreach(  $intranet_tags as $intranet_tag ) {
-			$tmp_intranet_tag = new GenyIntranetTag();
-			$tmp_intranet_tag->id = $intranet_tag->id;
-			$tmp_intranet_tag->name = $intranet_tag->name;
-			$intranet_tags_list[] = $tmp_intranet_tag;
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_tag = new GenyIntranetTag();
+				$tmp_intranet_tag->id = $intranet_tag->id;
+				$tmp_intranet_tag->name = $intranet_tag->name;
+				$intranet_tags_list[] = $tmp_intranet_tag;
+			}
 		}
 		return $intranet_tags_list;
 	}
