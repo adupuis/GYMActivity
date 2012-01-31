@@ -117,6 +117,7 @@ echo $header_title
 <script type="text/javascript" src="js/jquery.datepick.js"></script>
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
