@@ -24,6 +24,8 @@
 $geny_rights_group = new GenyRightsGroup( $profile->rights_group_id );
 $geny_pmd = new GenyProfileManagementData();
 $geny_pmd->loadProfileManagementDataByProfileId($profile->id);
+$geny_hs = new GenyHolidaySummary();
+$hs_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id));
 
 ?>
 <div id="mainarea">
@@ -49,6 +51,13 @@ $geny_pmd->loadProfileManagementDataByProfileId($profile->id);
 			<li><strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?></li>
 			<li><strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;</li>
 			<li><strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?></li>
+		</ul>
+		<ul id="profile_holiday_info">
+		<?php
+			foreach( $hs_list as $hs ){
+				echo "<li>Période du ".$hs->period_start." au ".$hs->period_end." type: ".$hs->type." $hs->count_acquired/$hs->count_taken/$hs->count_remaining"."</li>";
+			}
+		?>
 		</ul>
 	</p>
 </div>
