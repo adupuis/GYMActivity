@@ -488,6 +488,7 @@ CREATE TABLE IntranetPages (
 	intranet_page_title varchar(25) not null default 'Undefined',
 	intranet_category_id int not null,
 	intranet_type_id int not null,
+	intranet_page_description varchar(140) not null default 'Undefined',
 	intranet_page_content text not null,
 	primary key(intranet_page_id),
 	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE,

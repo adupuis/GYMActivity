@@ -30,14 +30,15 @@ class GenyIntranetPage extends GenyDatabaseTools {
 		$this->title = '';
 		$this->category_id = -1;
 		$this->type_id = -1;
-		$this->page_content = '';
+		$this->description = '';
+		$this->content = '';
 		if( $id > -1 ) {
 			$this->loadIntranetPageById( $id );
 		}
 	}
 
-	public function insertNewIntranetPage( $id, $intranet_page_title, $category_id, $type_id, $intranet_page_content ) {
-	$query = "INSERT INTO IntranetPages VALUES($id,'".mysql_real_escape_string( $intranet_page_title )."','".$category_id."','".$type_id."','".mysql_real_escape_string( $intranet_page_content )."')";
+	public function insertNewIntranetPage( $id, $intranet_page_title, $category_id, $type_id, $intranet_page_description, $intranet_page_content ) {
+	$query = "INSERT INTO IntranetPages VALUES($id,'".mysql_real_escape_string( $intranet_page_title )."','".$category_id."','".$type_id."','".mysql_real_escape_string( $intranet_page_description )."','".mysql_real_escape_string( $intranet_page_content )."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetPage MySQL query : $query", 0 );
 		}
@@ -74,7 +75,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 	public function getIntranetPagesListWithRestrictions( $restrictions ) {
 		// $restrictions is in the form of array("intranet_category_id=1","intranet_type_id=2")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT intranet_page_id,intranet_page_title,intranet_category_id,intranet_type_id,intranet_page_content FROM IntranetPages";
+		$query = "SELECT intranet_page_id,intranet_page_title,intranet_category_id,intranet_type_id,intranet_page_description,intranet_page_content FROM IntranetPages";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			foreach( $restrictions as $key => $value ) {
@@ -96,7 +97,8 @@ class GenyIntranetPage extends GenyDatabaseTools {
 				$tmp_intranet_page->title = $row[1];
 				$tmp_intranet_page->category_id = $row[2];
 				$tmp_intranet_page->type_id = $row[3];
-				$tmp_intranet_page->content = $row[4];
+				$tmp_intranet_page->description = $row[4];
+				$tmp_intranet_page->content = $row[5];
 				$intranet_pages_list[] = $tmp_intranet_page;
 			}
 		}
@@ -117,6 +119,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 			$tmp_intranet_page->title = $intranet_page->title;
 			$tmp_intranet_page->category_id = $intranet_page->category_id;
 			$tmp_intranet_page->type_id = $intranet_page->type_id;
+			$tmp_intranet_page->description = $intranet_page->description;
 			$tmp_intranet_page->content = $intranet_page->content;
 			$intranet_pages_list[] = $tmp_intranet_page;
 		}
@@ -132,6 +135,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 			$tmp_intranet_page->title = $intranet_page->title;
 			$tmp_intranet_page->category_id = $intranet_page->category_id;
 			$tmp_intranet_page->type_id = $intranet_page->type_id;
+			$tmp_intranet_page->description = $intranet_page->description;
 			$tmp_intranet_page->content = $intranet_page->content;
 			$intranet_pages_list[] = $tmp_intranet_page;
 		}
@@ -140,7 +144,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 
 	public function getIntranetPagesByTag( $intranet_tag_id ) {
 		
-		$query = "SELECT IntranetPages.intranet_page_id, intranet_page_title, intranet_category_id, intranet_type_id, intranet_page_content FROM IntranetPages, IntranetTagPageRelations WHERE IntranetPages.intranet_page_id = IntranetTagPageRelations.intranet_page_id AND IntranetTagPageRelations.intranet_tag_id=".$intranet_tag_id;
+		$query = "SELECT IntranetPages.intranet_page_id, intranet_page_title, intranet_category_id, intranet_type_id, intranet_page_description, intranet_page_content FROM IntranetPages, IntranetTagPageRelations WHERE IntranetPages.intranet_page_id = IntranetTagPageRelations.intranet_page_id AND IntranetTagPageRelations.intranet_tag_id=".$intranet_tag_id;
 		
 		$result = mysql_query( $query, $this->handle );
 		if( $this->config->debug ) {
@@ -155,6 +159,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 				$tmp_intranet_page->title = $intranet_page->title;
 				$tmp_intranet_page->category_id = $intranet_page->category_id;
 				$tmp_intranet_page->type_id = $intranet_page->type_id;
+				$tmp_intranet_page->description = $intranet_page->description;
 				$tmp_intranet_page->content = $intranet_page->content;
 				$intranet_pages_list[] = $tmp_intranet_page;
 			}
@@ -175,6 +180,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 			$this->title = $intranet_page->title;
 			$this->category_id = $intranet_page->category_id;
 			$this->type_id = $intranet_page->type_id;
+			$this->description = $intranet_page->description;
 			$this->content = $intranet_page->content;
 		}
 	}
@@ -190,6 +196,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 			$this->title = $intranet_page->title;
 			$this->category_id = $intranet_page->category_id;
 			$this->type_id = $intranet_page->type_id;
+			$this->description = $intranet_page->description;
 			$this->content = $intranet_page->content;
 		}
 	}
