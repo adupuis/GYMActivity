@@ -93,7 +93,7 @@ else if( $edit_intranet_page == 'true' ) {
 				$geny_intranet_page->updateString( 'intranet_page_description', $intranet_page_description );
 			}
 			if( $intranet_page_content != 'NULL' && $geny_intranet_page->content != $intranet_page_content ) {
-				$geny_intranet_page->updateString( 'intranet_page_content', $intranet_page_content );
+				$geny_intranet_page->updateString( 'intranet_page_content', gzcompress( $intranet_page_content ) );
 			}
 // 		}
 		if( $geny_intranet_page->commitUpdates() ) {
