@@ -31,29 +31,30 @@ include_once 'ajax_toolbox.php';
 try {
 	$types = array();
 	if( $auth_granted ) {
-		$tmp_types = new GenyIntranetType();
+		$tmp_intranet_type = new GenyIntranetType();
 		$results = array();
 
 		$results = NULL;
-		$category_id = getParam( "category_id", -1 );
-		if($category_id > 0) {
-			$results = $tmp_types->getIntranetTypesByCategoryId($category_id);
-		}else{
-			$results = $tmp_types->getAllIntranetTypes();
+		$intranet_category_id = getParam( "intranet_category_id", -1 );
+		if( $intranet_category_id > 0 ) {
+			$results = $tmp_intranet_type->getIntranetTypesByCategoryId( $intranet_category_id );
+		}
+		else {
+			$results = $tmp_intranet_type->getAllIntranetTypes();
 		}
 
 		$types = array();
-		foreach( $results as $pr ){
+		foreach( $results as $type ){
 			$tmp = array();
-			foreach( get_object_vars( $pr ) as $field => $value ) {
-				$tmp[$field] = $pr->$field ;
+			foreach( get_object_vars( $type ) as $field => $value ) {
+				$tmp[$field] = $type->$field ;
 			}
 			$types[] = $tmp;
 		}
 		$data = json_encode( $types );
 		echo $data;
 	}
-} catch (Exception $e) {
+} catch ( Exception $e ) {
     echo "Exception: ".$e->getMessage(), "\n";
 }
 
