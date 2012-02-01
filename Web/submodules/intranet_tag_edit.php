@@ -24,10 +24,28 @@ $gritter_notifications = array();
 
 $geny_intranet_tag = new GenyIntranetTag();
 
+$create_intranet_tag = GenyTools::getParam( 'create_intranet_tag', 'NULL' );
 $load_intranet_tag = GenyTools::getParam( 'load_intranet_tag', 'NULL' );
 $edit_intranet_tag = GenyTools::getParam( 'edit_intranet_tag', 'NULL' );
 
-if( $load_intranet_tag == 'true' ) {
+if( $create_intranet_tag == "true" ) {
+	$intranet_tag_name = GenyTools::getParam( 'intranet_tag_name', 'NULL' );
+	
+	if( $intranet_tag_name != 'NULL' ) {
+		$insert_id = $geny_intranet_tag->insertNewIntranetTag( 'NULL', $intranet_tag_name );
+		if( $insert_id != -1 ) {
+			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Tag Intranet créé avec succès." );
+			$geny_intranet_tag->loadIntranetTagById( $insert_id );
+		}
+		else {
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création du tag Intranet." );
+		}
+	}
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir." );
+	}
+}
+else if( $load_intranet_tag == 'true' ) {
 	$intranet_tag_id = GenyTools::getParam( 'intranet_tag_id', 'NULL' );
 	if( $intranet_tag_id != 'NULL' ) {
 		if( $profile->rights_group_id == 1  || /* admin */
@@ -134,5 +152,5 @@ else if( $edit_intranet_tag == 'true' ) {
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/intranet_tag_list.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/intranet_tag_list.dock.widget.php','backend/widgets/intranet_tag_add.dock.widget.php');
 ?>

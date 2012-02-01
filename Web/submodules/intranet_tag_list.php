@@ -160,6 +160,5 @@ foreach( $geny_intranet_tag->getAllIntranetTags() as $tmp ) {
 </div>
 
 <?php
-// 	$bottomdock_items = array('backend/widgets/intranet_tag_add.dock.widget.php');
-	$bottomdock_items = array();
+	$bottomdock_items = array('backend/widgets/intranet_tag_add.dock.widget.php');
 ?>
