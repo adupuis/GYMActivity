@@ -25,8 +25,24 @@ $geny_rights_group = new GenyRightsGroup( $profile->rights_group_id );
 $geny_pmd = new GenyProfileManagementData();
 $geny_pmd->loadProfileManagementDataByProfileId($profile->id);
 $geny_hs = new GenyHolidaySummary();
-$hs_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id));
 
+$month = date('m', time());
+$year=date('Y', time());
+$start_hs_date = '1979-06-01';
+$end_hs_date = '1980-05-31';
+if( $month < 6 ){
+	$start_year = $year-1;
+	$start_hs_date = "$start_year-06-01";
+	$end_hs_date = "$year-05-31";
+}
+else {
+	$next_year = $year+1;
+	$start_hs_date = "$year-06-01";
+	$end_hs_date = "$next_year-05-31";
+}
+$geny_hs->setDebug(true);
+$hs_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$start_hs_date'","holiday_summary_period_end <= '$end_hs_date'"));
+$geny_hs->setDebug(false);
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
