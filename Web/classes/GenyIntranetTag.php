@@ -112,8 +112,8 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_tag = new GenyIntranetTag();
-				$tmp_intranet_tag->id = $intranet_tag->id;
-				$tmp_intranet_tag->name = $intranet_tag->name;
+				$tmp_intranet_tag->id = $row[0];
+				$tmp_intranet_tag->name = $row[1];
 				$intranet_tags_list[] = $tmp_intranet_tag;
 			}
 		}
@@ -132,8 +132,8 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_tag = new GenyIntranetTag();
-				$tmp_intranet_tag->id = $intranet_tag->id;
-				$tmp_intranet_tag->name = $intranet_tag->name;
+				$tmp_intranet_tag->id = $row[0];
+				$tmp_intranet_tag->name = $row[1];
 				$intranet_tags_list[] = $tmp_intranet_tag;
 			}
 		}
@@ -153,8 +153,8 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_tag = new GenyIntranetTag();
-				$tmp_intranet_tag->id = $intranet_tag->id;
-				$tmp_intranet_tag->name = $intranet_tag->name;
+				$tmp_intranet_tag->id = $row[0];
+				$tmp_intranet_tag->name = $row[1];
 				$intranet_tags_list[] = $tmp_intranet_tag;
 			}
 		}
