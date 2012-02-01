@@ -114,7 +114,11 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 		
 		<?php
 		$idx=0;
-		foreach ( $reporting_data as $date => $arr ){
+		$rd_keys = array_keys($reporting_data);
+		sort($rd_keys);
+// 		foreach ( $reporting_data as $date => $arr ){
+		foreach ( $rd_keys as $date){
+			$arr = $reporting_data[$date];
 			echo "data.setValue($idx, 0, '$date');\n";
 			echo "data.setValue($idx, 1, ".round($arr['P_USER_VALIDATION']/8,1).");\n";
 			echo "data.setValue($idx, 2, ".round($arr['P_APPROVAL']/8,1).");\n";
