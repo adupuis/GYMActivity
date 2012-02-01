@@ -42,7 +42,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 	}
 
 	public function insertNewIntranetPage( $id, $intranet_page_title, $category_id, $type_id, $intranet_page_description, $intranet_page_content ) {
-	$query = "INSERT INTO IntranetPages VALUES($id,'".mysql_real_escape_string( $intranet_page_title )."','".$category_id."','".$type_id."','".mysql_real_escape_string( $intranet_page_description )."','".mysql_real_escape_string( $intranet_page_content )."')";
+		$query = "INSERT INTO IntranetPages VALUES($id,'".mysql_real_escape_string( $intranet_page_title )."','".$category_id."','".$type_id."','".mysql_real_escape_string( $intranet_page_description )."','".mysql_real_escape_string( gzcompress( $intranet_page_content ) )."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetPage MySQL query : $query", 0 );
 		}
@@ -102,7 +102,7 @@ class GenyIntranetPage extends GenyDatabaseTools {
 				$tmp_intranet_page->category_id = $row[2];
 				$tmp_intranet_page->type_id = $row[3];
 				$tmp_intranet_page->description = $row[4];
-				$tmp_intranet_page->content = $row[5];
+				$tmp_intranet_page->content = gzuncompress( $row[5] );
 				$intranet_pages_list[] = $tmp_intranet_page;
 			}
 		}
@@ -159,12 +159,12 @@ class GenyIntranetPage extends GenyDatabaseTools {
 		if( mysql_num_rows( $result ) != 0 ) {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_page = new GenyIntranetPage();
-				$tmp_intranet_page->id = $intranet_page->id;
-				$tmp_intranet_page->title = $intranet_page->title;
-				$tmp_intranet_page->category_id = $intranet_page->category_id;
-				$tmp_intranet_page->type_id = $intranet_page->type_id;
-				$tmp_intranet_page->description = $intranet_page->description;
-				$tmp_intranet_page->content = $intranet_page->content;
+				$tmp_intranet_page->id = $row[0];
+				$tmp_intranet_page->title = $row[1];
+				$tmp_intranet_page->category_id = $row[2];
+				$tmp_intranet_page->type_id = $row[3];
+				$tmp_intranet_page->description = $row[4];
+				$tmp_intranet_page->content = gzuncompress( $row[5] );
 				$intranet_pages_list[] = $tmp_intranet_page;
 			}
 		}
