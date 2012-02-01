@@ -24,6 +24,8 @@ $gritter_notifications = array();
 
 $geny_intranet_page = new GenyIntranetPage();
 $geny_intranet_category = new GenyIntranetCategory();
+$geny_intranet_tag = new GenyIntranetTag();
+$geny_intranet_tag_page_relation = new GenyIntranetTagPageRelation();
 
 $create_intranet_page = GenyTools::getParam( 'create_intranet_page', 'NULL' );
 $load_intranet_page = GenyTools::getParam( 'load_intranet_page', 'NULL' );
@@ -33,6 +35,9 @@ if( $create_intranet_page == "true" ) {
 	$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
 	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 	$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
+	
+	$intranet_tag_list = GenyTools::getParam( 'intranet_tag_id', 'NULL' );
+	
 	$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
 	$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
 
@@ -41,6 +46,19 @@ if( $create_intranet_page == "true" ) {
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet créée avec succès." );
 			$geny_intranet_page->loadIntranetPageById( $insert_id );
+			
+			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
+				foreach( $_POST['intranet_tag_id'] as $key => $value ) {
+					$geny_intranet_tag = new GenyIntranetTag( $value );
+					if( $geny_intranet_tag_page_relation->insertNewIntranetTagPageRelation( $geny_intranet_tag->id, $geny_intranet_page->id ) ) {
+						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tag $geny_intranet_tag->name ajouté à la page.");
+					}
+					else {
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du tag $geny_intranet_tag->name.");
+					}
+				}
+			}
+			
 		}
 		else {
 			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de la création de la page Intranet." );
@@ -53,6 +71,7 @@ if( $create_intranet_page == "true" ) {
 else if( $load_intranet_page == 'true' ) {
 	$intranet_page_id = GenyTools::getParam( 'intranet_page_id', 'NULL' );
 	if( $intranet_page_id != 'NULL' ) {
+//TODO: rights_group check or not on this page
 // 		if( $profile->rights_group_id == 1  || /* admin */
 // 		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
@@ -89,6 +108,26 @@ else if( $edit_intranet_page == 'true' ) {
 			if( $intranet_type_id != 'NULL' && $geny_intranet_page->type_id != $intranet_type_id ) {
 				$geny_intranet_page->updateInt( 'intranet_type_id', $intranet_type_id );
 			}
+			
+			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
+				if( $geny_intranet_tag_page_relation->deleteAllIntranetTagPageRelationsByPageId( $geny_intranet_page->id ) ) {
+					$error = 0;
+					foreach( $_POST['intranet_tag_id'] as $key => $value ) {
+						$geny_intranet_tag = new GenyIntranetTag( $value );
+						if( $geny_intranet_tag_page_relation->insertNewIntranetTagPageRelation( $geny_intranet_tag->id, $geny_intranet_page->id ) ) {
+// 							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tag $geny_intranet_tag->name ajouté à la page.");
+						}
+						else {
+							$error++;
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du tag $geny_intranet_tag->name.");
+						}
+					}
+					if( $error == 0 ) {
+						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Les tags ont été mis à jour avec succès.");
+					}
+				}
+			}
+			
 			if( $intranet_page_description != 'NULL' && $geny_intranet_page->description != $intranet_page_description ) {
 				$geny_intranet_page->updateString( 'intranet_page_description', $intranet_page_description );
 			}
@@ -103,6 +142,7 @@ else if( $edit_intranet_page == 'true' ) {
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de la page Intranet.");
 		}
+		//FIXME: mis à part les tags, si rien n'est modifié, on a une erreur à la mise à jour
 	}
 }
 
@@ -181,6 +221,22 @@ else if( $edit_intranet_page == 'true' ) {
 					<option value=""></option>
 				</select>
 			</p>
+			<p>
+				<label for="intranet_tag_id">Tags</label>
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags...">
+					<?php
+						$current_page_tags = $geny_intranet_tag->getIntranetTagsByPage( $geny_intranet_page->id );
+						foreach( $geny_intranet_tag->getAllIntranetTags() as $intranet_tag ) {
+							if( in_array( $intranet_tag, $current_page_tags ) ) {
+								echo "<option value=\"".$intranet_tag->id."\" selected>".$intranet_tag->name."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$intranet_tag->id."\">".$intranet_tag->name."</option>\n";
+							}
+						}
+					?>
+				</select>
+			</p>
 			
 			<script type="text/javascript">
 
@@ -189,7 +245,7 @@ else if( $edit_intranet_page == 'true' ) {
 					if( intranet_category_id > 0 ) {
 						var intranet_type_id = <?php echo $geny_intranet_page->type_id ?>;
 						
-						$.get('backend/api/get_intranet_type_list.php?category_id='+intranet_category_id, function( data ) {
+						$.get('backend/api/get_intranet_type_list.php?intranet_category_id='+intranet_category_id, function( data ) {
 							$('.intranet_types_options').remove();
 							$.each( data, function( key, val ) {
 								if( val["id"] == intranet_type_id ) {

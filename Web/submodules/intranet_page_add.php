@@ -66,7 +66,7 @@ $geny_intranet_type = new GenyIntranetType();
 			</p>
 			<p>
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags...">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags...">
 				</select>
 			</p>
 			
@@ -75,7 +75,7 @@ $geny_intranet_type = new GenyIntranetType();
 				function getIntranetTypes(){
 					var intranet_category_id = $("#intranet_category_id").val();
 					if( intranet_category_id > 0 ) {
-						$.get('backend/api/get_intranet_type_list.php?category_id='+intranet_category_id, function( data ) {
+						$.get('backend/api/get_intranet_type_list.php?intranet_category_id='+intranet_category_id, function( data ) {
 							$('.intranet_types_options').remove();
 							$.each( data, function( key, val ) {
 								$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
