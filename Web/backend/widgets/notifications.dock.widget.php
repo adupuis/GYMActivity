@@ -136,7 +136,7 @@ $html .= '</ul>';
 	</a>
 </li>
 
-<div id="notifications-dialog-message" title="Notifications">
+<div id="notifications-dialog-message" title="Notifications" style="display: none;">
 	<p>
 		<?php echo $html; ?>
 	</p>
