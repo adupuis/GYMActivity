@@ -34,6 +34,11 @@ try {
 	$access_loger = new GenyAccessLog();
 	$checkId_obj = new CheckIdentity();
 	$web_config = new GenyWebConfig();
+	$param_session_id = GenyTools::getParam('session','');
+	if($param_session_id != ''){
+		$SESSION['LOGGEDIN']=1;
+		$SESSION['USERID'] = $param_session_id;
+	}
 	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
 			if(isset($_SESSION['THEME']))
@@ -119,6 +124,9 @@ echo $header_title
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
 
+<link rel="stylesheet" href="js/prettyPhoto_compressed_3.1.3/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
+<script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
 <!-- <link href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css' /> -->
@@ -138,7 +146,9 @@ echo $header_title
 </style>
 </head>
 <body>
+<?php if($load_menu == "true"){ ?>
 <a href="loader.php?module=home" id="home_logo">
+<?php } ?>
 
 </a>
 
