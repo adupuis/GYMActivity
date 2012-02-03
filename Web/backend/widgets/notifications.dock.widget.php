@@ -82,7 +82,7 @@ $html .= '</ul>';
 	function get_unread_notification_list(){
 		$.get("backend/api/get_notification_list.php?profile_id="+<?php echo $profile->id; ?>+"&state=unread&action=list", function(data){
 			$("#notifications-dialog-message").empty();
-			var html = "<p><ul class='notifications_list'>";
+			var html = "<ul class='notifications_list'>";
 			var notification_count=0;
 			jQuery.each(data, function(row,content){
 				html += '<li class="notification_type_'+content.type+'"><img src="images/'+<?php echo "'".$web_config->theme."'"; ?>+'/notifications/'+content.type+'.png" /><span>'+content.text+'</span></li>';
@@ -91,7 +91,7 @@ $html .= '</ul>';
 			if( notification_count == 0 ){
 				html += '<li class="notification_type_ok"><img src="images/'+<?php echo "'".$web_config->theme."'"; ?>+"/notifications/ok.png\" /><span>Vous n\'avez pas de notifications non lues.</span></li>";
 			}
-			html += "</ul></p>";
+			html += "</ul>";
 			$("#notifications-dialog-message").append(html);
 		},"json");
 	}
@@ -110,26 +110,27 @@ $html .= '</ul>';
 		});
 	}
 	
-	$(function() {
-		$( "#notifications-dialog-message" ).dialog({
-			modal: true,
-			autoOpen: false,
-			width: 900,
-			show: "slide",
-			hide: "explode",
-			buttons: {
-				Ok: function() {
-					mark_all_notifications_as_read();
-					$( this ).dialog( "close" );
-					
-				}
-			}
-		});
-	});
+// 	$(function() {
+// 		$( "#notifications-dialog-message" ).dialog({
+// 			modal: true,
+// 			autoOpen: false,
+// 			width: 900,
+// 			show: "slide",
+// 			hide: "explode",
+// 			buttons: {
+// 				Ok: function() {
+// 					mark_all_notifications_as_read();
+// 					$( this ).dialog( "close" );
+// 					
+// 				}
+// 			}
+// 		});
+// 	});
 </script>
 
 <li class="notifications">
-	<a href="#" onClick='$( "#notifications-dialog-message" ).dialog( "open" )'>
+<!-- 	<a href="#" onClick='$( "#notifications-dialog-message" ).dialog( "open" )'> -->
+	<a href="#notifications-dialog-message" rel='prettyPhoto[notifications]'>
 <!-- 		<span class="notifications_count"><span class="notification_count_content">0</span></span> -->
 		<span class="dock_item_title">Notifications</span><br/>
 		<span class="dock_item_content"><span id="notification_content">Vous n'avez aucune nouvelle notification.</span></span>
@@ -137,10 +138,12 @@ $html .= '</ul>';
 </li>
 
 <div id="notifications-dialog-message" title="Notifications" style="display: none;">
-	<p>
+<!-- 	<p> -->
 		<?php echo $html; ?>
-	</p>
+<!-- 	</p> -->
 </div>
-
+<script>
+$("a[rel='prettyPhoto[notifications]']").prettyPhoto({animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social"></div>', theme: 'pp_default', callback: function() {mark_all_notifications_as_read();}});
+</script>
 
 
