@@ -26,19 +26,22 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 	public $id = -1;
 	public $name = '';
 	public $description = '';
-	public function __construct($id = -1){
-		parent::__construct("IntranetCategories",  "intranet_category_id");
+	
+	public function __construct( $id = -1 ) {
+		parent::__construct( "IntranetCategories", "intranet_category_id" );
 		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
-		if($id > -1)
-			$this->loadIntranetCategoryById($id);
+		if( $id > -1 ) {
+			$this->loadIntranetCategoryById( $id );
+		}
 	}
 	
-	public function insertNewIntranetCategory($id,$name,$desc){
-		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($desc)."')";
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
+	public function insertNewIntranetCategory( $id, $name, $description ) {
+		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string( $name )."','".mysql_real_escape_string( $description )."')";
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetCategory MySQL query : $query", 0 );
+		}
 		if( mysql_query( $query, $this->handle ) ) {
 			return mysql_insert_id( $this->handle );
 		}
@@ -47,96 +50,105 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 		}
 	}
 	
-	public function removeIntranetCategory($id=0){
-		if(is_numeric($id)){
-			if( $id == 0 && $this->id > 0 )
+	public function removeIntranetCategory( $id = 0 ) {
+		if( is_numeric( $id ) ) {
+			if( $id == 0 && $this->id > 0 ) {
 				$id = $this->id;
-			if($id <= 0)
-				return -1;
-			//delete type
-			$p_object = new GenyIntranetType();
-			foreach( $p_object->getIntranetTypesByCategory($id) as $p ){
-				if( $p->removeIntranetType() <= 0 )
-					return -1;
 			}
-			//delete page
-			$p_object = new GenyIntranetPage();
-			foreach( $p_object->getIntranetPagesByCategory($id) as $p ){
-				if( $p->removeIntranetPage() <= 0 )
+			if( $id <= 0 ) {
+				return -1;
+			}
+			// Delete intranet_type
+			$p_object = new GenyIntranetType();
+			foreach( $p_object->getIntranetTypesByCategory( $id ) as $p ) {
+				if( $p->removeIntranetType() <= 0 ) {
 					return -1;
+				}
+			}
+			// Delete intranet_page
+			$p_object = new GenyIntranetPage();
+			foreach( $p_object->getIntranetPagesByCategory( $id ) as $p ) {
+				if( $p->removeIntranetPage() <= 0 ) {
+					return -1;
+				}
 			}
 
 			$query = "DELETE FROM IntranetCategories WHERE intranet_category_id=$id";
-			if( $this->config->debug )
-				error_log("[GYMActivity::DEBUG] GenyClient MySQL DELETE query : $query",0);
-			if(mysql_query($query,$this->handle))
+			if( $this->config->debug ) {
+				error_log( "[GYMActivity::DEBUG] GenyIntranetCategory MySQL DELETE query : $query", 0 );
+			}
+			if( mysql_query( $query, $this->handle ) ) {
 				return 1;
-			else
+			}
+			else {
 				return -1;
+			}
 		}
 		return -1;
 	}
 	
-	public function getIntranetCategoryListWithRestrictions($restrictions){
-		// $restrictions is in the form of array("project_id=1","project_status_id=2")
-		$last_index = count($restrictions)-1;
+	public function getIntranetCategoryListWithRestrictions( $restrictions ) {
+		// $restrictions is in the form of array("intranet_category_id=1")
+		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT intranet_category_id,intranet_category_name,intranet_category_description FROM IntranetCategories";
-		if(count($restrictions) > 0){
+		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
-			foreach($restrictions as $key => $value) {
+			foreach( $restrictions as $key => $value ) {
 				$query .= $value;
-				if($key != $last_index){
+				if( $key != $last_index ) {
 					$query .= " AND ";
 				}
 			}
 		}
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyClient MySQL query : $query",0);
-		$result = mysql_query($query, $this->handle);
-		$cat_list = array();
-		if (mysql_num_rows($result) != 0){
-			while ($row = mysql_fetch_row($result)){
-				$tmp_cat = new GenyIntranetCategory();
-				$tmp_cat->id = $row[0];
-				$tmp_cat->name = $row[1];
-				$tmp_cat->description = $row[2];
-				$cat_list[] = $tmp_cat;
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetCategory MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+		$intranet_category_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_category = new GenyIntranetCategory();
+				$tmp_intranet_category->id = $row[0];
+				$tmp_intranet_category->name = $row[1];
+				$tmp_intranet_category->description = $row[2];
+				$intranet_category_list[] = $tmp_intranet_category;
 			}
 		}
 // 		mysql_close();
-		return $cat_list;
+		return $intranet_category_list;
 	}
 	
-	public function getAllIntranetCategories(){
+	public function getAllIntranetCategories() {
 		return $this->getIntranetCategoryListWithRestrictions( array() );
 	}
 	
-	public function searchIntranetCategory($term){
-		$q = mysql_real_escape_string($term);
+	public function searchIntranetCategory( $term ) {
+		$q = mysql_real_escape_string( $term );
 		return $this->getIntranetCategoryListWithRestrictions( array("intranet_category_name LIKE '%$q%' or intranet_category_description LIKE '%$q%'") );
 	}
 	
-	public function loadIntranetCategoryById($id){
-		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_id=".mysql_real_escape_string($id)));
-		$cat = $cats[0];
-		if(isset($cat) && $cat->id > -1){
-			$this->id = $cat->id;
-			$this->name = $cat->name;
-			$this->description = $cat->description;
+	public function loadIntranetCategoryById( $id ) {
+		$intranet_categories = $this->getIntranetCategoryListWithRestrictions( array( "intranet_category_id=".mysql_real_escape_string( $id ) ) );
+		$intranet_category = $intranet_categories[0];
+		if( isset( $intranet_category ) && $intranet_category->id > -1 ) {
+			$this->id = $intranet_category->id;
+			$this->name = $intranet_category->name;
+			$this->description = $intranet_category->description;
 		}
 	}
 	
-	public function loadIntranetCategoryByName($name){
-		$cats = $this->getIntranetCategoryListWithRestrictions(array("intranet_category_name='".mysql_real_escape_string($name)."'"));
-
-		if(count($cats) == 0)
+	public function loadIntranetCategoryByName( $name ) {
+		$intranet_categories = $this->getIntranetCategoryListWithRestrictions( array( "intranet_category_name='".mysql_real_escape_string( $name )."'" ) );
+		if( count( $intranet_categories ) == 0 ) {
 			return;
-		$cat = $cats[0];
-		if(isset($cat) && $cat->id > -1){
-			$this->id = $cat->id;
-			$this->name = $cat->name;
-			$this->description = $cat->description;
+		}
+		$intranet_category = $intranet_categories[0];
+		if( isset( $intranet_category ) && $intranet_category->id > -1 ) {
+			$this->id = $intranet_category->id;
+			$this->name = $intranet_category->name;
+			$this->description = $intranet_category->description;
 		}
 	}
+	
 }
 ?>
