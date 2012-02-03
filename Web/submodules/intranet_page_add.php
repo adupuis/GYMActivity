@@ -22,8 +22,14 @@
 
 $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_type = new GenyIntranetType();
+$geny_intranet_page_status = new GenyIntranetPageStatus();
 
 ?>
+
+<style>
+	@import "styles/genymobile-2012/chosen_override.css";
+</style>
+
 <div id="mainarea">
 	<p class="mainarea_title">
 		<span class="intranet_page_add">
@@ -67,6 +73,17 @@ $geny_intranet_type = new GenyIntranetType();
 			<p>
 				<label for="intranet_tag_id">Tags</label>
 				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags...">
+				</select>
+			</p>
+			<p>
+				<label for="intranet_page_status_id">Statut</label>
+				<select name="intranet_page_status_id" id="intranet_page_status_id" class="chzn-select" data-placeholder="Choisissez un statut...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $intranet_page_status ) {
+							echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+						}
+					?>
 				</select>
 			</p>
 			

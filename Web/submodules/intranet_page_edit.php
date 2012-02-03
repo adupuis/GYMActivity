@@ -26,6 +26,7 @@ $geny_intranet_page = new GenyIntranetPage();
 $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_tag = new GenyIntranetTag();
 $geny_intranet_tag_page_relation = new GenyIntranetTagPageRelation();
+$geny_intranet_page_status = new GenyIntranetPageStatus();
 
 $create_intranet_page = GenyTools::getParam( 'create_intranet_page', 'NULL' );
 $load_intranet_page = GenyTools::getParam( 'load_intranet_page', 'NULL' );
@@ -35,14 +36,14 @@ if( $create_intranet_page == "true" ) {
 	$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
 	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 	$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
-	
+	$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
+	$profile_id = $profile->id;
 	$intranet_tag_list = GenyTools::getParam( 'intranet_tag_id', 'NULL' );
-	
 	$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
 	$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
 
-	if( $intranet_page_title != 'NULL' && $intranet_category_id && $intranet_type_id && $intranet_page_description != 'NULL' && $intranet_page_content != 'NULL' ) {
-		$insert_id = $geny_intranet_page->insertNewIntranetPage( 'NULL', $intranet_page_title, $intranet_category_id, $intranet_type_id, $intranet_page_description, $intranet_page_content );
+	if( $intranet_page_title != 'NULL' && $intranet_category_id && $intranet_type_id && $intranet_page_status_id && $profile_id && $intranet_page_description != 'NULL' && $intranet_page_content != 'NULL' ) {
+		$insert_id = $geny_intranet_page->insertNewIntranetPage( 'NULL', $intranet_page_title, $intranet_category_id, $intranet_type_id, $intranet_page_status_id, $profile_id, $intranet_page_description, $intranet_page_content );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet créée avec succès." );
 			$geny_intranet_page->loadIntranetPageById( $insert_id );
@@ -96,6 +97,7 @@ else if( $edit_intranet_page == 'true' ) {
 			$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
 			$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 			$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
+			$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
 			$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
 			$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
 
@@ -107,6 +109,9 @@ else if( $edit_intranet_page == 'true' ) {
 			}
 			if( $intranet_type_id != 'NULL' && $geny_intranet_page->type_id != $intranet_type_id ) {
 				$geny_intranet_page->updateInt( 'intranet_type_id', $intranet_type_id );
+			}
+			if( $intranet_page_status_id != 'NULL' && $geny_intranet_page->page_status_id != $intranet_page_status_id ) {
+				$geny_intranet_page->updateInt( 'intranet_page_status_id', $intranet_page_status_id );
 			}
 			
 			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
@@ -147,6 +152,10 @@ else if( $edit_intranet_page == 'true' ) {
 }
 
 ?>
+
+<style>
+	@import "styles/genymobile-2012/chosen_override.css";
+</style>
 
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -232,6 +241,22 @@ else if( $edit_intranet_page == 'true' ) {
 							}
 							else {
 								echo "<option value=\"".$intranet_tag->id."\">".$intranet_tag->name."</option>\n";
+							}
+						}
+					?>
+				</select>
+			</p>
+			<p>
+				<label for="intranet_page_status_id">Statut</label>
+				<select name="intranet_page_status_id" id="intranet_page_status_id" class="chzn-select" data-placeholder="Choisissez un statut...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $intranet_page_status ) {
+							if( $geny_intranet_page->page_status_id == $intranet_page_status->id ) {
+								echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
 							}
 						}
 					?>

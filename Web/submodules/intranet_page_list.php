@@ -24,7 +24,7 @@ date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-$data_array_filters = array( 1 => array(), 2 => array() );
+$data_array_filters = array( 1 => array(), 2 => array(), 3 => array(), 4 => array() );
 
 
 $geny_intranet_page = new GenyIntranetPage();
@@ -39,19 +39,38 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $type ) {
 	$intranet_types[$type->id] = $type;
 }
 
+$geny_intranet_page_status = new GenyIntranetPageStatus();
+foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $page_status ) {
+	$intranet_page_statuses[$page_status->id] = $page_status;
+}
+
+$geny_profile = new GenyProfile();
+foreach( $geny_profile->getAllProfiles() as $profile ) {
+	$profiles[$profile->id] = $profile;
+}
+
 foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	
 	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
 	$intranet_type_name = $intranet_types["$tmp->type_id"]->name." (".$intranet_category_name.")";
+	$intranet_page_status_name = $intranet_page_statuses["$tmp->page_status_id"]->name;
+	$profile_screen_name = $profiles["$tmp->profile_id"]->firstname." ".$profiles["$tmp->profile_id"]->lastname;
+	if( $profile_screen_name == '' ) {
+		$profile_screen_name = $profiles["$tmp->profile_id"]->login;
+	}
 
 	$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
 	
-	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $remove );
+	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $intranet_page_status_name, $profile_screen_name, $remove );
 	
 	if( !in_array( $intranet_category_name, $data_array_filters[1]) )
 		$data_array_filters[1][] = $intranet_category_name;
 	if( !in_array( $intranet_type_name, $data_array_filters[2]) )
 		$data_array_filters[2][] = $intranet_type_name;
+	if( !in_array( $intranet_page_status_name, $data_array_filters[3]) )
+		$data_array_filters[3][] = $intranet_page_status_name;
+	if( !in_array( $profile_screen_name, $data_array_filters[4]) )
+		$data_array_filters[4][] = $profile_screen_name;
 }
 
 ?>
@@ -120,7 +139,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 1 || i == 2 ) {
+					if( i == 1 || i == 2 || i == 3 || i == 4 ) {
 						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -147,12 +166,14 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 						<th>Titre</th>
 						<th>Catégorie</th>
 						<th>Type</th>
+						<th>Statut</th>
+						<th>Créateur</th>
 						<th>Supprimer</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."</center></td><td><center>".$da[4]."</center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -160,6 +181,8 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 						<th class="filtered">Titre</th>
 						<th class="filtered">Catégorie</th>
 						<th class="filtered">Type</th>
+						<th class="filtered">Statut</th>
+						<th class="filtered">Créateur</th>
 						<th class="filtered">Supprimer</th>
 					</tfoot>
 				</table>
