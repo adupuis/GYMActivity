@@ -24,14 +24,17 @@ include 'classes/GenyTools.php';
 $header_title = '%COMPANY_NAME% - Home';
 $required_group_rights = 6;
 
+$load_menu = GenyTools::getParam("load_menu","true");
+$load_bottomdock = GenyTools::getParam("load_bottomdock","true");
 // Here is the code for submodule metadata loading
 $submod = GenyTools::getParam("module","bork");
 if( file_exists( 'submodules/'.$submod.'.php.meta' ) ){
 	include_once('submodules/'.$submod.'.php.meta');
 }
-
+GenyTools::debug("load_menu=$load_menu");
 include_once 'header.php';
-include_once 'menu.php';
+if($load_menu == "true")
+	include_once 'menu.php';
 
 ?>
 
@@ -53,16 +56,18 @@ include_once 'menu.php';
 <div id='services' class='widget clearfix'>
 <ul>-->
 <?php
-	if( ! isset($bottomdock_items) )
-		$bottomdock_items = array();
-	
-	if($bottomdock_items[0] != 'backend/widgets/notifications.dock.widget.php')
-		array_unshift($bottomdock_items,'backend/widgets/notifications.dock.widget.php');
-	echo "<div id='separator_top'></div>\n<div id='bottomdock'>\n<h3 class='italic'>Liens rapides</h3>\n<div id='services'>\n<ul>";
-	foreach ($bottomdock_items as $item){
-		include "$item";
+	if($load_bottomdock == "true"){
+		if( ! isset($bottomdock_items) )
+			$bottomdock_items = array();
+		
+		if($bottomdock_items[0] != 'backend/widgets/notifications.dock.widget.php')
+			array_unshift($bottomdock_items,'backend/widgets/notifications.dock.widget.php');
+		echo "<div id='separator_top'></div>\n<div id='bottomdock'>\n<h3 class='italic'>Liens rapides</h3>\n<div id='services'>\n<ul>";
+		foreach ($bottomdock_items as $item){
+			include "$item";
+		}
+		echo "</ul>\n</div>\n</div>\n<div id='separator_bottom'></div>";
 	}
-	echo "</ul>\n</div>\n</div>\n<div id='separator_bottom'></div>";
 ?>
 <!--</ul>
 </div>

@@ -28,21 +28,30 @@ $geny_hs = new GenyHolidaySummary();
 
 $month = date('m', time());
 $year=date('Y', time());
-$start_hs_date = '1979-06-01';
-$end_hs_date = '1980-05-31';
+$start_hs_cp_date = '1979-06-01';
+$end_hs_cp_date = '1980-05-31';
+
 if( $month < 6 ){
 	$start_year = $year-1;
-	$start_hs_date = "$start_year-06-01";
-	$end_hs_date = "$year-05-31";
+	$start_hs_cp_date = "$start_year-06-01";
+	$end_hs_cp_date = "$year-05-31";
 }
 else {
 	$next_year = $year+1;
-	$start_hs_date = "$year-06-01";
-	$end_hs_date = "$next_year-05-31";
+	$start_hs_cp_date = "$year-06-01";
+	$end_hs_cp_date = "$next_year-05-31";
 }
-$geny_hs->setDebug(true);
-$hs_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$start_hs_date'","holiday_summary_period_end <= '$end_hs_date'"));
-$geny_hs->setDebug(false);
+
+$hs_cp_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$start_hs_cp_date'","holiday_summary_period_end <= '$end_hs_cp_date'","holiday_summary_type='CP'"));
+
+// Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
+$hs_cp = $hs_cp_list[0];
+
+$hs_rtt_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$year-01-01'","holiday_summary_period_end <= '$year-12-31'","holiday_summary_type='RTT'"));
+
+// Idem pour les RTT
+$hs_rtt = $hs_rtt_list[0];
+
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -68,12 +77,17 @@ $geny_hs->setDebug(false);
 			<li><strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;</li>
 			<li><strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?></li>
 		</ul>
-		<ul id="profile_holiday_info">
-		<?php
-			foreach( $hs_list as $hs ){
-				echo "<li>Période du ".$hs->period_start." au ".$hs->period_end." type: ".$hs->type." $hs->count_acquired/$hs->count_taken/$hs->count_remaining"."</li>";
-			}
-		?>
+		<ul id="profile_holiday_info_cp">
+		<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong>
+			<li><strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?></li>
+			<li><strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?></li>
+			<li><strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?></li>
+		</ul>
+		<ul id="profile_holiday_info_rtt">
+		<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong>
+		<li><strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?></li>
+		<li><strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?></li>
+		<li><strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?></li>
 		</ul>
 	</p>
 </div>
