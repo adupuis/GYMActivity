@@ -42,16 +42,13 @@ else {
 	$end_hs_cp_date = "$next_year-05-31";
 }
 
-$hs_cp_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$start_hs_cp_date'","holiday_summary_period_end <= '$end_hs_cp_date'","holiday_summary_type='CP'"));
-
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
-$hs_cp = $hs_cp_list[0];
-
-$hs_rtt_list = $geny_hs->getHolidaySummariesListWithRestrictions(array("profile_id=".$profile->id,"holiday_summary_period_start >= '$year-01-01'","holiday_summary_period_end <= '$year-12-31'","holiday_summary_type='RTT'"));
+$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
 
 // Idem pour les RTT
-$hs_rtt = $hs_rtt_list[0];
-
+$geny_hs->setDebug(true);
+$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
+$geny_hs->setDebug(false);
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -64,31 +61,39 @@ $hs_rtt = $hs_rtt_list[0];
 		<p class="mainarea_content_intro">
 		Dans cette page vous trouverez toutes les informations relatives à votre profil chez <?php echo $web_config->company_name ?>. Vous trouverez aussi la liste complètes des évènements de carrière au sein de l'entreprise.
 		</p>
-		<ul id="profile_general_info">
+		<style>
+		@import 'styles/<?php echo $web_config->theme ?>/profile_summary.css';
+		</style>
+<!-- 		<span> -->
+		<ul id="profile_general_info" class="ps_float">
 			<li><strong>Nom : </strong> <?php echo $profile->lastname ; ?></li>
 			<li><strong>Prénom : </strong> <?php echo $profile->firstname ; ?></li>
 			<li><strong>Login : </strong> <?php echo $profile->login ; ?></li>
 			<li><strong>Email : </strong> <?php echo $profile->email ; ?></li>
 			<li><strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?></li>
 		</ul>
-		<ul id="profile_management_info">
+		<ul id="profile_management_info" class="ps_float">
 			<li><strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?></li>
 			<li><strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?></li>
 			<li><strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;</li>
 			<li><strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?></li>
 		</ul>
-		<ul id="profile_holiday_info_cp">
+		<div style="clear:both"></div>
+		<!--</span>
+		<span>-->
+		<ul id="profile_holiday_info_cp" class="ps_float">
 		<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong>
 			<li><strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?></li>
 			<li><strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?></li>
 			<li><strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?></li>
 		</ul>
-		<ul id="profile_holiday_info_rtt">
+		<ul id="profile_holiday_info_rtt" class="ps_float">
 		<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong>
 		<li><strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?></li>
 		<li><strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?></li>
 		<li><strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?></li>
 		</ul>
+<!-- 		</span> -->
 	</p>
 </div>
 <?php
