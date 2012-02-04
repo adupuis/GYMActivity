@@ -1,37 +1,20 @@
 
 ul.ps_float {
-	display: block;
-	float: left;
+	display: inline;
 	margin-left: 30px;
-}
-ul.ps_float:hover {
-	background-color: #84BE5D;
-	border: 1px solid #D9D9D9;
-	color: #fff;
-}
-/*ul > li {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-}*/
-#profile_general_info {
-/* 	float: left; */
-/* 	margin-left: 10px; */
-	border: 1px solid #D8D8D8;
-	width: 500px;
-}
-#profile_management_info {
-/* 	float: right; */
-/* 	margin-right: 10px; */
-	border: 1px solid #D8D8D8;
-	width: 500px;
-}
-#profile_holiday_info_cp {
-	border: 1px solid #D8D8D8;
-	width: 500px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
 }
 
-#profile_holiday_info_rtt {
-	border: 1px solid #D8D8D8;
+ul.ps_float li {
+	display: block;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+/* 	border: 1px solid #D8D8D8; */
 	width: 500px;
+	height: 70px;
 }
+

@@ -26,22 +26,6 @@ $geny_pmd = new GenyProfileManagementData();
 $geny_pmd->loadProfileManagementDataByProfileId($profile->id);
 $geny_hs = new GenyHolidaySummary();
 
-$month = date('m', time());
-$year=date('Y', time());
-$start_hs_cp_date = '1979-06-01';
-$end_hs_cp_date = '1980-05-31';
-
-if( $month < 6 ){
-	$start_year = $year-1;
-	$start_hs_cp_date = "$start_year-06-01";
-	$end_hs_cp_date = "$year-05-31";
-}
-else {
-	$next_year = $year+1;
-	$start_hs_cp_date = "$year-06-01";
-	$end_hs_cp_date = "$next_year-05-31";
-}
-
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
 $hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
 
@@ -64,36 +48,33 @@ $geny_hs->setDebug(false);
 		<style>
 		@import 'styles/<?php echo $web_config->theme ?>/profile_summary.css';
 		</style>
-<!-- 		<span> -->
-		<ul id="profile_general_info" class="ps_float">
-			<li><strong>Nom : </strong> <?php echo $profile->lastname ; ?></li>
-			<li><strong>Prénom : </strong> <?php echo $profile->firstname ; ?></li>
-			<li><strong>Login : </strong> <?php echo $profile->login ; ?></li>
-			<li><strong>Email : </strong> <?php echo $profile->email ; ?></li>
-			<li><strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?></li>
+		<ul class="ps_float">
+			<li>
+				<strong>Nom : </strong> <?php echo $profile->lastname ; ?><br/>
+				<strong>Prénom : </strong> <?php echo $profile->firstname ; ?><br/>
+				<strong>Login : </strong> <?php echo $profile->login ; ?><br/>
+				<strong>Email : </strong> <?php echo $profile->email ; ?><br/>
+				<strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?>
+			</li>
+			<li>
+				<strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?><br/>
+				<strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?><br/>
+				<strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;<br/>
+				<strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?>
+			</li>
+			<li>
+				<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong><br/>
+				<strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?><br/>
+				<strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?><br/>
+				<strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?>
+			</li>
+			<li>
+				<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong><br/>
+				<strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?><br/>
+				<strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?><br/>
+				<strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?>
+			</li>
 		</ul>
-		<ul id="profile_management_info" class="ps_float">
-			<li><strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?></li>
-			<li><strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?></li>
-			<li><strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;</li>
-			<li><strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?></li>
-		</ul>
-		<div style="clear:both"></div>
-		<!--</span>
-		<span>-->
-		<ul id="profile_holiday_info_cp" class="ps_float">
-		<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong>
-			<li><strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?></li>
-			<li><strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?></li>
-			<li><strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?></li>
-		</ul>
-		<ul id="profile_holiday_info_rtt" class="ps_float">
-		<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong>
-		<li><strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?></li>
-		<li><strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?></li>
-		<li><strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?></li>
-		</ul>
-<!-- 		</span> -->
 	</p>
 </div>
 <?php
