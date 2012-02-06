@@ -23,7 +23,7 @@
 
 <li class="intranet_type_add">
 	<a href="loader.php?module=intranet_type_add">
-		<span class="dock_item_title">Ajouter type Intranet</span><br/>
+		<span class="dock_item_title">Type Intranet</span><br/>
 		<span class="dock_item_content">Ajouter un type de catégorie Intranet.</span>
 	</a>
 </li>

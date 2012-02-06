@@ -23,7 +23,7 @@
 
 <li class="intranet_category_edit">
 	<a href="loader.php?module=intranet_category_edit">
-		<span class="dock_item_title">Modifier une catégorie Intranet</span><br/>
+		<span class="dock_item_title">Cat. Intranet</span><br/>
 		<span class="dock_item_content">Modifier une catégorie Intranet existante.</span>
 	</a>
 </li>

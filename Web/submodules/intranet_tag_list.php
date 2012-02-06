@@ -38,9 +38,9 @@ foreach( $geny_intranet_tag->getAllIntranetTags() as $tmp ) {
 	
 // 	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
 
-	$edit = "<a href=\"loader.php?module=intranet_tag_edit&load_intranet_tag=true&intranet_tag_id=$tmp->id\" title=\"Editer le tag Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer le tag Intranet\"></a>";
+	$edit = "<a href=\"loader.php?module=intranet_tag_edit&load_intranet_tag=true&intranet_tag_id=$tmp->id\" title=\"Editer le tag Intranet\"><img src=\"images/$web_config->theme/intranet_tag_edit_small.png\" alt=\"Editer le tag Intranet\"></a>";
 
-	$remove = "<a href=\"loader.php?module=intranet_tag_remove&intranet_tag_id=$tmp->id\" title=\"Supprimer définitivement le tag Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement le tag Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_tag_remove&intranet_tag_id=$tmp->id\" title=\"Supprimer définitivement le tag Intranet\"><img src=\"images/$web_config->theme/intranet_tag_remove_small.png\" alt=\"Supprimer définitivement le tag Intranet\"></a>";
 	
 	$data_array[] = array( $tmp->id, $tmp->name, $edit, $remove );
 	

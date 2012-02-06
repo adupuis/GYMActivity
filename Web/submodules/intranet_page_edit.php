@@ -159,8 +159,9 @@ else if( $edit_intranet_page == 'true' ) {
 
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_page_edit.png"></img>
 		<span class="intranet_page_view">
-			Page Intranet
+			Modifier page Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">

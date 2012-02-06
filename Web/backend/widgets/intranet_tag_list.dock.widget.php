@@ -23,7 +23,7 @@
 
 <li class="intranet_tag_list">
 	<a href="loader.php?module=intranet_tag_list">
-		<span class="dock_item_title">Liste des tags Intranet</span><br/>
+		<span class="dock_item_title">Tags Intranet</span><br/>
 		<span class="dock_item_content">Lister tous les tags de l'Intranet.</span>
 	</a>
 </li>

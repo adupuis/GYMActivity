@@ -23,7 +23,7 @@
 
 <li class="intranet_tag_remove">
 	<a href="loader.php?module=intranet_tag_remove">
-		<span class="dock_item_title">Supprimer tag Intranet</span><br/>
+		<span class="dock_item_title">Tag Intranet</span><br/>
 		<span class="dock_item_content">Supprimer un tag Intranet existant.</span>
 	</a>
 </li>

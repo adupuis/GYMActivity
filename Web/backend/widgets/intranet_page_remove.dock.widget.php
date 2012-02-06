@@ -23,7 +23,7 @@
 
 <li class="intranet_page_remove">
 	<a href="loader.php?module=intranet_page_remove">
-		<span class="dock_item_title">Supprimer page Intranet</span><br/>
+		<span class="dock_item_title">Page Intranet</span><br/>
 		<span class="dock_item_content">Supprimer une page Intranet existante.</span>
 	</a>
 </li>

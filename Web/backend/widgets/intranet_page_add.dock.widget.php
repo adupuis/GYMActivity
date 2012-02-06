@@ -23,7 +23,7 @@
 
 <li class="intranet_page_add">
 	<a href="loader.php?module=intranet_page_add">
-		<span class="dock_item_title">Créer une page Intranet</span><br/>
+		<span class="dock_item_title">Page Intranet</span><br/>
 		<span class="dock_item_content">Créer une page Intranet.</span>
 	</a>
 </li>

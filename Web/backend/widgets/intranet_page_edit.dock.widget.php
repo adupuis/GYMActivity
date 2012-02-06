@@ -21,9 +21,9 @@
 
 ?>
 
-<li class="intranet_type_edit">
-	<a href="loader.php?module=intranet_type_edit">
-		<span class="dock_item_title">Type Intranet</span><br/>
-		<span class="dock_item_content">Modifier un type de catégorie Intranet existant.</span>
+<li class="intranet_page_edit">
+	<a href="loader.php?module=intranet_page_edit">
+		<span class="dock_item_title">Page Intranet</span><br/>
+		<span class="dock_item_content">Modifier une page Intranet.</span>
 	</a>
 </li>

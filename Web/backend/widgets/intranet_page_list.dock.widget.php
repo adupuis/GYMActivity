@@ -23,7 +23,7 @@
 
 <li class="intranet_page_list">
 	<a href="loader.php?module=intranet_page_list">
-		<span class="dock_item_title">Liste des pages Intranet</span><br/>
+		<span class="dock_item_title">Pages Intranet</span><br/>
 		<span class="dock_item_content">Lister tous les pages de l'Intranet.</span>
 	</a>
 </li>

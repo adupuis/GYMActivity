@@ -23,6 +23,7 @@
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/intranet_tag_add.png"></img>
 		<span class="intranet_tag_add">
 			Ajouter Tag Intranet
 		</span>

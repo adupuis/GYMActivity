@@ -439,59 +439,67 @@ li.daily_rate_list a {
 }
 
 li.intranet_category_add a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_category_add.png);
 }
 
 li.intranet_category_edit a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_category_edit.png);
 }
 
 li.intranet_category_remove a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_category_remove.png);
 }
 
 li.intranet_category_list a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_category_list.png);
 }
 
 li.intranet_type_add a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_type_add.png);
 }
 
 li.intranet_type_edit a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_type_edit.png);
 }
 
 li.intranet_type_remove a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_type_remove.png);
 }
 
 li.intranet_type_list a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_type_list.png);
 }
 
 li.intranet_tag_add a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_tag_add.png);
 }
 
 li.intranet_tag_edit a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_tag_edit.png);
 }
 
 li.intranet_tag_remove a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_tag_remove.png);
 }
 
 li.intranet_tag_list a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_tag_list.png);
+}
+
+li.intranet_page_add a {
+	background-image: url(../../images/genymobile-2012/intranet_page_add.png);
+}
+
+li.intranet_page_edit a {
+	background-image: url(../../images/genymobile-2012/intranet_page_edit.png);
 }
 
 li.intranet_page_remove a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_page_remove.png);
 }
 
 li.intranet_page_list a {
-	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+	background-image: url(../../images/genymobile-2012/intranet_page_list.png);
 }
 
 

@@ -62,9 +62,9 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 // 		}
 // 	}
 
-	$edit = "<a href=\"loader.php?module=intranet_category_edit&load_intranet_category=true&intranet_category_id=$tmp->id\" title=\"Editer la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer la catégorie Intranet\"></a>";
+	$edit = "<a href=\"loader.php?module=intranet_category_edit&load_intranet_category=true&intranet_category_id=$tmp->id\" title=\"Editer la catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_category_edit_small.png\" alt=\"Editer la catégorie Intranet\"></a>";
 
-	$remove = "<a href=\"loader.php?module=intranet_category_remove&intranet_category_id=$tmp->id\" title=\"Supprimer définitivement la catégorie Intranet\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement la catégorie Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_category_remove&intranet_category_id=$tmp->id\" title=\"Supprimer définitivement la catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_category_remove_small.png\" alt=\"Supprimer définitivement la catégorie Intranet\"></a>";
 	
 	$data_array[] = array( $tmp->id, $tmp->name, $tmp->description, $edit, $remove );
 }
@@ -167,7 +167,7 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td>".$da[3]."</td><td><center>".$da[4]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td>".$da[2]."</td><td><center>".$da[3]."</center></td><td><center>".$da[4]."</center></td></tr>";
 						}
 					?>
 					</tbody>

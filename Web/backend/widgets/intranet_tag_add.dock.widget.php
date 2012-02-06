@@ -23,7 +23,7 @@
 
 <li class="intranet_tag_add">
 	<a href="loader.php?module=intranet_tag_add">
-		<span class="dock_item_title">Ajouter tag Intranet</span><br/>
+		<span class="dock_item_title">Tag Intranet</span><br/>
 		<span class="dock_item_content">Ajouter un tag Intranet.</span>
 	</a>
 </li>

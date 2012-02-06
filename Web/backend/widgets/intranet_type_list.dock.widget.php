@@ -23,7 +23,7 @@
 
 <li class="intranet_type_list">
 	<a href="loader.php?module=intranet_type_list">
-		<span class="dock_item_title">Liste des types Intranet</span><br/>
-		<span class="dock_item_content">Lister tous les types de catégories de l'Intranet.</span>
+		<span class="dock_item_title">Types Intranet</span><br/>
+		<span class="dock_item_content">Lister tous les types de catégories Intranet.</span>
 	</a>
 </li>
