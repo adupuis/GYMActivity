@@ -44,12 +44,12 @@ try {
 		// Si le profile n'est pas définit et que le requester n'est pas admin ou superuser ou que le profile demandé ne correpsond pas au profile du requester => BANG! *headshot*
 		if( $profile->rights_group_id > 2 && ($profile_id <= 0 || $profile->id != $profile_id) ){
 			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
-			echo json_encode( array( "error" => "Fatal error: You are not allowed to update this data. Access logged." ) );
+			echo json_encode( array( "status" => "error", "status_message" => "Fatal error: You are not allowed to update this data. Access logged." ) );
 			exit;
 		}
 		
 		if( $ce_id == -1 ){
-			echo json_encode( array( "error" => "Fatal error: career_event_id is mandatory, please define one." ) );
+			echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event_id is mandatory, please define one." ) );
 			exit;
 		}
 		else{
@@ -76,7 +76,7 @@ try {
 				$tmp_ce->commitUpdates();
 			}
 			else{
-				echo json_encode( array( "error" => "Fatal error: career_event couldn't be load, please check the parameters." ) );
+				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be load, please check the parameters." ) );
 				exit;
 			}
 		}

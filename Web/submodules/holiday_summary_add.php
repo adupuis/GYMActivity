@@ -115,6 +115,24 @@ $geny_profile = new GenyProfile();
 					var remaining = $('#holiday_summary_count_acquired').val() - $('#holiday_summary_count_taken').val();
 					$('#holiday_summary_count_remaining').val( remaining.toFixed(2) );
 				});
+				$("#holiday_summary_count_acquired").change(function(){
+					$("#holiday_summary_count_taken").change();
+				});
+				$("#holiday_summary_type").chosen().change( function(){
+					var value = $("#holiday_summary_type").val();
+					var date = new Date();
+					if( value == "CP" ){
+						$( "#holiday_summary_period_start" ).datepicker('setDate', date.getFullYear()+"-06-01");
+						$( "#holiday_summary_period_end" ).datepicker('setDate', (date.getFullYear()+1)+"-05-31");
+					}
+					if( value == "RTT" ){
+						$( "#holiday_summary_period_start" ).datepicker('setDate', date.getFullYear()+"-01-01");
+						$( "#holiday_summary_period_end" ).datepicker('setDate', date.getFullYear()+"-12-31");
+					}
+					$("#holiday_summary_count_acquired").val('0.00');
+					$("#holiday_summary_count_taken").val('0.00');
+					$("#holiday_summary_count_taken").change();
+				});
 			</script>
 			<p>
 				<label for="holiday_summary_count_remaining">Restant</label>
