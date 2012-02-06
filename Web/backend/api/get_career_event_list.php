@@ -38,7 +38,7 @@ try {
 		// Si le profile n'est pas définit et que le requester n'est pas admin ou superuser ou que le profile demandé ne correpsond pas au profile du requester => BANG! *headshot*
 		if( $profile->rights_group_id > 2 && ($profile_id <= 0 || $profile->id != $profile_id) ){
 			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
-			echo json_encode( array( "error" => "Fatal error: You are not allowed to retrieve this data. Access logged." ) );
+			echo json_encode( array( "status" => "error", "status_message" => "Fatal error: You are not allowed to retrieve this data. Access logged." ) );
 			exit;
 		}
 		

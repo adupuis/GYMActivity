@@ -47,7 +47,7 @@ class GenyCareerEvent extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadCareerEventById($id);
 	}
-	public function insertNewCareerEvent($profile_id,$type,$title,$text,$attachement = "",$manager_agreement,$employee_agreement){
+	public function insertNewCareerEvent($profile_id,$type,$title,$text,$attachement = "",$manager_agreement='false',$employee_agreement='false'){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		

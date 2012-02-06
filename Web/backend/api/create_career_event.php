@@ -27,6 +27,7 @@ header('Content-type:text/javascript;charset=UTF-8');
 
 include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
+include '../../classes/GenyTools.php';
 
 try {
 	$ces = array();
@@ -36,7 +37,6 @@ try {
 		$ce_title = getParam("title","");
 		$ce_text = getParam("text","");
 		$ce_attachement = getParam("attachement","");
-		$ce_timestamp = time();
 		
 		if( $ce_type == "" || $ce_title == "" || $ce_text == ""){
 			$access_loger->insertNewAccessLog(
@@ -54,11 +54,11 @@ try {
 		$new_id = $tmp_ce->insertNewCareerEvent($profile->id,$ce_type,$ce_title,$ce_text,$ce_attachement,"false","false");
 		
 		if( $new_id > 0 ){
-			$data = json_encode( array("success" => "Nouvel évènement inséré avec succès (id=$new_id)") );
+			$data = json_encode( array("status" => "success", "status_message" => "Nouvel évènement inséré avec succès (id=$new_id)") );
 			echo $data;
 		}
 		else{
-			echo json_encode( array( "error" => "Erreur à la création de l'évènement." ) );
+			echo json_encode( array( "status" => "error", "status_message" => "Erreur à la création de l'évènement." ) );
 		}
 	}
 } catch (Exception $e) {
