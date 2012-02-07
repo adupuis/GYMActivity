@@ -196,7 +196,7 @@ $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 			<textarea name="ce_description" id="ce_description" class="validate[required] text-input"></textarea>
 		</p>
 		<p>
-			<a href="#" id="submit_ce" class="submit">Ajouter</a> <a href="#" onclick="$.prettyPhoto.close()" class="submit" >Annuler</a>
+			<a href="#" id="submit_ce" class="submit">Ajouter</a> <a href="#" id="close_popup" onclick="$.prettyPhoto.close()" class="submit" >Annuler</a>
 		</p>
 	</form>
 </div>
@@ -227,6 +227,7 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 			console.log("Back from AJAX, processing");
 			console.log("status="+data.status);
 			console.log("status_message="+data.status_message);
+			$(".pp_social #status_message_display").empty();
 			if( data.status == "success" ){
 				$('#ce_list_table').dataTable().fnAddData( [
 				"<?php echo date('Y-m-d',time()); ?>",
@@ -237,6 +238,8 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 				0
 				] );
 				$(".pp_social #status_message_display").append("<strong style='color: green;'>"+data.status_message+"</strong>");
+				$("div#pp_full_res #close_popup").empty();
+				$("div#pp_full_res #close_popup").append("Fermer");
 			}
 			else{
 				$(".pp_social #status_message_display").append("<strong style='color: red;'>"+data.status_message+"</strong>");
