@@ -202,7 +202,7 @@ $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 </div>
 
 <script>
-$("a[rel='prettyPhoto[create_career_event]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social"></div>', theme: 'pp_default', default_width: 700, keyboard_shortcuts: false});
+$("a[rel='prettyPhoto[create_career_event]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social" id="status_message_display"></div>', theme: 'pp_default', default_width: 700, keyboard_shortcuts: false});
 // Les éléments dans TR sont centrés
 $.fn.dataTableExt.oJUIClasses.sStripOdd = "centered odd";
 $.fn.dataTableExt.oJUIClasses.sStripEven = "centered even";
@@ -236,6 +236,10 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 				0,
 				0
 				] );
+				$(".pp_social #status_message_display").append("<strong style='color: green;'>"+data.status_message+"</strong>");
+			}
+			else{
+				$(".pp_social #status_message_display").append("<strong style='color: red;'>"+data.status_message+"</strong>");
 			}
 		},"json");
 	}
