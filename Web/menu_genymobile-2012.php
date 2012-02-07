@@ -28,6 +28,15 @@ $estimated_load = 0;
 $user_load = 0;
 
 $geny_ar = new GenyActivityReport();
+$geny_hs = new GenyHolidaySummary();
+
+// Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
+$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
+
+// Idem pour les RTT
+$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
+
+$hs_remaining = $hs_cp->count_remaining + $hs_rtt->count_remaining;
 
 foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date)) as $day ){
 	$estimated_load += 8;
@@ -57,7 +66,7 @@ $completion = round(($user_load*100)/$estimated_load,1);
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
-				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<br/>Congés dispo : 12 j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
+				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<br/>Congés dispo : <?php echo $hs_remaining;?> j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
 			</span>
 		</a>
 	</li>
