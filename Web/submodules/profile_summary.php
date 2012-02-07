@@ -28,7 +28,7 @@ $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 4 => array() );
+$data_array_filters = array( 0 => array(), 2 => array(), 4 => array(), 5 => array() );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
 $hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
@@ -37,6 +37,24 @@ $hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
 $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 
 // TODO : faire la construction des data_array* (c'est chiant...)
+
+
+function ceTypeToHtml($type="neutral"){
+	if ( $type == "positive" ) {
+		return "<span style='color: green;'>Positif</span>";
+	}
+	elseif ( $type == "negative" ) {
+		return "<span style='color: red;'>Négatif</span>";
+	}
+	return "Neutre";
+}
+
+function ceAgreementToHtml($ce_id,$agreement,$theme) {
+	if( $agreement == 0){
+		return "<a href='#ce_agreement_validation_$ce_id' rel='prettyPhoto[ce_$ce_id]'><img src='images/$theme/edit_add_small.png'></a>";
+	}
+}
+
 
 ?>
 <script>
@@ -86,12 +104,12 @@ $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 	/* Add a select menu for each TH element in the table footer */
 	/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 	$("tfoot th").each( function ( i ) {
-// 		if( i==0 || i == 1 || i == 2 || i == 4){
+		if( i==0 || i == 2 || i == 4 || i == 5){
 			this.innerHTML = indexData[i];
 			$('select', this).change( function () {
 				oTable.fnFilter( $(this).val(), i );
 			} );
-// 		}
+		}
 	} );
 	
 	});
@@ -99,6 +117,11 @@ $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 	function onCheckBoxSelectAll(){
 		$("#ce_list_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 	}
+	
+	function submit_ce_agreement(agreement_type,ce_id,ce_vote){
+		
+	}
+	
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -159,7 +182,8 @@ $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
 				<tbody>
 				<?php
 				foreach( $geny_ce->getCareerEventListByProfileId($profile->id) as $ce ){
-					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>$ce->type</td><td>$ce->text</td><td>$ce->employee_agreement</td><td>$ce->manager_agreement</td></tr>";
+					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>".ceTypeToHtml($ce->type)."</td><td>$ce->text</td><td id='ce_employee_agreement_$ce->id'><a href='#ce_employee_agreement_$ce->id' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,1)\"><img src='images/$web_config->theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,-1)\"><img src='images/$web_config->theme/idea_vote_down_small.png' /></a></td><td>".ceAgreementToHtml($ce->id,$ce->manager_agreement,$web_config->theme)."</td></tr>";
+					
 				}
 				?>
 				</tbody>
