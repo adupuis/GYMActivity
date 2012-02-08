@@ -147,4 +147,8 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 </div>
 <?php
 	$bottomdock_items = array();
+	if( $profile->rights_group_id == 1  || /* admin */
+	    $profile->rights_group_id == 2     /* superuser */ ) {
+		array_push( $bottomdock_items, 'backend/widgets/intranet_page_list.dock.widget.php' );
+	}
 ?>
