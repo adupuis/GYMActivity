@@ -165,5 +165,5 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 </div>
 
 <?php
-	$bottomdock_items = array('backend/widgets/intranet_type_add.dock.widget.php');
+	$bottomdock_items = array('backend/widgets/intranet_type_add.dock.widget.php','backend/widgets/intranet_category_list.dock.widget.php','backend/widgets/intranet_category_add.dock.widget.php');
 ?>
