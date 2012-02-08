@@ -248,6 +248,49 @@ class GenyIntranetPage extends GenyDatabaseTools {
 			$this->title = $intranet_page->title;
 			$this->category_id = $intranet_page->category_id;
 			$this->type_id = $intranet_page->type_id;
+			$this->page_status_id = $intranet_page->page_status_id;
+			$this->profile_id = $intranet_page->profile_id;
+			$this->description = $intranet_page->description;
+			$this->content = $intranet_page->content;
+		}
+	}
+	
+	public function loadIntranetPageByHistoryId( $id ) {
+		
+		$query = "SELECT DISTINCT IntranetPages.intranet_page_id, intranet_page_title, intranet_category_id, intranet_type_id, IntranetPages.intranet_page_status_id, IntranetPages.profile_id, intranet_page_description, intranet_page_content FROM IntranetPages, IntranetHistories WHERE IntranetPages.intranet_page_id = IntranetHistories.intranet_page_id AND IntranetHistories.intranet_history_id=".$id;
+				
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetPage MySQL query : $query", 0 );
+		}
+		
+		$intranet_pages_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_page = new GenyIntranetPage();
+				$tmp_intranet_page->id = $row[0];
+				$tmp_intranet_page->title = $row[1];
+				$tmp_intranet_page->category_id = $row[2];
+				$tmp_intranet_page->type_id = $row[3];
+				$tmp_intranet_page->page_status_id = $row[4];
+				$tmp_intranet_page->profile_id = $row[5];
+				$tmp_intranet_page->description = $row[6];
+				$tmp_intranet_page->content = gzuncompress( $row[7] );
+				$intranet_pages_list[] = $tmp_intranet_page;
+			}
+		}
+		
+		if( count( $intranet_pages_list ) == 0 ) {
+			return;
+		}
+		$intranet_page = $intranet_pages_list[0];
+		if( isset( $intranet_page ) && $intranet_page->id > -1 ) {
+			$this->id = $intranet_page->id;
+			$this->title = $intranet_page->title;
+			$this->category_id = $intranet_page->category_id;
+			$this->type_id = $intranet_page->type_id;
+			$this->page_status_id = $intranet_page->page_status_id;
+			$this->profile_id = $intranet_page->profile_id;
 			$this->description = $intranet_page->description;
 			$this->content = $intranet_page->content;
 		}

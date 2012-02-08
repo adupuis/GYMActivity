@@ -26,10 +26,23 @@ $geny_intranet_page = new GenyIntranetPage();
 $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_tag = new GenyIntranetTag();
 $geny_intranet_tag_page_relation = new GenyIntranetTagPageRelation();
+$geny_intranet_history = new GenyIntranetHistory();
+
 $geny_intranet_page_status = new GenyIntranetPageStatus();
+foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $status ) {
+	$statuses[$status->id] = $status;
+}
+
+$geny_profile = new GenyProfile();
+foreach( $geny_profile->getAllProfiles() as $prof ) {
+	$profiles[$prof->id] = $prof;
+}
+
+$current_datetime = date("Y-m-d H:i:s");
 
 $create_intranet_page = GenyTools::getParam( 'create_intranet_page', 'NULL' );
 $load_intranet_page = GenyTools::getParam( 'load_intranet_page', 'NULL' );
+$load_intranet_history = GenyTools::getParam( 'load_intranet_history', 'NULL' );
 $edit_intranet_page = GenyTools::getParam( 'edit_intranet_page', 'NULL' );
 
 if( $create_intranet_page == "true" ) {
@@ -47,6 +60,7 @@ if( $create_intranet_page == "true" ) {
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet créée avec succès." );
 			$geny_intranet_page->loadIntranetPageById( $insert_id );
+			$intranet_page_content_to_display = $geny_intranet_page->content;
 			
 			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
 				foreach( $_POST['intranet_tag_id'] as $key => $value ) {
@@ -58,6 +72,16 @@ if( $create_intranet_page == "true" ) {
 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du tag $geny_intranet_tag->name.");
 					}
 				}
+			}
+			
+			$history_insert_id = $geny_intranet_history->insertNewIntranetHistory( 'NULL', $insert_id, $intranet_page_status_id, $profile_id, $current_datetime, $intranet_page_content );
+			if( $history_insert_id != -1 ) {
+// 				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Historique créé avec succès." );
+				$geny_intranet_history->loadIntranetHistoryById( $history_insert_id );
+				$intranet_page_content_to_display = $geny_intranet_history->history_content;
+			}
+			else {
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de l'historique.");
 			}
 			
 		}
@@ -76,6 +100,31 @@ else if( $load_intranet_page == 'true' ) {
 // 		if( $profile->rights_group_id == 1  || /* admin */
 // 		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
+			$intranet_page_content_to_display = $geny_intranet_page->content;
+// 		}
+// 		else {
+// 			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la page Intranet",'msg'=>"Vous n'êtes pas autorisé.");
+// 			header( 'Location: error.php?category=intranet_page' );
+// 		}
+	}
+	else {
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger la page Intranet','msg'=>"id non spécifié." );
+	}
+}
+else if( $load_intranet_history == 'true' ) {
+	$intranet_history_id = GenyTools::getParam( 'intranet_history_id', 'NULL' );
+	if( $intranet_history_id != 'NULL' ) {
+//TODO: rights_group check or not on this page
+// 		if( $profile->rights_group_id == 1  || /* admin */
+// 		    $profile->rights_group_id == 2     /* superuser */ ) {
+			$geny_intranet_page->loadIntranetPageByHistoryId( $intranet_history_id );
+			$geny_intranet_history->loadIntranetHistoryById( $intranet_history_id );
+			$intranet_page_content_to_display = $geny_intranet_history->history_content;
+			
+// 			foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $status ) {
+// 				$statuses[$status->id] = $status;
+// 			}
+			
 // 		}
 // 		else {
 // 			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la page Intranet",'msg'=>"Vous n'êtes pas autorisé.");
@@ -90,6 +139,7 @@ else if( $edit_intranet_page == 'true' ) {
 	$intranet_page_id = GenyTools::getParam( 'intranet_page_id', 'NULL' );
 	if( $intranet_page_id != 'NULL' ) {
 		$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
+		$intranet_page_content_to_display = $geny_intranet_page->content;
 		
 // 		if( $profile->rights_group_id == 1 /* admin */       ||
 // 		    $profile->rights_group_id == 2 /* superuser */ ) {
@@ -143,6 +193,17 @@ else if( $edit_intranet_page == 'true' ) {
 		if( $geny_intranet_page->commitUpdates() ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet mise à jour avec succès.");
 			$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
+			$intranet_page_content_to_display = $geny_intranet_page->content;
+			
+			$history_insert_id = $geny_intranet_history->insertNewIntranetHistory( 'NULL', $intranet_page_id, $intranet_page_status_id, $profile->id, $current_datetime, $intranet_page_content );
+			if( $history_insert_id != -1 ) {
+// 				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Historique créé avec succès." );
+				$geny_intranet_history->loadIntranetHistoryById( $history_insert_id );
+				$intranet_page_content_to_display = $geny_intranet_history->history_content;
+			}
+			else {
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de l'historique.");
+			}
 		}
 		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de la page Intranet.");
@@ -160,7 +221,7 @@ else if( $edit_intranet_page == 'true' ) {
 <div id="mainarea">
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/intranet_page_edit.png"></img>
-		<span class="intranet_page_view">
+		<span class="intranet_page_edit">
 			Modifier page Intranet
 		</span>
 	</p>
@@ -206,6 +267,42 @@ else if( $edit_intranet_page == 'true' ) {
 				</select>
 			</p>
 		</form>
+		
+		<form id="select_intranet_history_form" action="loader.php?module=intranet_page_edit" method="post">
+			<input type="hidden" name="load_intranet_history" value="true" />
+			<p>
+				<label for="intranet_history_id">Historique</label>
+
+				<select name="intranet_history_id" id="intranet_history_id" class="chzn-select" onChange="submit()">
+					<?php
+						$intranet_histories = $geny_intranet_history->getIntranetHistoriesByIntranetPageId( $geny_intranet_page->id );
+						
+						foreach( $intranet_histories as $intranet_history ) {
+							$tmp_profile = $profiles["$intranet_history->profile_id"];
+							if( $tmp_profile->firstname && $tmp_profile->lastname ) {
+								$profile_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
+							}
+							else {
+								$profile_name = $tmp_profile->login;
+							}
+							
+							$tmp_intranet_page_status = $statuses["$intranet_history->page_status_id"];
+							
+							if( $geny_intranet_history->id == $intranet_history->id ) {
+								echo "<option value=\"".$intranet_history->id."\" selected>".$intranet_history->history_date." - ".$profile_name." - ".$tmp_intranet_page_status->name."</option>\n";
+							}
+							else {
+								echo "<option value=\"".$intranet_history->id."\">".$intranet_history->history_date." - ".$profile_name." - ".$tmp_intranet_page_status->name."</option>\n";
+							}
+						}
+						if( $geny_intranet_history->id < 0 ) {
+							$geny_intranet_history->loadIntranetHistoryById( $intranet_histories[0]->id );
+						}
+					?>
+				</select>
+			</p>
+		</form>
+		
 		<form id="formID" action="loader.php?module=intranet_page_edit" method="post">
 			<input type="hidden" name="edit_intranet_page" value="true" />
 			<input type="hidden" name="intranet_page_id" value="<?php echo $geny_intranet_page->id ?>" />
@@ -303,14 +400,14 @@ else if( $edit_intranet_page == 'true' ) {
 			</p>
 			
 			<p>
-				<textarea id="intranet_page_content_editor" name="intranet_page_content_editor"><?php echo $geny_intranet_page->content ?></textarea>
+				<textarea id="intranet_page_content_editor" name="intranet_page_content_editor"><?php echo $intranet_page_content_to_display ?></textarea>
 			</p>
 			<script type="text/javascript">
 				CKEDITOR.replace( 'intranet_page_content_editor' );
 			</script>
 			
 			<p>
-				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_edit">annuler</a>
+				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_list">annuler</a>
 			</p>
 		</form>
 	</p>

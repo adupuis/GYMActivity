@@ -104,7 +104,7 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 				$tmp_intranet_history->page_status_id = $row[2];
 				$tmp_intranet_history->profile_id = $row[3];
 				$tmp_intranet_history->history_date = $row[4];
-				$tmp_intranet_history->history_content = $row[5];
+				$tmp_intranet_history->history_content = gzuncompress( $row[5] );
 				$intranet_history_list[] = $tmp_intranet_history;
 			}
 		}
