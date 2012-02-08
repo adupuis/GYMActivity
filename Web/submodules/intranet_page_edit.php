@@ -50,13 +50,14 @@ if( $create_intranet_page == "true" ) {
 	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 	$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
 	$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
+	$intranet_page_acl_modification_type = GenyTools::getParam( 'intranet_page_acl_modification_type', 'NULL' );
 	$profile_id = $profile->id;
 	$intranet_tag_list = GenyTools::getParam( 'intranet_tag_id', 'NULL' );
 	$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
 	$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
 
-	if( $intranet_page_title != 'NULL' && $intranet_category_id && $intranet_type_id && $intranet_page_status_id && $profile_id && $intranet_page_description != 'NULL' && $intranet_page_content != 'NULL' ) {
-		$insert_id = $geny_intranet_page->insertNewIntranetPage( 'NULL', $intranet_page_title, $intranet_category_id, $intranet_type_id, $intranet_page_status_id, $profile_id, $intranet_page_description, $intranet_page_content );
+	if( $intranet_page_title != 'NULL' && $intranet_category_id && $intranet_type_id && $intranet_page_status_id && $intranet_page_acl_modification_type != 'NULL' && $profile_id && $intranet_page_description != 'NULL' && $intranet_page_content != 'NULL' ) {
+		$insert_id = $geny_intranet_page->insertNewIntranetPage( 'NULL', $intranet_page_title, $intranet_category_id, $intranet_type_id, $intranet_page_status_id, $intranet_page_acl_modification_type, $profile_id, $intranet_page_description, $intranet_page_content );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet créée avec succès." );
 			$geny_intranet_page->loadIntranetPageById( $insert_id );
@@ -148,20 +149,24 @@ else if( $edit_intranet_page == 'true' ) {
 			$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
 			$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
 			$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
+			$intranet_page_acl_modification_type = GenyTools::getParam( 'intranet_page_acl_modification_type', 'NULL' );
 			$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
 			$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
 
 			if( $intranet_page_title != 'NULL' && $geny_intranet_page->title != $intranet_page_title ) {
 				$geny_intranet_page->updateString( 'intranet_page_title', $intranet_page_title );
 			}
-			if( $intranet_category_id != 'NULL' && $geny_intranet_page->category_id != $intranet_category_id ) {
+			if( $intranet_category_id != 'NULL' && $geny_intranet_page->intranet_category_id != $intranet_category_id ) {
 				$geny_intranet_page->updateInt( 'intranet_category_id', $intranet_category_id );
 			}
-			if( $intranet_type_id != 'NULL' && $geny_intranet_page->type_id != $intranet_type_id ) {
+			if( $intranet_type_id != 'NULL' && $geny_intranet_page->intranet_type_id != $intranet_type_id ) {
 				$geny_intranet_page->updateInt( 'intranet_type_id', $intranet_type_id );
 			}
-			if( $intranet_page_status_id != 'NULL' && $geny_intranet_page->page_status_id != $intranet_page_status_id ) {
+			if( $intranet_page_status_id != 'NULL' && $geny_intranet_page->status_id != $intranet_page_status_id ) {
 				$geny_intranet_page->updateInt( 'intranet_page_status_id', $intranet_page_status_id );
+			}
+			if( $intranet_page_acl_modification_type != 'NULL' && $geny_intranet_page->acl_modification_type != $intranet_page_acl_modification_type ) {
+				$geny_intranet_page->updateInt( 'intranet_page_acl_modification_type', $intranet_page_acl_modification_type );
 			}
 			
 			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
@@ -286,7 +291,7 @@ else if( $edit_intranet_page == 'true' ) {
 								$profile_name = $tmp_profile->login;
 							}
 							
-							$tmp_intranet_page_status = $statuses["$intranet_history->page_status_id"];
+							$tmp_intranet_page_status = $statuses["$intranet_history->intranet_page_status_id"];
 							
 							if( $geny_intranet_history->id == $intranet_history->id ) {
 								echo "<option value=\"".$intranet_history->id."\" selected>".$intranet_history->history_date." - ".$profile_name." - ".$tmp_intranet_page_status->name."</option>\n";
@@ -312,7 +317,7 @@ else if( $edit_intranet_page == 'true' ) {
 				<select name="intranet_category_id" id="intranet_category_id" class="chzn-select">
 					<?php
 						foreach( $geny_intranet_category->getAllIntranetCategories() as $intranet_category ) {
-							if( $geny_intranet_page->category_id == $intranet_category->id ) {
+							if( $geny_intranet_page->intranet_category_id == $intranet_category->id ) {
 								echo "<option value=\"".$intranet_category->id."\" selected>".$intranet_category->name."</option>\n";
 							}
 							else {
@@ -350,12 +355,36 @@ else if( $edit_intranet_page == 'true' ) {
 					<option value=""></option>
 					<?php
 						foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $intranet_page_status ) {
-							if( $geny_intranet_page->page_status_id == $intranet_page_status->id ) {
+							if( $geny_intranet_page->status_id == $intranet_page_status->id ) {
 								echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
 							}
 							else {
 								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
 							}
+						}
+					?>
+				</select>
+			</p>
+			<p>
+				<label for="intranet_page_acl_modification_type">Modification Page</label>
+				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select">
+					<?php
+						if( $geny_intranet_page->acl_modification_type == "owner" ) {
+							
+							echo "<option value=\"owner\" selected>Créateur de la page</option>";
+							echo "<option value=\"group\">Membres du groupe du créateur de la page</option>";
+							echo "<option value=\"all\">Tout le monde</option>";
+						}
+						else if( $geny_intranet_page->acl_modification_type == "group" ) {
+							
+							echo "<option value=\"owner\">Créateur de la page</option>";
+							echo "<option value=\"group\" selected>Membres du groupe du créateur de la page</option>";
+							echo "<option value=\"all\">Tout le monde</option>";
+						}
+						else {
+							echo "<option value=\"owner\">Créateur de la page</option>";
+							echo "<option value=\"group\">Membres du groupe du créateur de la page</option>";
+							echo "<option value=\"all\" selected>Tout le monde</option>";
 						}
 					?>
 				</select>
@@ -366,7 +395,7 @@ else if( $edit_intranet_page == 'true' ) {
 				function getIntranetTypes(){
 					var intranet_category_id = $("#intranet_category_id").val();
 					if( intranet_category_id > 0 ) {
-						var intranet_type_id = <?php echo $geny_intranet_page->type_id ?>;
+						var intranet_type_id = <?php echo $geny_intranet_page->intranet_type_id ?>;
 						
 						$.get('backend/api/get_intranet_type_list.php?intranet_category_id='+intranet_category_id, function( data ) {
 							$('.intranet_types_options').remove();

@@ -87,6 +87,15 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 					?>
 				</select>
 			</p>
+			<p>
+				<label for="intranet_page_acl_modification_type">Modification Page</label>
+				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select" data-placeholder="Choisissez qui peut modifier la page...">
+					<option value=""></option>
+					<option value="owner">Créateur de la page</option>
+					<option value="group">Membres du groupe du créateur de la page</option>
+					<option value="all">Tout le monde</option>
+				</select>
+			</p>
 			
 			<script type="text/javascript">
 

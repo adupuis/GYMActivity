@@ -24,17 +24,18 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyIntranetHistory extends GenyDatabaseTools {
 	public $id = -1;
-	public $page_id = '';
-	public $profile_id = '';
+	public $intranet_page_id = -1;
+	public $intranet_page_status_id = -1;
+	public $profile_id = -1;
 	public $history_date = '';
 	public $history_content = '';
 	
 	public function __construct( $id = -1 ) {
-		parent::__construct( "InternetHistories", "intranet_history_id" );
+		parent::__construct( "IntranetHistories", "intranet_history_id" );
 		$this->id = -1;
-		$this->page_id = '';
-		$this->page_status_id = '';
-		$this->profile_id = '';
+		$this->intranet_page_id = -1;
+		$this->intranet_page_status_id = -1;
+		$this->profile_id = -1;
 		$this->history_date = '';
 		$this->history_content = '';
 		if( $id > -1 ) {
@@ -100,8 +101,8 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 			while( $row = mysql_fetch_row( $result ) ) {
 				$tmp_intranet_history = new GenyIntranetHistory();
 				$tmp_intranet_history->id = $row[0];
-				$tmp_intranet_history->page_id = $row[1];
-				$tmp_intranet_history->page_status_id = $row[2];
+				$tmp_intranet_history->intranet_page_id = $row[1];
+				$tmp_intranet_history->intranet_page_status_id = $row[2];
 				$tmp_intranet_history->profile_id = $row[3];
 				$tmp_intranet_history->history_date = $row[4];
 				$tmp_intranet_history->history_content = gzuncompress( $row[5] );
@@ -132,8 +133,8 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		$intranet_history = $intranet_histories[0];
 		if( isset( $intranet_history ) && $intranet_history->id > -1 ) {
 			$this->id = $intranet_history->id;
-			$this->page_id = $intranet_history->page_id;
-			$this->page_status_id = $intranet_history->page_status_id;
+			$this->intranet_page_id = $intranet_history->intranet_page_id;
+			$this->intranet_page_status_id = $intranet_history->intranet_page_status_id;
 			$this->profile_id = $intranet_history->profile_id;
 			$this->history_date = $intranet_history->history_date;
 			$this->history_content = $intranet_history->history_content;

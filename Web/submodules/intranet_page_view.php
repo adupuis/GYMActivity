@@ -33,7 +33,7 @@ if( $load_intranet_page == 'true' ) {
 // 		    $profile->rights_group_id == 2     /* superuser */ ) {
 			$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
 			
-			$intranet_category_id = $geny_intranet_page->category_id;
+			$intranet_category_id = $geny_intranet_page->intranet_category_id;
 			switch( $intranet_category_id ) {
 				case 1:
 					$intranet_page_image = "intranet_category_administratif.png";
@@ -83,7 +83,7 @@ if( $load_intranet_page == 'true' ) {
 		</span>
 	</p>
 	<div class="mainarea_content">
-		<div class="page_content">
+		<div class="intranet_page_content">
 			<?php echo html_entity_decode( $geny_intranet_page->content ) ?>
 		</div>
 	</div>

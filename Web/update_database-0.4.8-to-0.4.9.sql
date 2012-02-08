@@ -219,9 +219,9 @@ CREATE TABLE IntranetPageStatus (
 	primary key(intranet_page_status_id)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetPageStatus AUTO_INCREMENT=1;
-INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon','Page Brouillon');
-INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon partagé','Page Brouillon accessible pour les profils appartenant groupe du créateur de la page');
-INSERT INTO IntranetPageStatus VALUES (NULL,'Publié','Page publiée');
+INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon','Visible uniquement par le créateur de la page');
+INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon partagé','Visible par les profils appartenant groupe du créateur de la page');
+INSERT INTO IntranetPageStatus VALUES (NULL,'Publié','Visible par tous');
 
 DROP TABLE IntranetPages;
 CREATE TABLE IntranetPages (
@@ -230,16 +230,24 @@ CREATE TABLE IntranetPages (
 	intranet_category_id int not null,
 	intranet_type_id int not null,
 	intranet_page_status_id int not null,
+	intranet_page_acl_modification_type varchar(10) not null,
 	profile_id int not null,
 	intranet_page_description varchar(140) not null default 'Undefined',
 	intranet_page_content blob not null,
 	primary key(intranet_page_id),
 	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE,
-	foreign key(intranet_type_id) references IntranetTypes(intranet_type_id) ON DELETE CASCADE,
-	foreign key(intranet_page_status_id) references IntranetPageStatus(intranet_page_status_id) ON DELETE CASCADE,
-	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+	foreign key(intranet_type_id) references IntranetTypes(intranet_type_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetPages AUTO_INCREMENT=1;
+
+DELIMITER $$
+create trigger ip_check_modification_type before insert on IntranetPages for each row
+begin
+  if new.intranet_page_acl_modification_type != "owner" and new.intranet_page_acl_modification_type != "group" and new.intranet_page_acl_modification_type != "all" then
+    set new.intranet_page_acl_modification_type := "owner";
+  end if;
+end $$
+DELIMITER ;
 
 DROP TABLE IntranetTagPageRelations;
 CREATE TABLE IntranetTagPageRelations (

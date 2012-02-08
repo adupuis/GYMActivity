@@ -40,8 +40,8 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $type ) {
 }
 
 $geny_intranet_page_status = new GenyIntranetPageStatus();
-foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $page_status ) {
-	$intranet_page_statuses[$page_status->id] = $page_status;
+foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $status ) {
+	$intranet_page_statuses[$status->id] = $status;
 }
 
 $geny_profile = new GenyProfile();
@@ -51,9 +51,9 @@ foreach( $geny_profile->getAllProfiles() as $profile ) {
 
 foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	
-	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
-	$intranet_type_name = $intranet_types["$tmp->type_id"]->name." (".$intranet_category_name.")";
-	$intranet_page_status_name = $intranet_page_statuses["$tmp->page_status_id"]->name;
+	$intranet_category_name = $intranet_categories["$tmp->intranet_category_id"]->name;
+	$intranet_type_name = $intranet_types["$tmp->intranet_type_id"]->name." (".$intranet_category_name.")";
+	$intranet_page_status_name = $intranet_page_statuses["$tmp->status_id"]->name;
 	$profile_screen_name = $profiles["$tmp->profile_id"]->firstname." ".$profiles["$tmp->profile_id"]->lastname;
 	if( $profile_screen_name == '' ) {
 		$profile_screen_name = $profiles["$tmp->profile_id"]->login;
