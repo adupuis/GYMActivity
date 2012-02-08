@@ -42,8 +42,8 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		}
 	}
 	
-	public function insertNewIntranetHistory( $id, $page_id, $page_status_id, $profile_id, $date, $content ) {
-		$query = "INSERT INTO IntranetHistories VALUES($id,$page_id,$page_status_id,$profile_id,$date'".mysql_real_escape_string( $content )."')";
+	public function insertNewIntranetHistory( $id, $intranet_page_id, $intranet_page_status_id, $profile_id, $datetime, $intranet_page_content ) {
+		$query = "INSERT INTO IntranetHistories VALUES($id,'".$intranet_page_id."','".$intranet_page_status_id."','".$profile_id."','".$datetime."','".mysql_real_escape_string( gzcompress( $intranet_page_content ) )."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetHistory MySQL query : $query", 0 );
 		}
@@ -78,15 +78,16 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		return -1;
 	}
 	
-	public function getIntranetHistoriesListWithRestrictions( $restrictions ) {
+	public function getIntranetHistoriesListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT intranet_history_id,intranet_page_id,intranet_page_status_id,profile_id,intranet_history_date,intranet_history_content FROM IntranetHistories";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string( $restriction_type );
 			foreach( $restrictions as $key => $value ) {
 				$query .= $value;
 				if( $key != $last_index ) {
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -115,11 +116,15 @@ class GenyIntranetHistory extends GenyDatabaseTools {
 		return $this->getIntranetHistoriesListWithRestrictions( array() );
 	}
 	
+	public function getIntranetHistoriesByIntranetPageId( $id ) {
+		return $this->getIntranetHistoriesListWithRestrictions( array( "intranet_page_id=".$id, "ORDER BY intranet_history_date DESC" ), "" );
+	}
+	
 	public function getIntranetHistoriesByProfileId( $id ) {
 		return $this->getIntranetHistoriesListWithRestrictions( array( "profile_id=".$id ) );
 	}
 	
-	public function loadHistoryById( $id ) {
+	public function loadIntranetHistoryById( $id ) {
 		$intranet_histories = $this->getIntranetHistoriesListWithRestrictions( array( "intranet_history_id=".$id ) );
 		if( count( $intranet_histories ) == 0 ) {
 			return;

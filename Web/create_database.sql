@@ -525,7 +525,7 @@ CREATE TABLE IntranetHistories (
 	intranet_page_status_id int not null,
 	profile_id int not null,
 	intranet_history_date datetime not null,
-	intranet_history_content text not null,
+	intranet_history_content blob not null,
 	primary key(intranet_history_id),
 	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
