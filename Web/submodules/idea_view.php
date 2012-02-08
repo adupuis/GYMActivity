@@ -202,8 +202,20 @@ else if( $idea_message_create == "true" ) {
 }
 
 ?>
+
+<style>
+	@import 'styles/<?php echo $web_config->theme ?>/idea_view.css';
+</style>
+
 <div id="mainarea">
-	<form id="select_idea_form" action="idea_view.php" method="post">
+	<p class="mainarea_title">
+		<img src="images/<?php echo $web_config->theme; ?>/idea_view.png"></img>
+		<span class="idea_view">
+			<?php echo $geny_idea->title ?>
+		</span>
+	</p>
+
+	<form id="select_idea_form" action="loader.php?module=idea_view" method="post">
 		<input type="hidden" name="load_idea" value="true" />
 		<p>
 			<label for="idea_id">Sélection idée</label>
@@ -226,12 +238,6 @@ else if( $idea_message_create == "true" ) {
 			</select>
 		</p>
 	</form>
-	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/idea_edit.png"></img>
-		<span class="idea_edit">
-		<?php echo $geny_idea->title ?>
-		</span>
-	</p>
 	<p class="mainarea_content">
 		<script>
 			jQuery(document).ready(function(){
