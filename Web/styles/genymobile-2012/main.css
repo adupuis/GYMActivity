@@ -730,3 +730,9 @@ margin-bottom: 20px;
 
 /* End of new bottomdock */
 
+.page_content {
+	padding: 20px;
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}

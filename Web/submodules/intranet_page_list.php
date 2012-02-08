@@ -59,11 +59,13 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 		$profile_screen_name = $profiles["$tmp->profile_id"]->login;
 	}
 
+	$view = "<a href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Visualiser la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Visualiser la page Intranet\"></a>";
+	
 	$edit = "<a href=\"loader.php?module=intranet_page_edit&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Editer la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Editer la page Intranet\"></a>";
 	
 	$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
 	
-	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $intranet_page_status_name, $profile_screen_name, $edit, $remove );
+	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $intranet_page_status_name, $profile_screen_name, $view, $edit, $remove );
 	
 	if( !in_array( $intranet_category_name, $data_array_filters[1]) )
 		$data_array_filters[1][] = $intranet_category_name;
@@ -170,13 +172,14 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 						<th>Type</th>
 						<th>Statut</th>
 						<th>Créateur</th>
+						<th>Visualiser</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."</center></td><td><center>".$da[4]."</center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."</center></td><td><center>".$da[4]."</center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -186,6 +189,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 						<th class="filtered">Type</th>
 						<th class="filtered">Statut</th>
 						<th class="filtered">Créateur</th>
+						<th class="filtered">Visualiser</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>
 					</tfoot>
