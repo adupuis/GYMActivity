@@ -355,9 +355,9 @@ if( $profile_authorized ) {
 					<option value=""></option>
 				</select>
 			</p>
-			<p>
+			<p style="width:550px">
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags...">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
 					<?php
 						$current_page_tags = $geny_intranet_tag->getIntranetTagsByPage( $geny_intranet_page->id );
 						foreach( $geny_intranet_tag->getAllIntranetTags() as $intranet_tag ) {
@@ -370,6 +370,7 @@ if( $profile_authorized ) {
 						}
 					?>
 				</select>
+				<a href='#create_intranet_tag' rel='prettyPhoto[create_intranet_tag]' class="submit" style="margin:0;float:right">+</a>
 			</p>
 			<p>
 				<label for="intranet_page_status_id">Statut</label>
@@ -463,6 +464,79 @@ if( $profile_authorized ) {
 		</form>
 	</p>
 </div>
+
+<!-- Formulaire de création d'un tag -->
+<div id='create_intranet_tag' style="display:none">
+	<script>
+		$(function() {
+			var availableTags = [
+				<?php
+					$tags = '';
+					$intranet_tag = new GenyIntranetTag();
+					foreach( $intranet_tag->getAllIntranetTags() as $tag ) {
+						$tags .= '"'.$tag->name.'",';
+					}
+					echo rtrim( $tags, "," );
+				?>
+			];
+			console.log( availableTags );
+			$("#intranet_tag_name").autocomplete({
+				source: availableTags
+			});
+		});
+	</script>
+	<form id="form_intranet_tag_add" class="popup">
+		<p>
+			<label for="intranet_tag_name">Nom</label>
+			<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="text-input" maxlength="25"/>
+		</p>
+		<p>
+			<a href="#" id="submit_tag" class="submit">Créer</a> <a href="#" id="close_popup" onclick="$.prettyPhoto.close()" class="submit" >Annuler</a>
+		</p>
+	</form>
+</div>
+
+<script>
+$("a[rel='prettyPhoto[create_intranet_tag]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social" id="status_message_display"></div>', theme: 'pp_default', default_width: 700, keyboard_shortcuts: false});
+// Les éléments dans TR sont centrés
+$.fn.dataTableExt.oJUIClasses.sStripOdd = "centered odd";
+$.fn.dataTableExt.oJUIClasses.sStripEven = "centered even";
+
+$(document).on("click", "div#pp_full_res #submit_tag", function(){
+	var intranet_tag_name = $("div#pp_full_res #intranet_tag_name").val();
+	if( intranet_tag_name == "" ) {
+		alert( "Vous devez saisir un nom." );
+	}
+	else {
+		console.log("About to send AJAX request");
+		jQuery.get("backend/api/create_intranet_tag.php?name="+encodeURIComponent(intranet_tag_name), function(data){
+			console.log("Back from AJAX, processing");
+			console.log("status="+data.status);
+			console.log("status_message="+data.status_message);
+			$(".pp_social #status_message_display").empty();
+			if( data.status == "success" ) {
+				$("div#pp_full_res #intranet_tag_name").val("");
+				var intranet_tag_id = $("#intranet_tag_id").attr('value');
+				console.log("intranet_tag_id="+intranet_tag_id);
+				$("#intranet_tag_id").append('<option class="tasks_options" value="' + data.id + '">' + data.name + '</option>');
+				$("#intranet_tag_id").trigger("liszt:updated");
+				$(".pp_social #status_message_display").append("<strong style='color: green;'>"+data.status_message+"</strong>");
+				$("div#pp_full_res #close_popup").empty();
+				$("div#pp_full_res #close_popup").append("Fermer");
+			}
+			else {
+				$(".pp_social #status_message_display").append("<strong style='color: red;'>"+data.status_message+"</strong>");
+			}
+		},"json");
+	}
+} );
+
+$("#pp_full_res #form_intranet_tag_add").validationEngine('init');
+// binds form submission and fields to the validation engine
+$("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
+
+</script>
+
 <?php
 } // endif $profile_authorized
 
