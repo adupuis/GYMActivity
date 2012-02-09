@@ -45,6 +45,8 @@ foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date
 
 $completion = round(($user_load*100)/$estimated_load,1);
 
+$geny_ic = new GenyIntranetCategory();
+
 ?>
 <!-- Here is the genymobile-2012 menu -->
 
@@ -67,17 +69,6 @@ $completion = round(($user_load*100)/$estimated_load,1);
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
 				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<br/>Congés dispo : <?php echo $hs_remaining;?> j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
-			</span>
-		</a>
-	</li>
-	<li>
-<!-- 		<a href="home.php"> -->
-		<a href="loader.php?module=home">
-			<img src="images/genymobile-2012/home_banner.png" alt=""/>
-			<span class="sdt_active"></span>
-			<span class="sdt_wrap">
-				<span class="sdt_link">Home</span>
-				<span class="sdt_descr">There's no place like 127.0.0.1</span>
 			</span>
 		</a>
 	</li>
@@ -114,6 +105,22 @@ $completion = round(($user_load*100)/$estimated_load,1);
 		</div>
 	</li>
 	<li>
+		<a href="loader.php?module=home_project">
+			<img src="images/genymobile-2012/project_banner.png" alt=""/>
+			<span class="sdt_active"></span>
+			<span class="sdt_wrap">
+				<span class="sdt_link">Projets</span>
+				<span class="sdt_descr">Consultation / Administration de projets</span>
+			</span>
+		</a>
+		<div class="sdt_box">
+			<a href="loader.php?module=project_assignemts_list">Liste de vos affectations</a>
+			<a href="loader.php?module=conges_validation">Valider vos congés</a>
+			<a href="loader.php?module=conges_list">Lister vos congés</a>
+			<a href="loader.php?module=conges_deletion">Supprimer des congés</a>
+		</div>
+	</li>
+	<li>
 		<a href="loader.php?module=home_reporting">
 			<img src="images/genymobile-2012/reporting_banner.png" alt=""/>
 			<span class="sdt_active"></span>
@@ -140,13 +147,23 @@ $completion = round(($user_load*100)/$estimated_load,1);
 		</a>
 	</li>
 	<li>
-		<a href="logout.php">
-			<img src="images/genymobile-2012/logout_banner.png" alt=""/>
+		<a href="loader.pĥp?module=home_intranet">
+			<img src="images/genymobile-2012/intranet_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
-				<span class="sdt_link">Logout</span>
-				<span class="sdt_descr">Se déconnecter</span>
+				<span class="sdt_link">Intranet</span>
+				<span class="sdt_descr">((inter)^-1)net</span>
 			</span>
+			<div class="sdt_box">
+				<?php
+					foreach( $geny_ic->getAllIntranetCategories() as $cat ){
+						echo "<a href='loader.php?module=home_intranet&category_id=$cat->id'>$cat->name</a>";
+					}
+					if($profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
+						echo "<a href='loader.php?module=home_intranet_admin'>Admin. Intranet</a>";
+					}
+				?>
+			</div>
 		</a>
 	</li>
 </ul>
