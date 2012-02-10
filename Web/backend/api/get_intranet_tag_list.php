@@ -36,18 +36,18 @@ try {
 		$intranet_category_id = getParam( "intranet_category_id", -1 );
 		$intranet_type_id = getParam( "intranet_type_id", -1 );
 		$intranet_page_id = getParam( "intranet_page_id", -1 );
-
+		
 		if( $intranet_page_id > 0 ) {
 			$results = $tmp_intranet_tag->getIntranetTagsByPage( $intranet_page_id );
 		}
-		if( $intranet_type_id > 0 ) {
+		else if( $intranet_type_id > 0 ) {
 			$results = $tmp_intranet_tag->getIntranetTagsByType( $intranet_type_id );
 		}
 		else if( $intranet_category_id > 0 ) {
 			$results = $tmp_intranet_tag->getIntranetTagsByCategory( $intranet_category_id );
 		}
 		else {
-			$results = $tmp_intranet_tag->getAllIntranetTags();
+			$results = $tmp_intranet_tag->getAllIntranetTagsOrderByName();
 		}
 		
 		$intranet_tags = array();
