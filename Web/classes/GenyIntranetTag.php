@@ -136,7 +136,7 @@ class GenyIntranetTag extends GenyDatabaseTools {
 	}
 	
 	public function getIntranetTagsByType( $intranet_type_id ) {
-		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_type_id = ".$intranet_type_id;
+		$query = "SELECT DISTINCT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_type_id = ".$intranet_type_id." ORDER BY intranet_tag_name ASC";
 		
 		$result = mysql_query( $query, $this->handle );
 		if( $this->config->debug ) {
@@ -156,7 +156,7 @@ class GenyIntranetTag extends GenyDatabaseTools {
 	}
 
 	public function getIntranetTagsByCategory( $intranet_category_id ) {
-		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_category_id = ".$intranet_category_id;
+		$query = "SELECT DISTINCT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_category_id = ".$intranet_category_id." ORDER BY intranet_tag_name ASC";
 		
 		$result = mysql_query( $query, $this->handle );
 		if( $this->config->debug ) {
@@ -177,7 +177,7 @@ class GenyIntranetTag extends GenyDatabaseTools {
 	
 	public function getIntranetTagsByPage( $intranet_page_id ) {
 		
-		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id=".$intranet_page_id;
+		$query = "SELECT DISTINCT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id=".$intranet_page_id." ORDER BY intranet_tag_name ASC";
 		
 		$result = mysql_query( $query, $this->handle );
 		if( $this->config->debug ) {
