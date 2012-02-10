@@ -59,7 +59,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 		$profile_screen_name = $profiles["$tmp->profile_id"]->login;
 	}
 
-	$view = "<a href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Visualiser la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Visualiser la page Intranet\"></a>";
+	$view = "<a href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Visualiser la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_view_small.png\" alt=\"Visualiser la page Intranet\"></a>";
 	
 	$edit = "<a href=\"loader.php?module=intranet_page_edit&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Editer la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Editer la page Intranet\"></a>";
 	
