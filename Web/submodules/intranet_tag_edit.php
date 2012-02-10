@@ -119,7 +119,7 @@ else if( $edit_intranet_tag == 'true' ) {
 
 				<select name="intranet_tag_id" id="intranet_tag_id" class="chzn-select" onChange="submit()">
 					<?php
-						$intranet_tags = $geny_intranet_tag->getAllIntranetTags();
+						$intranet_tags = $geny_intranet_tag->getAllIntranetTagsOrderByName();
 						
 						foreach( $intranet_tags as $intranet_tag ) {
 							

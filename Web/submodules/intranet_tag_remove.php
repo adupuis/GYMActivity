@@ -93,7 +93,7 @@ else {
 
 				<select name="intranet_tag_id" id="intranet_tag_id" class="chzn-select">
 					<?php
-					$intranet_tags = $geny_intranet_tag->getAllIntranetTags();
+					$intranet_tags = $geny_intranet_tag->getAllIntranetTagsOrderByName();
 					$intranet_tag_id = GenyTools::getParam( 'intranet_tag_id', 'NULL' );
 
 					foreach( $intranet_tags as $intranet_tag ) {

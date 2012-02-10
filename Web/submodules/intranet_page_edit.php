@@ -360,7 +360,7 @@ if( $profile_authorized ) {
 				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
 					<?php
 						$current_page_tags = $geny_intranet_tag->getIntranetTagsByPage( $geny_intranet_page->id );
-						foreach( $geny_intranet_tag->getAllIntranetTags() as $intranet_tag ) {
+						foreach( $geny_intranet_tag->getAllIntranetTagsOrderByName() as $intranet_tag ) {
 							if( in_array( $intranet_tag, $current_page_tags ) ) {
 								echo "<option value=\"".$intranet_tag->id."\" selected>".$intranet_tag->name."</option>\n";
 							}
