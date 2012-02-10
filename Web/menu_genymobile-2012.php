@@ -114,10 +114,15 @@ $geny_ic = new GenyIntranetCategory();
 			</span>
 		</a>
 		<div class="sdt_box">
-			<a href="loader.php?module=project_assignemts_list">Liste de vos affectations</a>
-			<a href="loader.php?module=conges_validation">Valider vos congés</a>
-			<a href="loader.php?module=conges_list">Lister vos congés</a>
-			<a href="loader.php?module=conges_deletion">Supprimer des congés</a>
+			<a href="loader.php?module=project_assignements_list">Liste de vos affectations</a>
+			<?php
+				if($profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
+					echo "<a href='loader.php?module=project_add'>Ajouter un projet</a>";
+					echo "<a href='loader.php?module=task_add'>Ajouter une tâche</a>";
+					echo "<a href='loader.php?module=project_list'>Liste des projets</a>";
+					echo "<a href='loader.php?module=home_project'>Plus...</a>";
+				}
+			?>
 		</div>
 	</li>
 	<li>
