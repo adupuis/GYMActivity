@@ -102,6 +102,18 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		return $this->getIntranetTagsListWithRestrictions( array() );
 	}
 	
+	public function getIntranetTagsByName( $intranet_tag_name ) {
+		$intranet_tags = $this->getIntranetTagsListWithRestrictions( array( "intranet_tag_name='".mysql_real_escape_string( $intranet_tag_name )."'" ) );
+		$intranet_tags_list = array();
+		foreach( $intranet_tags as $intranet_tag ) {
+			$tmp_intranet_tag = new GenyIntranetTag();
+			$tmp_intranet_tag->id = $intranet_tag->id;
+			$tmp_intranet_tag->name = $intranet_tag->name;
+			$intranet_tags_list[] = $tmp_intranet_tag;
+		}
+		return $intranet_tags_list;
+	}
+	
 	public function getIntranetTagsByType( $intranet_type_id ) {
 		$query = "SELECT IntranetTags.intranet_tag_id, intranet_tag_name FROM IntranetTags, IntranetTagPageRelations, IntranetPages WHERE IntranetTags.intranet_tag_id = IntranetTagPageRelations.intranet_tag_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetPages.intranet_type_id = ".$intranet_type_id;
 		
