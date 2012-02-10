@@ -485,7 +485,7 @@ if( $profile_authorized ) {
 			});
 		});
 	</script>
-	<form id="form_intranet_tag_add" class="popup">
+	<form id="form_intranet_tag_add" class="popup" style="margin:0">
 		<p>
 			<label for="intranet_tag_name">Nom</label>
 			<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="text-input" maxlength="25"/>
@@ -498,9 +498,6 @@ if( $profile_authorized ) {
 
 <script>
 $("a[rel='prettyPhoto[create_intranet_tag]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social" id="status_message_display"></div>', theme: 'pp_default', default_width: 700, keyboard_shortcuts: false});
-// Les éléments dans TR sont centrés
-$.fn.dataTableExt.oJUIClasses.sStripOdd = "centered odd";
-$.fn.dataTableExt.oJUIClasses.sStripEven = "centered even";
 
 $(document).on("click", "div#pp_full_res #submit_tag", function(){
 	var intranet_tag_name = $("div#pp_full_res #intranet_tag_name").val();
