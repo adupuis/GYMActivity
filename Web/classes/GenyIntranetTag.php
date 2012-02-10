@@ -68,16 +68,17 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		return -1;
 	}
 
-	public function getIntranetTagsListWithRestrictions( $restrictions ) {
+	public function getIntranetTagsListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("intranet_tag_id=1")
 		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT intranet_tag_id,intranet_tag_name FROM IntranetTags";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string( $restriction_type );
 			foreach( $restrictions as $key => $value ) {
 				$query .= $value;
 				if( $key != $last_index ) {
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -98,8 +99,28 @@ class GenyIntranetTag extends GenyDatabaseTools {
 		return $intranet_tags_list;
 	}
 
-	public function getAllIntranetTags(){
+	public function getAllIntranetTags() {
 		return $this->getIntranetTagsListWithRestrictions( array() );
+	}
+	
+	public function getAllIntranetTagsOrderByName() {
+		$query = "SELECT intranet_tag_id,intranet_tag_name FROM IntranetTags ORDER BY intranet_tag_name ASC";
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetTag MySQL query : $query", 0 );
+		}
+		
+		$intranet_tags_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_tag = new GenyIntranetTag();
+				$tmp_intranet_tag->id = $row[0];
+				$tmp_intranet_tag->name = $row[1];
+				$intranet_tags_list[] = $tmp_intranet_tag;
+			}
+		}
+		return $intranet_tags_list;
 	}
 	
 	public function getIntranetTagsByName( $intranet_tag_name ) {
