@@ -45,6 +45,40 @@ $load_intranet_page = GenyTools::getParam( 'load_intranet_page', 'NULL' );
 $load_intranet_history = GenyTools::getParam( 'load_intranet_history', 'NULL' );
 $edit_intranet_page = GenyTools::getParam( 'edit_intranet_page', 'NULL' );
 
+$profile_authorized = false;
+
+function checkProfileAuthorization( $intranet_page_id, $current_profile ) {
+	
+	global $profile_authorized;
+	
+	$tmp_geny_intranet_page = new GenyIntranetPage();
+	$tmp_geny_intranet_page->loadIntranetPageById( $intranet_page_id );
+	
+	$intranet_page_acl_modification_type = $tmp_geny_intranet_page->acl_modification_type;
+	$intranet_page_profile = new GenyProfile( $tmp_geny_intranet_page->profile_id );
+	if( $intranet_page_acl_modification_type == "owner" ) {
+		if( $current_profile->rights_group_id == 1  || /* admin */
+			$current_profile->rights_group_id == 2  ||   /* superuser */
+			$current_profile->id == $tmp_geny_intranet_page->profile_id ) {
+			$profile_authorized = true;
+		}
+	}
+	else if( $intranet_page_acl_modification_type == "group" ) {
+		if( $current_profile->rights_group_id == 1  || /* admin */
+			$current_profile->rights_group_id == 2  ||   /* superuser */
+			$current_profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+			$profile_authorized = true;
+		}
+	}
+	else {
+		$profile_authorized = true;
+	}
+	if( !$profile_authorized ) {
+		$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la page Intranet",'msg'=>"Vous n'êtes pas autorisé.");
+		include_once( 'bork.php' );
+	}
+}
+
 if( $create_intranet_page == "true" ) {
 	$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
 	$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
@@ -97,35 +131,7 @@ if( $create_intranet_page == "true" ) {
 else if( $load_intranet_page == 'true' ) {
 	$intranet_page_id = GenyTools::getParam( 'intranet_page_id', 'NULL' );
 	if( $intranet_page_id != 'NULL' ) {
-		
-		$tmp_geny_intranet_page = new GenyIntranetPage();
-		$tmp_geny_intranet_page->loadIntranetPageById( $intranet_page_id );
-		
-		$profile_authorized = false;
-		$intranet_page_acl_modification_type = $tmp_geny_intranet_page->acl_modification_type;
-		$intranet_page_profile = new GenyProfile( $tmp_geny_intranet_page->profile_id );
-		if( $intranet_page_acl_modification_type == "owner" ) {
-			if( $profile->rights_group_id == 1  || /* admin */
-			    $profile->rights_group_id == 2  ||   /* superuser */
-			    $profile->id == $tmp_geny_intranet_page->profile_id ) {
-				$profile_authorized = true;
-			}
-		}
-		else if( $intranet_page_acl_modification_type == "group" ) {
-			if( $profile->rights_group_id == 1  || /* admin */
-			    $profile->rights_group_id == 2  ||   /* superuser */
-			    $profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
-				$profile_authorized = true;
-			}
-		}
-		else {
-			$profile_authorized = true;
-		}
-		if( !$profile_authorized ) {
-			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la page Intranet",'msg'=>"Vous n'êtes pas autorisé.");
-			include_once( 'bork.php' );
-		}
-		
+		checkProfileAuthorization( $intranet_page_id, $profile );
 		$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
 		$intranet_page_content_to_display = $geny_intranet_page->content;
 	}
@@ -136,22 +142,12 @@ else if( $load_intranet_page == 'true' ) {
 else if( $load_intranet_history == 'true' ) {
 	$intranet_history_id = GenyTools::getParam( 'intranet_history_id', 'NULL' );
 	if( $intranet_history_id != 'NULL' ) {
-//TODO: rights_group check or not on this page
-// 		if( $profile->rights_group_id == 1  || /* admin */
-// 		    $profile->rights_group_id == 2     /* superuser */ ) {
-			$geny_intranet_page->loadIntranetPageByHistoryId( $intranet_history_id );
-			$geny_intranet_history->loadIntranetHistoryById( $intranet_history_id );
-			$intranet_page_content_to_display = $geny_intranet_history->history_content;
-			
-// 			foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $status ) {
-// 				$statuses[$status->id] = $status;
-// 			}
-			
-// 		}
-// 		else {
-// 			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la page Intranet",'msg'=>"Vous n'êtes pas autorisé.");
-// 			header( 'Location: error.php?category=intranet_page' );
-// 		}
+		$tmp_geny_intranet_page = new GenyIntranetPage();
+		$tmp_geny_intranet_page->loadIntranetPageByHistoryId( $intranet_history_id );
+		checkProfileAuthorization( $tmp_geny_intranet_page->id, $profile );
+		$geny_intranet_page->loadIntranetPageByHistoryId( $intranet_history_id );
+		$geny_intranet_history->loadIntranetHistoryById( $intranet_history_id );
+		$intranet_page_content_to_display = $geny_intranet_history->history_content;
 	}
 	else {
 		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger la page Intranet','msg'=>"id non spécifié." );
@@ -160,6 +156,9 @@ else if( $load_intranet_history == 'true' ) {
 else if( $edit_intranet_page == 'true' ) {
 	$intranet_page_id = GenyTools::getParam( 'intranet_page_id', 'NULL' );
 	if( $intranet_page_id != 'NULL' ) {
+		
+		checkProfileAuthorization( $intranet_page_id, $profile );
+		
 		$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
 		$intranet_page_content_to_display = $geny_intranet_page->content;
 		
