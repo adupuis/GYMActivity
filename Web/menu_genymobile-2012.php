@@ -147,7 +147,7 @@ $geny_ic = new GenyIntranetCategory();
 		</a>
 	</li>
 	<li>
-		<a href="loader.pĥp?module=home_intranet">
+		<a href="loader.php?module=home_intranet">
 			<img src="images/genymobile-2012/intranet_banner.png" alt=""/>
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
