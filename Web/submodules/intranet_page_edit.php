@@ -94,6 +94,8 @@ if( $create_intranet_page == "true" ) {
 		$insert_id = $geny_intranet_page->insertNewIntranetPage( 'NULL', $intranet_page_title, $intranet_category_id, $intranet_type_id, $intranet_page_status_id, $intranet_page_acl_modification_type, $profile_id, $intranet_page_description, $intranet_page_content );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet créée avec succès." );
+			
+			checkProfileAuthorization( $insert_id, $profile );
 			$geny_intranet_page->loadIntranetPageById( $insert_id );
 			$intranet_page_content_to_display = $geny_intranet_page->content;
 			
@@ -161,60 +163,56 @@ else if( $edit_intranet_page == 'true' ) {
 		
 		$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
 		$intranet_page_content_to_display = $geny_intranet_page->content;
+
+		$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
+		$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
+		$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
+		$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
+		$intranet_page_acl_modification_type = GenyTools::getParam( 'intranet_page_acl_modification_type', 'NULL' );
+		$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
+		$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
+
+		if( $intranet_page_title != 'NULL' && $geny_intranet_page->title != $intranet_page_title ) {
+			$geny_intranet_page->updateString( 'intranet_page_title', $intranet_page_title );
+		}
+		if( $intranet_category_id != 'NULL' && $geny_intranet_page->intranet_category_id != $intranet_category_id ) {
+			$geny_intranet_page->updateInt( 'intranet_category_id', $intranet_category_id );
+		}
+		if( $intranet_type_id != 'NULL' && $geny_intranet_page->intranet_type_id != $intranet_type_id ) {
+			$geny_intranet_page->updateInt( 'intranet_type_id', $intranet_type_id );
+		}
+		if( $intranet_page_status_id != 'NULL' && $geny_intranet_page->status_id != $intranet_page_status_id ) {
+			$geny_intranet_page->updateInt( 'intranet_page_status_id', $intranet_page_status_id );
+		}
+		if( $intranet_page_acl_modification_type != 'NULL' && $geny_intranet_page->acl_modification_type != $intranet_page_acl_modification_type ) {
+			$geny_intranet_page->updateInt( 'intranet_page_acl_modification_type', $intranet_page_acl_modification_type );
+		}
 		
-// 		if( $profile->rights_group_id == 1 /* admin */       ||
-// 		    $profile->rights_group_id == 2 /* superuser */ ) {
-
-			$intranet_page_title = GenyTools::getParam( 'intranet_page_title', 'NULL' );
-			$intranet_category_id = GenyTools::getParam( 'intranet_category_id', 'NULL' );
-			$intranet_type_id = GenyTools::getParam( 'intranet_type_id', 'NULL' );
-			$intranet_page_status_id = GenyTools::getParam( 'intranet_page_status_id', 'NULL' );
-			$intranet_page_acl_modification_type = GenyTools::getParam( 'intranet_page_acl_modification_type', 'NULL' );
-			$intranet_page_description = GenyTools::getParam( 'intranet_page_description', 'NULL' );
-			$intranet_page_content = GenyTools::getParam( 'intranet_page_content_editor', 'NULL' );
-
-			if( $intranet_page_title != 'NULL' && $geny_intranet_page->title != $intranet_page_title ) {
-				$geny_intranet_page->updateString( 'intranet_page_title', $intranet_page_title );
-			}
-			if( $intranet_category_id != 'NULL' && $geny_intranet_page->intranet_category_id != $intranet_category_id ) {
-				$geny_intranet_page->updateInt( 'intranet_category_id', $intranet_category_id );
-			}
-			if( $intranet_type_id != 'NULL' && $geny_intranet_page->intranet_type_id != $intranet_type_id ) {
-				$geny_intranet_page->updateInt( 'intranet_type_id', $intranet_type_id );
-			}
-			if( $intranet_page_status_id != 'NULL' && $geny_intranet_page->status_id != $intranet_page_status_id ) {
-				$geny_intranet_page->updateInt( 'intranet_page_status_id', $intranet_page_status_id );
-			}
-			if( $intranet_page_acl_modification_type != 'NULL' && $geny_intranet_page->acl_modification_type != $intranet_page_acl_modification_type ) {
-				$geny_intranet_page->updateInt( 'intranet_page_acl_modification_type', $intranet_page_acl_modification_type );
-			}
-			
-			if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
-				if( $geny_intranet_tag_page_relation->deleteAllIntranetTagPageRelationsByPageId( $geny_intranet_page->id ) ) {
-					$error = 0;
-					foreach( $_POST['intranet_tag_id'] as $key => $value ) {
-						$geny_intranet_tag = new GenyIntranetTag( $value );
-						if( $geny_intranet_tag_page_relation->insertNewIntranetTagPageRelation( $geny_intranet_tag->id, $geny_intranet_page->id ) ) {
+		if( isset( $_POST['intranet_tag_id'] ) && count( $_POST['intranet_tag_id'] ) > 0 ) {
+			if( $geny_intranet_tag_page_relation->deleteAllIntranetTagPageRelationsByPageId( $geny_intranet_page->id ) ) {
+				$error = 0;
+				foreach( $_POST['intranet_tag_id'] as $key => $value ) {
+					$geny_intranet_tag = new GenyIntranetTag( $value );
+					if( $geny_intranet_tag_page_relation->insertNewIntranetTagPageRelation( $geny_intranet_tag->id, $geny_intranet_page->id ) ) {
 // 							$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Tag $geny_intranet_tag->name ajouté à la page.");
-						}
-						else {
-							$error++;
-							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du tag $geny_intranet_tag->name.");
-						}
 					}
-					if( $error == 0 ) {
-						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Les tags ont été mis à jour avec succès.");
+					else {
+						$error++;
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du tag $geny_intranet_tag->name.");
 					}
 				}
+				if( $error == 0 ) {
+					$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Les tags ont été mis à jour avec succès.");
+				}
 			}
-			
-			if( $intranet_page_description != 'NULL' && $geny_intranet_page->description != $intranet_page_description ) {
-				$geny_intranet_page->updateString( 'intranet_page_description', $intranet_page_description );
-			}
-			if( $intranet_page_content != 'NULL' && $geny_intranet_page->content != $intranet_page_content ) {
-				$geny_intranet_page->updateString( 'intranet_page_content', gzcompress( $intranet_page_content ) );
-			}
-// 		}
+		}
+		
+		if( $intranet_page_description != 'NULL' && $geny_intranet_page->description != $intranet_page_description ) {
+			$geny_intranet_page->updateString( 'intranet_page_description', $intranet_page_description );
+		}
+		if( $intranet_page_content != 'NULL' && $geny_intranet_page->content != $intranet_page_content ) {
+			$geny_intranet_page->updateString( 'intranet_page_content', gzcompress( $intranet_page_content ) );
+		}
 		if( $geny_intranet_page->commitUpdates() ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Page Intranet mise à jour avec succès.");
 			$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
