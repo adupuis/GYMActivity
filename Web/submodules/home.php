@@ -6,6 +6,7 @@
 			include 'backend/widgets/conges_add.dock.widget.php';
 			include 'backend/widgets/conges_validation.dock.widget.php';
 			include 'backend/widgets/gymactivity_version.dock.widget.php';
+			include 'backend/widgets/logout.dock.widget.php';
 		?>
 	</ul>
 </div>
