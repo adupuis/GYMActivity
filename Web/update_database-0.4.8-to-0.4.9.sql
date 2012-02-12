@@ -273,4 +273,26 @@ CREATE TABLE IntranetHistories (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetHistories AUTO_INCREMENT=1;
 
+-- Update de la table groupe
+
+-- Ajout d'une colonne shortname
+ALTER TABLE RightsGroups ADD COLUMN rights_group_shortname varchar(20) not null default 'UNDEF' AFTER rights_group_name;
+
+-- Update des groupes
+UPDATE RightsGroups SET rights_group_name='ProjectManagers' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_description='Groupe des chefs de projets. Ils ont accès à toutes les données financières et opérationnelles de leur projets.' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_name='TopManagers' WHERE rights_group_id=2;
+UPDATE RightsGroups SET rights_group_description='Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).' WHERE rights_group_id=2;
+
+-- Mise à jour des shortname
+UPDATE RightsGroups SET rights_group_shortname='ADM' WHERE rights_group_id=1;
+UPDATE RightsGroups SET rights_group_shortname='TM' WHERE rights_group_id=2;
+UPDATE RightsGroups SET rights_group_shortname='USR' WHERE rights_group_id=3;
+UPDATE RightsGroups SET rights_group_shortname='PM' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_shortname='REP' WHERE rights_group_id=5;
+UPDATE RightsGroups SET rights_group_shortname='EXT' WHERE rights_group_id=6;
+
+-- TODO: Voir pour ajouter la contrainte unique key sur shortname
+
+
 COMMIT;
