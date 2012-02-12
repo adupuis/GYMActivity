@@ -294,5 +294,9 @@ UPDATE RightsGroups SET rights_group_shortname='EXT' WHERE rights_group_id=6;
 
 -- TODO: Voir pour ajouter la contrainte unique key sur shortname
 
+-- Ajout de l'avant vente dans les status et type de projets.
+INSERT INTO ProjectTypes VALUES(7,'Avant Vente',"Projet servant à tracer l'avant vente."); 
+INSERT INTO ProjectStatus VALUES(7,'Avant Vente',"Le projet est en cours d'avant vente.");
+INSERT INTO ProjectStatus VALUES(8,'Perdu','Le projet à été perdu.');
 
 COMMIT;
