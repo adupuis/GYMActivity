@@ -126,7 +126,8 @@ INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projet
 INSERT INTO ProjectTypes VALUES(3,'Régie forfaitée','Employé chez le client dans un cadre de régie forfaitée.');
 INSERT INTO ProjectTypes VALUES(4,'R&D', 'Employé travail sur un ou plusieurs projet de R&D ou innovation par et pour GENYMOBILE.');
 INSERT INTO ProjectTypes VALUES(5,'Congés','Projet utilisé pour faire les demandes de congés des employés.');
-INSERT INTO ProjectTypes VALUES(6,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, congés, etc.');
+INSERT INTO ProjectTypes VALUES(6,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, etc.');
+INSERT INTO ProjectTypes VALUES(7,'Avant Vente',"Projet servant à tracer l'avant vente.");
 
 CREATE TABLE ProjectStatus (
 	project_status_id int auto_increment,
@@ -141,6 +142,8 @@ INSERT INTO ProjectStatus VALUES(3,'Pause','Projet en pause (pas de facturation,
 INSERT INTO ProjectStatus VALUES(4,'Dépassement',"Projet en dépassement (nous perdons de l'argent).");
 INSERT INTO ProjectStatus VALUES(5,'Risque client','Un risque de dépassement est identifié et celui-ci est dû au client.');
 INSERT INTO ProjectStatus VALUES(6,'Risque interne','Un risque de dépassement est identifié et celui-ci est dû à GENYMOBILE (ou un de ces sous-traitant).');
+INSERT INTO ProjectStatus VALUES(7,'Avant Vente',"Le projet est en cours d'avant vente.");
+INSERT INTO ProjectStatus VALUES(8,'Perdu','Le projet à été perdu.');
 
 CREATE TABLE Projects (
 	project_id int auto_increment,
