@@ -111,7 +111,7 @@ $header_title = str_replace("%SCREEN_NAME%",$screen_name,$header_title);
 echo $header_title 
 ?>
 </title>
-<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.11.custom.min.js"></script>
 <script src="js/timerX.js"></script>
 <script src="js/formValidator/js/jquery.validationEngine-fr.js" type="text/javascript"></script>  
