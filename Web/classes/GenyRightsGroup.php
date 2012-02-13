@@ -98,7 +98,7 @@ class GenyRightsGroup extends GenyDatabaseTools{
 		}
 	}
 	public function loadRightsGroupByShortname($shortname='UNDEF'){
-		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname=".mysql_real_escape_string($shortname)));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname='".mysql_real_escape_string($shortname)."'"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
@@ -108,7 +108,7 @@ class GenyRightsGroup extends GenyDatabaseTools{
 		}
 	}
 	public function getIdByShortname($shortname='UNDEF'){
-		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname=".mysql_real_escape_string($shortname)));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname='".mysql_real_escape_string($shortname)."'"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			return $object->id;
