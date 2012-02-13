@@ -26,29 +26,29 @@ class GenyIntranetType extends GenyDatabaseTools {
 	public $id = -1;
 	public $name = '';
 	public $description = '';
-	public $category_id = -1;
+	public $intranet_category_id = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("IntranetTypes",  "intranet_type_id");
 		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
-		$this->category_id = -1;
+		$this->intranet_category_id = -1;
 		if( $id > -1 ) {
  			$this->loadIntranetTypeById( $id );
 		}
 	}
 	
-	public function insertNewIntranetType( $id, $intranet_type_name, $intranet_type_description, $category_id ) {
+	public function insertNewIntranetType( $id, $intranet_type_name, $intranet_type_description, $intranet_category_id ) {
 		if( $this->config->debug ) {
-			error_log( "[GYMActivity::DEBUG] GenyIntranetType new intranet_type insertion - id: $id - intranet_type_name: $intranet_type_name - intranet_type_description: $intranet_type_description - category_id: $category_id", 0 );
+			error_log( "[GYMActivity::DEBUG] GenyIntranetType new intranet_type insertion - id: $id - intranet_type_name: $intranet_type_name - intranet_type_description: $intranet_type_description - intranet_category_id: $intranet_category_id", 0 );
 		}
 		if( !is_numeric( $id ) && $id != 'NULL' ) {
 			return -1;
 		}
-		if( !is_numeric( $category_id ) ) {
+		if( !is_numeric( $intranet_category_id ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO IntranetTypes VALUES($id,'".mysql_real_escape_string( $intranet_type_name )."','".mysql_real_escape_string( $intranet_type_description )."','".$category_id."')";
+		$query = "INSERT INTO IntranetTypes VALUES($id,'".mysql_real_escape_string( $intranet_type_name )."','".mysql_real_escape_string( $intranet_type_description )."','".$intranet_category_id."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetType MySQL query : $query", 0 );
 		}
@@ -69,7 +69,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 	}
 
 	public function getIntranetTypesListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
-		// $restrictions is in the form of array("intranet_type_id=1","category_id=1")
+		// $restrictions is in the form of array("intranet_type_id=1","intranet_category_id=1")
 		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT intranet_type_id,intranet_type_name,intranet_type_description,intranet_category_id FROM IntranetTypes";
 		if( count( $restrictions ) > 0 ) {
@@ -93,7 +93,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 				$tmp_intranet_type->id = $row[0];
 				$tmp_intranet_type->name = $row[1];
 				$tmp_intranet_type->description = $row[2];
-				$tmp_intranet_type->category_id = $row[3];
+				$tmp_intranet_type->intranet_category_id = $row[3];
 				$intranet_type_list[] = $tmp_intranet_type;
 			}
 		}
@@ -105,8 +105,8 @@ class GenyIntranetType extends GenyDatabaseTools {
 		return $this->getIntranetTypesListWithRestrictions( array() );
 	}
 
-	public function getIntranetTypesByCategoryId( $category_id ) {
-		return $this->getIntranetTypesListWithRestrictions( array( "intranet_category_id=".$category_id ) );
+	public function getIntranetTypesByCategoryId( $intranet_category_id ) {
+		return $this->getIntranetTypesListWithRestrictions( array( "intranet_category_id=".$intranet_category_id ) );
 	}
 
 	public function loadIntranetTypeById( $id ) {
@@ -119,7 +119,7 @@ class GenyIntranetType extends GenyDatabaseTools {
 			$this->id = $intranet_type->id;
 			$this->name = $intranet_type->name;
 			$this->description = $intranet_type->description;
-			$this->category_id = $intranet_type->category_id;
+			$this->intranet_category_id = $intranet_type->intranet_category_id;
 		}
 	}
 }
