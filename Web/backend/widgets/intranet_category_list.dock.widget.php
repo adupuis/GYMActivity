@@ -23,7 +23,7 @@
 
 <li class="intranet_category_list">
 	<a href="loader.php?module=intranet_category_list">
-		<span class="dock_item_title">Cat. Intranet</span><br/>
+		<span class="dock_item_title">Cats. Intranet</span><br/>
 		<span class="dock_item_content">Lister toutes les catégories de l'Intranet.</span>
 	</a>
 </li>
