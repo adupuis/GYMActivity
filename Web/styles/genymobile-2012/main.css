@@ -502,6 +502,9 @@ li.intranet_page_list a {
 	background-image: url(../../images/genymobile-2012/intranet_page_list.png);
 }
 
+li.logout a {
+	background-image: url(../../images/genymobile-2012/logout_generic.png);
+}
 
 /* End of main dock style */
 

@@ -163,9 +163,15 @@ function ceAgreementToHtml($ce_id,$agreement,$theme) {
 				<strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?><br/>
 				<strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?>
 			</li>
+			<?php
+				if($profile->rights_group_id == $geny_rights_group->getIdByShortname('ADM') || $profile->rights_group_id == $geny_rights_group->getIdByShortname('TM')){
+			?>
 			<li>
 				<a href='#create_career_event' rel='prettyPhoto[create_career_event]' class="submit">Ajouter un évènement de carrière</a>
 			</li>
+			<?php
+				}
+			?>
 		</ul>
 	</p>
 	<div class="table_container">

@@ -25,16 +25,19 @@ START TRANSACTION;
 CREATE TABLE RightsGroups (
 	rights_group_id int auto_increment,
 	rights_group_name varchar(100) not null default 'Undefined',
+	rights_group_shortname varchar(20) not null default 'UNDEF',
 	rights_group_description text,
+	unique key rights_group_shortname (rights_group_shortname),
 	primary key(rights_group_id)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE RightsGroups AUTO_INCREMENT = 1;
-INSERT INTO RightsGroups VALUES(1,'Admins','Administrators of the application');
-INSERT INTO RightsGroups VALUES(2,'SuperUsers','Users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
-INSERT INTO RightsGroups VALUES(3,'Users','Standard users, they can create and edit activities.');
-INSERT INTO RightsGroups VALUES(4,'SuperReporters','Read only access for various reports. They can see almost all data.');
-INSERT INTO RightsGroups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
-INSERT INTO RightsGroups VALUES(6,'Externes','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
+INSERT INTO RightsGroups VALUES(1,'Admins','ADM','Administrators of the application');
+INSERT INTO RightsGroups VALUES(2,'TopManagers','TM','Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
+INSERT INTO RightsGroups VALUES(3,'Users','USR','Standard users, they can create and edit activities.');
+INSERT INTO RightsGroups VALUES(4,'TechnologyLeaders','TL','Groupe des Technology Leaders (chefs de projets, scrum masters, RO, etc.). Ils ont accès à toutes les données financières et opérationnelles de leur projets.');
+INSERT INTO RightsGroups VALUES(5,'Reporters','REP','Read only access for various reports. They can only see projects (and assignees) related data.');
+INSERT INTO RightsGroups VALUES(6,'Externes','EXT','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
+INSERT INTO RightsGroups VALUES(7,'GroupLeaders','GL','Groupe des Group Leaders (manager administratifs, etc.).');
 
 
 CREATE TABLE Profiles (
@@ -124,7 +127,8 @@ INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projet
 INSERT INTO ProjectTypes VALUES(3,'Régie forfaitée','Employé chez le client dans un cadre de régie forfaitée.');
 INSERT INTO ProjectTypes VALUES(4,'R&D', 'Employé travail sur un ou plusieurs projet de R&D ou innovation par et pour GENYMOBILE.');
 INSERT INTO ProjectTypes VALUES(5,'Congés','Projet utilisé pour faire les demandes de congés des employés.');
-INSERT INTO ProjectTypes VALUES(6,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, congés, etc.');
+INSERT INTO ProjectTypes VALUES(6,'Autre','Autre types. Par exemple: travaux internes à GENYMOBILE, etc.');
+INSERT INTO ProjectTypes VALUES(7,'Avant Vente',"Projet servant à tracer l'avant vente.");
 
 CREATE TABLE ProjectStatus (
 	project_status_id int auto_increment,
@@ -139,6 +143,8 @@ INSERT INTO ProjectStatus VALUES(3,'Pause','Projet en pause (pas de facturation,
 INSERT INTO ProjectStatus VALUES(4,'Dépassement',"Projet en dépassement (nous perdons de l'argent).");
 INSERT INTO ProjectStatus VALUES(5,'Risque client','Un risque de dépassement est identifié et celui-ci est dû au client.');
 INSERT INTO ProjectStatus VALUES(6,'Risque interne','Un risque de dépassement est identifié et celui-ci est dû à GENYMOBILE (ou un de ces sous-traitant).');
+INSERT INTO ProjectStatus VALUES(7,'Avant Vente',"Le projet est en cours d'avant vente.");
+INSERT INTO ProjectStatus VALUES(8,'Perdu','Le projet à été perdu.');
 
 CREATE TABLE Projects (
 	project_id int auto_increment,

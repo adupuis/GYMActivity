@@ -273,4 +273,31 @@ CREATE TABLE IntranetHistories (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetHistories AUTO_INCREMENT=1;
 
+-- Update de la table groupe
+
+-- Ajout d'une colonne shortname
+ALTER TABLE RightsGroups ADD COLUMN rights_group_shortname varchar(20) not null default 'UNDEF' AFTER rights_group_name;
+
+-- Update des groupes
+UPDATE RightsGroups SET rights_group_name='TechnologyLeaders' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_description='Groupe des Technology Leaders (chefs de projets, scrum masters, RO, etc.). Ils ont accès à toutes les données financières et opérationnelles de leur projets.' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_name='TopManagers' WHERE rights_group_id=2;
+UPDATE RightsGroups SET rights_group_description='Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).' WHERE rights_group_id=2;
+INSERT INTO RightsGroups VALUES(7,'GroupLeaders','GL','Groupe des Group Leaders (manager administratifs, etc.).');
+
+-- Mise à jour des shortname
+UPDATE RightsGroups SET rights_group_shortname='ADM' WHERE rights_group_id=1;
+UPDATE RightsGroups SET rights_group_shortname='TM' WHERE rights_group_id=2;
+UPDATE RightsGroups SET rights_group_shortname='USR' WHERE rights_group_id=3;
+UPDATE RightsGroups SET rights_group_shortname='PM' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_shortname='REP' WHERE rights_group_id=5;
+UPDATE RightsGroups SET rights_group_shortname='EXT' WHERE rights_group_id=6;
+
+-- TODO: Voir pour ajouter la contrainte unique key sur shortname
+
+-- Ajout de l'avant vente dans les status et type de projets.
+INSERT INTO ProjectTypes VALUES(7,'Avant Vente',"Projet servant à tracer l'avant vente."); 
+INSERT INTO ProjectStatus VALUES(7,'Avant Vente',"Le projet est en cours d'avant vente.");
+INSERT INTO ProjectStatus VALUES(8,'Perdu','Le projet à été perdu.');
+
 COMMIT;

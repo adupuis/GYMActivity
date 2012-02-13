@@ -111,7 +111,7 @@ $header_title = str_replace("%SCREEN_NAME%",$screen_name,$header_title);
 echo $header_title 
 ?>
 </title>
-<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.11.custom.min.js"></script>
 <script src="js/timerX.js"></script>
 <script src="js/formValidator/js/jquery.validationEngine-fr.js" type="text/javascript"></script>  
@@ -123,9 +123,9 @@ echo $header_title
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+<script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
 
 <link rel="stylesheet" href="js/prettyPhoto_compressed_3.1.3/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
-<script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
