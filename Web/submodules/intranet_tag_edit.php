@@ -69,7 +69,7 @@ else if( $edit_intranet_tag == 'true' ) {
 		if( $profile->rights_group_id == 1 /* admin */       ||
 		    $profile->rights_group_id == 2 /* superuser */ ) {
 
-			$intranet_tag_name = GenyTools::getParam( 'intranet_tag_name', 'NULL' );
+			$intranet_tag_name = strtolower( GenyTools::getParam( 'intranet_tag_name', 'NULL' ) );
 
 			if( $intranet_tag_name != 'NULL' && $geny_intranet_tag->name != $intranet_tag_name ) {
 				$geny_intranet_tag->updateString( 'intranet_tag_name', $intranet_tag_name );
@@ -143,7 +143,7 @@ else if( $edit_intranet_tag == 'true' ) {
 			
 			<p>
 				<label for="intranet_tag_name">Nom</label>
-				<input name="intranet_tag_name" id="intranet_tag_name" type="text" value="<?php echo $geny_intranet_tag->name ?>" class="validate[required,length[2,25]] text-input" maxlength="25"/>
+				<input name="intranet_tag_name" id="intranet_tag_name" type="text" value="<?php echo $geny_intranet_tag->name ?>" class="validate[required,length[2,25]] text-input" maxlength="25" style="text-transform:lowercase"/>
 			</p>
 			
 			<p>

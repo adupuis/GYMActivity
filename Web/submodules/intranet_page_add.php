@@ -179,7 +179,7 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 	<form id="form_intranet_tag_add" class="popup" style="margin:0">
 		<p>
 			<label for="intranet_tag_name">Nom</label>
-			<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="text-input" maxlength="25"/>
+			<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="text-input" maxlength="25" style="text-transform:lowercase"/>
 		</p>
 		<p>
 			<a href="#" id="submit_tag" class="submit">Créer</a> <a href="#" id="close_popup" onclick="$.prettyPhoto.close()" class="submit" >Annuler</a>

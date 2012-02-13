@@ -43,7 +43,7 @@
 			<input type="hidden" name="create_intranet_tag" value="true" />
 			<p>
 				<label for="intranet_tag_name">Nom</label>
-				<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="validate[required,length[2,25]] text-input" maxlength="25"/>
+				<input name="intranet_tag_name" id="intranet_tag_name" type="text" class="validate[required,length[2,25]] text-input" maxlength="25" style="text-transform:lowercase"/>
 			</p>
 			
 			<p>

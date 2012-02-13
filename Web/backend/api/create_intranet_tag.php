@@ -30,10 +30,9 @@ include_once 'ajax_toolbox.php';
 include '../../classes/GenyTools.php';
 
 try {
-	$intranet_tags = array(	);
 	if( $auth_granted ) {
 		$tmp_intranet_tag = new GenyIntranetTag();
-		$intranet_tag_name = getParam( "name", "" );
+		$intranet_tag_name = strtolower( getParam( "name", "" ) );
 		
 		if( $intranet_tag_name == "" ) {
 			$access_loger->insertNewAccessLog(

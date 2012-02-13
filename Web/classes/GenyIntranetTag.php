@@ -34,7 +34,7 @@ class GenyIntranetTag extends GenyDatabaseTools {
 	}
 
 	public function insertNewIntranetTag( $id, $intranet_tag_name ) {
-		$query = "INSERT INTO IntranetTags VALUES($id,'".mysql_real_escape_string($intranet_tag_name)."')";
+		$query = "INSERT INTO IntranetTags VALUES($id,LOWER('".mysql_real_escape_string($intranet_tag_name)."'))";
 			if( $this->config->debug ) {
 				error_log( "[GYMActivity::DEBUG] GenyIntranetTag MySQL query : $query", 0 );
 			}
