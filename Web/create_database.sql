@@ -32,11 +32,11 @@ CREATE TABLE RightsGroups (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE RightsGroups AUTO_INCREMENT = 1;
 INSERT INTO RightsGroups VALUES(1,'Admins','ADM','Administrators of the application');
-INSERT INTO RightsGroups VALUES(2,'TopManagers','Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
-INSERT INTO RightsGroups VALUES(3,'Users','Standard users, they can create and edit activities.');
-INSERT INTO RightsGroups VALUES(4,'ProjectManagers','Groupe des chefs de projets. Ils ont accès à toutes les données financières et opérationnelles de leur projets.');
-INSERT INTO RightsGroups VALUES(5,'Reporters','Read only access for various reports. They can only see projects (and assignees) related data.');
-INSERT INTO RightsGroups VALUES(6,'Externes','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
+INSERT INTO RightsGroups VALUES(2,'TopManagers','TM','Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
+INSERT INTO RightsGroups VALUES(3,'Users','USR','Standard users, they can create and edit activities.');
+INSERT INTO RightsGroups VALUES(4,'ProjectManagers','PM','Groupe des chefs de projets. Ils ont accès à toutes les données financières et opérationnelles de leur projets.');
+INSERT INTO RightsGroups VALUES(5,'Reporters','REP','Read only access for various reports. They can only see projects (and assignees) related data.');
+INSERT INTO RightsGroups VALUES(6,'Externes','EXT','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
 
 
 CREATE TABLE Profiles (
