@@ -29,13 +29,12 @@ include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
 
 try {
-	$types = array();
+	$intranet_types = array();
 	if( $auth_granted ) {
 		$tmp_intranet_type = new GenyIntranetType();
 		$results = array();
-
-		$results = NULL;
 		$intranet_category_id = getParam( "intranet_category_id", -1 );
+		
 		if( $intranet_category_id > 0 ) {
 			$results = $tmp_intranet_type->getIntranetTypesByCategoryId( $intranet_category_id );
 		}
@@ -43,15 +42,14 @@ try {
 			$results = $tmp_intranet_type->getAllIntranetTypes();
 		}
 
-		$types = array();
 		foreach( $results as $type ){
 			$tmp = array();
 			foreach( get_object_vars( $type ) as $field => $value ) {
 				$tmp[$field] = $type->$field ;
 			}
-			$types[] = $tmp;
+			$intranet_types[] = $tmp;
 		}
-		$data = json_encode( $types );
+		$data = json_encode( $intranet_types );
 		echo $data;
 	}
 } catch ( Exception $e ) {

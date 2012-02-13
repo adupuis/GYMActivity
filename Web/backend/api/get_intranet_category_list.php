@@ -29,21 +29,21 @@ include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
 
 try {
-	$categories = array();
+	$intranet_categories = array();
 	if( $auth_granted ) {
 		$tmp_categorie = new GenyIntranetCategory();
 		$results = array();
 
 		$cats = $tmp_categorie->getAllIntranetCategories();
-		$categories = array();
+		$intranet_categories = array();
 		foreach( $cats as $cat ){
 			$tmp = array();
 			foreach( get_object_vars( $cat ) as $field => $value ) {
 				$tmp[$field] = $cat->$field ;
 			}
-			$categories[] = $tmp;
+			$intranet_categories[] = $tmp;
 		}
-		$data = json_encode( $categories );
+		$data = json_encode( $intranet_categories );
 		echo $data;
 	}
 } catch (Exception $e) {

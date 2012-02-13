@@ -29,7 +29,7 @@ include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
 
 try {
-	$pages = array();
+	$intranet_tags = array();
 	if( $auth_granted ) {
 		$tmp_intranet_tag = new GenyIntranetTag();
 		$results = array();
@@ -50,7 +50,6 @@ try {
 			$results = $tmp_intranet_tag->getAllIntranetTagsOrderByName();
 		}
 		
-		$intranet_tags = array();
 		foreach( $results as $tag ){
 			$tmp = array();
 			foreach( get_object_vars( $tmp_intranet_tag ) as $field => $value ) {
