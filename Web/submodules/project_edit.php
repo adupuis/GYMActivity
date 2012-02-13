@@ -233,13 +233,12 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
-			});
-			$(document).ready(function(){
+				
 				$(".taskslistselect").listselect({listTitle: "Tâches disponibles",selectedTitle: "Tâches séléctionnées"});
-			});
-			$(document).ready(function(){
+				
 				$(".profileslistselect").listselect({listTitle: "Profiles disponibles",selectedTitle: "Profiles séléctionnées"});
 			});
+			
 			$(function() {
 				var availableTags = [
 					<?php

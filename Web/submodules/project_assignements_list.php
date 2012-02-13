@@ -20,8 +20,8 @@
 
 // Variable to configure global behaviour
 
-
 $geny_project = new GenyProject();
+$geny_assignement = new GenyAssignement();
 $geny_client = new GenyClient();
 foreach( $geny_client->getAllClients() as $client ){
 	$clients[$client->id] = $client;
@@ -150,7 +150,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des projets dans la base des projets.
+		Voici la liste des projets sur lesquels vous êtes affecté.
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/project_list.css';
@@ -177,8 +177,9 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 					else
 						return 'images/'.$web_config->theme.'/button_error_small.png';
 				}
-				foreach( $geny_project->getAllProjects() as $tmp ){
-					echo "<tr><td>$tmp->name</td><td>".$clients["$tmp->client_id"]->name."</td><td>$tmp->location</td><td>$tmp->start_date</td><td>$tmp->end_date</td><td>".$pts["$tmp->type_id"]->name."</td><td>".$pss["$tmp->status_id"]->name."</td><td>$tmp->description</td></tr>";
+				foreach( $geny_assignement->getAssignementsListByProfileId($profile->id) as $ass ){
+					$geny_project->loadProjectById( $ass->project_id );
+					echo "<tr><td>$geny_project->name</td><td>".$clients["$geny_project->client_id"]->name."</td><td>$geny_project->location</td><td>$geny_project->start_date</td><td>$geny_project->end_date</td><td>".$pts["$geny_project->type_id"]->name."</td><td>".$pss["$geny_project->status_id"]->name."</td><td>$geny_project->description</td></tr>";
 				}
 			?>
 			</tbody>
