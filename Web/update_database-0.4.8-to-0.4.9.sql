@@ -188,6 +188,7 @@ CREATE TABLE IntranetCategories (
 	intranet_category_id int auto_increment,
 	intranet_category_name varchar(25) not null default 'Undefined',
 	intranet_category_description varchar(140) not null default 'Undefined',
+	intranet_category_image_name varchar(100) not null default 'intranet_category_generic',
 	primary key(intranet_category_id)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetCategories AUTO_INCREMENT=1;

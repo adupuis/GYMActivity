@@ -50,6 +50,10 @@
 				<textarea name="intranet_category_description" id="intranet_category_description" class="validate[required,length[2,140]] text-input" maxlength="140"></textarea>
 			</p>
 			<p>
+				<label for="intranet_category_image_name">Image</label>
+				<input name="intranet_category_image_name" id="intranet_category_image_name" type="text" class="validate[required,length[2,100]] text-input" maxlength="100"/>
+			</p>
+			<p>
 				<input type="submit" value="Créer" /> ou <a href="loader.php?module=intranet_category_list">annuler</a>
 			</p>
 		</form>

@@ -26,19 +26,21 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 	public $id = -1;
 	public $name = '';
 	public $description = '';
+	public $image_name = '';
 	
 	public function __construct( $id = -1 ) {
 		parent::__construct( "IntranetCategories", "intranet_category_id" );
 		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
+		$this->image_name = '';
 		if( $id > -1 ) {
 			$this->loadIntranetCategoryById( $id );
 		}
 	}
 	
 	public function insertNewIntranetCategory( $id, $name, $description ) {
-		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string( $name )."','".mysql_real_escape_string( $description )."')";
+		$query = "INSERT INTO IntranetCategories VALUES($id,'".mysql_real_escape_string( $name )."','".mysql_real_escape_string( $description )."','".mysql_real_escape_string( $image_name )."')";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyIntranetCategory MySQL query : $query", 0 );
 		}
@@ -90,7 +92,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 	public function getIntranetCategoryListWithRestrictions( $restrictions ) {
 		// $restrictions is in the form of array("intranet_category_id=1")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT intranet_category_id,intranet_category_name,intranet_category_description FROM IntranetCategories";
+		$query = "SELECT intranet_category_id,intranet_category_name,intranet_category_description,intranet_category_image_name FROM IntranetCategories";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			foreach( $restrictions as $key => $value ) {
@@ -111,6 +113,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 				$tmp_intranet_category->id = $row[0];
 				$tmp_intranet_category->name = $row[1];
 				$tmp_intranet_category->description = $row[2];
+				$tmp_intranet_category->image_name = $row[3];
 				$intranet_category_list[] = $tmp_intranet_category;
 			}
 		}
@@ -134,6 +137,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 			$this->id = $intranet_category->id;
 			$this->name = $intranet_category->name;
 			$this->description = $intranet_category->description;
+			$this->image_name = $intranet_category->image_name;
 		}
 	}
 	
@@ -147,6 +151,7 @@ class GenyIntranetCategory extends GenyDatabaseTools {
 			$this->id = $intranet_category->id;
 			$this->name = $intranet_category->name;
 			$this->description = $intranet_category->description;
+			$this->image_name = $intranet_category->image_name;
 		}
 	}
 	

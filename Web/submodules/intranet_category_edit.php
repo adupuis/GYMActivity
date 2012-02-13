@@ -32,9 +32,10 @@ $edit_intranet_category = GenyTools::getParam( 'edit_intranet_category', 'NULL' 
 if( $create_intranet_category == "true" ) {
 	$intranet_category_name = GenyTools::getParam( 'intranet_category_name', 'NULL' );
 	$intranet_category_description = GenyTools::getParam( 'intranet_category_description', 'NULL' );
+	$intranet_category_image_name = GenyTools::getParam( 'intranet_category_image_name', 'NULL' );
 
 	if( $intranet_category_name != 'NULL' && $intranet_category_description != 'NULL' ) {
-		$insert_id = $geny_intranet_category->insertNewIntranetCategory( 'NULL', $intranet_category_name, $intranet_category_description );
+		$insert_id = $geny_intranet_category->insertNewIntranetCategory( 'NULL', $intranet_category_name, $intranet_category_description, $intranet_category_image_name );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Catégorie Intranet ajoutée avec succès." );
 			$geny_intranet_category->loadIntranetCategoryById( $insert_id );
@@ -73,12 +74,16 @@ else if( $edit_intranet_category == 'true' ) {
 
 			$intranet_category_name = GenyTools::getParam( 'intranet_category_name', 'NULL' );
 			$intranet_category_description = GenyTools::getParam( 'intranet_category_description', 'NULL' );
+			$intranet_category_image_name = GenyTools::getParam( 'intranet_category_image_name', 'NULL' );
 
 			if( $intranet_category_name != 'NULL' && $geny_intranet_category->name != $intranet_category_name ) {
 				$geny_intranet_category->updateString( 'intranet_category_name', $intranet_category_name );
 			}
 			if( $intranet_category_description != 'NULL' && $geny_intranet_category->description != $intranet_category_description ) {
 				$geny_intranet_category->updateString( 'intranet_category_description', $intranet_category_description );
+			}
+			if( $intranet_category_image_name != 'NULL' && $geny_intranet_category->image_name != $intranet_category_image_name ) {
+				$geny_intranet_category->updateString( 'intranet_category_image_name', $intranet_category_image_name );
 			}
 		}
 		if( $geny_intranet_category->commitUpdates() ) {
@@ -154,6 +159,10 @@ else if( $edit_intranet_category == 'true' ) {
 			<p>
 				<label for="intranet_category_description">Description</label>
 				<textarea name="intranet_category_description" id="intranet_category_description" class="validate[required,length[2,140]] text-input" maxlength="140"><?php echo $geny_intranet_category->description ?></textarea>
+			</p>
+			<p>
+				<label for="intranet_category_image_name">Image</label>
+				<input name="intranet_category_image_name" id="intranet_category_image_name" type="text" value="<?php echo $geny_intranet_category->image_name ?>" class="validate[required,length[2,100]] text-input" maxlength="100"/>
 			</p>
 
 			<p>
