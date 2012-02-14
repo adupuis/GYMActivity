@@ -1,4 +1,4 @@
 <?php
-$header_title = '%COMPANY_NAME% - Liste des types de catégories de l\'Intranet';
+$header_title = '%COMPANY_NAME% - Liste des sous-catégories de l\'Intranet';
 $required_group_rights = array(1,2);
 ?>

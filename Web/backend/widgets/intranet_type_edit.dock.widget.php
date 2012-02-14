@@ -23,7 +23,7 @@
 
 <li class="intranet_type_edit">
 	<a href="loader.php?module=intranet_type_edit">
-		<span class="dock_item_title">Type Intranet</span><br/>
-		<span class="dock_item_content">Modifier un type de catégorie Intranet existant.</span>
+		<span class="dock_item_title">Sous-cat. Intranet</span><br/>
+		<span class="dock_item_content">Modifier une sous-catégorie Intranet existante.</span>
 	</a>
 </li>

@@ -27,12 +27,12 @@ $geny_intranet_category = new GenyIntranetCategory();
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_add.png"></img>
 		<span class="intranet_type_add">
-			Ajouter type de catégorie Intranet
+			Ajouter sous-catégorie Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet d'ajouter un type de catégorie Intranet. Tous les champs doivent être remplis.
+		Ce formulaire permet d'ajouter une sous-catégorie Intranet. Tous les champs doivent être remplis.
 		</p>
 		<script>
 			jQuery(document).ready(function(){

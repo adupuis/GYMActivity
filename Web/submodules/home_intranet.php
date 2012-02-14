@@ -16,7 +16,7 @@
 		</select>
 	</p>
 	<p id="home_intranet_type_list" style="display:none">
-		<label for="intranet_type_id">Type</label>
+		<label for="intranet_type_id">Sous-catégorie</label>
 		<select name="intranet_type_id" id="intranet_type_id" class="chzn-select">
 		</select>
 	</p>

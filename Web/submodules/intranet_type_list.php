@@ -36,11 +36,11 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $cat ) {
 
 foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 	
-	$intranet_category_name = $intranet_categories["$tmp->category_id"]->name;
+	$intranet_category_name = $intranet_categories["$tmp->intranet_category_id"]->name;
 
-	$edit = "<a href=\"loader.php?module=intranet_type_edit&load_intranet_type=true&intranet_type_id=$tmp->id\" title=\"Editer le type de catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_type_edit_small.png\" alt=\"Editer le type de catégorie Intranet\"></a>";
+	$edit = "<a href=\"loader.php?module=intranet_type_edit&load_intranet_type=true&intranet_type_id=$tmp->id\" title=\"Editer la sous-catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_type_edit_small.png\" alt=\"Editer la sous-catégorie Intranet\"></a>";
 
-	$remove = "<a href=\"loader.php?module=intranet_type_remove&intranet_type_id=$tmp->id\" title=\"Supprimer définitivement le type de catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_type_remove_small.png\" alt=\"Supprimer définitivement le type de catégorie Intranet\"></a>";
+	$remove = "<a href=\"loader.php?module=intranet_type_remove&intranet_type_id=$tmp->id\" title=\"Supprimer définitivement la sous-catégorie Intranet\"><img src=\"images/$web_config->theme/intranet_type_remove_small.png\" alt=\"Supprimer définitivement la sous-catégorie Intranet\"></a>";
 	
 	$data_array[] = array( $tmp->id, $tmp->name, $tmp->description, $intranet_category_name, $edit, $remove );
 	
@@ -53,12 +53,12 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_list.png"></img>
 		<span class="intranet_type_list">
-			Liste des types de catégories Intranet
+			Liste des sous-catégories Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des types de catégories de l'Intranet.
+		Voici la liste des sous-catégories de l'Intranet.
 		</p>
 		<script>
 			var indexData = new Array();
@@ -97,7 +97,7 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
-						"sLengthMenu": "Types par page _MENU_",
+						"sLengthMenu": "Ss-cats par page _MENU_",
 						"sZeroRecords": "Aucun résultat",
 						"sInfo": "Aff. _START_ à _END_ de _TOTAL_ enregistrements",
 						"sInfoEmpty": "Aff. 0 à 0 de 0 enregistrements",
