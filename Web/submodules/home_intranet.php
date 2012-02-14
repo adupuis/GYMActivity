@@ -5,8 +5,8 @@
 <div id="home_intranet_dock">
 
 	<p id="home_intranet_category_list" style="display:none">
-		<label for="intranet_category_id">Catégorie</label>
-		<select name="intranet_category_id" id="intranet_category_id" class="chzn-select">
+		<label for="intranet_category_select">Catégorie</label>
+		<select name="intranet_category_select" id="intranet_category_select" class="chzn-select">
 			<?php
 				$geny_intranet_category = new GenyIntranetCategory();
 				foreach( $geny_intranet_category->getAllIntranetCategories() as $intranet_category ) {
@@ -16,8 +16,8 @@
 		</select>
 	</p>
 	<p id="home_intranet_type_list" style="display:none">
-		<label for="intranet_type_id">Sous-catégorie</label>
-		<select name="intranet_type_id" id="intranet_type_id" class="chzn-select">
+		<label for="intranet_type_select">Sous-catégorie</label>
+		<select name="intranet_type_select" id="intranet_type_select" class="chzn-select">
 		</select>
 	</p>
 
@@ -31,7 +31,7 @@
 				}
 				
 				echo "<li class=\"widget intranet_category intranet_category_".$intranet_category->id."\">";
-				echo "<a href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetTypes( ".$intranet_category->id.");updateIntranetCategoryList( ".$intranet_category->id.");\">";
+				echo "<a href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetTypeWidgets( ".$intranet_category->id.");updateIntranetCategoryList( ".$intranet_category->id.");\">";
 				echo "<span class=\"dock_item_title\">".$intranet_category->name."</span><br/>";
 				echo "<span class=\"dock_item_content\">".$intranet_category->description."</span>";
 				echo "</a>";
@@ -50,7 +50,7 @@
 				}
 				
 				echo "<li class=\"widget intranet_type intranet_type_".$intranet_type->id." type_intranet_category_".$intranet_category->id."\">";
-				echo "<a href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetPages( ".$intranet_type->id.");updateIntranetTypeList( ".$intranet_type->id.");\">";
+				echo "<a href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetPageWidgets( ".$intranet_type->id.");updateIntranetTypeList( ".$intranet_type->id.");\">";
 				echo "<span class=\"dock_item_title\">".$intranet_type->name."</span><br/>";
 				echo "<span class=\"dock_item_content\">".$intranet_type->description."</span>";
 				echo "</a>";
@@ -94,67 +94,53 @@
 
 <script type="text/javascript">
 	
-	function getIntranetTypes( intranet_type_id ) {
+	$("#intranet_category_select").change( intranetCategoryChanged );
+	$("#intranet_type_select").change( intranetTypeChanged );
+	
+	function getIntranetTypes( selected_intranet_type_id ) {
 		console.log( 'function getIntranetTypes' );
-		var intranet_category_id = $("#intranet_category_id").val();
+		var intranet_category_id = $("#intranet_category_select").val();
 		console.log( '[getIntranetTypes] intranet_category_id: '+intranet_category_id );
-		console.log( '[getIntranetTypes] intranet_type_id: '+intranet_type_id );
+		console.log( '[getIntranetTypes] selected_intranet_type_id: '+selected_intranet_type_id );
 		if( intranet_category_id > 0 ) {
 			$.get('backend/api/get_intranet_type_list.php?intranet_category_id='+intranet_category_id, function( data ) {
 				$('.intranet_types_options').remove();
 				$.each( data, function( key, val ) {
-					console.log( '[getIntranetTypes] val: '+val["id"] );
-					if( val["id"] == intranet_type_id ) {
-						$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '" selected>' + val["name"] + '</option>');
+					if( val["id"] == selected_intranet_type_id ) {
+						$("#intranet_type_select").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '" selected>' + val["name"] + '</option>');
 					}
 					else {
-						$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
+						$("#intranet_type_select").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 					}
 				});
-				$("#intranet_type_id").trigger("liszt:updated");
+				$("#intranet_type_select").trigger("liszt:updated");
 
 			},'json');
 		}
 	}
 	
-	$("#intranet_category_id").change( intranetCategoryChanged );
-	
 	function intranetCategoryChanged() {
 		console.log( 'function intranetCategoryChanged' );
 		$('#home_intranet_type_list').hide();
-		var intranet_category_id = $("#intranet_category_id").val();
+		var intranet_category_id = $("#intranet_category_select").val();
 		if( intranet_category_id > 0 ) {
-			$("#intranet_category_id").change( displayIntranetTypes( intranet_category_id ) );
+			$("#intranet_category_select").change( displayIntranetTypeWidgets( intranet_category_id ) );
 		}
 	}
 	
-	function getIntranetPages() {
-		console.log( 'function getIntranetPages' );
-		var intranet_type_id = $("#intranet_type_id").val();
-		console.log( '(3) intranet_type_id: '+intranet_type_id );
+	function intranetTypeChanged() {
+		console.log( 'function intranetTypeChanged' );
+		var intranet_type_id = $("#intranet_type_select").val();
+		console.log( 'intranet_type_id: '+intranet_type_id );
 		if( intranet_type_id > 0 ) {
-			$("#intranet_type_id").change( displayIntranetPages( intranet_type_id ) );
+			$("#intranet_type_select").change( displayIntranetPageWidgets( intranet_type_id ) );
 		}
-	}
-	
-	$("#intranet_type_id").change( getIntranetPages );
-	
-	function displayIntranetTypes( intranet_category_id ) {
-		console.log( 'function displayIntranetTypes' );
-		console.log( 'intranet_category_id: '+intranet_category_id );
-		$('.intranet_type').hide();
-		if( intranet_category_id > 0 ) {
-			$('.type_intranet_category_'+intranet_category_id).show();
-		}
-		$('#home_intranet_categories').hide();
-		$('#home_intranet_pages').hide();
-		$('#home_intranet_types').show();
 	}
 	
 	function updateIntranetCategoryList( intranet_category_id ) {
 		console.log( 'function updateIntranetCategoryList' );
-		$("#intranet_category_id").val( intranet_category_id );
-		$("#intranet_category_id").trigger("liszt:updated");
+		$("#intranet_category_select").val( intranet_category_id );
+		$("#intranet_category_select").trigger("liszt:updated");
 		$('#home_intranet_category_list').show();
 	}
 	
@@ -165,8 +151,20 @@
 		$('#home_intranet_type_list').show();
 	}
 	
-	function displayIntranetPages( intranet_type_id ) {
-		console.log( 'function displayIntranetPages' );
+	function displayIntranetTypeWidgets( intranet_category_id ) {
+		console.log( 'function displayIntranetTypeWidgets' );
+		console.log( 'intranet_category_id: '+intranet_category_id );
+		$('.intranet_type').hide();
+		if( intranet_category_id > 0 ) {
+			$('.type_intranet_category_'+intranet_category_id).show();
+		}
+		$('#home_intranet_categories').hide();
+		$('#home_intranet_pages').hide();
+		$('#home_intranet_types').show();
+	}
+	
+	function displayIntranetPageWidgets( intranet_type_id ) {
+		console.log( 'function displayIntranetPageWidgets' );
 		console.log( 'intranet_type_id: '+intranet_type_id );
 		$('.intranet_page').hide();
 		if( intranet_type_id > 0 ) {
