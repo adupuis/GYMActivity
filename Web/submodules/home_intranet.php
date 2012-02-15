@@ -3,6 +3,7 @@
 $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_type = new GenyIntranetType();
 $geny_intranet_tag = new GenyIntranetTag();
+$geny_intranet_page = new GenyIntranetPage();
 
 ?>
 
@@ -43,14 +44,8 @@ $geny_intranet_tag = new GenyIntranetTag();
 					if( !file_exists( $filename ) ) {
 						$filename = "images/genymobile-2012/intranet_category_generic.png";
 					}
-					
-					$intranet_tag_list = $geny_intranet_tag->getIntranetTagsByCategory( $intranet_category->id );
-					$tag_classes = "";
-					foreach( $intranet_tag_list as $tag ) {
-						$tag_classes .= " tag_".$tag->name;
-					}
 									
-					echo "<li class=\"widget intranet_category intranet_category_".$intranet_category->id.$tag_classes."\">";
+					echo "<li class=\"widget\">";
 					echo "<a class=\"widget_link\" href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetTypeWidgets( ".$intranet_category->id.");updateIntranetCategoryList( ".$intranet_category->id.");\">";
 					echo "<span class=\"dock_item_title\">".$intranet_category->name."</span><br/>";
 					echo "<span class=\"dock_item_content\">".$intranet_category->description."</span>";
@@ -72,43 +67,10 @@ $geny_intranet_tag = new GenyIntranetTag();
 						$filename = "images/genymobile-2012/intranet_category_generic.png";
 					}
 					
-					$intranet_tag_list = $geny_intranet_tag->getIntranetTagsByType( $intranet_type->id );
-					$tag_classes = "";
-					foreach( $intranet_tag_list as $tag ) {
-						$tag_classes .= " tag_".$tag->name;
-					}
-					
-					echo "<li class=\"widget intranet_type intranet_type_".$intranet_type->id." type_intranet_category_".$intranet_category->id.$tag_classes."\">";
+					echo "<li class=\"widget intranet_type type_intranet_category_".$intranet_category->id."\">";
 					echo "<a class=\"widget_link\" href=# style=\"background-image: url(".$filename.")\" onclick=\"displayIntranetPageWidgets( ".$intranet_type->id.");updateIntranetTypeList( ".$intranet_type->id.");\">";
 					echo "<span class=\"dock_item_title\">".$intranet_type->name."</span><br/>";
 					echo "<span class=\"dock_item_content\">".$intranet_type->description."</span>";
-					echo "</a>";
-					echo "</li>\n";
-				}
-			?>
-		</ul>
-	</div>
-	
-	<div id="home_intranet_tags" style="display:none">
-		<div class="home_intranet_separator">Tags</div>
-		<ul>
-			<?php
-				foreach( $geny_intranet_tag->getAllIntranetTags() as $intranet_tag ) {
-					
-					$intranet_category_list = $geny_intranet_category->getIntranetCategoriesByTagId( $intranet_tag->id );
-					$category_classes = "";
-					foreach( $intranet_category_list as $cat ) {
-						$category_classes .= " tag_intranet_category_".$cat->id;
-					}
-					$intranet_type_list = $geny_intranet_type->getIntranetTypesByTagId( $intranet_tag->id );
-					$type_classes = "";
-					foreach( $intranet_type_list as $typ ) {
-						$type_classes .= " tag_intranet_type_".$typ->id;
-					}
-					
-					echo "<li class=\"widget intranet_tag intranet_tag_".$intranet_tag->id.$category_classes.$type_classes."\">";
-					echo "<a class=\"widget_link\" href=#>";
-					echo "<span class=\"dock_item_title\">".$intranet_tag->name."</span>";
 					echo "</a>";
 					echo "</li>\n";
 				}
@@ -120,7 +82,6 @@ $geny_intranet_tag = new GenyIntranetTag();
 		<div class="home_intranet_separator">Pages</div>
 		<ul>
 			<?php
-				$geny_intranet_page = new GenyIntranetPage();
 				foreach( $geny_intranet_page->getAllIntranetPages() as $intranet_page ) {
 					$intranet_category = new GenyIntranetCategory( $intranet_page->intranet_category_id );
 					$intranet_type = new GenyIntranetType( $intranet_page->intranet_type_id );
@@ -139,7 +100,7 @@ $geny_intranet_tag = new GenyIntranetTag();
 						$page_intranet_tag_names .= " ".$tag->name;
 					}
 					
-					echo "<li class=\"widget intranet_page intranet_page_".$intranet_page->id." page_intranet_category_".$intranet_category->id." page_intranet_type_".$intranet_type->id.$page_intranet_tag_classes."\">";
+					echo "<li class=\"widget intranet_page page_intranet_type_".$intranet_type->id.$page_intranet_tag_classes."\">";
 					echo "<a class=\"widget_link\" href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=".$intranet_page->id."\" style=\"background-image: url(".$filename.")\">";
 					echo "<span class=\"dock_item_title\">".$intranet_page->title."</span><br/>";
 					echo "<span class=\"dock_item_content\">".$intranet_page->description."</span>";
