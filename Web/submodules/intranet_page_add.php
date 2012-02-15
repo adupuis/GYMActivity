@@ -226,9 +226,5 @@ $("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
 </script>
 
 <?php
-	$bottomdock_items = array();
-	if( $profile->rights_group_id == 1  || /* admin */
-	    $profile->rights_group_id == 2     /* superuser */ ) {
-		array_push( $bottomdock_items, 'backend/widgets/intranet_page_list.dock.widget.php' );
-	}
+	$bottomdock_items = array('backend/widgets/intranet_page_list.dock.widget.php');
 ?>

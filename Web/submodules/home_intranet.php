@@ -315,5 +315,5 @@ if( $load_intranet_category == 'true' ) {
 	}
 }
 
-$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/intranet_page_add.dock.widget.php');
+$bottomdock_items = array('backend/widgets/intranet_page_list.dock.widget.php','backend/widgets/intranet_page_add.dock.widget.php');
 ?>
