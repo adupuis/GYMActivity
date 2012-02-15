@@ -22,7 +22,6 @@
 
 
 $geny_ptr = new GenyProjectTaskRelation();
-$geny_tools = new GenyTools();
 date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
@@ -144,13 +143,14 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 // Now we create an array that contains all data that will be displayed in our table
 $data_array = array();
 // We also create a table that contains the filters data (but only for required data).
-$data_array_filters = array( 1 => array(), 3 => array(), 4 => array(), 7 => array());
+$data_array_filters = array( 1 => array(), 3 => array(), 4 => array(),5 => array(), 8 => array());
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
 $geny_ars_approval = new GenyActivityReportStatus();
 $geny_ars_approval->loadActivityReportStatusByShortName('P_APPROVAL');
 $geny_ars_user_validation = new GenyActivityReportStatus();
 $geny_ars_user_validation->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+$geny_client = new GenyClient();
 foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id != ".$geny_ars_approval->id,"activity_report_status_id != ".$geny_ars_user_validation->id) ) as $ar ){
 	// Let's use some server load here...
 	$tmp_activity = new GenyActivity( $ar->activity_id );
@@ -159,7 +159,8 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 	$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
 	$tmp_project = new GenyProject( $tmp_assignement->project_id );
 	$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
-	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$tmp_activity->load,$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
+	$geny_client->loadClientById($tmp_project->client_id);
+	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$geny_client->name,$tmp_activity->load,$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
 	
 	if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
 		$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
@@ -167,8 +168,10 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 		$data_array_filters[3][] = $tmp_project->name;
 	if( ! in_array($tmp_task->name,$data_array_filters[4]) )
 		$data_array_filters[4][] = $tmp_task->name;
-	if( ! in_array($geny_ars->name,$data_array_filters[7]) )
-		$data_array_filters[7][] = $geny_ars->name;
+	if( ! in_array($geny_client->name,$data_array_filters[5]) )
+		$data_array_filters[5][] = $geny_client->name;
+	if( ! in_array($geny_ars->name,$data_array_filters[8]) )
+		$data_array_filters[8][] = $geny_ars->name;
 }
 
 ?>
@@ -236,7 +239,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 					}
 				} );
 				$("tfoot th").each( function ( i ) {
-					if( i == 1 || i == 3 || i  == 4 || i == 7){
+					if( i == 1 || i == 3 || i  == 4 || i == 5 || i == 8){
 						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -287,6 +290,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 						<th>Date</th>
 						<th>Projet</th>
 						<th>Tâche</th>
+						<th>Client</th>
 						<th>Charge (tâche)</th>
 						<th>Charge (total jour)</th>
 						<th>Status</th>
@@ -294,7 +298,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$da[0]." /></td><td>".$da[1]."</td><td class='centered'>".$da[2]."</td><td class='centered'>".$da[3]."</td><td class='centered'>".$da[4]."</td><td class='centered'>".$da[5]."</td><td class='centered'>".$da[6]."</td><td>".$da[7]."</td></tr>";
+							echo "<tr><td><input type='checkbox' name='activity_report_id[]' value=".$da[0]." /></td><td>".$da[1]."</td><td class='centered'>".$da[2]."</td><td class='centered'>".$da[3]."</td><td class='centered'>".$da[4]."</td><td class='centered'>".$da[5]."</td><td class='centered'>".$da[6]."</td><td class='centered'>".$da[7]."</td><td>".$da[8]."</td></tr>";
 						}
 					?>
 					</tbody>
@@ -304,6 +308,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 						<th>Date</th>
 						<th>Projet</th>
 						<th id="task">Tâche</th>
+						<th>Client</th>
 						<th>Charge (tâche)</th>
 						<th>Charge (total jour)</th>
 						<th>Status</th>
@@ -319,6 +324,3 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 	</p>
 </div>
 
-<?php
-include_once 'footer.php';
-?>
