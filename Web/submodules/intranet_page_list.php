@@ -52,18 +52,76 @@ foreach( $geny_profile->getAllProfiles() as $profile ) {
 foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	
 	$intranet_category_name = $intranet_categories["$tmp->intranet_category_id"]->name;
-	$intranet_type_name = $intranet_types["$tmp->intranet_type_id"]->name." (".$intranet_category_name.")";
+	$intranet_type_name = $intranet_types["$tmp->intranet_type_id"]->name;
 	$intranet_page_status_name = $intranet_page_statuses["$tmp->status_id"]->name;
 	$profile_screen_name = $profiles["$tmp->profile_id"]->firstname." ".$profiles["$tmp->profile_id"]->lastname;
 	if( $profile_screen_name == '' ) {
 		$profile_screen_name = $profiles["$tmp->profile_id"]->login;
 	}
+	
+	$intranet_page_profile = new GenyProfile( $tmp->profile_id );
+	
+	$profile_authorized_to_view = false;
+	$intranet_page_status_id = $tmp->status_id;
+	if( $intranet_page_status_id == 1 ) {
+		if( $profile->rights_group_id == 1  || /* admin */
+			$profile->rights_group_id == 2  ||   /* superuser */
+			$profile->id == $tmp->profile_id ) {
+			$profile_authorized_to_view = true;
+		}
+	}
+	else if( $intranet_page_status_id == 2 ) {
+		if( $profile->rights_group_id == 1  || /* admin */
+			$profile->rights_group_id == 2  ||   /* superuser */
+			$profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+			$profile_authorized_to_view = true;
+		}
+	}
+	else {
+		$profile_authorized_to_view = true;
+	}
+	
+	if( $profile_authorized_to_view ) {
+		$view = "<a href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Visualiser la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_view_small.png\" alt=\"Visualiser la page Intranet\"></a>";
+	}
+	else {
+		$view = "";
+	}
 
-	$view = "<a href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Visualiser la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_view_small.png\" alt=\"Visualiser la page Intranet\"></a>";
+	$profile_authorized_to_edit = false;
+	$intranet_page_acl_modification_type = $tmp->acl_modification_type;
+	if( $intranet_page_acl_modification_type == "owner" ) {
+		if( $profile->rights_group_id == 1  || /* admin */
+			$profile->rights_group_id == 2  ||   /* superuser */
+			$profile->id == $tmp->profile_id ) {
+			$profile_authorized_to_edit = true;
+		}
+	}
+	else if( $intranet_page_acl_modification_type == "group" ) {
+		if( $profile->rights_group_id == 1  || /* admin */
+			$profile->rights_group_id == 2  ||   /* superuser */
+			$profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+			$profile_authorized_to_edit = true;
+		}
+	}
+	else {
+		$profile_authorized_to_edit = true;
+	}
 	
-	$edit = "<a href=\"loader.php?module=intranet_page_edit&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Editer la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Editer la page Intranet\"></a>";
+	if( $profile_authorized_to_edit ) {
+		$edit = "<a href=\"loader.php?module=intranet_page_edit&load_intranet_page=true&intranet_page_id=$tmp->id\" title=\"Editer la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_edit_small.png\" alt=\"Editer la page Intranet\"></a>";
+	}
+	else {
+		$edit = "";
+	}
 	
-	$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
+	if( $profile->rights_group_id == 1  || /* admin */
+	    $profile->rights_group_id == 2  /* superuser */ ) {
+		$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
+	}
+	else {
+		$remove = "";
+	}
 	
 	$data_array[] = array( $tmp->id, $tmp->title, $intranet_category_name, $intranet_type_name, $intranet_page_status_name, $profile_screen_name, $view, $edit, $remove );
 	
@@ -169,7 +227,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 					<thead>
 						<th>Titre</th>
 						<th>Catégorie</th>
-						<th>Type</th>
+						<th>Sous-catégorie</th>
 						<th>Statut</th>
 						<th>Créateur</th>
 						<th>Visualiser</th>
@@ -186,7 +244,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 					<tfoot>
 						<th class="filtered">Titre</th>
 						<th class="filtered">Catégorie</th>
-						<th class="filtered">Type</th>
+						<th class="filtered">Sous-catégorie</th>
 						<th class="filtered">Statut</th>
 						<th class="filtered">Créateur</th>
 						<th class="filtered">Visualiser</th>
