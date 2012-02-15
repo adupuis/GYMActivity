@@ -533,7 +533,7 @@ CREATE TABLE IntranetPageStatus (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetPageStatus AUTO_INCREMENT=1;
 INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon','Visible uniquement par le créateur de la page');
-INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon partagé','Visible par les profils appartenant groupe du créateur de la page');
+INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon partagé','Visible par les profils appartenant au groupe du créateur de la page');
 INSERT INTO IntranetPageStatus VALUES (NULL,'Publié','Visible par tous');
 
 CREATE TABLE IntranetHistories (
