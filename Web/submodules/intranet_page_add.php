@@ -66,7 +66,7 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 				</select>
 			</p>
 			<p>
-				<label for="intranet_type_id">Type</label>
+				<label for="intranet_type_id">Sous-catégorie</label>
 				<select name="intranet_type_id" id="intranet_type_id" class="chzn-select" data-placeholder="Choisissez d'abord une catégorie...">
 					<option value=""></option>
 				</select>
@@ -108,9 +108,9 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 							$.each( data, function( key, val ) {
 								$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 							});
-							$("#intranet_type_id").attr('data-placeholder','Choisissez un type...');
+							$("#intranet_type_id").attr('data-placeholder','Choisissez une sous-catégorie...');
 							$("#intranet_type_id").trigger("liszt:updated");
-							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez un type...');
+							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez une sous-catégorie...');
 
 						},'json');
 					}
