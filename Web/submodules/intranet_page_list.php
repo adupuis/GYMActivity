@@ -65,15 +65,15 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	$intranet_page_status_id = $tmp->status_id;
 	if( $intranet_page_status_id == 1 ) {
 		if( $profile->rights_group_id == 1  || /* admin */
-			$profile->rights_group_id == 2  ||   /* superuser */
-			$profile->id == $tmp->profile_id ) {
+		    $profile->rights_group_id == 2  ||   /* superuser */
+		    $profile->id == $tmp->profile_id ) {
 			$profile_authorized_to_view = true;
 		}
 	}
 	else if( $intranet_page_status_id == 2 ) {
 		if( $profile->rights_group_id == 1  || /* admin */
-			$profile->rights_group_id == 2  ||   /* superuser */
-			$profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+		    $profile->rights_group_id == 2  ||   /* superuser */
+		    $profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
 			$profile_authorized_to_view = true;
 		}
 	}
@@ -92,15 +92,15 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	$intranet_page_acl_modification_type = $tmp->acl_modification_type;
 	if( $intranet_page_acl_modification_type == "owner" ) {
 		if( $profile->rights_group_id == 1  || /* admin */
-			$profile->rights_group_id == 2  ||   /* superuser */
-			$profile->id == $tmp->profile_id ) {
+		    $profile->rights_group_id == 2  ||   /* superuser */
+		    $profile->id == $tmp->profile_id ) {
 			$profile_authorized_to_edit = true;
 		}
 	}
 	else if( $intranet_page_acl_modification_type == "group" ) {
 		if( $profile->rights_group_id == 1  || /* admin */
-			$profile->rights_group_id == 2  ||   /* superuser */
-			$profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+		    $profile->rights_group_id == 2  ||   /* superuser */
+		    $profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
 			$profile_authorized_to_edit = true;
 		}
 	}
