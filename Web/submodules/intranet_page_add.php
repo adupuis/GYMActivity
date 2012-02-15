@@ -73,7 +73,7 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 			</p>
 			<p style="width:550px">
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 				</select>
 				<a href='#create_intranet_tag' rel='prettyPhoto[create_intranet_tag]' class="submit" style="margin:0;float:right">+</a>
 			</p>
@@ -124,7 +124,7 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 						$.each( data, function( key, val ) {
 							$("#intranet_tag_id").append('<option class="intranet_tags_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 						});
-						$("#intranet_tag_id").attr('data-placeholder','Choisissez un ou plusieurs tags...');
+						$("#intranet_tag_id").attr('data-placeholder','Choisissez/ajoutez des tags...');
 						$("#intranet_tag_id").trigger("liszt:updated");
 
 					},'json');

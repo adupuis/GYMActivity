@@ -354,7 +354,7 @@ if( $profile_authorized ) {
 			</p>
 			<p style="width:550px">
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 					<?php
 						$current_page_tags = $geny_intranet_tag->getIntranetTagsByPage( $geny_intranet_page->id );
 						foreach( $geny_intranet_tag->getAllIntranetTagsOrderByName() as $intranet_tag ) {
