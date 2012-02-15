@@ -25,17 +25,30 @@ div#home_intranet_dock p:last-child {
 	margin-bottom:0;
 }
 
-div#home_intranet_dock select {
+/*div#home_intranet_dock select {
 	cursor:pointer;
 	display:block;
-/* 	float:left; */
 	font-size:14px;
 	font-weight:bold;
 	line-height:28px;
 	margin-bottom:5px;
-/* 	width:245px; */
 	width: 400px;
 	text-align: center;
+}*/
+
+div#home_intranet_dock .category_type_list {
+	cursor: pointer;
+	display: block;
+	line-height: 28px;
+	margin-bottom: 5px;
+	width: 400px;
+}
+
+div#home_intranet_dock .tag_list {
+	cursor: pointer;
+	display: block;
+	margin-bottom: 5px;
+	width: 400px;
 }
 
 div#home_intranet_dock ul {
@@ -52,7 +65,7 @@ div#home_intranet_dock ul li .widget {
 	vertical-align: middle;
 }
 
-div#home_intranet_dock ul li a {
+div#home_intranet_dock .widget_link {
 	text-align: center;
 	margin-left: 50px;
 	margin-bottom: 50px;
@@ -60,7 +73,7 @@ div#home_intranet_dock ul li a {
 	background-position:10px 10px;
 }
 
-div#home_intranet_dock ul li a {
+div#home_intranet_dock .widget_link {
 	display:block;
 	float: left;
 	width: 350px;
@@ -73,14 +86,14 @@ div#home_intranet_dock ul li a {
 	padding: 5px;
 }
 
-div#home_intranet_dock ul li a:hover{
+div#home_intranet_dock ul li a:hover {
 	background-color:#84BE5D;
 	border: 1px solid #D9D9D9;
 	color: #fff;
 	text-shadow:none;
 }
 
-div#home_intranet_dock ul li a span.dock_item_title{
+div#home_intranet_dock ul li a span.dock_item_title {
 	position: relative;
 	left: 35px;
 	top: 20px;
@@ -100,3 +113,15 @@ div#home_intranet_dock ul li a span.dock_item_content {
 }
 
 /* End of main dock style */
+
+.home_intranet_separator {
+	display: block;
+	width: 300px;
+	height: 20px;
+/* 	margin: 20px auto; */
+	margin-bottom: 20px;
+/* 	background: url('../../images/genymobile-2012/separator.png') no-repeat; */
+	clear: both;
+	font-weight: bold;
+	font-size: 16px;
+}
