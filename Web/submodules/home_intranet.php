@@ -1,7 +1,5 @@
 <?php
 
-$gritter_notifications = array();
-
 $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_type = new GenyIntranetType();
 $geny_intranet_tag = new GenyIntranetTag();
