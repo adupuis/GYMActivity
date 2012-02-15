@@ -21,6 +21,7 @@ $geny_intranet_page = new GenyIntranetPage();
 	<p id="home_intranet_category_list" style="display:none">
 		<label for="intranet_category_select">Catégories</label>
 		<select name="intranet_category_select" id="intranet_category_select" class="category_type_list chzn-select">
+			<option value="0"></option>
 			<?php
 				foreach( $geny_intranet_category->getAllIntranetCategories() as $intranet_category ) {
 					echo "<option value=\"".$intranet_category->id."\">".$intranet_category->name."</option>\n";
@@ -31,6 +32,7 @@ $geny_intranet_page = new GenyIntranetPage();
 	<p id="home_intranet_type_list" style="display:none">
 		<label for="intranet_type_select">Sous-catégories</label>
 		<select name="intranet_type_select" id="intranet_type_select" class="category_type_list chzn-select">
+			<option value="0"></option>
 		</select>
 	</p>
 
@@ -100,7 +102,7 @@ $geny_intranet_page = new GenyIntranetPage();
 						$page_intranet_tag_names .= " ".$tag->name;
 					}
 					
-					echo "<li class=\"widget intranet_page page_intranet_type_".$intranet_type->id.$page_intranet_tag_classes."\">";
+					echo "<li class=\"widget intranet_page page_intranet_category_".$intranet_category->id." page_intranet_type_".$intranet_type->id.$page_intranet_tag_classes."\">";
 					echo "<a class=\"widget_link\" href=\"loader.php?module=intranet_page_view&load_intranet_page=true&intranet_page_id=".$intranet_page->id."\" style=\"background-image: url(".$filename.")\">";
 					echo "<span class=\"dock_item_title\">".$intranet_page->title."</span><br/>";
 					echo "<span class=\"dock_item_content\">".$intranet_page->description."</span>";
@@ -171,6 +173,9 @@ $geny_intranet_page = new GenyIntranetPage();
 	
 	function intranetCategoryChanged() {
 		console.log( 'function intranetCategoryChanged' );
+		$('#intranet_type_select').val(0);
+		var intranet_type_id = $("#intranet_type_select").val();
+		console.log( '--intranet_type_id: '+intranet_type_id );
 		$('#home_intranet_type_list').hide();
 		var intranet_category_id = $("#intranet_category_select").val();
 		if( intranet_category_id > 0 ) {
@@ -187,7 +192,12 @@ $geny_intranet_page = new GenyIntranetPage();
 		}
 		else {
 			$('#home_intranet_pages').hide();
-			$('#home_intranet_categories').show();
+			if( $('#home_intranet_category_list').is(':hidden') ) {
+				$('#home_intranet_categories').show();
+			}
+			else {
+				$('#home_intranet_types').show();
+			}
 		}
 	}
 	
@@ -204,15 +214,21 @@ $geny_intranet_page = new GenyIntranetPage();
 		$('#home_intranet_types').show();
 	}
 	
-	function processPageFilterByTagsAndType( intranet_tags, intranet_type_id ) {
+	function processPageFilterByTagsAndTypeOrTagsAndCategory( intranet_tags, intranet_type_id, intranet_category_id ) {
+		console.log( 'processPageFilterByTagsAndTypeOrTagsAndCategory' );
 		var intranet_tags_split = intranet_tags.toString().split(',');
 		var tag_classes = "";
 		$.each( intranet_tags_split, function( data ) {
 			tag_classes += ".page_intranet_tag_"+intranet_tags_split[data];
 		});
 		console.log( 'tag_classes: '+tag_classes );
-		if( intranet_type_id != null ) {
+		console.log( 'intranet_type_id: '+intranet_type_id );
+		console.log( 'intranet_category_id: '+intranet_category_id );
+		if( intranet_type_id > 0 ) {
 			$(tag_classes).filter('.page_intranet_type_'+intranet_type_id).show();
+		}
+		else if( intranet_category_id > 0 ) {
+			$(tag_classes).filter('.page_intranet_category_'+intranet_category_id).show();
 		}
 		else {
 			$(tag_classes).show();
@@ -224,10 +240,12 @@ $geny_intranet_page = new GenyIntranetPage();
 		$('.intranet_page').hide();
 		var intranet_tags = $("#intranet_tag_select").val();
 		var intranet_type_id = $("#intranet_type_select").val();
+		var intranet_category_id = $("#intranet_category_select").val();
 		console.log( 'intranet_tags: '+intranet_tags );
 		console.log( 'intranet_type_id: '+intranet_type_id );
+		console.log( 'intranet_category_id: '+intranet_category_id );
 		if( intranet_tags != null ) {
-			processPageFilterByTagsAndType( intranet_tags, intranet_type_id );
+			processPageFilterByTagsAndTypeOrTagsAndCategory( intranet_tags, intranet_type_id, intranet_category_id );
 			$('#home_intranet_categories').hide();
 			$('#home_intranet_types').hide();
 			$('#home_intranet_pages').show();
@@ -241,10 +259,12 @@ $geny_intranet_page = new GenyIntranetPage();
 		console.log( 'function displayIntranetPageWidgets' );
 		$('.intranet_page').hide();
 		var intranet_tags = $("#intranet_tag_select").val();
+		var intranet_category_id = $("#intranet_category_select").val();
 		console.log( 'intranet_tags: '+intranet_tags );
 		console.log( 'intranet_type_id: '+intranet_type_id );
+		console.log( 'intranet_category_id: '+intranet_category_id );
 		if( intranet_tags != null ) {
-			processPageFilterByTagsAndType( intranet_tags, intranet_type_id );
+			processPageFilterByTagsAndTypeOrTagsAndCategory( intranet_tags, intranet_type_id, intranet_category_id );
 		}
 		else {
 			if( intranet_type_id > 0 ) {
