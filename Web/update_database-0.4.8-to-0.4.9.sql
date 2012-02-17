@@ -46,8 +46,12 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_recruitement_date date not null,
 	profile_management_data_is_billable boolean not null default true,
 	profile_management_data_availability_date date not null,
+	profile_management_data_group_leader_id int not null default 5,
+	profile_management_data_technology_leader_id int not null default 5,
 	primary key(profile_management_data_id),
-	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
+	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
+	foreign key(profile_management_data_group_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
+	foreign key(profile_management_data_technology_leader_id) references Profiles(profile_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
@@ -122,8 +126,8 @@ CREATE TABLE CareerEvents (
 	career_event_title varchar(200) not null,
 	career_event_text text not null,
 	career_event_attachement varchar(250),
-	career_event_manager_agreement boolean not null default false,
-	career_event_employee_agreement boolean not null default false,
+	career_event_manager_agreement int not null default 0,
+	career_event_employee_agreement int not null default 0,
 	primary key(career_event_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
