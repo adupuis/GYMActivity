@@ -20,10 +20,13 @@
 
 // Variable to configure global behaviour
 
+$param_profile_id = GenyTools::getParam("profile_id",$profile->id);
+
 date_default_timezone_set('Europe/Paris');
-$geny_rights_group = new GenyRightsGroup( $profile->rights_group_id );
+$geny_profile = new GenyProfile( $param_profile_id );
+$geny_rights_group = new GenyRightsGroup( $geny_profile->rights_group_id );
 $geny_pmd = new GenyProfileManagementData();
-$geny_pmd->loadProfileManagementDataByProfileId($profile->id);
+$geny_pmd->loadProfileManagementDataByProfileId($geny_profile->id);
 $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
 
@@ -31,10 +34,10 @@ $data_array = array();
 $data_array_filters = array( 0 => array(), 2 => array(), 4 => array(), 5 => array() );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
-$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
+$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($geny_profile->id);
 
 // Idem pour les RTT
-$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
+$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($geny_profile->id);
 
 // TODO : faire la construction des data_array* (c'est chiant...)
 
@@ -49,10 +52,29 @@ function ceTypeToHtml($type="neutral"){
 	return "Neutre";
 }
 
-function ceAgreementToHtml($ce_id,$agreement,$theme) {
+function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$consulted_profile) {
+// 	<a href='#ce_employee_agreement_$ce->id' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,1)\"><img src='images/$web_config->theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,-1)\"><img src='images/$web_config->theme/idea_vote_down_small.png' /></a>
+	$grg = new GenyRightsGroup($current_profile->rights_group_id);
 	if( $agreement == 0){
-		return "<a href='#ce_agreement_validation_$ce_id' rel='prettyPhoto[ce_$ce_id]'><img src='images/$theme/edit_add_small.png'></a>";
+		if($type == 'employee_agreement' && $current_profile->id == $consulted_profile->id){
+			return "<a href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
+			
+		}
+		elseif ($type == 'manager_agreement' && ($current_profile->rights_group_id == $grg->getIdByShortname('ADM') || $current_profile->rights_group_id == $grg->getIdByShortname('TM')) ) {
+			return "<a href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
+		}
+		else {
+			return "<img src='images/$theme/edit_add_small.png'>";
+		}
 	}
+	elseif ($agreement == 1) {
+		return "<img src='images/$theme/idea_vote_up_small.png' />";
+	}
+	elseif ($agreement == -1) {
+		return "<img src='images/$theme/idea_vote_down_small.png' />";
+	}
+	
+	return "<img src='images/$theme/edit_add_small.png'>";
 }
 
 
@@ -118,10 +140,6 @@ function ceAgreementToHtml($ce_id,$agreement,$theme) {
 		$("#ce_list_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 	}
 	
-	function submit_ce_agreement(agreement_type,ce_id,ce_vote){
-		
-	}
-	
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -139,10 +157,10 @@ function ceAgreementToHtml($ce_id,$agreement,$theme) {
 		</style>
 		<ul class="ps_float">
 			<li>
-				<strong>Nom : </strong> <?php echo $profile->lastname ; ?><br/>
-				<strong>Prénom : </strong> <?php echo $profile->firstname ; ?><br/>
-				<strong>Login : </strong> <?php echo $profile->login ; ?><br/>
-				<strong>Email : </strong> <?php echo $profile->email ; ?><br/>
+				<strong>Nom : </strong> <?php echo $geny_profile->lastname ; ?><br/>
+				<strong>Prénom : </strong> <?php echo $geny_profile->firstname ; ?><br/>
+				<strong>Login : </strong> <?php echo $geny_profile->login ; ?><br/>
+				<strong>Email : </strong> <?php echo $geny_profile->email ; ?><br/>
 				<strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?>
 			</li>
 			<li>
@@ -187,8 +205,8 @@ function ceAgreementToHtml($ce_id,$agreement,$theme) {
 				</thead>
 				<tbody>
 				<?php
-				foreach( $geny_ce->getCareerEventListByProfileId($profile->id) as $ce ){
-					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>".ceTypeToHtml($ce->type)."</td><td>$ce->text</td><td id='ce_employee_agreement_$ce->id'><a href='#ce_employee_agreement_$ce->id' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,1)\"><img src='images/$web_config->theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,-1)\"><img src='images/$web_config->theme/idea_vote_down_small.png' /></a></td><td>".ceAgreementToHtml($ce->id,$ce->manager_agreement,$web_config->theme)."</td></tr>";
+				foreach( $geny_ce->getCareerEventListByProfileId($geny_profile->id) as $ce ){
+					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>".ceTypeToHtml($ce->type)."</td><td>$ce->text</td><td id='ce_employee_agreement_$ce->id'>".ceAgreementToHtml('employee_agreement',$ce->id,$ce->employee_agreement,$web_config->theme,$profile,$geny_profile)."</td><td id='ce_manager_agreement_$ce->id'>".ceAgreementToHtml('manager_agreement',$ce->id,$ce->manager_agreement,$web_config->theme,$profile,$geny_profile)."</td></tr>";
 					
 				}
 				?>
@@ -253,7 +271,7 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 	}
 	else{
 		console.log("About to send AJAX request");
-		jQuery.get("backend/api/create_career_event.php?type="+encodeURIComponent(ce_type)+"&title="+encodeURIComponent(ce_title)+"&text="+encodeURIComponent(ce_description), function(data){
+		jQuery.get("backend/api/create_career_event.php?type="+encodeURIComponent(ce_type)+"&title="+encodeURIComponent(ce_title)+"&text="+encodeURIComponent(ce_description)+"&profile_id="+<?php echo $geny_profile->id;?>, function(data){
 			console.log("Back from AJAX, processing");
 			console.log("status="+data.status);
 			console.log("status_message="+data.status_message);
@@ -264,8 +282,8 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 				ce_title,
 				ce_type,
 				ce_description,
-				0,
-				0
+				'Recharger la page pour valider',
+				'Recharger la page pour valider'
 				] );
 				$(".pp_social #status_message_display").append("<strong style='color: green;'>"+data.status_message+"</strong>");
 				$("div#pp_full_res #close_popup").empty();
@@ -281,6 +299,21 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 $("#pp_full_res #form_career_event_add").validationEngine('init');
 // binds form submission and fields to the validation engine
 $("##pp_full_res #form_career_event_add").validationEngine('attach');
+
+function bordel(){
+	console.log('Mais bordel quoi !!!');
+}
+
+function submit_ce_agreement(agreement_type,ce_id,ce_vote){
+	var api_call_url = "backend/api/update_career_event.php?career_event_id="+ce_id+"&profile_id="+<?php echo $geny_profile->id;?>+"&"+agreement_type+"="+ce_vote;
+	$("#ce_"+agreement_type+"_"+ce_id).empty();
+	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader.gif' style='height:32px; width: 32px;' />")
+	console.log("Entering career_event submission. About to call: "+api_call_url);
+	$.get(api_call_url, 
+		function(){
+			console.log('Mais bordel quoi !!!');
+		});
+}
 
 </script>
 <?php
