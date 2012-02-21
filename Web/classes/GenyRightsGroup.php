@@ -44,16 +44,17 @@ class GenyRightsGroup extends GenyDatabaseTools{
 		else
 			return -1;
 	}
-	public function getRightsGroupsListWithRestrictions($restrictions){
+	public function getRightsGroupsListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
 		$query = "SELECT rights_group_id,rights_group_name,rights_group_shortname,rights_group_description FROM RightsGroups";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string($restriction_type);
 			foreach($restrictions as $key => $value) {
 				$query .= $value;
 				if($key != $last_index){
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
