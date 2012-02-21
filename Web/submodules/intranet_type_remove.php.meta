@@ -1,4 +1,4 @@
 <?php
-$header_title = '%COMPANY_NAME% - Suppression type de catégorie Intranet';
+$header_title = '%COMPANY_NAME% - Suppression Sous-catégorie Intranet';
 $required_group_rights = array(1,2);
 ?>

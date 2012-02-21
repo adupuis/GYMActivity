@@ -41,10 +41,10 @@ if( $remove_intranet_type == "true" ) {
 			    $profile->rights_group_id == 2 /* superuser */)  {
 				$query = "DELETE FROM IntranetTypes WHERE intranet_type_id=$id";
 				if( !mysql_query( $query ) ) {
-					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression du type de catégorie Intranet de la table IntranetTypes." );
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la sous-catégorie Intranet de la table IntranetTypes." );
 				}
 				else
-					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Type de catégorie Intranet supprimé avec succès." );
+					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Sous-catégorie Intranet supprimée avec succès." );
 			}
 		}
 		else {
@@ -52,7 +52,7 @@ if( $remove_intranet_type == "true" ) {
 		}
 	}
 	else {
-		$gritter_notifications[] = array( 'status'=>'error', 'title' => "Impossible de supprimer le type de catégorie Intranet",'msg'=>"id non spécifié." );
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => "Impossible de supprimer la sous-catégorie Intranet",'msg'=>"id non spécifié." );
 	}
 }
 else {
@@ -66,12 +66,12 @@ else {
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_remove.png"></img>
 		<span class="intranet_type_remove">
-			Supprimer un type de catégorie Intranet
+			Supprimer sous-catégorie Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet de <strong>supprimer définitivement</strong> un type de catégorie Intranet.
+		Ce formulaire permet de <strong>supprimer définitivement</strong> une sous-catégorie Intranet.
 		</p>
 		<script>
 			<?php
@@ -90,7 +90,7 @@ else {
 		<form id="select_login_form" action="loader.php?module=intranet_type_remove" method="post">
 			<input type="hidden" name="remove_intranet_type" value="true" />
 			<p>
-				<label for="intranet_type_id">Sélection type de catégorie Intranet</label>
+				<label for="intranet_type_id">Sélection sous-catégorie</label>
 
 				<select name="intranet_type_id" id="intranet_type_id" class="chzn-select">
 					<?php
@@ -100,7 +100,7 @@ else {
 					foreach( $intranet_types as $intranet_type ) {
 						
 						foreach( $geny_intranet_category->getAllIntranetCategories() as $cat ) {
-							if( $intranet_type->category_id == $cat->id ) {
+							if( $intranet_type->intranet_category_id == $cat->id ) {
 								$intranet_category_name = $cat->name;
 							}
 						}
@@ -119,7 +119,7 @@ else {
 				</select>
 			</p>
 			<p>
-			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression du type de catégorie Intranet. <strong>La suppression est définitive et ne pourra pas être annulée.</strong>
+			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression de la sous-catégorie Intranet. <strong>La suppression est définitive et ne pourra pas être annulée.</strong>
 			</p>
 			<p>
 				<input type="submit" value="Supprimer" /> ou <a href="loader.php?module=intranet_type_list">annuler</a>

@@ -162,10 +162,10 @@ $geny_ic = new GenyIntranetCategory();
 			<div class="sdt_box">
 				<?php
 					foreach( $geny_ic->getAllIntranetCategories() as $cat ){
-						echo "<a href='loader.php?module=home_intranet&category_id=$cat->id'>$cat->name</a>";
+						echo "<a href='loader.php?module=home_intranet&load_intranet_category=true&intranet_category_id=$cat->id'>$cat->name</a>";
 					}
 					if($profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
-						echo "<a href='loader.php?module=home_intranet_admin'>Admin. Intranet</a>";
+						echo "<a href='loader.php?module=home_intranet_admin'>|Admin. Intranet|</a>";
 					}
 				?>
 			</div>

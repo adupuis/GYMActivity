@@ -277,11 +277,33 @@ if( $profile_authorized ) {
 						$intranet_pages = $geny_intranet_page->getAllIntranetPages();
 						
 						foreach( $intranet_pages as $intranet_page ) {
-							if( $geny_intranet_page->id == $intranet_page->id ) {
-								echo "<option value=\"".$intranet_page->id."\" selected>".$intranet_page->title."</option>\n";
+							$profile_authorized_to_edit = false;
+							$tmp_intranet_page_acl_modification_type = $intranet_page->acl_modification_type;
+							$intranet_page_profile = new GenyProfile( $intranet_page->profile_id );
+							if( $tmp_intranet_page_acl_modification_type == "owner" ) {
+								if( $profile->rights_group_id == 1  || /* admin */
+								    $profile->rights_group_id == 2  ||   /* superuser */
+								    $profile->id == $intranet_page->profile_id ) {
+									$profile_authorized_to_edit = true;
+								}
+							}
+							else if( $tmp_intranet_page_acl_modification_type == "group" ) {
+								if( $profile->rights_group_id == 1  || /* admin */
+								    $profile->rights_group_id == 2  ||   /* superuser */
+								    $profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
+									$profile_authorized_to_edit = true;
+								}
 							}
 							else {
-								echo "<option value=\"".$intranet_page->id."\">".$intranet_page->title."</option>\n";
+								$profile_authorized_to_edit = true;
+							}
+							if( $profile_authorized_to_edit ) {
+								if( $geny_intranet_page->id == $intranet_page->id ) {
+									echo "<option value=\"".$intranet_page->id."\" selected>".$intranet_page->title."</option>\n";
+								}
+								else {
+									echo "<option value=\"".$intranet_page->id."\">".$intranet_page->title."</option>\n";
+								}
 							}
 						}
 						if( $geny_intranet_page->id < 0 ) {
@@ -347,14 +369,14 @@ if( $profile_authorized ) {
 				</select>
 			</p>
 			<p>
-				<label for="intranet_type_id">Type</label>
+				<label for="intranet_type_id">Sous-catégorie</label>
 				<select name="intranet_type_id" id="intranet_type_id" class="chzn-select" data-placeholder="Choisissez d'abord une catégorie...">
 					<option value=""></option>
 				</select>
 			</p>
 			<p style="width:550px">
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 					<?php
 						$current_page_tags = $geny_intranet_tag->getIntranetTagsByPage( $geny_intranet_page->id );
 						foreach( $geny_intranet_tag->getAllIntranetTagsOrderByName() as $intranet_tag ) {
@@ -427,9 +449,9 @@ if( $profile_authorized ) {
 									$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 								}
 							});
-							$("#intranet_type_id").attr('data-placeholder','Choisissez un type...');
+							$("#intranet_type_id").attr('data-placeholder','Choisissez une sous-catégorie...');
 							$("#intranet_type_id").trigger("liszt:updated");
-							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez un type...');
+							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez une sous-catégorie...');
 
 						},'json');
 					}
@@ -534,10 +556,5 @@ $("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
 <?php
 } // endif $profile_authorized
 
-	$bottomdock_items = array();
-	if( $profile->rights_group_id == 1  || /* admin */
-	    $profile->rights_group_id == 2     /* superuser */ ) {
-		array_push( $bottomdock_items, 'backend/widgets/intranet_page_list.dock.widget.php' );
-	}
-	array_push( $bottomdock_items, 'backend/widgets/intranet_page_add.dock.widget.php' );
+	$bottomdock_items = array('backend/widgets/intranet_page_list.dock.widget.php','backend/widgets/intranet_page_add.dock.widget.php');
 ?>

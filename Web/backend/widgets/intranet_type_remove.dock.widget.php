@@ -23,7 +23,7 @@
 
 <li class="intranet_type_remove">
 	<a href="loader.php?module=intranet_type_remove">
-		<span class="dock_item_title">Type Intranet</span><br/>
-		<span class="dock_item_content">Supprimer un type de catégorie Intranet existant.</span>
+		<span class="dock_item_title">Sous-cat. Intranet</span><br/>
+		<span class="dock_item_content">Supprimer une sous-catégorie Intranet existante.</span>
 	</a>
 </li>

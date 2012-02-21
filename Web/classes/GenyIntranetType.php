@@ -108,6 +108,29 @@ class GenyIntranetType extends GenyDatabaseTools {
 	public function getIntranetTypesByCategoryId( $intranet_category_id ) {
 		return $this->getIntranetTypesListWithRestrictions( array( "intranet_category_id=".$intranet_category_id ) );
 	}
+	
+	public function getIntranetTypesByTagId( $intranet_tag_id ) {
+		
+		$query = "SELECT DISTINCT IntranetTypes.intranet_type_id,intranet_type_name,intranet_type_description,IntranetTypes.intranet_category_id FROM IntranetTypes,IntranetPages,IntranetTagPageRelations WHERE IntranetPages.intranet_type_id = IntranetTypes.intranet_type_id AND IntranetTagPageRelations.intranet_page_id = IntranetPages.intranet_page_id AND IntranetTagPageRelations.intranet_tag_id = ".$intranet_tag_id;
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIntranetType MySQL query : $query", 0 );
+		}
+		
+		$intranet_type_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_intranet_type = new GenyIntranetType();
+				$tmp_intranet_type->id = $row[0];
+				$tmp_intranet_type->name = $row[1];
+				$tmp_intranet_type->description = $row[2];
+				$tmp_intranet_type->intranet_category_id = $row[3];
+				$intranet_type_list[] = $tmp_intranet_type;
+			}
+		}
+		return $intranet_type_list;
+	}
 
 	public function loadIntranetTypeById( $id ) {
 		if( !is_numeric( $id ) ) {

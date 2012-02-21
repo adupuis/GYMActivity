@@ -66,14 +66,14 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 				</select>
 			</p>
 			<p>
-				<label for="intranet_type_id">Type</label>
+				<label for="intranet_type_id">Sous-catégorie</label>
 				<select name="intranet_type_id" id="intranet_type_id" class="chzn-select" data-placeholder="Choisissez d'abord une catégorie...">
 					<option value=""></option>
 				</select>
 			</p>
 			<p style="width:550px">
 				<label for="intranet_tag_id">Tags</label>
-				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez un ou plusieurs tags..." style="width:360px">
+				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 				</select>
 				<a href='#create_intranet_tag' rel='prettyPhoto[create_intranet_tag]' class="submit" style="margin:0;float:right">+</a>
 			</p>
@@ -108,9 +108,9 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 							$.each( data, function( key, val ) {
 								$("#intranet_type_id").append('<option class="intranet_types_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 							});
-							$("#intranet_type_id").attr('data-placeholder','Choisissez un type...');
+							$("#intranet_type_id").attr('data-placeholder','Choisissez une sous-catégorie...');
 							$("#intranet_type_id").trigger("liszt:updated");
-							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez un type...');
+							$("span:contains('Choisissez d'abord une catégorie...')").text('Choisissez une sous-catégorie...');
 
 						},'json');
 					}
@@ -124,7 +124,7 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 						$.each( data, function( key, val ) {
 							$("#intranet_tag_id").append('<option class="intranet_tags_options" value="' + val["id"] + '" title="' + val["id"] + '">' + val["name"] + '</option>');
 						});
-						$("#intranet_tag_id").attr('data-placeholder','Choisissez un ou plusieurs tags...');
+						$("#intranet_tag_id").attr('data-placeholder','Choisissez/ajoutez des tags...');
 						$("#intranet_tag_id").trigger("liszt:updated");
 
 					},'json');
@@ -226,9 +226,5 @@ $("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
 </script>
 
 <?php
-	$bottomdock_items = array();
-	if( $profile->rights_group_id == 1  || /* admin */
-	    $profile->rights_group_id == 2     /* superuser */ ) {
-		array_push( $bottomdock_items, 'backend/widgets/intranet_page_list.dock.widget.php' );
-	}
+	$bottomdock_items = array('backend/widgets/intranet_page_list.dock.widget.php');
 ?>

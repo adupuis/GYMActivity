@@ -37,11 +37,11 @@ if( $create_intranet_type == "true" ) {
 	if( $intranet_type_name != 'NULL' && $intranet_type_description != 'NULL' && $intranet_category_id != 'NULL' ) {
 		$insert_id = $geny_intranet_type->insertNewIntranetType( 'NULL', $intranet_type_name, $intranet_type_description, $intranet_category_id );
 		if( $insert_id != -1 ) {
-			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Type de catégorie Intranet ajoutée avec succès." );
+			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Sous-catégorie Intranet ajoutée avec succès." );
 			$geny_intranet_type->loadIntranetTypeById( $insert_id );
 		}
 		else {
-			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du type de catégorie Intranet." );
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout de la sous-catégorie Intranet." );
 		}
 	}
 	else {
@@ -56,12 +56,12 @@ else if( $load_intranet_type == 'true' ) {
 			$geny_intranet_type->loadIntranetTypeById( $intranet_type_id );
 		}
 		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger le type de catégorie Intranet",'msg'=>"Vous n'êtes pas autorisé.");
+			$gritter_notifications[] = array('status'=>'error', 'title' => "Impossible de charger la sous-catégorie Intranet",'msg'=>"Vous n'êtes pas autorisé.");
 			header( 'Location: error.php?category=intranet_type&backlinks=intranet_type_list,intranet_type_add' );
 		}
 	}
 	else {
-		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger le type de catégorie Intranet','msg'=>"id non spécifié." );
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger la sous-catégorie Intranet','msg'=>"id non spécifié." );
 	}
 }
 else if( $edit_intranet_type == 'true' ) {
@@ -82,16 +82,16 @@ else if( $edit_intranet_type == 'true' ) {
 			if( $intranet_type_description != 'NULL' && $geny_intranet_type->description != $intranet_type_description ) {
 				$geny_intranet_type->updateString( 'intranet_type_description', $intranet_type_description );
 			}
-			if( $intranet_category_id != 'NULL' && $geny_intranet_type->category_id != $intranet_category_id ) {
+			if( $intranet_category_id != 'NULL' && $geny_intranet_type->intranet_category_id != $intranet_category_id ) {
 				$geny_intranet_type->updateInt( 'intranet_category_id', $intranet_category_id );
 			}
 		}
 		if( $geny_intranet_type->commitUpdates() ) {
-			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Type de catégorie Intranet mis à jour avec succès.");
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Sous-catégorie Intranet mise à jour avec succès.");
 			$geny_intranet_type->loadIntranetTypeById( $intranet_type_id );
 		}
 		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour du type de catégorie Intranet.");
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de la sous-catégorie Intranet.");
 		}
 	}
 }
@@ -102,7 +102,7 @@ else if( $edit_intranet_type == 'true' ) {
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/intranet_type_edit.png"></img>
 		<span class="intranet_type_edit">
-			Modifier type de catégorie Intranet
+			Modifier sous-catégorie Intranet
 		</span>
 	</p>
 	<p class="mainarea_content">
@@ -120,13 +120,13 @@ else if( $edit_intranet_type == 'true' ) {
 		</script>
 
 		<p class="mainarea_content_intro">
-		Ce formulaire permet d'éditer un type de catégorie Intranet existant. Tous les champs doivent être remplis.
+		Ce formulaire permet d'éditer une sous-catégorie Intranet existante. Tous les champs doivent être remplis.
 		</p>
 		
 		<form id="select_intranet_type_form" action="loader.php?module=intranet_type_edit" method="post">
 			<input type="hidden" name="load_intranet_type" value="true" />
 			<p>
-				<label for="intranet_type_id">Sélection type</label>
+				<label for="intranet_type_id">Sélection sous-catégorie</label>
 
 				<select name="intranet_type_id" id="intranet_type_id" class="chzn-select" onChange="submit()">
 					<?php
@@ -135,7 +135,7 @@ else if( $edit_intranet_type == 'true' ) {
 						foreach( $intranet_types as $intranet_type ) {
 							
 							foreach( $geny_intranet_category->getAllIntranetCategories() as $cat ) {
-								if( $intranet_type->category_id == $cat->id ) {
+								if( $intranet_type->intranet_category_id == $cat->id ) {
 									$intranet_category_name = $cat->name;
 								}
 							}
@@ -163,7 +163,7 @@ else if( $edit_intranet_type == 'true' ) {
 				<select name="intranet_category_id" id="intranet_category_id" class="chzn-select">
 					<?php
 						foreach( $geny_intranet_category->getAllIntranetCategories() as $intranet_category ) {
-							if( $geny_intranet_type->category_id == $intranet_category->id ) {
+							if( $geny_intranet_type->intranet_category_id == $intranet_category->id ) {
 								echo "<option value=\"".$intranet_category->id."\" selected>".$intranet_category->name."</option>\n";
 							}
 							else {
