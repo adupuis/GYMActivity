@@ -31,9 +31,10 @@ $profile_needs_password_reset = "true";
 $rights_group_id = 3;
 $geny_profile = new GenyProfile();
 $geny_pmd = new GenyProfileManagementData();
+$geny_pmd->setDebug(true);
 
 if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
-	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) ){
+	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) && isset($_POST['technology_leader_id']) && isset($_POST['group_leader_id']) ){
 		$profile_login = $_POST['profile_login'];
 		$profile_firstname = $_POST['profile_firstname'];
 		$profile_lastname = $_POST['profile_lastname'];
@@ -46,11 +47,13 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$pmd_is_billable = $_POST['pmd_is_billable'];
 		$pmd_recruitement_date = $_POST['pmd_recruitement_date'];
 		$pmd_salary = $_POST['pmd_salary'];
+		$pmd_group_leader_id = $_POST['group_leader_id'];
+		$pmd_technology_leader_id = $_POST['technology_leader_id'];
 		if( $geny_profile->insertNewProfile('NULL',$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id) ){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil créé avec succès.");
 			$geny_profile->loadProfileByLogin($profile_login);
 			if($geny_profile->id > 0){
-				$pmd_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,$pmd_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date);
+				$pmd_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,$pmd_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_group_leader_id,$pmd_technology_leader_id);
 				GenyTools::debug("profile_edit.php pmd_id=$pmd_id after a call to insertNewProfileManagementData.");
 				if( $pmd_id <= 0)
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur chargement','msg'=>"Erreur lors du chargement des données de management du profil.");
@@ -162,6 +165,12 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 		}
 		if( isset($_POST['pmd_salary']) && $_POST['pmd_salary'] != "" && $geny_pmd->salary != $_POST['pmd_salary'] ){
 			$geny_pmd->updateInt('profile_management_data_salary',$_POST['pmd_salary']);
+		}
+		if( isset($_POST['group_leader_id']) && $_POST['group_leader_id'] != "" && $geny_pmd->group_leader_id != $_POST['group_leader_id'] ){
+			$geny_pmd->updateInt('profile_management_data_group_leader_id',$_POST['group_leader_id']);
+		}
+		if( isset($_POST['technology_leader_id']) && $_POST['technology_leader_id'] != "" && $geny_pmd->technology_leader_id != $_POST['technology_leader_id'] ){
+			$geny_pmd->updateInt('profile_management_data_technology_leader_id',$_POST['technology_leader_id']);
 		}
 		if($geny_pmd->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Données de management du profil mis à jour avec succès.");
@@ -292,6 +301,37 @@ else{
 // 								echo "<option value=\"".$row[0]."\">".$row[1]."</option>\n";
 // 						}
 					?>
+				</select>
+			</p>
+			<p>
+				<label for="group_leader_id">Group Leader</label>
+				<select name="group_leader_id" id="group_leader_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('GL') ), "OR" ) as $pfl ){
+						if( $geny_pmd->group_leader_id == $pfl->id ) {
+							echo "<option value=\"".$pfl->id."\" selected>".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+						else {
+							echo "<option value=\"".$pfl->id."\" >".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+						
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="technology_leader_id">Technology Leader</label>
+				<select name="technology_leader_id" id="technology_leader_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						if( $geny_pmd->technology_leader_id == $pfl->id ) {
+							echo "<option value=\"".$pfl->id."\" selected>".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+						else {
+							echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+					}
+				?>
 				</select>
 			</p>
 			<p>

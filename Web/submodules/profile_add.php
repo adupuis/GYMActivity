@@ -22,6 +22,7 @@
 
 
 $geny_profile = new GenyProfile();
+$geny_rg = new GenyRightsGroup();
 
 ?>
 <div id="mainarea">
@@ -94,7 +95,6 @@ $geny_profile = new GenyProfile();
 				<label for="rights_group_id">Groupe</label>
 				<select name="rights_group_id" id="rights_group_id" class="chzn-select">
 					<?php
-						$geny_rg = new GenyRightsGroup();
 						foreach( $geny_rg->getAllRightsGroups() as $group ){
 							if($geny_profile->rights_group_id == $group->id)
 								echo "<option value=\"".$group->id."\" title=\"".$group->description."\" selected>".$group->name."</option>\n";
@@ -102,6 +102,26 @@ $geny_profile = new GenyProfile();
 								echo "<option value=\"".$group->id."\" title=\"".$group->description."\">".$group->name."</option>\n";
 						}
 					?>
+				</select>
+			</p>
+			<p>
+				<label for="group_leader_id">Group Leader</label>
+				<select name="group_leader_id" id="group_leader_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('GL') ), "OR" ) as $pfl ){
+						echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="technology_leader_id">Technology Leader</label>
+				<select name="technology_leader_id" id="technology_leader_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+					}
+				?>
 				</select>
 			</p>
 			<p>
