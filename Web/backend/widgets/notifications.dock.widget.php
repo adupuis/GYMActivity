@@ -143,7 +143,7 @@ $html .= '</ul>';
 <!-- 	</p> -->
 </div>
 <script>
-$("a[rel='prettyPhoto[notifications]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social"></div>', theme: 'pp_default', callback: function() {mark_all_notifications_as_read();}});
+$("a[rel='prettyPhoto[notifications]']").prettyPhoto({modal: 'true',animation_speed:'fast',slideshow:false, hideflash: true, social_tools: '<div class="pp_social"></div>', theme: 'pp_default',default_width:800, callback: function() {mark_all_notifications_as_read();}});
 </script>
 
 
