@@ -68,12 +68,20 @@ try {
 					$tmp_ce->updateString("career_event_attachement",$ce_attachement);
 				}
 				if( $ce_manager_agreement != $tmp_ce->manager_agreement && $ce_manager_agreement != "" ){
-					$tmp_ce->updateBool("career_event_manager_agreement",$ce_manager_agreement);
+					$tmp_ce->updateInt("career_event_manager_agreement",$ce_manager_agreement);
 				}
 				if( $ce_employee_agreement != $tmp_ce->employee_agreement && $ce_employee_agreement != "" ){
-					$tmp_ce->updateBool("career_event_employee_agreement",$ce_employee_agreement);
+					GenyTools::debug("update_career_event: employee_agreement=".$ce_employee_agreement);
+					$tmp_ce->updateInt("career_event_employee_agreement",$ce_employee_agreement);
 				}
-				$tmp_ce->commitUpdates();
+				$tmp_ce->setDebug(true);
+				if( ! $tmp_ce->commitUpdates() ){
+					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be updated, please check the parameters and server logs." ) );
+				}
+				else{
+					echo json_encode( array( "status" => "success", "status_message" => "career_event have been updated successfully." ) );
+				}
+				$tmp_ce->setDebug(false);
 			}
 			else{
 				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be load, please check the parameters." ) );

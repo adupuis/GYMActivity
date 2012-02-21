@@ -32,11 +32,12 @@ include '../../classes/GenyTools.php';
 try {
 	$ces = array();
 	if($auth_granted){
-		$tmp_ce = new GenyCareerEvent();
-		$ce_type = getParam("type","neutral");
-		$ce_title = getParam("title","");
-		$ce_text = getParam("text","");
+		$tmp_ce         = new GenyCareerEvent();
+		$ce_type        = getParam("type","neutral");
+		$ce_title       = getParam("title","");
+		$ce_text        = getParam("text","");
 		$ce_attachement = getParam("attachement","");
+		$ce_profile_id  = getParam("profile_id",-1);
 		
 		if( $ce_type == "" || $ce_title == "" || $ce_text == ""){
 			$access_loger->insertNewAccessLog(
@@ -51,7 +52,7 @@ try {
 		}
 		$tmp_ce->setDebug(true);
 		// Il n'est pas possible de créer un évènement et de l'approuver en même temps. Il faut que le manager puisse avoir un second regard sur ce qu'il vient d'ajouter.
-		$new_id = $tmp_ce->insertNewCareerEvent($profile->id,$ce_type,$ce_title,$ce_text,$ce_attachement,"false","false");
+		$new_id = $tmp_ce->insertNewCareerEvent($ce_profile_id,$ce_type,$ce_title,$ce_text,$ce_attachement,"false","false");
 		
 		if( $new_id > 0 ){
 			$data = json_encode( array("status" => "success", "status_message" => "Nouvel évènement inséré avec succès (id=$new_id)") );
