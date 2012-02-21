@@ -80,7 +80,7 @@ $web_config = new GenyWebConfig();
 ?>
 </form>
 <p id="credits">&copy; 2011-2012 <strong>GENYMOBILE</strong>.</p>
-<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript"> $(".chzn-select").chosen();</script>
 </body>
