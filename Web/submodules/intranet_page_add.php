@@ -78,6 +78,15 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 				<a href='#create_intranet_tag' rel='prettyPhoto[create_intranet_tag]' class="submit" style="margin:0;float:right">+</a>
 			</p>
 			<p>
+				<label for="intranet_page_acl_modification_type">Modification Page</label>
+				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select" data-placeholder="Choisissez qui peut modifier la page...">
+					<option value=""></option>
+					<option value="owner">Créateur de la page</option>
+					<option value="group">Membres du groupe du créateur de la page</option>
+					<option value="all">Tout le monde</option>
+				</select>
+			</p>
+			<p>
 				<label for="intranet_page_status_id">Statut</label>
 				<select name="intranet_page_status_id" id="intranet_page_status_id" class="chzn-select" data-placeholder="Choisissez un statut...">
 					<option value=""></option>
@@ -86,15 +95,6 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 							echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
 						}
 					?>
-				</select>
-			</p>
-			<p>
-				<label for="intranet_page_acl_modification_type">Modification Page</label>
-				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select" data-placeholder="Choisissez qui peut modifier la page...">
-					<option value=""></option>
-					<option value="owner">Créateur de la page</option>
-					<option value="group">Membres du groupe du créateur de la page</option>
-					<option value="all">Tout le monde</option>
 				</select>
 			</p>
 			
