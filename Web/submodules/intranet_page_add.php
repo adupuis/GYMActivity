@@ -24,6 +24,15 @@ $geny_intranet_category = new GenyIntranetCategory();
 $geny_intranet_type = new GenyIntranetType();
 $geny_intranet_page_status = new GenyIntranetPageStatus();
 
+if( $profile->firstname != "" && $profile->lastname != "" ) {
+	$intranet_page_author_name = $profile->firstname." ".$profile->lastname;
+}
+else {
+	$intranet_page_author_name = $profile->login;
+}
+$tmp_rights_group = new GenyRightsGroup( $profile->rights_group_id );
+$intranet_page_author_group_name = $tmp_rights_group->name;
+
 ?>
 
 <style>
@@ -81,8 +90,8 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 				<label for="intranet_page_acl_modification_type">Modification Page</label>
 				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select" data-placeholder="Choisissez qui peut modifier la page...">
 					<option value=""></option>
-					<option value="owner">Créateur de la page</option>
-					<option value="group">Membres du groupe du créateur de la page</option>
+					<option value="owner">Créateur de la page (<?php echo $intranet_page_author_name ?>)</option>
+					<option value="group">Membres du groupe du créateur de la page (<?php echo $intranet_page_author_group_name ?>)</option>
 					<option value="all">Tout le monde</option>
 				</select>
 			</p>
@@ -92,7 +101,15 @@ $geny_intranet_page_status = new GenyIntranetPageStatus();
 					<option value=""></option>
 					<?php
 						foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $intranet_page_status ) {
-							echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+							if( $intranet_page_status->id == 1 ) {
+								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_name.")</option>\n";
+							}
+							else if( $intranet_page_status->id == 2 ) {
+								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_group_name.")</option>\n";
+							}
+							else {
+								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+							}
 						}
 					?>
 				</select>
