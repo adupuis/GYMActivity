@@ -504,10 +504,13 @@ if( $profile_authorized ) {
 			</script>
 			
 			<p>
-				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_list">annuler</a>
+				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_list">annuler</a> <input id="preview_button" type="button" class="submit" value="Prévisualiser" onclick="preview()" />
 			</p>
 		</form>
 	</p>
+</div>
+<div class="mainarea_content">
+	<div id="intranet_page_preview" class="intranet_page_content"></div>
 </div>
 
 <!-- Formulaire de création d'un tag -->
@@ -576,6 +579,18 @@ $(document).on("click", "div#pp_full_res #submit_tag", function(){
 $("#pp_full_res #form_intranet_tag_add").validationEngine('init');
 // binds form submission and fields to the validation engine
 $("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
+
+function preview() {
+	if( $('#preview_button').val() == 'Prévisualiser' ) {
+		var editorContent = $('#intranet_page_content_editor').val();
+		$('#intranet_page_preview').html( editorContent );
+		$('#preview_button').val( 'Masquer' );
+	}
+	else {
+		$('#intranet_page_preview').html( '' );
+		$('#preview_button').val( 'Prévisualiser' );
+	}
+}
 
 </script>
 
