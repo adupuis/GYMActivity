@@ -88,7 +88,7 @@ if( $load_intranet_page == 'true' ) {
 	}
 }
 
-if( $profile_authorized ) {
+if( isset( $profile_authorized ) && $profile_authorized ) {
 ?>
 
 <style>
