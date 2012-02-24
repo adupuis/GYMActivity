@@ -384,7 +384,7 @@ if( $profile_authorized ) {
 					<option value=""></option>
 				</select>
 			</p>
-			<p style="width:550px">
+			<p style="width:600px">
 				<label for="intranet_tag_id">Tags</label>
 				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 					<?php
