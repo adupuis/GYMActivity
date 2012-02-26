@@ -26,6 +26,7 @@ class GenyProfile extends GenyDatabaseTools {
 	public $login = '';
 	public $firstname = '';
 	public $lastname = '';
+	public $password = '';
 	public $email = '';
 	public $is_active = false;
 	public $needs_password_reset = false;
@@ -37,10 +38,11 @@ class GenyProfile extends GenyDatabaseTools {
 		$this->login = '';
 		$this->firstname = '';
 		$this->lastname = '';
+		$this->password = '';
 		$this->email = '';
+		$this->is_active = false;
 		$this->needs_password_reset = false;
 		$this->rights_group_id = -1;
-		$this->is_active = false;
 		if($id > -1)
 			$this->loadProfileById($id);
 	}
@@ -58,7 +60,7 @@ class GenyProfile extends GenyDatabaseTools {
 	public function getProfilesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles";
+		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_password,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -80,10 +82,11 @@ class GenyProfile extends GenyDatabaseTools {
 				$tmp_profile->login = $row[1];
 				$tmp_profile->firstname = $row[2];
 				$tmp_profile->lastname = $row[3];
-				$tmp_profile->email = $row[4];
-				$tmp_profile->is_active = $row[5];
-				$tmp_profile->needs_password_reset = $row[6];
-				$tmp_profile->rights_group_id = $row[7];
+				$tmp_profile->password = $row[4];
+				$tmp_profile->email = $row[5];
+				$tmp_profile->is_active = $row[6];
+				$tmp_profile->needs_password_reset = $row[7];
+				$tmp_profile->rights_group_id = $row[8];
 				$profile_list[] = $tmp_profile;
 			}
 		}
@@ -109,7 +112,7 @@ class GenyProfile extends GenyDatabaseTools {
 	public function getAllProfilesByProjectId($proj_id) {
 		$query = "SELECT Profiles.profile_id, profile_login, profile_firstname, profile_lastname, profile_password, profile_email, profile_is_active, profile_needs_password_reset, rights_group_id FROM Profiles, Assignements where Profiles.profile_id = Assignements.profile_id and Assignements.project_id=".$proj_id;
 		$result = mysql_query($query, $this->handle);
-		if( $this->config->debug )
+// 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 
 // 		var_dump($result);
@@ -121,10 +124,11 @@ class GenyProfile extends GenyDatabaseTools {
 				$tmp_profile->login = $row[1];
 				$tmp_profile->firstname = $row[2];
 				$tmp_profile->lastname = $row[3];
-				$tmp_profile->email = $row[4];
-				$tmp_profile->is_active = $row[5];
-				$tmp_profile->needs_password_reset = $row[6];
-				$tmp_profile->rights_group_id = $row[7];
+				$tmp_profile->password = $row[4];
+				$tmp_profile->email = $row[5];
+				$tmp_profile->is_active = $row[6];
+				$tmp_profile->needs_password_reset = $row[7];
+				$tmp_profile->rights_group_id = $row[8];
 				$profile_list[] = $tmp_profile;
 			}
 		}
@@ -138,6 +142,7 @@ class GenyProfile extends GenyDatabaseTools {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
@@ -152,6 +157,7 @@ class GenyProfile extends GenyDatabaseTools {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
@@ -166,6 +172,7 @@ class GenyProfile extends GenyDatabaseTools {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
