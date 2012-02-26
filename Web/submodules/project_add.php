@@ -42,12 +42,6 @@ $geny_profile = new GenyProfile();
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 			});
-			$(document).ready(function(){
-				$(".taskslistselect").listselect({listTitle: "Tâches disponibles",selectedTitle: "Tâches séléctionnées"});
-			});
-			$(document).ready(function(){
-				$(".profileslistselect").listselect({listTitle: "Profiles disponibles",selectedTitle: "Profiles séléctionnées"});
-			});
 			$(function() {
 				var availableTags = [
 					<?php
@@ -143,7 +137,7 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="tasks_checkboxgroup">Tâches</label>
-				<select class="taskslistselect" name="project_tasks[]">
+				<select name="project_tasks[]" multiple class="taskslistselect chzn-select" data-placeholder="Choisissez une ou plusieurs tâches...">
 				<?php
 					$geny_task = new GenyTask();
 					foreach( $geny_task->getAllTasks() as $t ){
@@ -154,10 +148,10 @@ $geny_profile = new GenyProfile();
 			</p>
 			<p>
 				<label for="profiles_checkboxgroup">Attributions</label>
-				<select class="profileslistselect" name="project_profiles[]">
+				<select name="project_profiles[]" multiple class="profileslistselect chzn-select" data-placeholder="Choisissez un ou plusieurs profils...">
 				<?php
 					foreach( $geny_profile->getAllProfiles() as $p ){
-						echo "<option value=\"$p->id\" title=\"$p->firstname $p->lastname\">$p->login</input></option>";
+						echo "<option value=\"$p->id\">".GenyTools::getProfileDisplayName( $p )."</option>";
 					}
 				?>
 				</select>

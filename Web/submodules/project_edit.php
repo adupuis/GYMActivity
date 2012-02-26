@@ -233,10 +233,6 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				$("#formID").validationEngine('init');
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
-				
-				$(".taskslistselect").listselect({listTitle: "Tâches disponibles",selectedTitle: "Tâches séléctionnées"});
-				
-				$(".profileslistselect").listselect({listTitle: "Profiles disponibles",selectedTitle: "Profiles séléctionnées"});
 			});
 			
 			$(function() {
@@ -376,37 +372,33 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			</p>
 			<p>
 				<label for="tasks_checkboxgroup">Tâches</label>
+				<select name="project_tasks[]" multiple class="taskslistselect chzn-select" data-placeholder="Choisissez une ou plusieurs tâches...">
 				<?php
-					$ptrs = $geny_ptr->getProjectTaskRelationsListByProjectId( $geny_project->id );
-					$selected_tasks = '';
-					foreach( $ptrs as $ptr ){
-						$selected_tasks .= "$ptr->task_id,";
-					}
-					$selected_tasks = rtrim($selected_tasks, ",");
-				?>
-				<select class="taskslistselect" name="project_tasks[]" selected="<?php echo $selected_tasks ?>">
-				<?php
-					$geny_task = new GenyTask();
-					foreach( $geny_task->getAllTasks() as $t ){
-						echo "<option value=\"$t->id\" title=\"$t->description\">$t->name</input></option>";
+					$tmp_geny_task = new GenyTask();
+					$current_project_tasks = $tmp_geny_task->getTasksByProjectId( $geny_project->id );
+					foreach( $tmp_geny_task->getAllTasks() as $tsk ) {
+						if( in_array( $tsk, $current_project_tasks ) ) {
+							echo "<option value=\"".$tsk->id."\" selected>".$tsk->name."</option>\n";
+						}
+						else {
+							echo "<option value=\"".$tsk->id."\">".$tsk->name."</option>\n";
+						}
 					}
 				?>
 				</select>
 			</p>
 			<p>
 				<label for="profiles_checkboxgroup">Attributions</label>
+				<select name="project_profiles[]" multiple class="profileslistselect chzn-select" data-placeholder="Choisissez un ou plusieurs profils...">
 				<?php
-					$assignements = $geny_assignement->getActiveAssignementsListByProjectId( $geny_project->id );
-					$selected_profiles = '';
-					foreach( $assignements as $assignement ){
-						$selected_profiles .= "$assignement->profile_id,";
-					}
-					$selected_profiles = rtrim($selected_profiles, ",");
-				?>
-				<select class="profileslistselect" name="project_profiles[]" selected="<?php echo $selected_profiles ?>">
-				<?php
-					foreach( $geny_profile->getAllProfiles() as $p ){
-						echo "<option value=\"$p->id\" title=\"$p->firstname $p->lastname\">$p->login</input></option>";
+					$current_project_profiles = $geny_profile->getAllProfilesByProjectId( $geny_project->id );
+					foreach( $geny_profile->getAllProfiles() as $p ) {
+						if( in_array( $p, $current_project_profiles ) ) {
+							echo "<option value=\"$p->id\" selected>".GenyTools::getProfileDisplayName( $p )."</option>";
+						}
+						else {
+							echo "<option value=\"$p->id\" title=\"$p->firstname $p->lastname\">".GenyTools::getProfileDisplayName( $p )."</option>";
+						}
 					}
 				?>
 				</select>
