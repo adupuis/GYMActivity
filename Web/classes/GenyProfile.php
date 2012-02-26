@@ -112,7 +112,7 @@ class GenyProfile extends GenyDatabaseTools {
 	public function getAllProfilesByProjectId($proj_id) {
 		$query = "SELECT Profiles.profile_id, profile_login, profile_firstname, profile_lastname, profile_password, profile_email, profile_is_active, profile_needs_password_reset, rights_group_id FROM Profiles, Assignements where Profiles.profile_id = Assignements.profile_id and Assignements.project_id=".$proj_id;
 		$result = mysql_query($query, $this->handle);
-// 		if( $this->config->debug )
+		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
 
 // 		var_dump($result);
