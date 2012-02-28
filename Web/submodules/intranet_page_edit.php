@@ -136,6 +136,16 @@ else if( $load_intranet_page == 'true' ) {
 		checkProfileAuthorization( $intranet_page_id, $profile );
 		$geny_intranet_page->loadIntranetPageById( $intranet_page_id );
 		$intranet_page_content_to_display = $geny_intranet_page->content;
+		$tmp_profile = new GenyProfile( $geny_intranet_page->profile_id );
+		if( $tmp_profile->firstname != "" && $tmp_profile->lastname != "" ) {
+			$intranet_page_author_name = $tmp_profile->firstname." ".$tmp_profile->lastname;
+		}
+		else {
+			$intranet_page_author_name = $tmp_profile->login;
+		}
+		$tmp_rights_group = new GenyRightsGroup( $tmp_profile->rights_group_id );
+		$intranet_page_author_group_name = $tmp_rights_group->name;
+		error_log( "[GYMActivity::DEBUG] intranet_page_author_group_name: $intranet_page_author_group_name", 0 );
 	}
 	else {
 		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de charger la page Intranet','msg'=>"id non spécifié." );
@@ -374,7 +384,7 @@ if( $profile_authorized ) {
 					<option value=""></option>
 				</select>
 			</p>
-			<p style="width:550px">
+			<p style="width:600px">
 				<label for="intranet_tag_id">Tags</label>
 				<select name="intranet_tag_id[]" id="intranet_tag_id" multiple class="chzn-select" data-placeholder="Choisissez/ajoutez des tags..." style="width:360px">
 					<?php
@@ -392,41 +402,57 @@ if( $profile_authorized ) {
 				<a href='#create_intranet_tag' rel='prettyPhoto[create_intranet_tag]' class="submit" style="margin:0;float:right">+</a>
 			</p>
 			<p>
+				<label for="intranet_page_acl_modification_type">Modification Page</label>
+				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select">
+					<?php
+						if( $geny_intranet_page->acl_modification_type == "owner" ) {
+							
+							echo "<option value=\"owner\" selected>Créateur de la page (".$intranet_page_author_name.")</option>";
+							echo "<option value=\"group\">Membres du groupe du créateur de la page (".$intranet_page_author_group_name.")</option>";
+							echo "<option value=\"all\">Tout le monde</option>";
+						}
+						else if( $geny_intranet_page->acl_modification_type == "group" ) {
+							
+							echo "<option value=\"owner\">Créateur de la page (".$intranet_page_author_name.")</option>";
+							echo "<option value=\"group\" selected>Membres du groupe du créateur de la page (".$intranet_page_author_group_name.")</option>";
+							echo "<option value=\"all\">Tout le monde</option>";
+						}
+						else {
+							echo "<option value=\"owner\">Créateur de la page (".$intranet_page_author_name.")</option>";
+							echo "<option value=\"group\">Membres du groupe du créateur de la page (".$intranet_page_author_group_name.")</option>";
+							echo "<option value=\"all\" selected>Tout le monde</option>";
+						}
+					?>
+				</select>
+			</p>
+			<p>
 				<label for="intranet_page_status_id">Statut</label>
 				<select name="intranet_page_status_id" id="intranet_page_status_id" class="chzn-select" data-placeholder="Choisissez un statut...">
 					<option value=""></option>
 					<?php
 						foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $intranet_page_status ) {
 							if( $geny_intranet_page->status_id == $intranet_page_status->id ) {
-								echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+								if( $intranet_page_status->id == 1 ) {
+									echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_name.")</option>\n";
+								}
+								else if( $intranet_page_status->id == 2 ) {
+									echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_group_name.")</option>\n";
+								}
+								else {
+									echo "<option value=\"".$intranet_page_status->id."\" selected>".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+								}
 							}
 							else {
-								echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+								if( $intranet_page_status->id == 1 ) {
+									echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_name.")</option>\n";
+								}
+								else if( $intranet_page_status->id == 2 ) {
+									echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description." (".$intranet_page_author_group_name.")</option>\n";
+								}
+								else {
+									echo "<option value=\"".$intranet_page_status->id."\">".$intranet_page_status->name." - ".$intranet_page_status->description."</option>\n";
+								}
 							}
-						}
-					?>
-				</select>
-			</p>
-			<p>
-				<label for="intranet_page_acl_modification_type">Modification Page</label>
-				<select name="intranet_page_acl_modification_type" id="intranet_page_acl_modification_type" class="chzn-select">
-					<?php
-						if( $geny_intranet_page->acl_modification_type == "owner" ) {
-							
-							echo "<option value=\"owner\" selected>Créateur de la page</option>";
-							echo "<option value=\"group\">Membres du groupe du créateur de la page</option>";
-							echo "<option value=\"all\">Tout le monde</option>";
-						}
-						else if( $geny_intranet_page->acl_modification_type == "group" ) {
-							
-							echo "<option value=\"owner\">Créateur de la page</option>";
-							echo "<option value=\"group\" selected>Membres du groupe du créateur de la page</option>";
-							echo "<option value=\"all\">Tout le monde</option>";
-						}
-						else {
-							echo "<option value=\"owner\">Créateur de la page</option>";
-							echo "<option value=\"group\">Membres du groupe du créateur de la page</option>";
-							echo "<option value=\"all\" selected>Tout le monde</option>";
 						}
 					?>
 				</select>
@@ -478,10 +504,13 @@ if( $profile_authorized ) {
 			</script>
 			
 			<p>
-				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_list">annuler</a>
+				<input type="submit" value="Sauvegarder" /> ou <a href="loader.php?module=intranet_page_list">annuler</a> <input id="preview_button" type="button" class="submit" value="Prévisualiser" onclick="preview()" />
 			</p>
 		</form>
 	</p>
+</div>
+<div class="mainarea_content">
+	<div id="intranet_page_preview" class="intranet_page_content"></div>
 </div>
 
 <!-- Formulaire de création d'un tag -->
@@ -550,6 +579,18 @@ $(document).on("click", "div#pp_full_res #submit_tag", function(){
 $("#pp_full_res #form_intranet_tag_add").validationEngine('init');
 // binds form submission and fields to the validation engine
 $("##pp_full_res #form_intranet_tag_add").validationEngine('attach');
+
+function preview() {
+	if( $('#preview_button').val() == 'Prévisualiser' ) {
+		var editorContent = $('#intranet_page_content_editor').val();
+		$('#intranet_page_preview').html( editorContent );
+		$('#preview_button').val( 'Masquer' );
+	}
+	else {
+		$('#intranet_page_preview').html( '' );
+		$('#preview_button').val( 'Prévisualiser' );
+	}
+}
 
 </script>
 

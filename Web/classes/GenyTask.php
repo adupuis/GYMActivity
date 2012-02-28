@@ -73,6 +73,29 @@ class GenyTask extends GenyDatabaseTools {
 	public function getAllTasks(){
 		return $this->getTasksListWithRestrictions( array() );
 	}
+	
+	public function getTasksByProjectId( $project_id ) {
+		
+		$query = "SELECT Tasks.task_id,task_name,task_description FROM Tasks,ProjectTaskRelations WHERE Tasks.task_id = ProjectTaskRelations.task_id AND ProjectTaskRelations.project_id=".$project_id;
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyTask MySQL query : $query", 0 );
+		}
+		
+		$tasks_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_task = new GenyTask();
+				$tmp_task->id = $row[0];
+				$tmp_task->name = $row[1];
+				$tmp_task->description = $row[2];
+				$tasks_list[] = $tmp_task;
+			}
+		}
+		return $tasks_list;
+	}
+	
 	public function loadTaskByName($name){
 		$objects = $this->getTasksListWithRestrictions(array("task_name='".mysql_real_escape_string($name)."'"));
 		$object = $objects[0];
