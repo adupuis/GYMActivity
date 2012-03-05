@@ -7,7 +7,7 @@
 			$.validationEngineLanguage.allRules = {"required":{    
 						"regex":"none",
 						"alertText":"* Ce champs est requis",
-						"alertTextCheckboxMultiple":"*Choisir un option",
+						"alertTextCheckboxMultiple":"*Choisir une option",
 						"alertTextCheckboxe":"* Ce checkbox est requis"},
 					"length":{
 						"regex":"none",
@@ -31,13 +31,19 @@
                          "alertText":"* Date invalide, format YYYY-MM-DD requis"},
 					"onlyNumber":{
 						"regex":"/^[0-9\ ]+$/",
-						"alertText":"* Chiffres seulement accepté"},	
+						"alertText":"* Chiffres seulement acceptés"},
+					"reallyOnlyNumber":{
+						"regex":"/^[0-9]+$/",
+						"alertText":"* Chiffres seulement acceptés (pas d'espace)"},
+					"onlyFloatNumber":{
+						"regex":"/^[0-9]+\.[0-9]{2}$/",
+						"alertText":"* Nombre à virgule flottante seulement accepté (2 décimales)"},
 					"noSpecialCaracters":{
 						"regex":"/^[0-9a-zA-Z]+$/",
-						"alertText":"* Aucune caractère spécial accepté"},	
+						"alertText":"* Aucun caractère spécial accepté"},
 					"onlyLetter":{
 						"regex":"/^[a-zA-Z\ \']+$/",
-						"alertText":"* Lettres seulement accepté"}
+						"alertText":"* Lettres seulement acceptées"}
 				}	
 		}
 	}

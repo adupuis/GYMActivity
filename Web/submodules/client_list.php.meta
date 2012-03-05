@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Liste clients';
+$required_group_rights = 2;
+?>

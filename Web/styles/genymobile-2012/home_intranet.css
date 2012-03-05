@@ -1,0 +1,126 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,li{ margin:0; padding:0;}
+table{ border-collapse:collapse; border-spacing:0;}
+fieldset,img{ border:0;}
+address,caption,cite,code,dfn,th,var{ font-style:normal; font-weight:normal;}
+ol,ul{ list-style:none;}
+caption,th{ text-align:left;}
+h1,h2,h3,h4,h5,h6{ font-size:100%; font-weight:normal;}
+q:before,q:after{ content:'';}
+abbr,acronym{ border:0;}
+
+div#home_intranet_dock {
+	position: relative;
+	margin-top:-37px;
+ 	margin-left: 180px;
+ 	margin-right: auto;
+/* 	border: 1px solid black; */
+	/*height: auto;*/
+	/*width: 100%;*/
+}
+
+div#home_intranet_dock p {
+	margin-bottom:20px;
+}
+div#home_intranet_dock p:last-child {
+	margin-bottom:0;
+}
+
+/*div#home_intranet_dock select {
+	cursor:pointer;
+	display:block;
+	font-size:14px;
+	font-weight:bold;
+	line-height:28px;
+	margin-bottom:5px;
+	width: 400px;
+	text-align: center;
+}*/
+
+div#home_intranet_dock .category_type_list {
+	cursor: pointer;
+	display: block;
+	line-height: 28px;
+	margin-bottom: 5px;
+	width: 400px;
+}
+
+div#home_intranet_dock .tag_list {
+	cursor: pointer;
+	display: block;
+	margin-bottom: 5px;
+	width: 400px;
+}
+
+div#home_intranet_dock ul {
+	padding-right: 20px;
+	vertical-align: middle;
+}
+
+div#home_intranet_dock ul li .widget {
+	display: inline;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#home_intranet_dock .widget_link {
+	text-align: center;
+	margin-left: 50px;
+	margin-bottom: 50px;
+	background-repeat:no-repeat;
+	background-position:10px 10px;
+}
+
+div#home_intranet_dock .widget_link {
+	display:block;
+	float: left;
+	width: 350px;
+	height: 150px;
+	text-decoration:none;
+	color: #6a6a6a;
+	background-color: transparent;
+	border: 1px solid #D8D8D8;
+	text-align:center;
+	padding: 5px;
+}
+
+div#home_intranet_dock ul li a:hover {
+	background-color:#84BE5D;
+	border: 1px solid #D9D9D9;
+	color: #fff;
+	text-shadow:none;
+}
+
+div#home_intranet_dock ul li a span.dock_item_title {
+	position: relative;
+	left: 35px;
+	top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size:30px;
+	font-weight: x-large;
+/* 	color: #6a6a6a; */
+/* 	text-shadow: 0 -1px 1px #fff;  */
+/* 	text-align:center; */
+}
+
+div#home_intranet_dock ul li a span.dock_item_content {
+	position: relative;
+	top: 60px;
+	font-size:14px;
+}
+
+/* End of main dock style */
+
+.home_intranet_separator {
+	display: block;
+	width: 300px;
+	height: 20px;
+/* 	margin: 20px auto; */
+	margin-bottom: 20px;
+/* 	background: url('../../images/genymobile-2012/separator.png') no-repeat; */
+	clear: both;
+	font-weight: bold;
+	font-size: 16px;
+}

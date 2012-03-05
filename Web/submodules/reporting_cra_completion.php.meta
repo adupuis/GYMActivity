@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Remplissage CRA';
+$required_group_rights = array(1,2,4,5);
+?>

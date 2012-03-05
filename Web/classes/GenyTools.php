@@ -89,6 +89,30 @@ class GenyTools {
 		$end_date="$year-$month-$lastday";
 		return $end_date;
 	}
+	static function debug($str){
+		error_log("[GYMActivity::DEBUG] $str",0);
+	}
+	static function getParam($param,$default=""){
+		$ret = $default;
+		if(isset($_POST[$param]))
+			$ret = $_POST[$param];
+		else if( isset($_GET[$param]))
+			$ret = $_GET[$param];
+		return htmlentities($ret,ENT_QUOTES,'UTF-8');
+	}
+	static function sortMultiArrayCaseInsensitive( $array, $key ) {
+		// example: $array = sortMultiArrayCaseInsensitive( $array, "key" );
+		for( $i = 0; $i < sizeof( $array ); $i++ ) {
+			$sort_values[$i] = $array[$i][$key];
+		}
+		natcasesort( $sort_values );
+		reset( $sort_values );
+
+		while( list( $arr_key, $arr_val ) = each( $sort_values ) ) {
+			$sorted_arr[] = $array[$arr_key];
+		}
+		return $sorted_arr;
+	}
 }
 
 ?>

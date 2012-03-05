@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Reporting de charge';
+$required_group_rights = array(1,2,4,5);
+?>

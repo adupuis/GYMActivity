@@ -240,6 +240,9 @@ ul#navigation .logout a      {
 ul#navigation .reporting a   {
 	background-image: url(../../images/default/reporting.png);
 }
+ul#navigation .reporting_personal a   {
+	background-image: url(../../images/default/reporting_personal.png);
+}
 ul#navigation .admin a     {
 	background-image: url(../../images/default/admin.png);
 }
@@ -387,8 +390,8 @@ li.cra_admin_generic a {
 	background-image: url(../../images/default/cra_admin_generic.png);
 }
 
-li.conges_admin_generic a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+li.holiday_summary_generic a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.project_add a {
@@ -469,6 +472,10 @@ li.notifications a {
 
 li.reporting_monthly_view a {
 	background-image: url(../../images/default/reporting.png);
+}
+
+li.reporting_personal a {
+	background-image: url(../../images/default/reporting_personal.png);
 }
 
 li.reporting_cra a {
@@ -775,6 +782,10 @@ p.mainarea_title span.conges_list {
 
 p.mainarea_title span.reporting_monthly_view {
 	background-image: url(../../images/default/reporting.png);
+}
+
+p.mainarea_title span.reporting_personal {
+	background-image: url(../../images/default/reporting_personal.png);
 }
 
 p.mainarea_title span.reporting_cra {

@@ -24,10 +24,14 @@ function __autoload($class_name) {
 }
 
 date_default_timezone_set('Europe/Paris');
+$access_loger = new GenyAccessLog();
+$profile = -1;
 
 try {
 	$checkId_obj = new CheckIdentity();
 	$api_key = "";
+	$referer = array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : "";
+	
 	if(isset($_POST['api_key']))
 		$api_key = $_POST['api_key'];
 	else if( isset($_GET['api_key']))
@@ -42,10 +46,21 @@ try {
 	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1 && ($authorized_auth_method == "session" || $authorized_auth_method=="all")){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
 			$auth_granted=true;
+			$tmp_profile = new GenyProfile();
+			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
+			$profile = $tmp_profile;
 		}
 		else{
 			$auth_granted=false;
+			$access_loger->insertNewAccessLog(
+				$profile->id,
+				$_SERVER['REMOTE_ADDR'],
+				'false',
+				"backend/api/ajax_authent_checking.php",
+				UNAUTHORIZED_ACCESS,
+				"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=User not allowed.");
 			echo json_encode(array('error'=>'User not allowed.'));
+			exit();
 		}
 	}
 	else if( $api_key != "" && ($authorized_auth_method == "api_key" || $authorized_auth_method=="all")){
@@ -57,25 +72,58 @@ try {
 // 				echo "Profile: ID=$tmp_profile->id, LOGIN=$tmp_profile->login, MD5(LOGIN)=".md5($tmp_profile->login).", REQUIRED_GROUPS_RIGHTS=$required_group_rights\n";
 				if( $tmp_profile->rights_group_id <= $required_group_rights ){
 					$auth_granted=true;
+					$profile = $tmp_profile;
 				}
 				else{
 					$auth_granted=false;
 					echo json_encode(array('error'=>'User not allowed (from API key authent).'));
+					$access_loger->insertNewAccessLog(
+						$profile->id,
+						$_SERVER['REMOTE_ADDR'],
+						'false',
+						"backend/api/ajax_authent_checking.php",
+						UNAUTHORIZED_ACCESS,
+						"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=User not allowed (from API key authent).");
+					exit();
 				}
 			}
 			else {
 				$auth_granted=false;
 				echo json_encode(array('error'=>'Invalid user.'));
+				$access_loger->insertNewAccessLog(
+					$profile->id,
+					$_SERVER['REMOTE_ADDR'],
+					'false',
+					"backend/api/ajax_authent_checking.php",
+					UNAUTHORIZED_ACCESS,
+					"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=Invalid user.");
+				exit();
 			}
 		}
 		else {
 			$auth_granted=false;
 			echo json_encode(array('error'=>'API key is invalid.'));
+			$access_loger->insertNewAccessLog(
+				$profile->id,
+				$_SERVER['REMOTE_ADDR'],
+				'false',
+				"backend/api/ajax_authent_checking.php",
+				UNAUTHORIZED_ACCESS,
+				"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=API key is invalid.");
+			exit();
 		}
 	}
 	else {
 		$auth_granted=false;
 		echo json_encode(array('error'=>'Authentication required.'));
+		$access_loger->insertNewAccessLog(
+			$profile->id,
+			$_SERVER['REMOTE_ADDR'],
+			'false',
+			"backend/api/ajax_authent_checking.php",
+			UNAUTHORIZED_ACCESS,
+			"referer=".$referer.",user_agent=".$_SERVER['HTTP_USER_AGENT']." error=Authentication required.");
+		exit();
 	}
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";

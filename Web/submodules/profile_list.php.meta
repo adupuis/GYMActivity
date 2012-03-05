@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Liste profils';
+$required_group_rights = 2;
+?>

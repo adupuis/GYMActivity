@@ -49,6 +49,9 @@ jQuery.fn.validationEngine = function(settings) {
 						"onlyNumber":{
 							"regex":"/^[0-9\ ]+$/",
 							"alertText":"* Numbers only"},	
+						"reallyOnlyNumber":{
+							"regex":"/^[0-9]+$/",
+							"alertText":"* Numbers only (no space)"},
 						"noSpecialCaracters":{
 							"regex":"/^[0-9a-zA-Z]+$/",
 							"alertText":"* No special caracters allowed"},	

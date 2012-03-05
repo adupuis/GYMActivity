@@ -23,6 +23,18 @@ define("GENYMOBILE_FALSE",-1);
 define("GENYMOBILE_ERROR",-2);
 
 class GenyWebConfig {
+	public $db_host = "";
+	public $db_user = "";
+	public $db_password = "";
+	public $theme = "";
+	public $debug = false;
+	public $db_name = "";
+	public $company_name = "";
+	public $version = "";
+	public $company_corner_logo = "";
+	public $company_index_logo = "";
+	public $gmail_username = "";
+	public $gmail_password = "";
 	public function __construct(){
 		$this->db_host = "localhost";
 		$this->db_user = "genymobile";
@@ -30,9 +42,9 @@ class GenyWebConfig {
 		$this->theme = "default";
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
-		$this->company_name = "GENYMOBILE";
-		$this->version = "0.4.8";
-		$this->company_corner_logo = "logo_genymobile_writting_small.jpg";
+		$this->company_name = "Genymobile";
+		$this->version = "0.9.99";
+		$this->company_corner_logo = "logo_banner.png";
 		$this->company_index_logo = "logo_genymobile.jpg";
 		$this->gmail_username = "yourusername";
 		$this->gmail_password = "yourpassword";

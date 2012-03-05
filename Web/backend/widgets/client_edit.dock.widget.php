@@ -22,7 +22,7 @@
 ?>
 
 <li class="client_edit">
-	<a href="client_edit.php">
+	<a href="loader.php?module=client_edit">
 		<span class="dock_item_title">Modifier un client</span><br/>
 		<span class="dock_item_content">Modifier un client existant.</span>
 	</a>

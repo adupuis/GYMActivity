@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Bork !';
+$required_group_rights = 6;
+?>

@@ -23,7 +23,7 @@
 ?>
 
 <li class="cra_remove">
-	<a href="cra_deletion.php">
+	<a href="loader.php?module=cra_deletion">
 		<span class="dock_item_title">Suppression CRA</span><br/>
 		<span class="dock_item_content">Demander la suppression d'un ou plusieurs rapport(s) d'activité(s) <strong>après qu'ils aient été validé par le management</strong>.</span>
 	</a>

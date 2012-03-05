@@ -1,0 +1,43 @@
+
+ul.ps_float {
+	display: inline;
+	margin-left: 30px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+ul.ps_float li {
+	display: block;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+/* 	border: 1px solid #D8D8D8; */
+	width: 500px;
+	height: 70px;
+}
+
+form.popup {
+	margin-top: 0;
+}
+
+form.popup input[type=submit],
+form.popup input[type=button].submit,
+form.popup a.submit {
+	margin-left: 150px;
+}
+.ps_float input[type=submit],
+.ps_float input[type=button].submit,
+.ps_float a.submit {
+	margin-left: 0px;
+}
+
+.table_container {
+/* 	width: 700px;  */
+	margin: auto;
+}
+
+/*.table_container table {
+	width: 700px;
+}*/

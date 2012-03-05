@@ -19,29 +19,30 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
-class GenyProfile {
-	public $profile_id = -1;
-	public $profile_login = '';
-	public $profile_firstname = '';
-	public $profile_lastname = '';
-	public $profile_email = '';
-	public $profile_is_active = false;
-	public $profile_needs_password_reset = false;
+include_once 'GenyDatabaseTools.php';
+
+class GenyProfile extends GenyDatabaseTools {
+	public $id = -1;
+	public $login = '';
+	public $firstname = '';
+	public $lastname = '';
+	public $password = '';
+	public $email = '';
+	public $is_active = false;
+	public $needs_password_reset = false;
 	public $rights_group_id = -1;
 	private $updates = array();
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("Profiles",  "profile_id");
 		$this->id = -1;
 		$this->login = '';
 		$this->firstname = '';
 		$this->lastname = '';
+		$this->password = '';
 		$this->email = '';
+		$this->is_active = false;
 		$this->needs_password_reset = false;
 		$this->rights_group_id = -1;
-		$this->is_active = false;
 		if($id > -1)
 			$this->loadProfileById($id);
 	}
@@ -59,7 +60,7 @@ class GenyProfile {
 	public function getProfilesListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles";
+		$query = "SELECT profile_id,profile_login,profile_firstname,profile_lastname,profile_password,profile_email,profile_is_active,profile_needs_password_reset,rights_group_id FROM Profiles";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -81,10 +82,11 @@ class GenyProfile {
 				$tmp_profile->login = $row[1];
 				$tmp_profile->firstname = $row[2];
 				$tmp_profile->lastname = $row[3];
-				$tmp_profile->email = $row[4];
-				$tmp_profile->is_active = $row[5];
-				$tmp_profile->needs_password_reset = $row[6];
-				$tmp_profile->rights_group_id = $row[7];
+				$tmp_profile->password = $row[4];
+				$tmp_profile->email = $row[5];
+				$tmp_profile->is_active = $row[6];
+				$tmp_profile->needs_password_reset = $row[7];
+				$tmp_profile->rights_group_id = $row[8];
 				$profile_list[] = $tmp_profile;
 			}
 		}
@@ -107,6 +109,31 @@ class GenyProfile {
 	public function getProfileByRightsGroup($group){
 		return $this->getProfilesListWithRestrictions( array("rights_group_id=".mysql_real_escape_string($group)) );
 	}
+	public function getAllProfilesByProjectId($proj_id) {
+		$query = "SELECT Profiles.profile_id, profile_login, profile_firstname, profile_lastname, profile_password, profile_email, profile_is_active, profile_needs_password_reset, rights_group_id FROM Profiles, Assignements where Profiles.profile_id = Assignements.profile_id and Assignements.project_id=".$proj_id;
+		$result = mysql_query($query, $this->handle);
+		if( $this->config->debug )
+			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
+
+// 		var_dump($result);
+		$profile_list = array();
+		if (mysql_num_rows($result) != 0){
+			while ($row = mysql_fetch_row($result)){
+				$tmp_profile = new GenyProfile();
+				$tmp_profile->id = $row[0];
+				$tmp_profile->login = $row[1];
+				$tmp_profile->firstname = $row[2];
+				$tmp_profile->lastname = $row[3];
+				$tmp_profile->password = $row[4];
+				$tmp_profile->email = $row[5];
+				$tmp_profile->is_active = $row[6];
+				$tmp_profile->needs_password_reset = $row[7];
+				$tmp_profile->rights_group_id = $row[8];
+				$profile_list[] = $tmp_profile;
+			}
+		}
+		return $profile_list;
+	}
 	public function loadProfileByUsername($username){
 		$profiles = $this->getProfilesListWithRestrictions(array("md5(profile_login)='".mysql_real_escape_string($username)."'"));
 		$profile = $profiles[0];
@@ -115,6 +142,7 @@ class GenyProfile {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
@@ -129,6 +157,7 @@ class GenyProfile {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
@@ -143,31 +172,12 @@ class GenyProfile {
 			$this->login = $profile->login;
 			$this->firstname = $profile->firstname;
 			$this->lastname = $profile->lastname;
+			$this->password = $profile->password;
 			$this->email = $profile->email;
 			$this->is_active = $profile->is_active;
 			$this->needs_password_reset = $profile->needs_password_reset;
 			$this->rights_group_id = $profile->rights_group_id;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE Profiles SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE profile_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProfile MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>
