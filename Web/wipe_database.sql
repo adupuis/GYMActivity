@@ -57,4 +57,5 @@ DROP TABLE IntranetPages;
 DROP TABLE IntranetTags;
 DROP TABLE IntranetTypes;
 DROP TABLE IntranetCategories;
+DROP TABLE IntranetPageStatus;
 COMMIT;

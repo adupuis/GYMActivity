@@ -64,6 +64,7 @@ if($load_menu == "true")
 		if( count( $bottomdock_items ) == 0 || $bottomdock_items[0] != 'backend/widgets/notifications.dock.widget.php' ) {
 			array_unshift( $bottomdock_items, 'backend/widgets/notifications.dock.widget.php' );
 		}
+		array_push($bottomdock_items, 'backend/widgets/logout.dock.widget.php');
 		echo "<div id='separator_top'></div>\n<div id='bottomdock'>\n<h3 class='italic'>Liens rapides</h3>\n<div id='services'>\n<ul>";
 		foreach ( $bottomdock_items as $item ) {
 			include "$item";
