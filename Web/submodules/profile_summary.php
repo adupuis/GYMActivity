@@ -53,6 +53,8 @@ function ceTypeToHtml($type="neutral"){
 }
 
 function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$consulted_profile) {
+	$cp_pmd = new GenyProfileManagementData();
+	$cp_pmd->loadProfileManagementDataByProfileId($consulted_profile->id);
 // 	<a href='#ce_employee_agreement_$ce->id' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,1)\"><img src='images/$web_config->theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,-1)\"><img src='images/$web_config->theme/idea_vote_down_small.png' /></a>
 	$grg = new GenyRightsGroup($current_profile->rights_group_id);
 	if( $agreement == 0){
@@ -60,7 +62,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 			return "<a href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
 			
 		}
-		elseif ($type == 'manager_agreement' && ($current_profile->rights_group_id == $grg->getIdByShortname('ADM') || $current_profile->rights_group_id == $grg->getIdByShortname('TM')) ) {
+		elseif ($type == 'manager_agreement' && ($current_profile->rights_group_id == $grg->getIdByShortname('ADM') || $current_profile->rights_group_id == $grg->getIdByShortname('TM')) && $current_profile->id == $cp_pmd->group_leader_id ) {
 			return "<a href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
 		}
 		else {
@@ -170,6 +172,10 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?>
 			</li>
 			<li>
+				<strong>Group Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->group_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?><br/>
+				<strong>Technology Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->technology_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?>
+			</li>
+			<li>
 				<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong><br/>
 				<strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?><br/>
 				<strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?><br/>
@@ -182,7 +188,9 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?>
 			</li>
 			<?php
-				if($profile->rights_group_id == $geny_rights_group->getIdByShortname('ADM') || $profile->rights_group_id == $geny_rights_group->getIdByShortname('TM')){
+				$cp_pmd = new GenyProfileManagementData();
+				$cp_pmd->loadProfileManagementDataByProfileId($consulted_profile->id);
+				if(($profile->rights_group_id == $geny_rights_group->getIdByShortname('ADM') || $profile->rights_group_id == $geny_rights_group->getIdByShortname('TM')) && $current_profile->id == $cp_pmd->group_leader_id ){
 			?>
 			<li>
 				<a href='#create_career_event' rel='prettyPhoto[create_career_event]' class="submit">Ajouter un évènement de carrière</a>

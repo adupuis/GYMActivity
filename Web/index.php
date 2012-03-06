@@ -49,14 +49,14 @@ $web_config = new GenyWebConfig();
 	<p>
 		<label for="geny_theme">Password</label>
 		<select name="geny_theme" id="geny_theme" class="chzn-select">
-			<option value='default'>Thème par défaut</option>
+			<!--<option value='default'>Thème par défaut</option>
 			<?php
-				$selected='';
-				if( stripos($_SERVER['HTTP_USER_AGENT'],"Android 3") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"SCH-I") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad") !== false )
-					$selected = "selected='selected'";
+// 				$selected='';
+// 				if( stripos($_SERVER['HTTP_USER_AGENT'],"Android 3") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"SCH-I") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad") !== false )
+// 					$selected = "selected='selected'";
 			?>
-			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>
-			<option value='genymobile-2012'>Genymobile 2012</option>
+			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>-->
+			<option value='genymobile-2012' selected>Genymobile 2012</option>
 		</select>
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
