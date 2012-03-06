@@ -20,14 +20,15 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyActivityReportStatus {
-	private $updates = array();
+class GenyActivityReportStatus extends GenyDatabaseTools {
+	public $id = -1;
+	public $name = '';
+	public $description = '';
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("ActivityReportStatus",
+				    "activity_report_status_id");
 		$this->id = -1;
 		$this->name = '';
 		$this->description = '';
@@ -102,26 +103,6 @@ class GenyActivityReportStatus {
 			$this->name = $object->name;
 			$this->description = $object->description;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ActivityReportStatus SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE activity_report_status_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyActivityReportStatus MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Visualisation Page Intranet';
+// $required_group_rights = array(1,2);
+?>

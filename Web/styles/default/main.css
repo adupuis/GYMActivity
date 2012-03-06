@@ -240,6 +240,9 @@ ul#navigation .logout a      {
 ul#navigation .reporting a   {
 	background-image: url(../../images/default/reporting.png);
 }
+ul#navigation .reporting_personal a   {
+	background-image: url(../../images/default/reporting_personal.png);
+}
 ul#navigation .admin a     {
 	background-image: url(../../images/default/admin.png);
 }
@@ -387,8 +390,8 @@ li.cra_admin_generic a {
 	background-image: url(../../images/default/cra_admin_generic.png);
 }
 
-li.conges_admin_generic a {
-	background-image: url(../../images/default/conges_admin_generic.png);
+li.holiday_summary_generic a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 li.project_add a {
@@ -471,6 +474,10 @@ li.reporting_monthly_view a {
 	background-image: url(../../images/default/reporting.png);
 }
 
+li.reporting_personal a {
+	background-image: url(../../images/default/reporting_personal.png);
+}
+
 li.reporting_cra a {
 	background-image: url(../../images/default/reporting_cra.png);
 }
@@ -493,6 +500,22 @@ li.idea_remove a {
 
 li.idea_list a {
 	background-image: url(../../images/default/idea_list.png);
+}
+
+li.holiday_summary_add a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+li.holiday_summary_edit a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+li.holiday_summary_remove a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+li.holiday_summary_list a {
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 
@@ -577,7 +600,7 @@ div#bottomdock a span.dock_item_content {
 
 .notifications_count {
 	position: absolute;
-	margin-left: 50px;
+	margin-left: -115px;
 	margin-top: 10px;
 	color: white;
 	background-color: red;
@@ -777,6 +800,10 @@ p.mainarea_title span.reporting_monthly_view {
 	background-image: url(../../images/default/reporting.png);
 }
 
+p.mainarea_title span.reporting_personal {
+	background-image: url(../../images/default/reporting_personal.png);
+}
+
 p.mainarea_title span.reporting_cra {
 	background-image: url(../../images/default/reporting_cra.png);
 }
@@ -799,6 +826,22 @@ p.mainarea_title span.idea_remove {
 
 p.mainarea_title span.idea_list {
 	background-image: url(../../images/default/idea_list.png);
+}
+
+p.mainarea_title span.holiday_summary_add {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.holiday_summary_edit {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.holiday_summary_remove {
+	background-image: url(../../images/default/holiday_summary_generic.png);
+}
+
+p.mainarea_title span.holiday_summary_list {
+	background-image: url(../../images/default/holiday_summary_generic.png);
 }
 
 table.object_list {
@@ -966,4 +1009,20 @@ table.object_list > tr:nth-child(odd){
 	/*position: absolute;
 	right: 20px;
 	bottom: 30px;*/
+}
+
+
+.holiday_summary_edit {
+	line-height: 30px;
+}
+
+.holiday_summary {
+	background:#F5F5F5;
+	border: #333 solid 1px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+	-moz-box-shadow: 3px 3px 4px #333;
+	-webkit-box-shadow: 3px 3px 4px #333;
+	box-shadow: 3px 3px 4px #333;
 }

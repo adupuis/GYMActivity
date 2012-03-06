@@ -28,7 +28,7 @@ $end_date="$year-$d_month_previous-$lastday";
 ?>
 
 <li class="reporting_monthly_view">
-	<a href="reporting_load.php?reporting_start_date=<?php echo $start_date; ?>&reporting_end_date=<?php echo $end_date; ?>">
+	<a href="loader.php?module=reporting_load&reporting_start_date=<?php echo $start_date; ?>&reporting_end_date=<?php echo $end_date; ?>">
 		<span class="dock_item_title">Reporting M-1</span><br/>
 		<span class="dock_item_content">Reporting sur l'activité du mois précédent.</span>
 	</a>

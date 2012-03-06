@@ -20,14 +20,15 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyProjectTaskRelation {
-	private $updates = array();
+class GenyProjectTaskRelation extends GenyDatabaseTools {
+	public $id = -1;
+	public $project_id = -1;
+	public $task_id = -1;
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("ProjectTaskRelations",  
+				    "project_task_relation_id");
 		$this->id = -1;
 		$this->project_id = -1;
 		$this->task_id = -1;
@@ -116,26 +117,6 @@ class GenyProjectTaskRelation {
 			$this->project_id = $object->project_id;
 			$this->task_id = $object->task_id;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ProjectTaskRelations SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE project_task_relation_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyProjectTaskRelation MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 	public function deleteAllProjectTaskRelationsByProjectId($project_id){
 		if(!is_numeric($project_id))

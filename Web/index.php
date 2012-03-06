@@ -29,11 +29,12 @@ $web_config = new GenyWebConfig();
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>GENYMOBILE - Apps</title>
 <link rel="stylesheet" type="text/css" href="styles/default/login-page.css" media="screen" title="bbxcss" />
+<link rel="stylesheet" href="js/chosen/chosen.css" />
 <style type="text/css">
 </style>
 </head>
 <body>
-<p style="margin:10px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
+<p style="margin:60px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
 <form id="start" action="check_login.php" method="post">
 	<h1>Login GENYMOBILE - Apps</h1>
 
@@ -47,14 +48,15 @@ $web_config = new GenyWebConfig();
 	</p>
 	<p>
 		<label for="geny_theme">Password</label>
-		<select name="geny_theme" id="geny_theme">
-			<option value='default'>Thème par défaut</option>
+		<select name="geny_theme" id="geny_theme" class="chzn-select">
+			<!--<option value='default'>Thème par défaut</option>
 			<?php
-				$selected='';
-				if( stripos($_SERVER['HTTP_USER_AGENT'],"Android 3") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"SCH-I") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad") !== false )
-					$selected = "selected='selected'";
+// 				$selected='';
+// 				if( stripos($_SERVER['HTTP_USER_AGENT'],"Android 3") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"SCH-I") !== false || stripos($_SERVER['HTTP_USER_AGENT'],"iPad") !== false )
+// 					$selected = "selected='selected'";
 			?>
-			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>
+			<option value='tablet' <?php echo $selected; ?>>Tablettes</option>-->
+			<option value='genymobile-2012' selected>Genymobile 2012</option>
 		</select>
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
@@ -78,6 +80,8 @@ $web_config = new GenyWebConfig();
 ?>
 </form>
 <p id="credits">&copy; 2011-2012 <strong>GENYMOBILE</strong>.</p>
-
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript"> $(".chzn-select").chosen();</script>
 </body>
 </html>

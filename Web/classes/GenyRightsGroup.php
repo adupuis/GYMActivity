@@ -20,22 +20,23 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
-
-class GenyRightsGroup {
-	private $updates = array();
+include_once 'GenyDatabaseTools.php';
+class GenyRightsGroup extends GenyDatabaseTools{
+	public $id = -1;
+	public $name = '';
+	public $shortname = '';
+	public $description = '';
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("RightsGroups",  "rights_group_id");
 		$this->id = -1;
 		$this->name = '';
+		$this->shortname = '';
 		$this->description = '';
 		if($id > -1)
 			$this->loadRightsGroupById($id);
 	}
-	public function insertNewRightsGroup($id,$name,$description){
-		$query = "INSERT INTO RightsGroups VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($description)."')";
+	public function insertNewRightsGroup($id,$name,$shortname,$description){
+		$query = "INSERT INTO RightsGroups VALUES($id,'".mysql_real_escape_string($name)."','".mysql_real_escape_string($shortname)."','".mysql_real_escape_string($description)."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyRightsGroups MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
@@ -43,16 +44,17 @@ class GenyRightsGroup {
 		else
 			return -1;
 	}
-	public function getRightsGroupsListWithRestrictions($restrictions){
+	public function getRightsGroupsListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT rights_group_id,rights_group_name,rights_group_description FROM RightsGroups";
+		$query = "SELECT rights_group_id,rights_group_name,rights_group_shortname,rights_group_description FROM RightsGroups";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string($restriction_type);
 			foreach($restrictions as $key => $value) {
 				$query .= $value;
 				if($key != $last_index){
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -65,7 +67,8 @@ class GenyRightsGroup {
 				$tmp_object = new GenyRightsGroup();
 				$tmp_object->id = $row[0];
 				$tmp_object->name = $row[1];
-				$tmp_object->description = $row[2];
+				$tmp_object->shortname = $row[2];
+				$tmp_object->description = $row[3];
 				$object_list[] = $tmp_object;
 			}
 		}
@@ -76,42 +79,50 @@ class GenyRightsGroup {
 		return $this->getRightsGroupsListWithRestrictions( array() );
 	}
 	public function loadRightsGroupByName($name){
-		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_name='".mysql_real_escape_string($id)."'"));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_name='".mysql_real_escape_string($name)."'"));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
 			$this->name = $object->name;
+			$this->shortname = $object->shortname;
 			$this->description = $object->description;
 		}
 	}
 	public function loadRightsGroupById($id){
-		$objects = $this->getRightsGroupListWithRestrictions(array("rights_group_id=".mysql_real_escape_string($id)));
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_id=".mysql_real_escape_string($id)));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
 			$this->name = $object->name;
+			$this->shortname = $object->shortname;
 			$this->description = $object->description;
 		}
 	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE RightsGroups SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
+	public function loadRightsGroupByShortname($shortname='UNDEF'){
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname='".mysql_real_escape_string($shortname)."'"));
+		$object = $objects[0];
+		if(isset($object) && $object->id > -1){
+			$this->id = $object->id;
+			$this->name = $object->name;
+			$this->shortname = $object->shortname;
+			$this->description = $object->description;
 		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE rights_group_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyRightsGroup MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
+	}
+	public function getIdByShortname($shortname='UNDEF'){
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname='".mysql_real_escape_string($shortname)."'"));
+		$object = $objects[0];
+		if(isset($object) && $object->id > -1){
+			return $object->id;
+		}
+		return GENYMOBILE_FALSE;
+	}
+	public function getRightsGroupByShortname($shortname='UNDEF'){
+		$objects = $this->getRightsGroupsListWithRestrictions(array("rights_group_shortname='".mysql_real_escape_string($shortname)."'"));
+		$object = $objects[0];
+		if(isset($object) && $object->id > -1){
+			return $object;
+		}
+		return new GenyRightsGroup();
 	}
 }
 ?>
