@@ -23,7 +23,13 @@
 
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_tools = new GenyTools();
+$geny_client = new GenyClient();
 date_default_timezone_set('Europe/Paris');
+$clients = array();
+
+foreach( $geny_client->getAllClients() as $client ){
+	$clients[$client->id] = $client;
+}
 
 ?>
 <div id="mainarea">
@@ -56,10 +62,19 @@ date_default_timezone_set('Europe/Paris');
 					<option value=""></option>
 					<?php
 						$geny_assignements = new GenyAssignement();
-						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
+						$pn = array();
+						foreach( $geny_assignements->getActiveAssignementsListByProfileId( $profile->id ) as $assignement ){
 							$p = new GenyProject( $assignement->project_id );
-							if( $p->type_id != 5 && $p->status_id != 2 && $p->status_id != 3 )
-								echo "<option value=\"$assignement->id\" title=\"$p->description\">$p->name</input></option>";
+							if( $p->type_id != 5 && $p->status_id != 2 && $p->status_id != 3 ){
+								// WARNING: Il n'y a pas de protection contre les doublons
+								$key = $clients[$p->client_id]->name." - $p->name";
+								$pns["$key"] = array("id" => $assignement->id, "description" => $p->description );
+							}
+						}
+						$keysu = array_keys($pns);
+						sort($keysu);
+						foreach( $keysu as $pn_key ){
+							echo "<option value=\"".$pns[$pn_key]['id']."\" title=\"".$pns[$pn_key]['description']."\">$pn_key</input></option>";
 						}
 					?>
 				</select>
