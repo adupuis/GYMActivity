@@ -30,6 +30,8 @@ $data_array_filters = array( 0 => array(), 1 => array() );
 
 $geny_holiday_summary = new GenyHolidaySummary();
 
+$geny_activity_report = new GenyActivityReport();
+
 $geny_profile = new GenyProfile();
 foreach( $geny_profile->getAllProfiles() as $prof ) {
 	$profiles[$prof->id] = $prof;
@@ -56,7 +58,15 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 		$remove = "<a href=\"loader.php?module=holiday_summary_remove&holiday_summary_id=$tmp->id\" title=\"Supprimer définitivement le solde de congés\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitivement le solde de congés\"></a>";
 	}
 	
-	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $tmp->count_remaining, $edit, $remove );
+	$count_taken_from_activity_report = 0.00;
+	if( $tmp->type == "CP" ) {
+		$count_taken_from_activity_report = number_format( $geny_activity_report->getDayLoadByProfileIdAndTaskId( $tmp_profile->id, 11 ), 2 );
+	}
+	else if( $tmp->type == "RTT" ) {
+		$count_taken_from_activity_report = number_format( $geny_activity_report->getDayLoadByProfileIdAndTaskId( $tmp_profile->id, 17 ), 2 );
+	}
+	
+	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $count_taken_from_activity_report, $tmp->count_remaining, $edit, $remove );
 
 	$holiday_summary_types = array( "CP"=>"CP", "RTT"=>"RTT" );
 
@@ -162,6 +172,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 						<th>Fin</th>
 						<th>Acquis</th>
 						<th>Pris</th>
+						<th>Pris (CRA)</th>
 						<th>Restant</th>
 						<th>Editer</th>
 						<th>Supprimer</th>
@@ -169,7 +180,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 					<tbody>
 					<?php
 						foreach( $data_array as $da ){
-							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."<center></td><td><center>".$da[4]."<center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td></tr>";
+							echo "<tr><td>".$da[1]."</td><td><center>".$da[2]."</center></td><td><center>".$da[3]."<center></td><td><center>".$da[4]."<center></td><td><center>".$da[5]."</center></td><td><center>".$da[6]."</center></td><td><center>".$da[7]."</center></td><td><center>".$da[8]."</center></td><td><center>".$da[9]."</center></td><td><center>".$da[10]."</center></td></tr>";
 						}
 					?>
 					</tbody>
@@ -180,6 +191,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 						<th class="filtered">Fin</th>
 						<th class="filtered">Acquis</th>
 						<th class="filtered">Pris</th>
+						<th class="filtered">Pris (CRA)</th>
 						<th class="filtered">Restant</th>
 						<th class="filtered">Editer</th>
 						<th class="filtered">Supprimer</th>

@@ -138,6 +138,40 @@ class GenyActivityReport extends GenyDatabaseTools {
 		else
 			return array();
 	}
+	
+	public function getDayLoadByProfileIdAndTaskId( $profile_id, $task_id ) {
+		if( !is_numeric( $profile_id ) ) {
+			return -1;
+		}
+		if( !is_numeric( $task_id ) ) {
+			return -1;
+		}
+		$ars_approved = new GenyActivityReportStatus();
+		$ars_approved->loadActivityReportStatusByShortName('APPROVED');
+		$ars_billed = new GenyActivityReportStatus();
+		$ars_billed->loadActivityReportStatusByShortName('BILLED');
+		$ars_paid = new GenyActivityReportStatus();
+		$ars_paid->loadActivityReportStatusByShortName('PAID');
+		$ars_close = new GenyActivityReportStatus();
+		$ars_close->loadActivityReportStatusByShortName('CLOSE');
+		
+		$query = "SELECT ifnull(sum(a.activity_load),0) FROM Activities a, ActivityReports ar WHERE task_id=".$task_id." AND a.activity_id = ar.activity_id AND ar.profile_id=".$profile_id." AND ( ar.activity_report_status_id=".$ars_approved->id." OR ar.activity_report_status_id=".$ars_billed->id." OR ar.activity_report_status_id=".$ars_paid->id." OR ar.activity_report_status_id=".$ars_close->id." )";
+		
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$day_load = $row[0] / 8;
+				return $day_load;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+	
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
