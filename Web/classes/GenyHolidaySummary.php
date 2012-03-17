@@ -187,6 +187,48 @@ class GenyHolidaySummary extends GenyDatabaseTools  {
 		}
 		return new GenyHolidaySummary();
 	}
+	public function getPreviousCPSummaryByProfileId( $id ){
+		$month = date('m', time());
+		$year=date('Y', time());
+		$start_hs_cp_date = '1979-06-01';
+		$end_hs_cp_date = '1980-05-31';
+		
+		if( $month < 6 ){
+			$start_year = $year-2;
+			$end_year = $year-1;
+			$start_hs_cp_date = "$start_year-06-01";
+			$end_hs_cp_date = "$end_year-05-31";
+		}
+		else {
+			$prev_year = $year-1;
+			$next_year = $year;
+			$start_hs_cp_date = "$prev_year-06-01";
+			$end_hs_cp_date = "$next_year-05-31";
+		}
+		
+		$hs_cp_list = $this->getHolidaySummariesListWithRestrictions(array("profile_id=".$id,"holiday_summary_period_start >= '$start_hs_cp_date'","holiday_summary_period_end <= '$end_hs_cp_date'","holiday_summary_type='CP'"));
+		if( count($hs_cp_list) == 1 ){
+			return $hs_cp_list[0];
+		}
+		elseif ( count($hs_cp_list) > 1 ) {
+			error_log("[GYMActivity::WARNING] GenyHolidaySummary::getCurrentCPSummaryByProfileId() : il y a plus d'un HolidaySummary pour les CP de la période du $start_hs_cp_date au $end_hs_cp_date pour le profil $id ! Le premier résultat a été retourné mais cela peut être une erreur.",0);
+			return $hs_cp_list[0];
+		}
+		return new GenyHolidaySummary();
+	}
+	public function getPreviousRTTSummaryByProfileId( $id ){
+		$year=date('Y', time())-1;
+		
+		$hs_rtt_list = $this->getHolidaySummariesListWithRestrictions(array("profile_id=".$id,"holiday_summary_period_start >= '$year-01-01'","holiday_summary_period_end <= '$year-12-31'","holiday_summary_type='RTT'"));
+		if( count($hs_rtt_list) == 1 ){
+			return $hs_rtt_list[0];
+		}
+		elseif ( count($hs_rtt_list) > 1 ) {
+			error_log("[GYMActivity::WARNING] GenyHolidaySummary::getCurrentRTTSummaryByProfileId() : il y a plus d'un HolidaySummary pour les RTT de la période du $year-01-01 au $year-12-31 pour le profil $id ! Le premier résultat a été retourné mais cela peut être une erreur.",0);
+			return $hs_rtt_list[0];
+		}
+		return new GenyHolidaySummary();
+	}
 }
 
 ?>
