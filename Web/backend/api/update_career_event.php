@@ -23,7 +23,7 @@ session_start();
 $required_group_rights = 6;
 $auth_granted = false;
 
-header('Content-type:text/javascript;charset=UTF-8');
+header('Content-Type: application/json;charset=UTF-8');
 
 include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
@@ -41,6 +41,7 @@ try {
 		$ce_attachement = getParam("attachement","");
 		$ce_manager_agreement = getParam("manager_agreement","");
 		$ce_employee_agreement = getParam("employee_agreement","");
+		
 		// Si le profile n'est pas définit et que le requester n'est pas admin ou superuser ou que le profile demandé ne correpsond pas au profile du requester => BANG! *headshot*
 		if( $profile->rights_group_id > 2 && ($profile_id <= 0 || $profile->id != $profile_id) ){
 			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
@@ -71,25 +72,24 @@ try {
 					$tmp_ce->updateInt("career_event_manager_agreement",$ce_manager_agreement);
 				}
 				if( $ce_employee_agreement != $tmp_ce->employee_agreement && $ce_employee_agreement != "" ){
-					GenyTools::debug("update_career_event: employee_agreement=".$ce_employee_agreement);
 					$tmp_ce->updateInt("career_event_employee_agreement",$ce_employee_agreement);
 				}
-				$tmp_ce->setDebug(true);
+// 				$tmp_ce->setDebug(true);
 				if( ! $tmp_ce->commitUpdates() ){
 					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be updated, please check the parameters and server logs." ) );
 				}
 				else{
 					echo json_encode( array( "status" => "success", "status_message" => "career_event have been updated successfully." ) );
 				}
-				$tmp_ce->setDebug(false);
+// 				$tmp_ce->setDebug(false);
 			}
 			else{
 				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be load, please check the parameters." ) );
 				exit;
 			}
 		}
-		$data = json_encode($ces);
-		echo $data;
+// 		$data = json_encode($ces);
+// 		echo $data;
 	}
 } catch (Exception $e) {
     echo "Exception: ".$e->getMessage(), "\n";

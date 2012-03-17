@@ -31,7 +31,7 @@ $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 2 => array(), 4 => array(), 5 => array() );
+$data_array_filters = array( 0 => array(), 2 => array() );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
 $geny_hs->setDebug(true);
@@ -64,15 +64,14 @@ function ceTypeToHtml($type="neutral"){
 function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$consulted_profile) {
 	$cp_pmd = new GenyProfileManagementData();
 	$cp_pmd->loadProfileManagementDataByProfileId($consulted_profile->id);
-// 	<a href='#ce_employee_agreement_$ce->id' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,1)\"><img src='images/$web_config->theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#' onclick=\"submit_ce_agreement('employee_agreement',$ce->id,-1)\"><img src='images/$web_config->theme/idea_vote_down_small.png' /></a>
 	$grg = new GenyRightsGroup($current_profile->rights_group_id);
 	if( $agreement == 0){
 		if($type == 'employee_agreement' && $current_profile->id == $consulted_profile->id){
-			return "<a href='#ce_employee_agreement_$ce_id' id='ce_employee_agreement_vote_$ce_id' ceId='$ce_id' ceAgreementType='employee_agreement' ceVote='1'><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
+			return "<a href='#ce_employee_agreement_$ce_id' class='ceVoteLink' ceId='$ce_id' ceAgreementType='employee_agreement' ceVote='1'><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' class='ceVoteLink' ceId='$ce_id' ceAgreementType='employee_agreement' ceVote='-1'><img src='images/$theme/idea_vote_down_small.png' /></a>";
 			
 		}
 		elseif ($type == 'manager_agreement' && ($current_profile->rights_group_id == $grg->getIdByShortname('ADM') || $current_profile->rights_group_id == $grg->getIdByShortname('TM')) && $current_profile->id == $cp_pmd->group_leader_id ) {
-			return "<a href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_manager_agreement_$ce_id' onclick=\"submit_ce_agreement('manager_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
+			return "<a href='#ce_manager_agreement_$ce_id' class='ceVoteLink' ceId='$ce_id' ceAgreementType='manager_agreement' ceVote='1'><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a  href='#ce_manager_agreement_$ce_id' class='ceVoteLink' ceId='$ce_id' ceAgreementType='manager_agreement' ceVote='-1'><img src='images/$theme/idea_vote_down_small.png' /></a>";
 		}
 		else {
 			return "<img src='images/$theme/edit_add_small.png'>";
@@ -137,7 +136,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 	/* Add a select menu for each TH element in the table footer */
 	/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 	$("tfoot th").each( function ( i ) {
-		if( i==0 || i == 2 || i == 4 || i == 5){
+		if( i==0 || i == 2){
 			this.innerHTML = indexData[i];
 			$('select', this).change( function () {
 				oTable.fnFilter( $(this).val(), i );
@@ -313,7 +312,6 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 	else{
 		console.log("About to send AJAX request");
 		jQuery.get("backend/api/create_career_event.php?type="+encodeURIComponent(ce_type)+"&title="+encodeURIComponent(ce_title)+"&text="+encodeURIComponent(ce_description)+"&profile_id="+<?php echo $geny_profile->id;?>, function(data){
-			console.log("Back from AJAX, processing");
 			console.log("status="+data.status);
 			console.log("status_message="+data.status_message);
 			$(".pp_social #status_message_display").empty();
@@ -341,33 +339,35 @@ $("#pp_full_res #form_career_event_add").validationEngine('init');
 // binds form submission and fields to the validation engine
 $("##pp_full_res #form_career_event_add").validationEngine('attach');
 
-function bordel(){
-	console.log('Mais bordel quoi !!!');
-}
-
-function submit_ce_agreement(agreement_type,ce_id,ce_vote){
+$('a[class="ceVoteLink"]').click(function(e) {
+	e.preventDefault();
+	var $item = $(this);
+	var initial_html = $item.closest('td').html();
+	var ce_id = $item.attr('ceId');
+	var agreement_type = $item.attr('ceAgreementType');
+	var ce_vote = $item.attr('ceVote');
 	var api_call_url = "backend/api/update_career_event.php?career_event_id="+ce_id+"&profile_id="+<?php echo $geny_profile->id;?>+"&"+agreement_type+"="+ce_vote;
-	$("#ce_"+agreement_type+"_"+ce_id).empty();
-	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader-fb-style.gif' style='height:32px; width: 32px;' />");
-	console.log("Entering career_event submission. About to call: "+api_call_url);
-	$.get(api_call_url, 
-		function(){
-			console.log('WTF !!!');
-		});
-}
+	
+	$item.closest('td').html("<img src='images/<?php echo $web_config->theme;?>/ajax-loader-indicator.gif' />");
 
-$('a[id*="ce_employee_agreement_vote_"]').click(function(){
-	var ce_id = $(this).attr('ceId');
-	var agreement_type = $(this).attr('ceAgreementType');
-	var ce_vote = $(this).attr('ceVote');
-	var api_call_url = "backend/api/update_career_event.php?career_event_id="+ce_id+"&profile_id="+<?php echo $geny_profile->id;?>+"&"+agreement_type+"="+ce_vote;
-	$("#ce_"+agreement_type+"_"+ce_id).empty();
-	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader-indicator.gif' />");
-	console.log("Entering career_event submission. About to call: "+api_call_url);
-	$.get(api_call_url, 
-	      function(){
-		      console.log("BACK FROM AJAX !");
-	      });
+	$.get(api_call_url, function(data){
+		console.log("status="+data.status);
+		console.log("status_message="+data.status_message);
+		if( data.status == "success" ){
+			if( $item.attr('ceVote') == 1 ){
+				$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).empty();
+				$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).append( "<img src='images/<?php echo $web_config->theme;?>/idea_vote_up_small.png' />" );
+			}
+			else if($item.attr('ceVote') == -1 ){
+				$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).empty();
+				$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).append( "<img src='images/<?php echo $web_config->theme;?>/idea_vote_down_small.png' />" );
+			}
+		}
+		else{
+			$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).empty();
+			$('#ce_'+$item.attr('ceAgreementType')+'_'+$item.attr('ceId')).append( " "+initial_html );
+		}
+	});
 });
 
 </script>
