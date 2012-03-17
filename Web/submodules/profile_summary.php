@@ -68,7 +68,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 	$grg = new GenyRightsGroup($current_profile->rights_group_id);
 	if( $agreement == 0){
 		if($type == 'employee_agreement' && $current_profile->id == $consulted_profile->id){
-			return "<a href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,1)\"><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
+			return "<a href='#ce_employee_agreement_$ce_id' id='ce_employee_agreement_vote_$ce_id' ceId='$ce_id' ceAgreementType='employee_agreement' ceVote='1'><img src='images/$theme/idea_vote_up_small.png' /></a>&nbsp;&nbsp;<a  href='#ce_employee_agreement_$ce_id' onclick=\"submit_ce_agreement('employee_agreement',$ce_id,-1)\"><img src='images/$theme/idea_vote_down_small.png' /></a>";
 			
 		}
 		elseif ($type == 'manager_agreement' && ($current_profile->rights_group_id == $grg->getIdByShortname('ADM') || $current_profile->rights_group_id == $grg->getIdByShortname('TM')) && $current_profile->id == $cp_pmd->group_leader_id ) {
@@ -348,13 +348,27 @@ function bordel(){
 function submit_ce_agreement(agreement_type,ce_id,ce_vote){
 	var api_call_url = "backend/api/update_career_event.php?career_event_id="+ce_id+"&profile_id="+<?php echo $geny_profile->id;?>+"&"+agreement_type+"="+ce_vote;
 	$("#ce_"+agreement_type+"_"+ce_id).empty();
-	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader.gif' style='height:32px; width: 32px;' />")
+	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader-fb-style.gif' style='height:32px; width: 32px;' />");
 	console.log("Entering career_event submission. About to call: "+api_call_url);
 	$.get(api_call_url, 
 		function(){
-			console.log('Mais bordel quoi !!!');
+			console.log('WTF !!!');
 		});
 }
+
+$('a[id*="ce_employee_agreement_vote_"]').click(function(){
+	var ce_id = $(this).attr('ceId');
+	var agreement_type = $(this).attr('ceAgreementType');
+	var ce_vote = $(this).attr('ceVote');
+	var api_call_url = "backend/api/update_career_event.php?career_event_id="+ce_id+"&profile_id="+<?php echo $geny_profile->id;?>+"&"+agreement_type+"="+ce_vote;
+	$("#ce_"+agreement_type+"_"+ce_id).empty();
+	$("#ce_"+agreement_type+"_"+ce_id).append("<img src='images/<?php echo $web_config->theme;?>/ajax-loader-indicator.gif' />");
+	console.log("Entering career_event submission. About to call: "+api_call_url);
+	$.get(api_call_url, 
+	      function(){
+		      console.log("BACK FROM AJAX !");
+	      });
+});
 
 </script>
 <?php
