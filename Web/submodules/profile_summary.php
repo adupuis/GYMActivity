@@ -34,10 +34,19 @@ $data_array = array();
 $data_array_filters = array( 0 => array(), 2 => array(), 4 => array(), 5 => array() );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
+$geny_hs->setDebug(true);
 $hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($geny_profile->id);
+$geny_hs->setDebug(false);
 
 // Idem pour les RTT
 $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($geny_profile->id);
+
+// Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
+$prev_hs_cp = $geny_hs->getPreviousCPSummaryByProfileId($geny_profile->id);
+
+// Idem pour les RTT
+$prev_hs_rtt = $geny_hs->getPreviousRTTSummaryByProfileId($geny_profile->id);
+
 
 // TODO : faire la construction des data_array* (c'est chiant...)
 
@@ -175,12 +184,36 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Group Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->group_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?><br/>
 				<strong>Technology Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->technology_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?>
 			</li>
+			<?php
+				if( ($prev_hs_cp->count_acquired - $prev_hs_cp->count_taken) > 0 && $prev_hs_cp->count_remaining > 0 ){
+			?>
+			<li>
+				<strong><u>Congés Payés pour la période du <?php echo $prev_hs_cp->period_start." au ".$prev_hs_cp->period_end; ?></u></strong><br/>
+				<strong>Congés acquis : </strong><?php echo $prev_hs_cp->count_acquired; ?><br/>
+				<strong>Congés pris : </strong><?php echo $prev_hs_cp->count_taken; ?><br/>
+				<strong>Congés restant : </strong><?php echo $prev_hs_cp->count_remaining; ?>
+			</li>
+			<?php
+				}
+			?>
 			<li>
 				<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong><br/>
 				<strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?><br/>
 				<strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?><br/>
 				<strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?>
 			</li>
+			<?php
+				if( ($prev_hs_rtt->count_acquired - $prev_hs_rtt->count_taken) > 0 && $prev_hs_rtt->count_remaining > 0 ){
+			?>
+			<li>
+				<strong><u>RTT pour la période du <?php echo $prev_hs_rtt->period_start." au ".$prev_hs_rtt->period_end; ?></u></strong><br/>
+				<strong>Congés acquis : </strong><?php echo $prev_hs_rtt->count_acquired; ?><br/>
+				<strong>Congés pris : </strong><?php echo $prev_hs_rtt->count_taken; ?><br/>
+				<strong>Congés restant : </strong><?php echo $prev_hs_rtt->count_remaining; ?>
+			</li>
+			<?php
+				}
+			?>
 			<li>
 				<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong><br/>
 				<strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?><br/>
@@ -189,8 +222,8 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 			</li>
 			<?php
 				$cp_pmd = new GenyProfileManagementData();
-				$cp_pmd->loadProfileManagementDataByProfileId($consulted_profile->id);
-				if(($profile->rights_group_id == $geny_rights_group->getIdByShortname('ADM') || $profile->rights_group_id == $geny_rights_group->getIdByShortname('TM')) && $current_profile->id == $cp_pmd->group_leader_id ){
+				$cp_pmd->loadProfileManagementDataByProfileId($geny_profile->id);
+				if(($profile->rights_group_id == $geny_rights_group->getIdByShortname('ADM') || ($profile->rights_group_id == $geny_rights_group->getIdByShortname('TM')) && $profile->id == $cp_pmd->group_leader_id) ){
 			?>
 			<li>
 				<a href='#create_career_event' rel='prettyPhoto[create_career_event]' class="submit">Ajouter un évènement de carrière</a>

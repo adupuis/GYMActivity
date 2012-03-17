@@ -286,11 +286,15 @@ else if( $edit_holiday_summary == 'true' ) {
 				<input name="holiday_summary_count_taken" id="holiday_summary_count_taken" type="text" value="<?php echo $geny_holiday_summary->count_taken ?>" class="validate[required,custom[onlyFloatNumber]] text-input" />
 			</p>
 			<script>
-			$("#holiday_summary_count_taken").change(function(){
-				var remaining = $('#holiday_summary_count_acquired').val() - $('#holiday_summary_count_taken').val();
-				$('#holiday_summary_count_remaining').val( remaining.toFixed(2) );
-			});
-				</script>
+				$("#holiday_summary_count_acquired").live('change',function(){
+					var remaining = $('#holiday_summary_count_acquired').val() - $('#holiday_summary_count_taken').val();
+					$('#holiday_summary_count_remaining').val( remaining.toFixed(2) );
+				});
+				$("#holiday_summary_count_taken").live('change',function(){
+					var remaining = $('#holiday_summary_count_acquired').val() - $('#holiday_summary_count_taken').val();
+					$('#holiday_summary_count_remaining').val( remaining.toFixed(2) );
+				});
+			</script>
 			<p>
 				<label for="holiday_summary_count_remaining">Restant</label>
 				<input name="holiday_summary_count_remaining" id="holiday_summary_count_remaining" type="text" value="<?php echo $geny_holiday_summary->count_remaining ?>" class="validate[required,custom[onlyFloatNumber]] text-input" />
