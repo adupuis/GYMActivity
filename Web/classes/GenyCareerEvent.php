@@ -51,7 +51,7 @@ class GenyCareerEvent extends GenyDatabaseTools {
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
-		if( $type != "neutral" && $type != "positive" && $type != "negative" )
+		if( $type != "neutral" && $type != "positive" && $type != "negative" && $type != "fault" && $type != "uber" )
 			return GENYMOBILE_FALSE;
 		
 		if( $manager_agreement != 'true' && $manager_agreement != 'false' && $manager_agreement != 0 && $manager_agreement != 1)
@@ -124,7 +124,7 @@ class GenyCareerEvent extends GenyDatabaseTools {
 		return $this->getCareerEventListWithRestrictions(array("career_event_manager_agreement=false","career_event_employee_agreement=false"),"AND");
 	}
 	public function getCareerEventListByType($type){
-		if( $type != "positive" && $type != "negative" && $type != "neutral" )
+		if( $type != "positive" && $type != "negative" && $type != "neutral" && $type != "fault" && $type != "uber" )
 			return GENYMOBILE_FALSE;
 		
 		return $this->getCareerEventListWithRestrictions(array("career_event_type='$type'"));

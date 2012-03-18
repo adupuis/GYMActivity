@@ -31,7 +31,7 @@ $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 2 => array() );
+$data_array_filters = array( 0 => array(), 2 => array('Über positif','Positif','Neutre','Négatif','Faute') );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
 $geny_hs->setDebug(true);
@@ -49,14 +49,24 @@ $prev_hs_rtt = $geny_hs->getPreviousRTTSummaryByProfileId($geny_profile->id);
 
 
 // TODO : faire la construction des data_array* (c'est chiant...)
-
+foreach( $geny_ce->getCareerEventListByProfileId($geny_profile->id) as $ce ){
+	$ce_date = date('Y-m-d',$ce->timestamp);
+	if( ! in_array($ce_date,$data_array_filters[0]) )
+		$data_array_filters[0][] = $ce_date;
+}
 
 function ceTypeToHtml($type="neutral"){
 	if ( $type == "positive" ) {
-		return "<span style='color: green;'>Positif</span>";
+		return "<span style='color: #4169E1;'>Positif</span>";
 	}
 	elseif ( $type == "negative" ) {
-		return "<span style='color: red;'>Négatif</span>";
+		return "<span style='color: orange;'>Négatif</span>";
+	}
+	elseif ( $type == "fault" ) {
+		return "<span style='color: red;font-weight: bold;'>Faute</span>";
+	}
+	elseif ( $type == "uber" ) {
+		return "<span style='color: green;font-weight: bold;'>Über positif</span>";
 	}
 	return "Neutre";
 }
@@ -240,13 +250,18 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 					<th>Titre</th>
 					<th>Type</th>
 					<th>Texte</th>
+					<th>Pièce jointe</th>
 					<th>Accord employé</th>
 					<th>Accord manager</th>
 				</thead>
 				<tbody>
 				<?php
 				foreach( $geny_ce->getCareerEventListByProfileId($geny_profile->id) as $ce ){
-					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>".ceTypeToHtml($ce->type)."</td><td>$ce->text</td><td id='ce_employee_agreement_$ce->id'>".ceAgreementToHtml('employee_agreement',$ce->id,$ce->employee_agreement,$web_config->theme,$profile,$geny_profile)."</td><td id='ce_manager_agreement_$ce->id'>".ceAgreementToHtml('manager_agreement',$ce->id,$ce->manager_agreement,$web_config->theme,$profile,$geny_profile)."</td></tr>";
+					$attch = "";
+					if( $ce->attachement != "" ){
+						$attch = "<a href='$ce->attachement' target='_blank'>Télécharger</a>";
+					}
+					echo "<tr class='centered'><td>".date('Y-m-d',$ce->timestamp)."</td><td>$ce->title</td><td>".ceTypeToHtml($ce->type)."</td><td>$ce->text</td><td>$attch</td><td id='ce_employee_agreement_$ce->id'>".ceAgreementToHtml('employee_agreement',$ce->id,$ce->employee_agreement,$web_config->theme,$profile,$geny_profile)."</td><td id='ce_manager_agreement_$ce->id'>".ceAgreementToHtml('manager_agreement',$ce->id,$ce->manager_agreement,$web_config->theme,$profile,$geny_profile)."</td></tr>";
 					
 				}
 				?>
@@ -256,6 +271,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 					<th>Titre</th>
 					<th>Type</th>
 					<th>Texte</th>
+					<th>Pièce jointe</th>
 					<th>Accord employé</th>
 					<th>Accord manager</th>
 				</tfoot>
@@ -270,9 +286,11 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 		<p>
 			<label for="ce_type">Type</label>
 			<select name="ce_type" id="ce_type">
+				<option value="fault">Faute</option>
 				<option value="negative">Négatif</option>
 				<option value="neutral" selected="selected">Neutre</option>
 				<option value="positive">Positif</option>
+				<option value="uber">Über positif</option>
 			</select>
 		</p>
 		<p>
@@ -282,6 +300,10 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 		<p>
 			<label for="ce_description">Description</label>
 			<textarea name="ce_description" id="ce_description" class="validate[required] text-input"></textarea>
+		</p>
+		<p>
+			<label for="ce_attachement" >Pièce jointe (lien)</label>
+			<input name="ce_attachement" id="ce_attachement" type="text" class="validate[required] text-input" />
 		</p>
 		<p>
 			<a href="#" id="submit_ce" class="submit">Ajouter</a> <a href="#" id="close_popup" onclick="$.prettyPhoto.close()" class="submit" >Annuler</a>
@@ -299,6 +321,7 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 	var ce_type = $("div#pp_full_res #ce_type").val();
 	var ce_title = $('div#pp_full_res #ce_title').val();
 	var ce_description = $('div#pp_full_res #ce_description').val();
+	var ce_attachement = $('div#pp_full_res #ce_attachement').val();
 	var error_string = "Les champs suivants ne peuvent être vide:\n";
 	if( ce_title == "" || ce_description == "" ){
 		if( ce_title == "" ){
@@ -311,7 +334,13 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 	}
 	else{
 		console.log("About to send AJAX request");
-		jQuery.get("backend/api/create_career_event.php?type="+encodeURIComponent(ce_type)+"&title="+encodeURIComponent(ce_title)+"&text="+encodeURIComponent(ce_description)+"&profile_id="+<?php echo $geny_profile->id;?>, function(data){
+		var attachement_params = "";
+		var attachement_html = "";
+		if( ce_attachement != "" ){
+			attachement_params = "&attachement="+ce_attachement;
+			attachement_html = "<a href='"+ce_attachement+"' target='_blank'>Télécharger</a>";
+		}
+		jQuery.get("backend/api/create_career_event.php?type="+encodeURIComponent(ce_type)+"&title="+encodeURIComponent(ce_title)+"&text="+encodeURIComponent(ce_description)+"&profile_id="+<?php echo $geny_profile->id;?>+attachement_params, function(data){
 			console.log("status="+data.status);
 			console.log("status_message="+data.status_message);
 			$(".pp_social #status_message_display").empty();
@@ -321,6 +350,7 @@ $(document).on("click", "div#pp_full_res #submit_ce", function(){
 				ce_title,
 				ce_type,
 				ce_description,
+				attachement_html,
 				'Recharger la page pour valider',
 				'Recharger la page pour valider'
 				] );
