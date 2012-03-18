@@ -137,7 +137,7 @@ DROP TRIGGER ce_check_type;
 DELIMITER $$
 create trigger ce_check_type before insert on CareerEvents for each row
 begin
-  if new.career_event_type != "positive" and new.career_event_type != "neutral" and new.career_event_type != "negative" then
+  if new.career_event_type != "positive" and new.career_event_type != "neutral" and new.career_event_type != "negative" and new.career_event_type != "fault" and new.career_event_type != "uber" then
     set new.career_event_type := "neutral";
   end if;
 end $$
