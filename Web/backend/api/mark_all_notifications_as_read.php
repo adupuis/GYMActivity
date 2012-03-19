@@ -23,7 +23,7 @@ session_start();
 $required_group_rights = 6;
 $auth_granted = false;
 
-header('Content-type:text/javascript;charset=UTF-8');
+header('Content-Type: application/json;charset=UTF-8');
 
 include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';

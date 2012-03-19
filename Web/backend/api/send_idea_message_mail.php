@@ -24,7 +24,7 @@ $required_group_rights = 6;
 $auth_granted = false;
 $authorized_auth_method = "all";
 
-header('Content-type:text/javascript;charset=UTF-8');
+header('Content-Type: application/json;charset=UTF-8');
 
 // include_once 'Mail.php';
 include_once 'ajax_authent_checking.php';

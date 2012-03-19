@@ -23,7 +23,7 @@ session_start();
 function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }
-header('Content-type:text/javascript;charset=UTF-8');
+header('Content-Type: application/json;charset=UTF-8');
 try {
     $checkId_obj = new CheckIdentity();
     $profiles = array();
