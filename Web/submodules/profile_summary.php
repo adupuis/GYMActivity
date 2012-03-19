@@ -48,7 +48,6 @@ $prev_hs_cp = $geny_hs->getPreviousCPSummaryByProfileId($geny_profile->id);
 $prev_hs_rtt = $geny_hs->getPreviousRTTSummaryByProfileId($geny_profile->id);
 
 
-// TODO : faire la construction des data_array* (c'est chiant...)
 foreach( $geny_ce->getCareerEventListByProfileId($geny_profile->id) as $ce ){
 	$ce_date = date('Y-m-d',$ce->timestamp);
 	if( ! in_array($ce_date,$data_array_filters[0]) )
