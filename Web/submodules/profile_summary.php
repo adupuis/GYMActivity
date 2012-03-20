@@ -186,6 +186,8 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?><br/>
 				<strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?><br/>
 				<strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;<br/>
+				<strong>Salaire Variable (brut annuel) : </strong> <?php echo $geny_pmd->variable_salary ;?> &euro;<br/>
+				<strong>Prime sur objectif (brut annuel) : </strong> <?php echo $geny_pmd->objectived_salary ;?> &euro;<br/>
 				<strong>Date de disponibilité : </strong> <?php echo $geny_pmd->availability_date ;?>
 			</li>
 			<li>

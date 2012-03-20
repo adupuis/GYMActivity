@@ -26,6 +26,8 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public $id = GENYMOBILE_FALSE;
 	public $profile_id = GENYMOBILE_FALSE;
 	public $salary = GENYMOBILE_FALSE;
+	public $variable_salary = GENYMOBILE_FALSE;
+	public $objectived_salary = GENYMOBILE_FALSE;
 	public $recruitement_date = '1979-01-01';
 	public $is_billable = false;
 	public $availability_date = '1979-01-01';
@@ -47,11 +49,17 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
-	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5){
+	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
 		if( ! is_numeric($pmd_salary) )
+			return GENYMOBILE_FALSE;
+		
+		if( ! is_numeric($pmd_variable_salary) )
+			return GENYMOBILE_FALSE;
+		
+		if( ! is_numeric($pmd_objectived_salary) )
 			return GENYMOBILE_FALSE;
 		
 		if( ! is_numeric($pmd_gl_id) )
@@ -63,7 +71,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if( $pmd_is_billable != 'true' && $pmd_is_billable != 'false' && $pmd_is_billable != 0 && $pmd_is_billable != 1)
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,'".mysql_real_escape_string($pmd_salary)."','".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is)";
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is)";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
@@ -76,7 +84,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public function getProfileManagementDataListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id  FROM ProfileManagementData";
+		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_variable_salary,profile_management_data_objectived_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id  FROM ProfileManagementData";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -97,11 +105,13 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 				$tmp_pmd->id = $row[0];
 				$tmp_pmd->profile_id = $row[1];
 				$tmp_pmd->salary = $row[2];
-				$tmp_pmd->recruitement_date = $row[3];
-				$tmp_pmd->is_billable = $row[4];
-				$tmp_pmd->availability_date = $row[5];
-				$tmp_pmd->group_leader_id = $row[6];
-				$tmp_pmd->technology_leader_id = $row[7];
+				$tmp_pmd->variable_salary = $row[3];
+				$tmp_pmd->objectived_salary = $row[4];
+				$tmp_pmd->recruitement_date = $row[5];
+				$tmp_pmd->is_billable = $row[6];
+				$tmp_pmd->availability_date = $row[7];
+				$tmp_pmd->group_leader_id = $row[8];
+				$tmp_pmd->technology_leader_id = $row[9];
 				$tmp_pmd->profile_object = new GenyProfile( $tmp_pmd->profile_id );
 				$pmd_list[] = $tmp_pmd;
 			}
@@ -128,6 +138,8 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 			$this->id = $profile->id;
 			$this->profile_id = $profile->profile_id;
 			$this->salary = $profile->salary;
+			$this->variable_salary = $profile->variable_salary;
+			$this->objectived_salary = $profile->objectived_salary;
 			$this->recruitement_date = $profile->recruitement_date;
 			$this->is_billable = $profile->is_billable;
 			$this->availability_date = $profile->availability_date;
@@ -144,6 +156,8 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 			$this->id = $profile->id;
 			$this->profile_id = $profile->profile_id;
 			$this->salary = $profile->salary;
+			$this->variable_salary = $profile->variable_salary;
+			$this->objectived_salary = $profile->objectived_salary;
 			$this->recruitement_date = $profile->recruitement_date;
 			$this->is_billable = $profile->is_billable;
 			$this->availability_date = $profile->availability_date;

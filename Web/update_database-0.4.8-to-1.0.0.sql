@@ -43,6 +43,8 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_id int auto_increment,
 	profile_id int not null unique,
 	profile_management_data_salary int not null,
+	profile_management_data_variable_salary int not null,
+	profile_management_data_objectived_salary int not null,
 	profile_management_data_recruitement_date date not null,
 	profile_management_data_is_billable boolean not null default true,
 	profile_management_data_availability_date date not null,
