@@ -30,6 +30,8 @@ class GenyDailyRate extends GenyDatabaseTools {
 	public $start_date = '';
 	public $end_date = '';
 	public $value = -1;
+	public $po_number = -1;
+	public $po_days = -1;
 	public function __construct( $id = -1 ) {
 		parent::__construct("DailyRates",  "daily_rate_id");
 		$this->id = -1;
@@ -39,6 +41,8 @@ class GenyDailyRate extends GenyDatabaseTools {
 		$this->start_date = '';
 		$this->end_date = '';
 		$this->value = -1;
+		$this->po_number = -1;
+		$this->po_days = -1;
 		if( $id > -1 ) {
  			$this->loadDailyRateById( $id );
 		}

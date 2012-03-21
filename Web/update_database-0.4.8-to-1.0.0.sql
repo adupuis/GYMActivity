@@ -156,6 +156,8 @@ CREATE TABLE DailyRates (
 	daily_rate_start_date date not null,
 	daily_rate_end_date date not null,
 	daily_rate_value int not null,
+	daily_rate_po_number varchar(250),
+	daily_rate_po_days int,
 	primary key(daily_rate_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
