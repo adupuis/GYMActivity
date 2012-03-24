@@ -39,6 +39,8 @@ if( $create_daily_rate == "true" ) {
 	$daily_rate_start_date = GenyTools::getParam( 'daily_rate_start_date', 'NULL' );
 	$daily_rate_end_date = GenyTools::getParam( 'daily_rate_end_date', 'NULL' );
 	$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
+	$daily_rate_po_number = GenyTools::getParam( 'daily_rate_po_number', 0 );
+	$daily_rate_po_days = GenyTools::getParam( 'daily_rate_po_days', 0 );
 
 	if( $project_id != 'NULL' && $task_id != 'NULL' && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
 		
@@ -60,7 +62,9 @@ if( $create_daily_rate == "true" ) {
 		}
 		else {
 			if( $geny_daily_rate->checkDailyRateOverlap( $daily_rate_id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date ) ) {
-				$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value );
+				$geny_daily_rate->setDebug(true);
+				$insert_id = $geny_daily_rate->insertNewDailyRate( 'NULL', $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value, $daily_rate_po_number, $daily_rate_po_days );
+				$geny_daily_rate->setDebug(false);
 				if( $insert_id != -1 ) {
 					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"TJM ajouté avec succès." );
 					$geny_daily_rate->loadDailyRateById( $insert_id );
@@ -110,6 +114,8 @@ else if( $edit_daily_rate == "true" ) {
 			$daily_rate_start_date = GenyTools::getParam( 'daily_rate_start_date', 'NULL' );
 			$daily_rate_end_date = GenyTools::getParam( 'daily_rate_end_date', 'NULL' );
 			$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
+			$daily_rate_po_number = GenyTools::getParam( 'daily_rate_po_number', 0 );
+			$daily_rate_po_days = GenyTools::getParam( 'daily_rate_po_days', 0 );
 
 			$daily_rate_start_date_timestamp = strtotime( $daily_rate_start_date );
 			$daily_rate_end_date_timestamp = strtotime( $daily_rate_end_date );
@@ -166,6 +172,12 @@ else if( $edit_daily_rate == "true" ) {
 			}
 			if( $daily_rate_value != 'NULL' && $geny_daily_rate->value != $daily_rate_value ) {
 				$geny_daily_rate->updateString( 'daily_rate_value', $daily_rate_value );
+			}
+			if( $geny_daily_rate->po_number != $daily_rate_po_number ) {
+				$geny_daily_rate->updateString( 'daily_rate_po_number', $daily_rate_po_number );
+			}
+			if( $geny_daily_rate->po_days != $daily_rate_po_days ) {
+				$geny_daily_rate->updateInt( 'daily_rate_po_days', $daily_rate_po_days );
 			}
 		}
 		if( $geny_daily_rate->commitUpdates() ) {
@@ -440,7 +452,15 @@ else if( $edit_daily_rate == "true" ) {
 				<label for="daily_rate_value">Valeur</label>
 				<input name="daily_rate_value" id="daily_rate_value" type="text" value="<?php echo $geny_daily_rate->value ?>" class="validate[required,length[2,100]] text-input" />
 			</p>
-
+			<p>
+				<label for="daily_rate_po_number">PO</label>
+				<input name="daily_rate_po_number" id="daily_rate_po_number" type="text" value="<?php echo $geny_daily_rate->po_number ?>" class="validate[length[2,100]] text-input" />
+			</p>
+			<p>
+				<label for="daily_rate_po_days">Nbr. jours PO</label>
+				<input name="daily_rate_po_days" id="daily_rate_po_days" type="text" value="<?php echo $geny_daily_rate->po_days ?>" class="validate[custom[onlyNumber]] text-input" />
+			</p>
+			
 			<p>
 				<input type="submit" value="Modifier" /> ou <a href="loader.php?module=daily_rate_list">annuler</a>
 			</p>

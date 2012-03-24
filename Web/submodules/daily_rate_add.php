@@ -168,6 +168,14 @@ $geny_profile = new GenyProfile();
 				<label for="daily_rate_value">Valeur</label>
 				<input name="daily_rate_value" id="daily_rate_value" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
+			<p>
+				<label for="daily_rate_po_number">PO</label>
+				<input name="daily_rate_po_number" id="daily_rate_po_number" type="text" class="validate[length[2,100]] text-input" />
+			</p>
+			<p>
+				<label for="daily_rate_po_days">Nbr. jours PO</label>
+				<input name="daily_rate_po_days" id="daily_rate_po_days" type="text" class="validate[custom[onlyNumber]] text-input" />
+			</p>
 
 				<input type="submit" value="Ajouter" /> ou <a href="loader.php?module=daily_rate_list">annuler</a>
 			</p>

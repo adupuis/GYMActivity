@@ -48,9 +48,9 @@ class GenyDailyRate extends GenyDatabaseTools {
 		}
 	}
 	
-	public function insertNewDailyRate( $id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value ) {
+	public function insertNewDailyRate( $id, $project_id, $task_id, $profile_id, $daily_rate_start_date, $daily_rate_end_date, $daily_rate_value, $daily_rate_po_number=0, $daily_rate_po_days=0 ) {
 		if( $this->config->debug ) {
-			error_log( "[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value", 0 );
+			error_log( "[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value - daily_rate_po_number: $daily_rate_po_number - daily_rate_po_days: $daily_rate_po_days",   0 );
 		}
 		if( $id != 'NULL' && !is_numeric( $id ) ) {
 			return -1;
@@ -70,7 +70,10 @@ class GenyDailyRate extends GenyDatabaseTools {
 		if( !is_numeric( $daily_rate_value ) ) {
 			return -1;
 		}
-		$query = "INSERT INTO DailyRates VALUES($id,'".$project_id."','".$task_id."',".$profile_id.",'".$daily_rate_start_date."','".$daily_rate_end_date."','".$daily_rate_value."')";
+		if( !is_numeric( $daily_rate_po_days ) ) {
+			return GENYMOBILE_ERROR;
+		}
+		$query = "INSERT INTO DailyRates VALUES($id,'".$project_id."','".$task_id."',".$profile_id.",'".$daily_rate_start_date."','".$daily_rate_end_date."','".$daily_rate_value."','".mysql_real_escape_string($daily_rate_po_number)."',$daily_rate_po_days)";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyDailyRate MySQL query : $query", 0 );
 		}
@@ -93,7 +96,7 @@ class GenyDailyRate extends GenyDatabaseTools {
 	public function getDailyRatesListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("daily_rate_id=1","profile_id=1")
 		$last_index = count( $restrictions ) - 1;
-		$query = "SELECT daily_rate_id,project_id,task_id,profile_id,daily_rate_start_date,daily_rate_end_date,daily_rate_value FROM DailyRates";
+		$query = "SELECT daily_rate_id,project_id,task_id,profile_id,daily_rate_start_date,daily_rate_end_date,daily_rate_value,daily_rate_po_number,daily_rate_po_days FROM DailyRates";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string( $restriction_type );
@@ -119,6 +122,8 @@ class GenyDailyRate extends GenyDatabaseTools {
 				$tmp_daily_rate->start_date = $row[4];
 				$tmp_daily_rate->end_date = $row[5];
 				$tmp_daily_rate->value = $row[6];
+				$tmp_daily_rate->po_number = $row[7];
+				$tmp_daily_rate->po_days = $row[8];
 				$daily_rate_list[] = $tmp_daily_rate;
 			}
 		}
@@ -175,7 +180,12 @@ class GenyDailyRate extends GenyDatabaseTools {
 			$this->start_date = $daily_rate->start_date;
 			$this->end_date = $daily_rate->end_date;
 			$this->value = $daily_rate->value;
+			$this->po_number = $daily_rate->po_number;
+			$this->po_days = $daily_rate->po_days;
 		}
+	}
+	public function getDailyRatesByPONumber( $po_number ){
+		return $this->getAllDailyRates( array("daily_rate_po_number='".mysql_real_escape_string($po_number)."'") );
 	}
 }
 
