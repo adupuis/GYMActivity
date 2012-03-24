@@ -34,7 +34,9 @@ $geny_profile = new GenyProfile();
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet d'ajouter un TJM. Tous les champs doivent être remplis.
+		Ce formulaire permet d'ajouter un TJM. Tous les champs doivent être remplis (à l'exception des champs concernant le PO).<br/>
+		<br/>
+		<strong>ATTENTION : </strong>Le nombre de jours sur le PO doit concerner <u>uniquement</u> le TJM en cours. Par exemple, si le TJM en cours d'édition concerne un collaborateur le nombre de jours du PO doit être la part qui lui correspond (et non pas le nombre de jours total du PO).
 		</p>
 		<script>
 			jQuery(document).ready(function(){
