@@ -70,6 +70,8 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_id int auto_increment,
 	profile_id int not null unique,
 	profile_management_data_salary int not null,
+	profile_management_data_variable_salary int not null,
+	profile_management_data_objectived_salary int not null,
 	profile_management_data_recruitement_date date not null,
 	profile_management_data_is_billable boolean not null default true,
 	profile_management_data_availability_date date not null,
@@ -82,9 +84,7 @@ CREATE TABLE ProfileManagementData (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
--- TODO: Ajouter le support des entretiens annuels
 -- TODO: Ajouter le support des profiles tags
-
 
 CREATE TABLE Notifications (
 	notification_id int auto_increment,
@@ -239,6 +239,8 @@ CREATE TABLE DailyRates (
 	daily_rate_start_date date not null,
 	daily_rate_end_date date not null,
 	daily_rate_value int not null,
+	daily_rate_po_number varchar(250),
+	daily_rate_po_days int,
 	primary key(daily_rate_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,

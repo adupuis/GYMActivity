@@ -132,10 +132,18 @@ $geny_rg = new GenyRightsGroup();
 				</select>
 			</p>
 			<p>
-				<label for="pmd_salary">Salaire (€ brut/an)</label>
+				<label for="pmd_salary">Salaire fixe (€ brut/an)</label>
 				<input name="pmd_salary" id="pmd_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
 			</p>
-			 
+			<p>
+				<label for="pmd_variable_salary">Salaire Var. (€ brut/an)</label>
+				<input name="pmd_variable_salary" id="pmd_variable_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
+			</p>
+			<p>
+				<label for="pmd_objectived_salary">Prime / Obj. (€ brut/an)</label>
+				<input name="pmd_objectived_salary" id="pmd_objectived_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
+			</p>
+			
 			<script type="text/javascript">
 				$(function() {
 					$( "#pmd_recruitement_date" ).datepicker();
