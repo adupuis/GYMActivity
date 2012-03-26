@@ -148,6 +148,7 @@ DELIMITER ;
 ALTER TABLE AccessLogs MODIFY profile_id int;
 
 DROP TABLE DailyFees;
+DROP TABLE DailyRates;
 CREATE TABLE DailyRates (
 	daily_rate_id int auto_increment,
 	project_id int not null,
