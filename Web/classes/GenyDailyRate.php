@@ -185,7 +185,22 @@ class GenyDailyRate extends GenyDatabaseTools {
 		}
 	}
 	public function getDailyRatesByPONumber( $po_number ){
-		return $this->getAllDailyRates( array("daily_rate_po_number='".mysql_real_escape_string($po_number)."'") );
+		return $this->getDailyRatesListWithRestrictions( array("daily_rate_po_number='".mysql_real_escape_string($po_number)."'") );
+	}
+	public function getDailyRatesByProjectId( $id ){
+		if( ! is_numeric($id) )
+			return GENYMOBILE_FALSE;
+		return $this->getDailyRatesListWithRestrictions( array("project_id=$id") );
+	}
+	public function getDailyRatesByProfileId( $id ){
+		if( ! is_numeric($id) )
+			return GENYMOBILE_FALSE;
+		return $this->getDailyRatesListWithRestrictions( array("profile_id=$id") );
+	}
+	public function getDailyRatesByTaskId( $id ){
+		if( ! is_numeric($id) )
+			return GENYMOBILE_FALSE;
+		return $this->getDailyRatesListWithRestrictions( array("task_id=$id") );
 	}
 }
 
