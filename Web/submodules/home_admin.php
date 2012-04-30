@@ -10,20 +10,10 @@
 			}
 			if( $profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
 				include 'backend/widgets/client_add.dock.widget.php'; 
-				include 'backend/widgets/client_list.dock.widget.php'; 
-				include 'backend/widgets/task_add.dock.widget.php'; 
-				include 'backend/widgets/task_list.dock.widget.php'; 
-				include 'backend/widgets/project_add.dock.widget.php'; 
-				include 'backend/widgets/project_list.dock.widget.php';
-				include 'backend/widgets/holiday_summary_add.dock.widget.php';
-				include 'backend/widgets/holiday_summary_list.dock.widget.php';
+				include 'backend/widgets/client_list.dock.widget.php';
 			}
 			include 'backend/widgets/idea_add.dock.widget.php';
 			include 'backend/widgets/idea_list.dock.widget.php';
-			if( $profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
-				include 'backend/widgets/daily_rate_add.dock.widget.php';
-				include 'backend/widgets/daily_rate_list.dock.widget.php';
-			}
 		?>
 	</ul>
 </div>
