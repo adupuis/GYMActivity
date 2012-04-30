@@ -31,6 +31,14 @@ function loadClass($class_name) {
 }
 
 try {
+	$pv = new GenyPropertyValue();
+	$state_pv = $pv->getPropertyValuesByPropertyId(3);
+	$s = array_shift($state_pv);
+	if($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive' ){
+		session_destroy();
+		header("Location: index.php");
+		exit();
+	}
 	$access_loger = new GenyAccessLog();
 	$checkId_obj = new CheckIdentity();
 	$web_config = new GenyWebConfig();

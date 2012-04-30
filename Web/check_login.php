@@ -24,8 +24,21 @@ session_start();
 include_once 'classes/GenyWebConfig.php';
 include_once 'classes/GenyProfile.php';
 include_once 'classes/GenyAccessLog.php';
+include_once 'classes/GenyPropertyValue.php';
+
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
+
+
+$pv = new GenyPropertyValue();
+$state_pv = $pv->getPropertyValuesByPropertyId(3);
+$s = array_shift($state_pv);
+error_log("[GYMActivity::DEBUG] check_login.php: \$s->content: $s->content",0);
+if($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive' ){
+	session_destroy();
+	header("Location: index.php");
+	exit();
+}
 
 if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 	trim($_POST['geny_username']);

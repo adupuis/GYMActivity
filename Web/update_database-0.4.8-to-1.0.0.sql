@@ -67,14 +67,13 @@ CREATE TABLE PropertyTypes (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyTypes AUTO_INCREMENT=1;
 
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_BOOL','Une propriété booléenne (vrai/faux).');
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_MULTI_SELECT','Une propriété contenant un choix multiple.');
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_LIST_SELECT','Une propriété contenant un choix unique dans une liste.');
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_SHORT_TEXT','Une propriété contenant un text court.');
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_LONG_TEXT','Une propriété contenant un text long.');
-INSERT INTO PropertyTypes VALUES(0,'PROP_TYPE_DATE','Une propriété contenant une date.');
+INSERT INTO PropertyTypes VALUES(1,'PROP_TYPE_BOOL','Une propriété booléenne (vrai/faux).');
+INSERT INTO PropertyTypes VALUES(2,'PROP_TYPE_MULTI_SELECT','Une propriété contenant un choix multiple.');
+INSERT INTO PropertyTypes VALUES(3,'PROP_TYPE_LIST_SELECT','Une propriété contenant un choix unique dans une liste.');
+INSERT INTO PropertyTypes VALUES(4,'PROP_TYPE_SHORT_TEXT','Une propriété contenant un text court.');
+INSERT INTO PropertyTypes VALUES(5,'PROP_TYPE_LONG_TEXT','Une propriété contenant un text long.');
+INSERT INTO PropertyTypes VALUES(6,'PROP_TYPE_DATE','Une propriété contenant une date.');
 
-DROP TABLE Properties;
 CREATE TABLE Properties (
 	property_id int auto_increment,
 	property_name varchar(250) not null default 'PNAME',
@@ -90,13 +89,16 @@ INSERT INTO Properties VALUES(0,'PROP_LIVE_DEBUG','Activer/desactiver le debug e
 
 -- Version du schéma de la base de donnée
 INSERT INTO Properties VALUES(0,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
-DROP TABLE PropertyOptions;
+
+-- Verrouillage de l'application.
+INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"L'état de l'application à un instant T. Tous status 'Inactive' entraîne l'impossibilité de se loguer.",4);
+
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
 	property_option_content text not null,
 	property_id int not null,
 	primary key(property_option_id),
-	foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
+			      foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyOptions AUTO_INCREMENT=1;
 
@@ -104,19 +106,25 @@ ALTER TABLE PropertyOptions AUTO_INCREMENT=1;
 INSERT INTO PropertyOptions VALUES(0,'Activé',1);
 INSERT INTO PropertyOptions VALUES(0,'Désactivé',1);
 
+INSERT INTO PropertyOptions VALUES(0,'Active',3);
+-- Application active et fonctionnelle mais des problèmes existent.
+INSERT INTO PropertyOptions VALUES(0,'Active - Issues',3);
+INSERT INTO PropertyOptions VALUES(0,'Inactive - Upgrade',3);
+INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
+INSERT INTO PropertyOptions VALUES(0,'Inactive',3);
+
 -- C'est dans cette table que vont les valeurs séléctionnées. Dans l'exemple ci-dessus il y aurait 1 ou 2 (les id d'une des deux options possible)
-DROP TABLE PropertyValues;
 CREATE TABLE PropertyValues (
 	property_value_id int auto_increment,
 	property_id int not null,
 	property_value_content text not null,
 	primary key(property_value_id),
-	foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
+			     foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 
--- Le schéma de la base de données est en version 4
 INSERT INTO PropertyValues VALUES(0,2,'4');
+INSERT INTO PropertyValues VALUES(0,3,'Active');
 
 -- Evènements de carrière
 DROP TABLE CareerEvents;
@@ -152,7 +160,7 @@ DROP TABLE DailyRates;
 CREATE TABLE DailyRates (
 	daily_rate_id int auto_increment,
 	project_id int not null,
-	task_id int not null,
+	task_id int default '-1',
 	profile_id int,
 	daily_rate_start_date date not null,
 	daily_rate_end_date date not null,
@@ -299,7 +307,7 @@ INSERT INTO RightsGroups VALUES(7,'GroupLeaders','GL','Groupe des Group Leaders 
 UPDATE RightsGroups SET rights_group_shortname='ADM' WHERE rights_group_id=1;
 UPDATE RightsGroups SET rights_group_shortname='TM' WHERE rights_group_id=2;
 UPDATE RightsGroups SET rights_group_shortname='USR' WHERE rights_group_id=3;
-UPDATE RightsGroups SET rights_group_shortname='PM' WHERE rights_group_id=4;
+UPDATE RightsGroups SET rights_group_shortname='TL' WHERE rights_group_id=4;
 UPDATE RightsGroups SET rights_group_shortname='REP' WHERE rights_group_id=5;
 UPDATE RightsGroups SET rights_group_shortname='EXT' WHERE rights_group_id=6;
 
