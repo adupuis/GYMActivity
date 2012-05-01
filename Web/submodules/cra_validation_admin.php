@@ -224,7 +224,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 	$tmp_project->loadProjectById( $tmp_assignement->project_id );
 	$tmp_profile->loadProfileById( $tmp_assignement->profile_id );
 	$tmp_profile_name = GenyTools::getProfileDisplayName($tmp_profile);
-	$data_array[] = array( $ar->id, $tmp_profile_name, $tmp_activity->activity_date, $tmp_project->name, $tmp_task->name, $tmp_activity->load, $geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date), GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
+	$data_array[] = array( $ar->id, $tmp_profile_name, $tmp_activity->activity_date, $tmp_project->name, $tmp_task->name, $tmp_activity->load, $geny_ar->getDayLoad($tmp_profile->id,$tmp_activity->activity_date), GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
 	
 	if( ! in_array($tmp_profile_name,$data_array_filters[1]) )
 		$data_array_filters[1][] = $tmp_profile_name;

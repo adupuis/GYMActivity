@@ -78,7 +78,7 @@ class GenyActivityReport extends GenyDatabaseTools {
 		$ars_refused->loadActivityReportStatusByShortName('REFUSED');
 		$query = "select ifnull(sum(activity_load),0) as activity_day_load from Activities where activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id AND activity_report_status_id != ".$ars_refused->id." AND activity_report_status_id != ".$ars_removed->id.")";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
+			error_log( "[GYMActivity::DEBUG] GenyActivityReport::getDayLoad MySQL query : $query", 0 );
 		$result = mysql_query($query,$this->handle);
 		if( mysql_num_rows($result) != 0 ){
 			while ($row = mysql_fetch_row($result)){
