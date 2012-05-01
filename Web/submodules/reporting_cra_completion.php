@@ -80,7 +80,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 	</script>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_cra.png"></img>
 		<span class="reporting_monthly_view">
 			Remplissage CRA
 		</span>

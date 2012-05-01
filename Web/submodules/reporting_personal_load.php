@@ -336,14 +336,14 @@ $load_by_tasks_js_data = implode(",",$tmp_array);
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_personal.png"></img>
 		<span class="reporting_monthly_view">
 			Reporting de charge
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des CRA ventilés par collaborateurs, par client et par projet pour la période sélectionnée (par défaut le mois en cours).<br/>
+		Voici la liste des CRA ventilés par client et par projet pour la période sélectionnée (par défaut le mois en cours).<br/>
 		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
 		<?php
 			if( $aggregation_level == "project" )

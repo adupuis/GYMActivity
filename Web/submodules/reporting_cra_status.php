@@ -22,8 +22,6 @@
 
 include_once 'backend/api/ajax_toolbox.php';
 
-// $reporting_data = array( "2011-01" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-02" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-03" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-04" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-05" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-06" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-07" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-08" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-09" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-10" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-11" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-12" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0) );
-
 $gritter_notifications = array();
 $year=date('Y', time());
 $start_date = $year.'-01-01';
@@ -178,7 +176,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_cra.png"></img>
 		<span class="reporting_monthly_view">
 			Repartition des CRA par status
 		</span>
