@@ -94,6 +94,7 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

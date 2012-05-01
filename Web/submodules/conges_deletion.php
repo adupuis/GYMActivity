@@ -160,6 +160,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
