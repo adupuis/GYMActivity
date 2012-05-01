@@ -25,20 +25,11 @@ include_once 'classes/GenyWebConfig.php';
 include_once 'classes/GenyProfile.php';
 include_once 'classes/GenyAccessLog.php';
 include_once 'classes/GenyPropertyValue.php';
+include_once 'classes/GenyRightsGroup.php';
+
 
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
-
-
-$pv = new GenyPropertyValue();
-$state_pv = $pv->getPropertyValuesByPropertyId(3);
-$s = array_shift($state_pv);
-error_log("[GYMActivity::DEBUG] check_login.php: \$s->content: $s->content",0);
-if($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive' ){
-	session_destroy();
-	header("Location: index.php");
-	exit();
-}
 
 if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 	trim($_POST['geny_username']);
@@ -70,6 +61,16 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 		else
 			$_SESSION['THEME'] = 'default';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );
+		$tmp_group   = new GenyRightsGroup( $tmp_profile->rights_group_id );
+		$pv = new GenyPropertyValue();
+		$state_pv = $pv->getPropertyValuesByPropertyId(3);
+		$s = array_shift($state_pv);
+		error_log("[GYMActivity::DEBUG] check_login.php: \$s->content: $s->content",0);
+		if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+			session_destroy();
+			header("Location: index.php");
+			exit();
+		}
 		if( $tmp_profile->needs_password_reset )
 			header('Location: user_admin_password_change.php');
 		else

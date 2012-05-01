@@ -31,14 +31,6 @@ function loadClass($class_name) {
 }
 
 try {
-	$pv = new GenyPropertyValue();
-	$state_pv = $pv->getPropertyValuesByPropertyId(3);
-	$s = array_shift($state_pv);
-	if($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive' ){
-		session_destroy();
-		header("Location: index.php");
-		exit();
-	}
 	$access_loger = new GenyAccessLog();
 	$checkId_obj = new CheckIdentity();
 	$web_config = new GenyWebConfig();
@@ -68,6 +60,15 @@ try {
 	}
 	$profile = new GenyProfile();
 	$profile->loadProfileByUsername($_SESSION['USERID']);
+	$tmp_group   = new GenyRightsGroup( $profile->rights_group_id );
+	$pv = new GenyPropertyValue();
+	$state_pv = $pv->getPropertyValuesByPropertyId(3);
+	$s = array_shift($state_pv);
+	if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+		session_destroy();
+		header("Location: index.php");
+		exit();
+	}
 	$screen_name = $_SESSION['USERID'];
 	if( $profile->firstname && $profile->lastname)
 		$screen_name = $profile->firstname." ".$profile->lastname;
