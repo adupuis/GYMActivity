@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Profil %SCREEN_NAME%';
+$required_group_rights = 6;
+?>

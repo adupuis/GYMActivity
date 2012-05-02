@@ -20,14 +20,15 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyApiKey {
-	private $updates = array();
+class GenyApiKey extends GenyDatabaseTools {
+	public $id = -1;
+	public $profile_id = -1;
+	public $data = '';
+	public $timestamp = -1;
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("ApiKeys",  "api_key_id");
 		$this->id = -1;
 		$this->profile_id = -1;
 		$this->data = '';
@@ -125,26 +126,6 @@ class GenyApiKey {
 			return -1;
 		$seed = $profile_object->id.$profile_object->login.rand().time();
 		return sha1(str_rot13(base64_encode(hash('sha512', $seed))));
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ApiKeys SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE api_key_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyApiKey MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

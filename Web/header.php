@@ -34,28 +34,53 @@ try {
 	$access_loger = new GenyAccessLog();
 	$checkId_obj = new CheckIdentity();
 	$web_config = new GenyWebConfig();
+	$param_session_id = GenyTools::getParam('session','');
+	if($param_session_id != ''){
+		$SESSION['LOGGEDIN']=1;
+		$SESSION['USERID'] = $param_session_id;
+	}
 	if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
 		if( $checkId_obj->isAllowed($_SESSION['USERID'],$required_group_rights) ){
 			if(isset($_SESSION['THEME']))
 				$web_config->theme = $_SESSION['THEME'];
 		}
 		else{
-			$tmp_profile = new GenyProfile();
-			$tmp_profile->loadProfileByUsername($_SESSION['USERID']);
-			$access_loger->insertNewAccessLog($tmp_profile->id,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",UNAUTHORIZED_ACCESS,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+			$profile = new GenyProfile();
+			$profile->loadProfileByUsername($_SESSION['USERID']);
+			$access_loger->insertSimpleAccessLog(UNAUTHORIZED_ACCESS);
 			header("Location: index.php?reason=forbidden");
+			exit;
 		}
 	}
 	else {
-		$access_loger->insertNewAccessLog(GENYMOBILE_ERROR,$_SERVER['REMOTE_ADDR'],'false',"check_login.php",AUTH_REQUIRED,",referer=".$_SERVER['HTTP_REFERER'].",user_agent=".$_SERVER['HTTP_USER_AGENT']);
+		$referer = array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER['HTTP_REFERER'] : "";
+ 		$access_loger->insertSimpleAccessLog(AUTH_REQUIRED);
 		header("Location: index.php?reason=authrequired");
+		exit;
 	}
-    $profile = new GenyProfile();
-    $profile->loadProfileByUsername($_SESSION['USERID']);
-    if( ! isset($disable_password_reset_redirection) )
-	$disable_password_reset_redirection = false;
-    if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) )
-	header('Location: user_admin_password_change.php');
+	$profile = new GenyProfile();
+	$profile->loadProfileByUsername($_SESSION['USERID']);
+	$tmp_group   = new GenyRightsGroup( $profile->rights_group_id );
+	$pv = new GenyPropertyValue();
+	$state_pv = $pv->getPropertyValuesByPropertyId(3);
+	$s = array_shift($state_pv);
+	if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+		session_destroy();
+		header("Location: index.php");
+		exit();
+	}
+	$screen_name = $_SESSION['USERID'];
+	if( $profile->firstname && $profile->lastname)
+		$screen_name = $profile->firstname." ".$profile->lastname;
+	else
+		$screen_name = $profile->login;
+	
+	if( ! isset($disable_password_reset_redirection) )
+		$disable_password_reset_redirection = false;
+	if( $profile->needs_password_reset && (isset($disable_password_reset_redirection) && !$disable_password_reset_redirection ) ) {
+		header('Location: user_admin_password_change.php');
+		exit;
+	}
 } catch (Exception $e) {
     //echo $e->getMessage(), "\n";
 }
@@ -74,7 +99,10 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 	}
 }
 
-loadClass('GenyTools');
+// GenyTools est maintenant chargé par le loader
+// loadClass('GenyTools');
+
+GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
 
 ?>
 
@@ -88,10 +116,11 @@ GYMActivity v<?php echo $web_config->version ?> by GENYMOBILE - http://www.genym
 <title>
 <?php 
 $header_title = str_replace("%COMPANY_NAME%",$web_config->company_name,$header_title);
+$header_title = str_replace("%SCREEN_NAME%",$screen_name,$header_title);
 echo $header_title 
 ?>
 </title>
-<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.11.custom.min.js"></script>
 <script src="js/timerX.js"></script>
 <script src="js/formValidator/js/jquery.validationEngine-fr.js" type="text/javascript"></script>  
@@ -101,15 +130,24 @@ echo $header_title
 <script type="text/javascript" src="js/Gritter/js/jquery.gritter.min.js"></script>
 <script type="text/javascript" src="js/jquery.datepick.js"></script>
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
+<script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+<script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+
+<link rel="stylesheet" href="js/prettyPhoto_compressed_3.1.3/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
 
 <link rel="shortcut icon" href="images/favicon.ico" /> 
 
+<!-- <link href='http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold' rel='stylesheet' type='text/css' /> -->
+<!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>-->
+<link href='http://fonts.googleapis.com/css?family=Lato:400,100,700italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="js/Gritter/css/jquery.gritter.css" />
 <link rel="stylesheet" href="js/DataTables/media/css/demo_table_jui.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="styles/<?php echo $web_config->theme ?>/main.css" media="screen" />
 <link rel="stylesheet" href="js/formValidator/css/validationEngine.jquery.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="js/formValidator/css/template.css" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="styles/default/jquery-ui.css" type="text/css" media="all" />
+<link rel="stylesheet" href="js/chosen/chosen.css" />
 
 <style type="text/css">
 	@import "styles/default/jquery.datepick.css";
@@ -117,18 +155,19 @@ echo $header_title
 </style>
 </head>
 <body>
-<img id="logo" src="images/<?php echo $web_config->theme ?>/<?php echo $web_config->company_corner_logo ?>" alt="<?php echo $web_config->company_name ?> Logo"/>
+<?php if($load_menu == "true"){ ?>
+<a href="loader.php?module=home" id="home_logo">
+<?php } ?>
 
-<p id="headband">
-	<?php
-		$screen_name = $_SESSION['USERID'];
-		if( $profile->firstname && $profile->lastname)
-			$screen_name = $profile->firstname." ".$profile->lastname;
-		else
-			$screen_name = $profile->login;
+</a>
+
+<?php
+	if( $web_config->theme == "default" ) {
+		echo "<p id=\"headband\">";
 		echo "<strong>Logged in as:</strong> ".$screen_name."";
-	?>
-</p>
+		echo "</p>";
+	}
+?>
 
 
 

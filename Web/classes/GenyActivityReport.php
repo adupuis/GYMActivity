@@ -20,14 +20,16 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyActivityReport {
-	private $updates = array();
+class GenyActivityReport extends GenyDatabaseTools {
+	public $id = -1;
+	public $invoice_reference = '';
+	public $activity_id = -1;
+	public $profile_id = -1;
+	public $status_id = -1;
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("ActivityReports",  "activity_report_id");
 		$this->id = -1;
 		$this->invoice_reference = '';
 		$this->activity_id = -1;
@@ -76,7 +78,7 @@ class GenyActivityReport {
 		$ars_refused->loadActivityReportStatusByShortName('REFUSED');
 		$query = "select ifnull(sum(activity_load),0) as activity_day_load from Activities where activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id AND activity_report_status_id != ".$ars_refused->id." AND activity_report_status_id != ".$ars_removed->id.")";
 		if( $this->config->debug )
-			echo "<!-- DEBUG: GenyActivityReport::getDayLoad MySQL query : $query -->\n";
+			error_log( "[GYMActivity::DEBUG] GenyActivityReport::getDayLoad MySQL query : $query", 0 );
 		$result = mysql_query($query,$this->handle);
 		if( mysql_num_rows($result) != 0 ){
 			while ($row = mysql_fetch_row($result)){
@@ -136,6 +138,40 @@ class GenyActivityReport {
 		else
 			return array();
 	}
+	
+	public function getDayLoadByProfileIdAndTaskId( $profile_id, $task_id ) {
+		if( !is_numeric( $profile_id ) ) {
+			return -1;
+		}
+		if( !is_numeric( $task_id ) ) {
+			return -1;
+		}
+		$ars_approved = new GenyActivityReportStatus();
+		$ars_approved->loadActivityReportStatusByShortName('APPROVED');
+		$ars_billed = new GenyActivityReportStatus();
+		$ars_billed->loadActivityReportStatusByShortName('BILLED');
+		$ars_paid = new GenyActivityReportStatus();
+		$ars_paid->loadActivityReportStatusByShortName('PAID');
+		$ars_close = new GenyActivityReportStatus();
+		$ars_close->loadActivityReportStatusByShortName('CLOSE');
+		
+		$query = "SELECT ifnull(sum(a.activity_load),0) FROM Activities a, ActivityReports ar WHERE task_id=".$task_id." AND a.activity_id = ar.activity_id AND ar.profile_id=".$profile_id." AND ( ar.activity_report_status_id=".$ars_approved->id." OR ar.activity_report_status_id=".$ars_billed->id." OR ar.activity_report_status_id=".$ars_paid->id." OR ar.activity_report_status_id=".$ars_close->id." )";
+		
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$day_load = $row[0] / 8;
+				return $day_load;
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+	
 	public function getActivityReportsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
@@ -208,37 +244,6 @@ class GenyActivityReport {
 			$this->profile_id = $activity_report->profile_id ;
 			$this->status_id = $activity_report->status_id ;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-		return true;
-	}
-	public function updateInt($key,$value){
-		if( is_numeric($value) ){
-			$this->updates[] = "$key=$value";
-			return true;
-		}
-		else
-			return false;
-	}
-	public function updateBool($key,$value){
-		if( is_bool($value) ){
-			$this->updates[] = "$key=$value";
-			return true;
-		}
-		else
-			return false;
-	}
-	public function commitUpdates(){
-		$query = "UPDATE ActivityReports SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE activity_report_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

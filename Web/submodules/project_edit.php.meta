@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Edition projet';
+$required_group_rights = 2;
+?>

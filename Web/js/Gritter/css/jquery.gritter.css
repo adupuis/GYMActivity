@@ -1,7 +1,7 @@
 /* the norm */
 #gritter-notice-wrapper {
 	position:fixed;
-	top:30px;
+	top:100px;
 	right:10px;
 	width:301px;
 	z-index:9999;

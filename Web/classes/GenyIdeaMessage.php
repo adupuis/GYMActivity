@@ -20,16 +20,17 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
+include_once 'backend/api/send_mail_func.php';
 
-class GenyIdeaMessage {
-
-	private $updates = array();
-
+class GenyIdeaMessage extends GenyDatabaseTools {
+	public $id = -1;
+	public $content = '';
+	public $submission_date = '';
+	public $profile_id = -1;
+	public $idea_id = -1;
 	public function __construct( $id = -1 ) {
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect( $this->config->db_host, $this->config->db_user, $this->config->db_password );
-		mysql_select_db($this->config->db_name);
-		mysql_query( "SET NAMES 'utf8'" );
+		parent::__construct("IdeaMessages",  "idea_message_id");
 		$this->id = -1;
 		$this->content = '';
 		$this->submission_date = '';
@@ -38,6 +39,46 @@ class GenyIdeaMessage {
 		if( $id > -1 ) {
 			$this->loadIdeaMessageById( $id );
 		}
+	}
+
+	public function sendMailForNewMessage( $idea_message_profile_id, $idea_message_content, $idea_message_idea_id ) {
+// 		$idea_message_idea = new GenyIdea();
+// 		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
+// 		$subject = '[GYMActivity] Un commentaire a &eacute;t&eacute; ajout&eacute; &agrave; votre id&eacute;e : '.$idea_message_idea->title;
+// 		$message_submitter_profile = new GenyProfile();
+// 		$message_submitter_profile->loadProfileById( $idea_message_profile_id );
+// 		$body = "Commentaire de ".$message_submitter_profile->firstname." ".$message_submitter_profile->lastname." [".$message_submitter_profile->email."] :<br/><br/>".$idea_message_content."<br/><br/>Vous pouvez consulter cette idée et répondre à ce message en allant sur <a href='http://cra.genymobile.com'>http://cra.genymobile.com</a> dans la section Boîte à Idées.<br/><br/>---<br/><font color=\"#7f7f7f\" face=\"&#39;BN Year 2000&#39;\" size=\"6\"><span style=\"line-height:36px\"><img src=\"https://lh5.googleusercontent.com/-D4J1fAOyk8A/TgbxwOsSIjI/AAAAAAAAABE/zWEpLl0Q3ZM/s144/genymobile-24.png\"><br></span></font><br/><font color=\"#666666\">Gestion de CRA</font></p><br/>";
+// 		$idea_submitter_profile = new GenyProfile();
+// 		$idea_submitter_profile->loadProfileById( $idea_message_idea->submitter );
+// 		$to = $idea_submitter_profile->email;
+		
+		$subject = $this->makeMailSubject( $idea_message_idea_id );
+		$body = $this->makeMailBody( $idea_message_profile_id, $idea_message_content );
+		$to = $this->makeMailReceiver( $idea_message_idea_id );
+		sendMail( $subject, $to, $body );
+	}
+
+	public function makeMailSubject( $idea_message_idea_id ) {
+		$idea_message_idea = new GenyIdea();
+		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
+		$subject = '[GYMActivity] Un commentaire a &eacute;t&eacute; ajout&eacute; &agrave; votre id&eacute;e : '.$idea_message_idea->title;
+		return $subject;
+	}
+
+	public function makeMailBody( $idea_message_profile_id, $idea_message_content ) {
+		$message_submitter_profile = new GenyProfile();
+		$message_submitter_profile->loadProfileById( $idea_message_profile_id );
+		$body = "Commentaire de ".$message_submitter_profile->firstname." ".$message_submitter_profile->lastname." [".$message_submitter_profile->email."] :<br/><br/>".$idea_message_content."<br/><br/>Vous pouvez consulter cette idée et répondre à ce message en allant sur <a href='http://cra.genymobile.com'>http://cra.genymobile.com</a> dans la section Boîte à Idées.<br/><br/>---<br/><font color=\"#7f7f7f\" face=\"&#39;BN Year 2000&#39;\" size=\"6\"><span style=\"line-height:36px\"><img src=\"https://lh5.googleusercontent.com/-D4J1fAOyk8A/TgbxwOsSIjI/AAAAAAAAABE/zWEpLl0Q3ZM/s144/genymobile-24.png\"><br></span></font><br/><font color=\"#666666\">Gestion de CRA</font></p><br/>";
+		return $body;
+	}
+
+	public function makeMailReceiver( $idea_message_idea_id ) {
+		$idea_message_idea = new GenyIdea();
+		$idea_message_idea->loadIdeaById( $idea_message_idea_id );
+		$idea_submitter_profile = new GenyProfile();
+		$idea_submitter_profile->loadProfileById( $idea_message_idea->submitter );
+		$to = $idea_submitter_profile->email;
+		return $to;
 	}
 
 	public function insertNewIdeaMessage( $id, $idea_message_content, $submission_date, $profile_id, $idea_id ) {
@@ -110,6 +151,25 @@ class GenyIdeaMessage {
 		return $this->getIdeaMessagesListWithRestrictions( array() );
 	}
 
+	public function getLastIdeaMessage( $idea_id ) {
+		$query = "SELECT idea_message_id,idea_message_content,idea_message_submission_date,profile_id,idea_id FROM IdeaMessages WHERE idea_id=$idea_id ORDER BY idea_message_submission_date DESC LIMIT 1";
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyIdeaMessage MySQL query : $query", 0 );
+		}
+		$result = mysql_query( $query, $this->handle );
+
+		if( mysql_num_rows( $result ) != 0 ) {
+			$row = mysql_fetch_row( $result );
+			$tmp_idea_message = new GenyIdeaMessage();
+			$tmp_idea_message->id = $row[0];
+			$tmp_idea_message->content = $row[1];
+			$tmp_idea_message->submission_date = $row[2];
+			$tmp_idea_message->profile_id = $row[3];
+			$tmp_idea_message->idea_id = $row[4];
+		}
+		return $tmp_idea_message;
+	}
+
 	public function getIdeaMessagesListByProfileId( $id ) {
 		if( !is_numeric( $id ) ) {
 			return false;
@@ -145,32 +205,6 @@ class GenyIdeaMessage {
 			$this->idea_id = $idea_message->idea_id;
 		}
 	}
-
-	public function updateString( $key, $value ) {
-		$this->updates[] = "$key='".mysql_real_escape_string( $value )."'";
-	}
-
-	public function updateInt( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
-	}
-
-	public function updateBool( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
-	}
-
-	public function commitUpdates() {
-		$query = "UPDATE IdeaMessages SET ";
-		foreach( $this->updates as $up ) {
-			$query .= "$up,";
-		}
-		$query = rtrim( $query, "," );
-		$query .= " WHERE idea_message_id=".$this->id;
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] GenyIdeaMessage MySQL query : $query",0);
-		}
-		return mysql_query( $query, $this->handle );
-	}
-
 }
 
 ?>

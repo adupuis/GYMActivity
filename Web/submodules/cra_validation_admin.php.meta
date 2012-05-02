@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Validation CRA';
+$required_group_rights = 2;
+?>

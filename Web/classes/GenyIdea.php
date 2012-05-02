@@ -20,16 +20,18 @@
 
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyIdea {
-
-	private $updates = array();
-
+class GenyIdea extends GenyDatabaseTools  {
+	public $id = -1;
+	public $title = '';
+	public $description = '';
+	public $votes = -1;
+	public $status_id = -1;
+	public $submitter = -1;
+	public $submission_date = '';
 	public function __construct( $id = -1 ) {
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect( $this->config->db_host, $this->config->db_user, $this->config->db_password );
-		mysql_select_db($this->config->db_name);
-		mysql_query( "SET NAMES 'utf8'" );
+		parent::__construct("Ideas",  "idea_id");
 		$this->id = -1;
 		$this->title = '';
 		$this->description = '';
@@ -75,16 +77,17 @@ class GenyIdea {
 		return mysql_query( $query, $this->handle );
 	}
 
-	public function getIdeasListWithRestrictions( $restrictions ) {
+	public function getIdeasListWithRestrictions( $restrictions, $restriction_type = "AND" ) {
 		// $restrictions is in the form of array("idea_id=1","idea_status_id=2")
 		$last_index = count( $restrictions ) - 1;
 		$query = "SELECT idea_id,idea_title,idea_description,idea_votes,idea_status_id,idea_submitter,idea_submission_date FROM Ideas";
 		if( count( $restrictions ) > 0 ) {
 			$query .= " WHERE ";
+			$op = mysql_real_escape_string( $restriction_type );
 			foreach( $restrictions as $key => $value ) {
 				$query .= $value;
 				if( $key != $last_index ) {
-					$query .= " AND ";
+					$query .= " $op ";
 				}
 			}
 		}
@@ -187,32 +190,6 @@ class GenyIdea {
 			$this->submission_date = $idea->submission_date;
 		}
 	}
-
-	public function updateString( $key, $value ) {
-		$this->updates[] = "$key='".mysql_real_escape_string( $value )."'";
-	}
-
-	public function updateInt( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
-	}
-
-	public function updateBool( $key, $value ) {
-		$this->updates[] = "$key=".mysql_real_escape_string( $value )."";
-	}
-
-	public function commitUpdates() {
-		$query = "UPDATE Ideas SET ";
-		foreach( $this->updates as $up ) {
-			$query .= "$up,";
-		}
-		$query = rtrim( $query, "," );
-		$query .= " WHERE idea_id=".$this->id;
-		if( $this->config->debug ) {
-			error_log("[GYMActivity::DEBUG] GenyIdea MySQL query : $query",0);
-		}
-		return mysql_query( $query, $this->handle );
-	}
-
 }
 
 ?>

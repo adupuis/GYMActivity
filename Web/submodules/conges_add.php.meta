@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Ajout congés';
+$required_group_rights = 5;
+?>

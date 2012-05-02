@@ -20,14 +20,13 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include_once 'GenyWebConfig.php';
+include_once 'GenyDatabaseTools.php';
 
-class GenyTask {
-	private $updates = array();
+class GenyTask extends GenyDatabaseTools {
+	public $id = -1;
+	public $name = '';
 	public function __construct($id = -1){
-		$this->config = new GenyWebConfig();
-		$this->handle = mysql_connect($this->config->db_host,$this->config->db_user,$this->config->db_password);
-		mysql_select_db($this->config->db_name);
-		mysql_query("SET NAMES 'utf8'");
+		parent::__construct("Tasks", "task_id");
 		$this->id = -1;
 		$this->name = '';
 		if($id > -1)
@@ -74,6 +73,29 @@ class GenyTask {
 	public function getAllTasks(){
 		return $this->getTasksListWithRestrictions( array() );
 	}
+	
+	public function getTasksByProjectId( $project_id ) {
+		
+		$query = "SELECT Tasks.task_id,task_name,task_description FROM Tasks,ProjectTaskRelations WHERE Tasks.task_id = ProjectTaskRelations.task_id AND ProjectTaskRelations.project_id=".$project_id;
+		
+		$result = mysql_query( $query, $this->handle );
+		if( $this->config->debug ) {
+			error_log( "[GYMActivity::DEBUG] GenyTask MySQL query : $query", 0 );
+		}
+		
+		$tasks_list = array();
+		if( mysql_num_rows( $result ) != 0 ) {
+			while( $row = mysql_fetch_row( $result ) ) {
+				$tmp_task = new GenyTask();
+				$tmp_task->id = $row[0];
+				$tmp_task->name = $row[1];
+				$tmp_task->description = $row[2];
+				$tasks_list[] = $tmp_task;
+			}
+		}
+		return $tasks_list;
+	}
+	
 	public function loadTaskByName($name){
 		$objects = $this->getTasksListWithRestrictions(array("task_name='".mysql_real_escape_string($name)."'"));
 		$object = $objects[0];
@@ -91,26 +113,6 @@ class GenyTask {
 			$this->name = $object->name;
 			$this->description = $object->description;
 		}
-	}
-	public function updateString($key,$value){
-		$this->updates[] = "$key='".mysql_real_escape_string($value)."'";
-	}
-	public function updateInt($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function updateBool($key,$value){
-		$this->updates[] = "$key=".mysql_real_escape_string($value)."";
-	}
-	public function commitUpdates(){
-		$query = "UPDATE Tasks SET ";
-		foreach($this->updates as $up) {
-			$query .= "$up,";
-		}
-		$query = rtrim($query, ",");
-		$query .= " WHERE task_id=".$this->id;
-		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyTask MySQL query : $query",0);
-		return mysql_query($query, $this->handle);
 	}
 }
 ?>

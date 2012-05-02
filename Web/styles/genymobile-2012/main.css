@@ -1,0 +1,741 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,li{ margin:0; padding:0;}
+table{ border-collapse:collapse; border-spacing:0;}
+fieldset,img{ border:0;}
+address,caption,cite,code,dfn,th,var{ font-style:normal; font-weight:normal;}
+ol,ul{ list-style:none;}
+caption,th{ text-align:left;}
+h1,h2,h3,h4,h5,h6{ font-size:100%; font-weight:normal;}
+q:before,q:after{ content:'';}
+abbr,acronym{ border:0;}
+
+html {
+	overflow:-moz-scrollbars-vertical;
+	height: 100%;
+}
+body{
+/* 	background:#eee; */
+	/*background-color: #fbfbfb;
+	background-image:url("../../images/genymobile-2012/background_p.png");
+	background-repeat: repeat-y;*/
+	
+	background-color: #F7F7F7;
+	background-image: -webkit-gradient(linear, left, right, from(#f7f7f7), to(#FFFFFF));
+	background-image: -webkit-linear-gradient(left, #f7f7f7, #FFFFFF);
+	background-image: -moz-linear-gradient(left, #f7f7f7, #FFFFFF);
+	background-image: -ms-linear-gradient(left, #f7f7f7, #FFFFFF);
+	background-image: -o-linear-gradient(left, #f7f7f7, #FFFFFF);
+	background-image: linear-gradient(left, #f7f7f7, #FFFFFF);
+	background-repeat: repeat-x;
+	
+	color:#333;
+	font-family: 'Lato', sans-serif;
+	font-size:14px;
+	line-height:16px;
+	text-shadow:0 1px 0 #fff;
+	height: 100%;
+}
+a{
+	color:#333;
+	text-decoration:underline;
+}
+
+input[type=submit],
+input[type=button].submit,
+a.submit{
+	background:#ddd;
+	background:-moz-linear-gradient(90deg, #95bd0d, #b1e012); /* Firefox */
+	background:-webkit-gradient(linear, left top, left bottom, from(#b1e012), to(#95bd0d)); /* Webkit */
+	border:1px solid #093c75;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-box-shadow:0 1px 0 #fff;
+	-webkit-box-shadow:0 1px 0 #fff;
+	color:#fff;
+	cursor:pointer;
+/* 	font-family:Arial,sans-serif; */
+	font-family: 'Lato', sans-serif;
+	font-size:14px;
+	font-weight:bold;
+	margin-left:120px;
+	padding:5px 10px;
+	text-decoration:none;
+	text-shadow:0 1px 1px #333;
+	text-transform:uppercase;
+}
+input[type=submit]:hover,
+input[type=button].submit:hover,
+a.submit:hover{
+	background:#eee;
+	background:-moz-linear-gradient(90deg, #a9d60f, #c5fa14);
+	background:-webkit-gradient(linear, left top, left bottom, from(#c5fa14), to(#a9d60f));
+	border-color:#093c75;
+	text-decoration:none;
+}
+input[type=submit]:active,
+input[type=submit]:focus,
+input[type=button].submit:active,
+input[type=button].submit:focus,
+a.submit:active,
+a.submit:focus{
+	background:#ccc;
+	background:-moz-linear-gradient(90deg, #c5fa14, #a9d60f);
+	background:-webkit-gradient(linear, left top, left bottom, from(#a9d60f), to(#c5fa14));
+	border-color:#093c75;
+	outline:none;
+}
+
+.table_container {
+	width: 932px;
+}
+
+.table_container select {
+	width: 150px;
+}
+
+form{
+	/*background:#f7f7f7;*/
+	/*background:-moz-linear-gradient(90deg, #ccc, #fff);
+	background:-webkit-gradient(linear, left top, left bottom, from(#fff), to(#ccc));*/
+/* 	border:1px solid #aaa; */
+	/*-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius: 10px;*/
+	/*-moz-box-shadow:0 0 15px #aaa;
+	-webkit-box-shadow:0 0 15px #aaa;*/
+	margin:10px auto 0;
+	padding:20px;
+	width:660px;
+}
+
+form p{
+	margin-bottom:20px;
+}
+form p:last-child{ /* Sélecteur avancé pour sélectionner le dernier paragraphe du formulaire */
+	margin-bottom:0;
+}
+label{
+	cursor:pointer;
+	display:block;
+	float:left;
+	font-size:15px;
+	font-weight:bold;
+	line-height:28px;
+	margin-bottom:5px;
+	width:200px;
+}
+
+form select {
+	cursor:pointer;
+	display:block;
+/* 	float:left; */
+	font-size:14px;
+	font-weight:bold;
+	line-height:28px;
+	margin-bottom:5px;
+/* 	width:245px; */
+	width: 400px;
+	text-align: center;
+}
+
+form input[type=text],input[type=password] {
+/* 	width: 245px; */
+	width: 400px;
+}
+
+
+form textarea {
+/* 	width: 245px; */
+	width: 400px;
+}
+
+form p:hover label{
+	color:#0459b7;
+}
+
+.centered {
+	vertical-align: middle;
+	text-align: center;
+}
+
+a#home_logo {
+	display: block;
+	position: absolute;
+	width: 170px;
+	height: 80px;
+	top: 10px;
+	left: -10px;
+	background-image: url(../../images/genymobile-2012/logo_banner.png);
+}
+a#home_logo:hover {
+	background-image: url(../../images/genymobile-2012/logo_home_banner.png);
+}
+
+#wrapper {
+/* 	background-color: red; */
+	margin-top: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+/* 	margin-bottom: 30px; */
+}
+
+#load {
+/* 	display: none; */
+	position: absolute;
+	right: 30px;
+	top: 30px;
+	background: url(../../images/genymobile-2012/ajax-loader.gif);
+	min-width: 66px;
+	min-height: 66px;
+	text-indent: -9999em;
+}
+
+div#maindock {
+	position: relative;
+	margin-top:-37px;
+	margin-left: 180px;
+	margin-right: auto;
+/* 	border: 1px solid black; */
+	/*height: auto;*/
+	/*width: 100%;*/
+}
+
+div#maindock ul {
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#maindock ul li {
+	display: inline;
+	margin: 0px auto auto auto;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	vertical-align: middle;
+}
+
+div#maindock ul li a {
+	text-align: center;
+	margin-left: 50px;
+	margin-bottom: 50px;
+	background-repeat:no-repeat;
+	background-position:10px 10px;
+}
+
+div#maindock ul li a {
+	display:block;
+	float: left;
+	width: 350px;
+	height: 150px;
+	text-decoration:none;
+	color: #6a6a6a;
+	background-color: transparent;
+	border: 1px solid #D8D8D8;
+	text-align:center;
+	padding: 5px;
+}
+
+div#maindock a:hover{
+	background-color:#84BE5D;
+	border: 1px solid #D9D9D9;
+	color: #fff;
+	text-shadow:none;
+}
+
+div#maindock a span.dock_item_title{
+	position: relative;
+	left: 35px;
+	top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size:30px;
+	font-weight: x-large;
+/* 	color: #6a6a6a; */
+/* 	text-shadow: 0 -1px 1px #fff;  */
+/* 	text-align:center; */
+}
+
+div#maindock a span.dock_item_content {
+	position: relative;
+	top: 60px;
+	font-size:14px;
+}
+
+li.cra_add a {
+	background-image: url(../../images/genymobile-2012/cra_add.png);
+}
+
+li.cra_edit a {
+	background-image: url(../../images/genymobile-2012/cra_edit.png);
+}
+
+li.cra_remove a {
+	background-image: url(../../images/genymobile-2012/cra_remove.png);
+}
+
+li.cra_list a {
+	background-image: url(../../images/genymobile-2012/cra_list.png);
+}
+
+li.conges_add a {
+	background-image: url(../../images/genymobile-2012/conges_add.png);
+}
+
+li.conges_edit a {
+	background-image: url(../../images/genymobile-2012/conges_edit.png);
+}
+
+li.conges_remove a {
+	background-image: url(../../images/genymobile-2012/conges_remove.png);
+}
+
+li.conges_list a {
+	background-image: url(../../images/genymobile-2012/conges_list.png);
+}
+
+li.cra_admin_generic a {
+	background-image: url(../../images/genymobile-2012/cra_admin_generic.png);
+}
+
+li.holiday_summary_generic a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.project_add a {
+	background-image: url(../../images/genymobile-2012/project_add.png);
+}
+
+li.project_edit a {
+	background-image: url(../../images/genymobile-2012/project_edit.png);
+}
+
+li.project_remove a {
+	background-image: url(../../images/genymobile-2012/project_remove.png);
+}
+
+li.project_list a {
+	background-image: url(../../images/genymobile-2012/project_list.png);
+}
+
+li.profile_add a {
+	background-image: url(../../images/genymobile-2012/profile_add.png);
+}
+
+li.profile_edit a {
+	background-image: url(../../images/genymobile-2012/profile_edit.png);
+}
+
+li.profile_remove a {
+	background-image: url(../../images/genymobile-2012/profile_remove.png);
+}
+
+li.profile_list a {
+	background-image: url(../../images/genymobile-2012/profile_list.png);
+}
+
+li.profile_admin a {
+	background-image: url(../../images/genymobile-2012/profile_admin.png);
+}
+
+li.client_add a {
+	background-image: url(../../images/genymobile-2012/client_add.png);
+}
+
+li.client_edit a {
+	background-image: url(../../images/genymobile-2012/client_edit.png);
+}
+
+li.client_remove a {
+	background-image: url(../../images/genymobile-2012/client_remove.png);
+}
+
+li.client_list a {
+	background-image: url(../../images/genymobile-2012/client_list.png);
+}
+
+li.task_add a {
+	background-image: url(../../images/genymobile-2012/task_add.png);
+}
+
+li.task_edit a {
+	background-image: url(../../images/genymobile-2012/task_edit.png);
+}
+
+li.task_remove a {
+	background-image: url(../../images/genymobile-2012/task_remove.png);
+}
+
+li.task_list a {
+	background-image: url(../../images/genymobile-2012/task_list.png);
+}
+
+li.user_admin_password_change a {
+	background-image: url(../../images/genymobile-2012/security_generic.png);
+}
+
+li.notifications a {
+	background-image: url(../../images/genymobile-2012/notification.png);
+}
+
+li.reporting_monthly_view a {
+	background-image: url(../../images/genymobile-2012/reporting.png);
+}
+
+li.reporting_personal a {
+	background-image: url(../../images/genymobile-2012/reporting_personal.png);
+}
+
+li.reporting_cra a {
+	background-image: url(../../images/genymobile-2012/reporting_cra.png);
+}
+
+li.admin_generic a {
+	background-image: url(../../images/genymobile-2012/admin.png);
+}
+
+li.idea_add a {
+	background-image: url(../../images/genymobile-2012/idea_add.png);
+}
+
+li.idea_edit a {
+	background-image: url(../../images/genymobile-2012/idea_edit.png);
+}
+
+li.idea_remove a {
+	background-image: url(../../images/genymobile-2012/idea_remove.png);
+}
+
+li.idea_list a {
+	background-image: url(../../images/genymobile-2012/idea_list.png);
+}
+li.holiday_summary_add a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.holiday_summary_edit a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.holiday_summary_remove a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+
+li.holiday_summary_list a {
+	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
+}
+li.daily_rate_add a {
+	background-image: url(../../images/genymobile-2012/daily_rate_add.png);
+}
+
+li.daily_rate_edit a {
+	background-image: url(../../images/genymobile-2012/daily_rate_edit.png);
+}
+
+li.daily_rate_remove a {
+	background-image: url(../../images/genymobile-2012/daily_rate_remove.png);
+}
+
+li.daily_rate_list a {
+	background-image: url(../../images/genymobile-2012/daily_rate_list.png);
+}
+
+li.intranet_category_add a {
+	background-image: url(../../images/genymobile-2012/intranet_category_add.png);
+}
+
+li.intranet_category_edit a {
+	background-image: url(../../images/genymobile-2012/intranet_category_edit.png);
+}
+
+li.intranet_category_remove a {
+	background-image: url(../../images/genymobile-2012/intranet_category_remove.png);
+}
+
+li.intranet_category_list a {
+	background-image: url(../../images/genymobile-2012/intranet_category_list.png);
+}
+
+li.intranet_type_add a {
+	background-image: url(../../images/genymobile-2012/intranet_type_add.png);
+}
+
+li.intranet_type_edit a {
+	background-image: url(../../images/genymobile-2012/intranet_type_edit.png);
+}
+
+li.intranet_type_remove a {
+	background-image: url(../../images/genymobile-2012/intranet_type_remove.png);
+}
+
+li.intranet_type_list a {
+	background-image: url(../../images/genymobile-2012/intranet_type_list.png);
+}
+
+li.intranet_tag_add a {
+	background-image: url(../../images/genymobile-2012/intranet_tag_add.png);
+}
+
+li.intranet_tag_edit a {
+	background-image: url(../../images/genymobile-2012/intranet_tag_edit.png);
+}
+
+li.intranet_tag_remove a {
+	background-image: url(../../images/genymobile-2012/intranet_tag_remove.png);
+}
+
+li.intranet_tag_list a {
+	background-image: url(../../images/genymobile-2012/intranet_tag_list.png);
+}
+
+li.intranet_page_add a {
+	background-image: url(../../images/genymobile-2012/intranet_page_add.png);
+}
+
+li.intranet_page_edit a {
+	background-image: url(../../images/genymobile-2012/intranet_page_edit.png);
+}
+
+li.intranet_page_remove a {
+	background-image: url(../../images/genymobile-2012/intranet_page_remove.png);
+}
+
+li.intranet_page_list a {
+	background-image: url(../../images/genymobile-2012/intranet_page_list.png);
+}
+
+li.logout a {
+	background-image: url(../../images/genymobile-2012/logout_generic.png);
+}
+
+/* End of main dock style */
+
+/* Mainarea */
+
+div#mainarea {
+	position:relative;
+	margin-top:-37px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: auto;
+	text-align: left;
+	vertical-align: middle;
+	color: #6a6a6a;
+	background-color: white;
+	background-image: -webkit-gradient(linear, left, right, from(#FFFFFF), to(#f7f7f7));
+	background-image: -webkit-linear-gradient(left, #FFFFFF, #f7f7f7);
+	background-image: -moz-linear-gradient(left, #FFFFFF, #f7f7f7);
+	background-image: -ms-linear-gradient(left, #FFFFFF, #f7f7f7);
+	background-image: -o-linear-gradient(left, #FFFFFF, #f7f7f7);
+	background-image: linear-gradient(left, #FFFFFF, #f7f7f7);
+	background-repeat: repeat-x;
+	border: 1px solid #D8D8D8;
+	text-decoration:none;
+/* 	padding: 5px; */
+}
+
+div#mainarea p.mainarea_content_intro {
+	text-align: left;
+	padding:5px;
+	margin: 10px auto 0;
+	padding: 20px;
+	width: 660px;
+}
+
+div#mainarea p.mainarea_title {
+	position:relative;
+	display: inline-block;
+	font-weight: bold;
+	font-size: 30px;
+	letter-spacing: 0.01em;
+	text-align: center;
+	vertical-align: middle;
+/* 	width: 100%; */
+	width: auto;
+	padding: 5px;
+	height: 64px;
+	text-shadow: none;
+	background-color: #D8D8D8;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid #D8D8D8;
+}
+
+div#mainarea p.mainarea_title span {
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	background-repeat: no-repeat;
+	height: 100%;
+	margin: auto;
+	width: auto;
+	padding-top: 20px;
+	padding-left: 10px;
+	padding-right: 5px;
+/* 	background-color: green; */
+}
+div#mainarea p.mainarea_title img {
+	float: left;
+}
+
+table.object_list {
+	border-collapse:collapse;
+	margin: auto;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px;
+	-khtml-border-radius:5px;
+}
+
+table.object_list > th > td
+{
+	border: 1px solid black;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+table.object_list > th {
+	font-size: 18px;
+	font-weight: x-large;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #65800a;
+	text-decoration:none;
+	color: white;
+}
+
+table.object_list > tr:nth-child(odd){
+	background-color:#d2d2d2;
+}
+
+/* End of mainarea */
+
+/* Footer */
+#footer {
+	font-size:10pt;
+	color:#59BA21;
+	text-align:center;
+	padding-bottom:35px;
+}
+#footer a{
+	color:#59BA21;
+	text-decoration:none!important;
+	margin:0px 20px;
+}
+#footer a:hover{
+	color:#6a6a6a;
+}
+/* End of footer */
+
+/* New bottomdock */
+
+#separator_top{
+	display: block;
+	width:960px;
+	height:27px;
+	margin:20px auto;
+	background:url('../../images/genymobile-2012/separator_top.png') no-repeat;
+	clear:both;
+}
+
+#separator_bottom{
+	display: block;
+	width:960px;
+	height:33px;
+	margin:20px auto;
+	background:url('../../images/genymobile-2012/separator_bottom.png') no-repeat;
+	clear:both;
+}
+
+#bottomdock {
+	display: block;
+	background: none;
+	max-width: 960px;
+	margin:auto;
+	line-height: 20px;
+	color: #6a6a6a;
+}
+
+#bottomdock ul li {
+	display: block;
+	padding: 0;
+	margin:0 12px;
+	width: 273px;
+	list-style: none;
+	display: inline;
+	height: 120px;
+}
+
+#bottomdock li a {
+	display: block;
+	text-decoration: none;
+	background-repeat:no-repeat;
+	background-position:0px 0px;
+	line-height: 20px;
+	color: #6a6a6a;
+	height: 120px;
+	width: 273px;
+}
+
+#bottomdock li a span.dock_item_title {
+	font-weight: bold;
+	font-size: 21px;
+	font-family: 'Lato', sans-serif;
+	height: 40px;
+	width: 203px;
+	position: absolute;
+	display: block;
+	padding-top: 10px;
+}
+
+#bottomdock li a span.dock_item_content {
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+	height: 80px;
+	width: 203px;
+	position: absolute;
+	display: block;
+	padding-top: 15px;
+}
+
+#bottomdock li a span.dock_item_title, #bottomdock li a span.dock_item_content {
+	margin-bottom: 10px;
+	padding-left: 70px;
+}
+
+#bottomdock ul {
+	display: inline;
+}
+
+#services ul li {
+	display: inline;
+	vertical-align: middle;
+	float: left;
+}
+
+h3.italic {
+font-style: italic;
+}
+
+h3 {
+font-weight: bold;
+font-size: 21px;
+font-family: 'Lato', sans-serif;
+}
+
+p, dl, hr, h1, h2, h3, h4, h5, h6, ol, ul, pre, address, fieldset, figure {
+margin-bottom: 20px;
+}
+
+#services {
+	margin: 10px 10px 0;
+	overflow: hidden;
+}
+
+/* End of new bottomdock */
+
+.intranet_page_content {
+	padding: 20px;
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}

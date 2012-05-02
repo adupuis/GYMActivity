@@ -23,7 +23,7 @@
 
 
 <li class="project_list">
-	<a href="project_list.php">
+	<a href="loader.php?module=project_list">
 		<span class="dock_item_title">Liste des projets</span><br/>
 		<span class="dock_item_content">Lister tous les projets de <?php echo $web_config->company_name; ?>.</span>
 	</a>
