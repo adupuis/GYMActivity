@@ -65,7 +65,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 				"bStateSave": true,
 				"bAutoWidth": false,
 				"iDisplayLength": 25,
-				"sCookiePrefix": "GYMActivity_",
+				"sCookiePrefix": "GYMActivity_Reporting_cra_status_",
 				"iCookieDuration": 60*60*24*365, // 1 year
 				"sPaginationType": "full_numbers",
 				"oLanguage": {
