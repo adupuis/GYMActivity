@@ -34,6 +34,7 @@ $geny_client = new GenyClient();
 // 			"sScrollY": 400,
 // 			"bScrollCollapse": true,
 			"sCookiePrefix": "GYMActivity_",
+			"iCookieDuration": 60*60*24*365, // 1 year
 			"sPaginationType": "full_numbers",
 			"oLanguage": {
 				"sSearch": "Recherche :",

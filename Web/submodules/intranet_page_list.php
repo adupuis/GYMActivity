@@ -181,6 +181,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationPage": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

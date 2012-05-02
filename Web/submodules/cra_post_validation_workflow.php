@@ -222,6 +222,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 					"bAutoWidth": false,
 					"bProcessing": true,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",
