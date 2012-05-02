@@ -80,7 +80,7 @@ else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
 		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
 		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
 			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
-			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,"1979-01-01","true","1979-01-01");
+			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,123,1000,"1979-01-01","true","1979-01-01");
 			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
 			$grg = new GenyRightsGroup();
 			$gn = new GenyNotification();
