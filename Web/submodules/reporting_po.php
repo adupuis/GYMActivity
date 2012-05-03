@@ -29,6 +29,18 @@ $geny_task = new GenyTask();
 $geny_daily_rate = new GenyDailyRate();
 $gritter_notifications = array();
 
+function getPoRateForActivityReport($ar_id){
+	// Pseudo-code :
+	// get activity for $ar_id
+	// get project
+	// get assignement 
+	// get profile (not sure)
+	// Try to get a daily rate with profile, project, task and corresponding dates
+	// if no results : try to get a daily rate with profile, project and corresponding dates
+	// if no results : try to get a daily rate with project, tasks and corresponding dates
+	// if no results : try to get a daily rate with project and corresponding dates (not sure this case is allowed)
+}
+
 foreach( $geny_client->getAllClients() as $client ){
 	$clients[$client->id] = $client;
 }
@@ -47,10 +59,10 @@ $start_date = GenyTools::getCurrentMonthFirstDayDate();
 $end_date = GenyTools::getCurrentMonthLastDayDate();
 $reporting_start_date = GenyTools::getParam('reporting_start_date',$start_date);
 $reporting_end_date = GenyTools::getParam('reporting_end_date',$end_date);
-$aggregation_level = GenyTools::getParam('reporting_aggregation_level','project');
+$aggregation_level = GenyTools::getParam('reporting_aggregation_level','po');
 
-if(array_key_exists('GYMActivity_reporting_list_reporting_po_php_task_state', $_COOKIE)) {
-	$ts_cookie = $_COOKIE['GYMActivity_reporting_list_reporting_po_php_task_state'];
+if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
+	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
 }
 if( isset($ts_cookie) && $ts_cookie == "true" )
 	$aggregation_level = "tasks";
@@ -150,8 +162,8 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_list_reporting_po_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_list_reporting_po_php"]);
+		if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_reporting_po_php"]);
 		}
 		
 		$data_array_filters_html = array();
@@ -173,7 +185,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 	
 	jQuery(document).ready(function(){
 		
-			var oTable = $('#reporting_list').dataTable( {
+			var oTable = $('#reporting_po_table').dataTable( {
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
@@ -328,18 +340,18 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 						document.cookie = name + "=" +escape( value );
 					}
 					function aggregationLevelChanged(){
-						setCookie('GYMActivity_reporting_list_reporting_po_php_task_state', $('#reporting_aggregation_level').attr('checked'));
+						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', $('#reporting_aggregation_level').attr('checked'));
 						$('#formID').submit();
 					}
 				</script>
-				<input type="checkbox" id="reporting_aggregation_level" name="reporting_aggregation_level" value="tasks" onChange="aggregationLevelChanged()" <?php if($aggregation_level == "tasks"){echo "checked";} ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
+				<input type="checkbox" id="reporting_aggregation_level" name="reporting_aggregation_level" value="po_details" onChange="aggregationLevelChanged()" <?php if($aggregation_level == "tasks"){echo "checked";} ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
 			</p>
 			<input type="submit" value="Ajuster le reporting" />
 		</form>
 		<div class="table_container">
 		<p>
 			
-			<table id="reporting_list">
+			<table id="reporting_po_table">
 			<thead>
 				<th>Collab.</th>
 				<th>Client</th>

@@ -155,7 +155,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#conges_validation_table').dataTable( {
+				var oTable = $('#conges_deletion_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -190,7 +190,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 			});
 			
 			function onCheckBoxSelectAll(){
-				$("#conges_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
+				$("#conges_deletion_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
 		</script>
 		<script>
@@ -214,7 +214,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 				</li>
 			</ul>
 			<p>
-				<table id="conges_validation_table" style="color: black; width: 100%;">
+				<table id="conges_deletion_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
 						<th>Date</th>

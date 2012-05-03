@@ -267,7 +267,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#cra_validation_table').dataTable( {
+				var oTable = $('#conges_validation_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -302,7 +302,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 			});
 			
 			function onCheckBoxSelectAll(){
-				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
+				$("#conges_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
 			$(function() {
 				$( "#radio" ).buttonset();
@@ -330,7 +330,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				</li>
 			</ul>
 			<p>
-				<table id="cra_validation_table" style="color: black; width: 100%;">
+				<table id="conges_validation_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
 						<th>Date</th>

@@ -155,7 +155,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#cra_validation_table').dataTable( {
+				var oTable = $('#cra_deletion_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -190,7 +190,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 			});
 			
 			function onCheckBoxSelectAll(){
-				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
+				$("#cra_deletion_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
 		</script>
 		<script>
@@ -214,7 +214,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 				</li>
 			</ul>
 			<p>
-				<table id="cra_validation_table" style="color: black; width: 100%;">
+				<table id="cra_deletion_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
 						<th>Date</th>

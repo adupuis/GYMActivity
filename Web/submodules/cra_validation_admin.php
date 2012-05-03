@@ -252,8 +252,8 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_cra_validation_table_cra_validation_admin_php", $_COOKIE)){
-					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_cra_validation_admin_php"]);
+				if(array_key_exists("GYMActivity_cra_validation_admin_table_cra_validation_admin_php", $_COOKIE)){
+					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_admin_table_cra_validation_admin_php"]);
 				}
 				
 				$data_array_filters_html = array();
@@ -276,7 +276,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 				// binds form submission and fields to the validation engine
 				$("#formID").validationEngine('attach');
 				
-				var oTable = $('#cra_validation_table').dataTable( {
+				var oTable = $('#cra_validation_admin_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -311,7 +311,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 			});
 			
 			function onCheckBoxSelectAll(){
-				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
+				$("#cra_validation_admin_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
 			}
 			$(function() {
 				$( "#radio" ).buttonset();
@@ -342,7 +342,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 				</li>
 			</ul>
 			<p>
-				<table id="cra_validation_table" style="color: black; width: 100%;">
+				<table id="cra_validation_admin_table" style="color: black; width: 100%;">
 					<thead>
 						<th>Sel.</th>
 						<th>Collab.</th>

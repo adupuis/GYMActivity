@@ -22,8 +22,6 @@
 
 include_once 'backend/api/ajax_toolbox.php';
 
-// $reporting_data = array( "2011-01" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-02" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-03" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-04" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-05" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-06" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-07" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-08" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-09" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-10" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-11" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0), "2011-12" => array("P_USER_VALIDATION" => 0, "P_APPROVAL" => 0, "APPROVED" => 0, "BILLED" => 0, "PAID" => 0, "CLOSE" => 0, "P_REMOVAL" => 0, "REMOVED" => 0, "REFUSED" => 0) );
-
 $gritter_notifications = array();
 $year=date('Y', time());
 $start_date = $year.'-01-01';
@@ -62,7 +60,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 <script>
 	jQuery(document).ready(function(){
 		
-			var oTable = $('#reporting_list').dataTable( {
+			var oTable = $('#reporting_cra_status_table').dataTable( {
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
@@ -205,7 +203,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 		<div class="table_container">
 		<p>
 			
-			<table id="reporting_list">
+			<table id="reporting_cra_status_table">
 			<thead>
 				<th>Date</th>
 				<th>Val. utilisateur</th>
