@@ -178,7 +178,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
-				"sCookiePrefix": "GYMActivity_Reporting_cra_load_",
+				"sCookiePrefix": "GYMActivity_",
 				"iCookieDuration": 60*60*24*365, // 1 year
 				"sPaginationType": "full_numbers",
 				"oLanguage": {

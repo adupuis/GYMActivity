@@ -59,7 +59,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
-					"sCookiePrefix": "GYMActivity_Reporting_cra_completion_",
+					"sCookiePrefix": "GYMActivity_",
 					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
