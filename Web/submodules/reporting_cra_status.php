@@ -60,7 +60,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 <script>
 	jQuery(document).ready(function(){
 		
-			var oTable = $('#reporting_list').dataTable( {
+			var oTable = $('#reporting_cra_status_table').dataTable( {
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
@@ -204,7 +204,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 		<div class="table_container">
 		<p>
 			
-			<table id="reporting_list">
+			<table id="reporting_cra_status_table">
 			<thead>
 				<th>Date</th>
 				<th>Val. utilisateur</th>
