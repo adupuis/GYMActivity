@@ -272,6 +272,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 					"bStateSave": true,
 					"bAutoWidth": false,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

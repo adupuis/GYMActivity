@@ -160,7 +160,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 	$tmp_project = new GenyProject( $tmp_assignement->project_id );
 	$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
 	$geny_client->loadClientById($tmp_project->client_id);
-	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$geny_client->name,$tmp_activity->load,$geny_ar->getDayLoad($profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
+	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$geny_client->name,$tmp_activity->load,$geny_ar->getDayLoad($tmp_profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
 	
 	if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
 		$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
@@ -222,6 +222,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 					"bAutoWidth": false,
 					"bProcessing": true,
 					"sCookiePrefix": "GYMActivity_",
+					"iCookieDuration": 60*60*24*365, // 1 year
 					"sPaginationType": "full_numbers",
 					"oLanguage": {
 						"sSearch": "Recherche :",

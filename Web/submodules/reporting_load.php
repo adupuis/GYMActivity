@@ -178,7 +178,8 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
-				"sCookiePrefix": "GYMActivity_",
+				"sCookiePrefix": "GYMActivity_Reporting_cra_load_",
+				"iCookieDuration": 60*60*24*365, // 1 year
 				"sPaginationType": "full_numbers",
 				"oLanguage": {
 					"sSearch": "Recherche :",
@@ -296,7 +297,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
-		<img src="images/<?php echo $web_config->theme; ?>/reporting_monthly_view.png"></img>
+		<img src="images/<?php echo $web_config->theme; ?>/reporting_generic.png"></img>
 		<span class="reporting_monthly_view">
 			Reporting de charge
 		</span>
@@ -326,7 +327,10 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 				<script>
 					function setCookie( name, value )
 					{
-						document.cookie = name + "=" +escape( value );
+						var date = new Date();
+						date.setTime(date.getTime()+(days*24*60*60*365));
+						var expires = "; expires="+date.toGMTString();
+						document.cookie = name + "=" +escape( value )+expires;
 					}
 					function aggregationLevelChanged(){
 						setCookie('GYMActivity_reporting_load_table_reporting_load_php_task_state', $('#reporting_aggregation_level').attr('checked'));
