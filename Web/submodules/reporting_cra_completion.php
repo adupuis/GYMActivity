@@ -55,7 +55,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 		
 		jQuery(document).ready(function(){
 			
-				var oTable = $('#reporting_list').dataTable( {
+				var oTable = $('#reporting_cra_completion_table').dataTable( {
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
@@ -97,7 +97,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 		<div class="table_container">
 		<p>
 			
-			<table id="reporting_list">
+			<table id="reporting_cra_completion_table">
 			<thead>
 				<th>Collab.</th>
 				<th>Complétion (%)</th>

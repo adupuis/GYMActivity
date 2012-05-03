@@ -41,8 +41,16 @@ if( $create_daily_rate == "true" ) {
 	$daily_rate_value = GenyTools::getParam( 'daily_rate_value', 'NULL' );
 	$daily_rate_po_number = GenyTools::getParam( 'daily_rate_po_number', 0 );
 	$daily_rate_po_days = GenyTools::getParam( 'daily_rate_po_days', 0 );
+	
+	if( $profile_id == "" ){
+		$profile_id = 'NULL';
+	}
+	
+	if( $task_id == "" ){
+		$task_id = 'NULL';
+	}
 
-	if( $project_id != 'NULL' && $task_id != 'NULL' && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
+	if( $project_id != 'NULL' && ($task_id != 'NULL' || $profile_id != 'NULL') && $daily_rate_start_date != 'NULL' && $daily_rate_end_date != 'NULL' && $daily_rate_value != 'NULL' ) {
 		
 		$daily_rate_start_date_timestamp = strtotime( $daily_rate_start_date );
 		$daily_rate_end_date_timestamp = strtotime( $daily_rate_end_date );

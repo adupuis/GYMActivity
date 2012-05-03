@@ -53,27 +53,40 @@ class GenyDailyRate extends GenyDatabaseTools {
 			error_log( "[GYMActivity::DEBUG] GenyDailyRate new daily_rate insertion - id: $id - project_id: $project_id - task_id: $task_id - profile_id: $profile_id - daily_rate_start_date: $daily_rate_start_date - daily_rate_end_date: $daily_rate_end_date - daily_rate_value: $daily_rate_value - daily_rate_po_number: $daily_rate_po_number - daily_rate_po_days: $daily_rate_po_days",   0 );
 		}
 		if( $id != 'NULL' && !is_numeric( $id ) ) {
+			error_log( "[GYMActivity::ERROR] GenyDailyRate \$id is not numeric AND not null", 0 );
 			return -1;
 		}
 		if( !is_numeric( $project_id ) ) {
+			error_log( "[GYMActivity::ERROR] GenyDailyRate \$project_id is not numeric", 0 );
 			return -1;
 		}
-		if( !is_numeric( $task_id ) ) {
-			return -1;
+		if( $task_id != 'NULL' ) {
+			if( !is_numeric( $task_id ) ) {
+				error_log( "[GYMActivity::ERROR] GenyDailyRate \$task_id is not numeric", 0 );
+				return -1;
+			}
+			$task_id = "'".$task_id."'";
 		}
 		if( $profile_id != 'NULL' ) {
 			if( !is_numeric( $profile_id ) ) {
+				error_log( "[GYMActivity::ERROR] GenyDailyRate \$profile_id is not numeric", 0 );
 				return -1;
 			}
 			$profile_id = "'".$profile_id."'";
 		}
+		if( $profile_id == 'NULL' && $task_id == 'NULL' ){
+			error_log( "[GYMActivity::ERROR] GenyDailyRate \$profile_id and \$task_id cannot be null at the same time.", 0 );
+			return -1;
+		}
 		if( !is_numeric( $daily_rate_value ) ) {
+			error_log( "[GYMActivity::ERROR] GenyDailyRate \$daily_rate_value is not numeric", 0 );
 			return -1;
 		}
 		if( !is_numeric( $daily_rate_po_days ) ) {
-			return GENYMOBILE_ERROR;
+			error_log( "[GYMActivity::ERROR] GenyDailyRate \$daily_rate_po_days is not numeric", 0 );
+			return -1;
 		}
-		$query = "INSERT INTO DailyRates VALUES($id,'".$project_id."','".$task_id."',".$profile_id.",'".$daily_rate_start_date."','".$daily_rate_end_date."','".$daily_rate_value."','".mysql_real_escape_string($daily_rate_po_number)."',$daily_rate_po_days)";
+		$query = "INSERT INTO DailyRates VALUES($id,'".$project_id."',".$task_id.",".$profile_id.",'".$daily_rate_start_date."','".$daily_rate_end_date."','".$daily_rate_value."','".mysql_real_escape_string($daily_rate_po_number)."',$daily_rate_po_days)";
 		if( $this->config->debug ) {
 			error_log( "[GYMActivity::DEBUG] GenyDailyRate MySQL query : $query", 0 );
 		}
