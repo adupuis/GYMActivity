@@ -51,7 +51,7 @@ $web_config = new GenyWebConfig();
 		<input name="geny_password" id="geny_password" type="password" />
 	</p>
 	<p>
-		<label for="geny_theme">Password</label>
+		<label for="geny_theme">Theme</label>
 		<select name="geny_theme" id="geny_theme" class="chzn-select">
 			<!--<option value='default'>Thème par défaut</option>
 			<?php
