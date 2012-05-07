@@ -136,8 +136,12 @@ $geny_ic = new GenyIntranetCategory();
 		</a>
 		<div class="sdt_box">
 			<a href="loader.php?module=reporting_personal_load">Rapport de charge</a>
-			<a href="loader.php?module=reporting_load">Rapport charge mensuel</a>
-			<a href="loader.php?module=reporting_cra_completion">Remplissage des CRA</a>
+			<?php
+				if($profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
+					echo "<a href='loader.php?module=reporting_load'>Rapport charge mensuel</a>";
+					echo "<a href='loader.php?module=reporting_cra_completion'>Remplissage des CRA</a>";
+				}
+			?>
 			<a href="loader.php?module=home_reporting">Plus...</a>
 		</div>
 	</li>

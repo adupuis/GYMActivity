@@ -50,7 +50,6 @@ date_default_timezone_set('Europe/Paris');
 			<p>
 				<label for="assignement_id">Projet</label>
 				<select name="assignement_id" id="assignement_id" class="chzn-select" data-placeholder="Choisissez un projet..." >
-					<option val=""></option>
 					<?php
 						$geny_assignements = new GenyAssignement();
 						foreach( $geny_assignements->getAssignementsListByProfileId( $profile->id ) as $assignement ){
