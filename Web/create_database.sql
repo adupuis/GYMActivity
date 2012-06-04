@@ -229,7 +229,7 @@ CREATE TABLE Assignements (
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
-INSERT INTO `Assignements` VALUES (NULL,3,1,0),(NULL,4,1,0),(NULL,5,1,0),(NULL,3,4,0),(NULL,3,2,0),(NULL,4,2,0),(NULL,5,2,0),(NULL,3,3,0),(NULL,4,3,0),(NULL,5,3,0),(NULL,4,4,0),(NULL,5,4,0);
+-- INSERT INTO `Assignements` VALUES (NULL,3,1,0),(NULL,4,1,0),(NULL,5,1,0),(NULL,3,4,0),(NULL,3,2,0),(NULL,4,2,0),(NULL,5,2,0),(NULL,3,3,0),(NULL,4,3,0),(NULL,5,3,0),(NULL,4,4,0),(NULL,5,4,0);
 
 CREATE TABLE DailyRates (
 	daily_rate_id int auto_increment,
@@ -398,7 +398,7 @@ INSERT INTO Properties VALUES(0,'PROP_LIVE_DEBUG','Activer/desactiver le debug e
 INSERT INTO Properties VALUES(0,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
 
 -- Verrouillage de l'application.
-INSERT INTO Properties VALUES(0,'PROP_APP_STATE',4);
+INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"Etat de l'application",4);
 
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
