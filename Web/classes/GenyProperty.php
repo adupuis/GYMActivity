@@ -107,6 +107,9 @@ class GenyProperty extends GenyDatabaseTools {
 // 		mysql_close();
 		return $prop_list;
 	}
+	public function getPropertiesList(){
+		return $this->getPropertiesListWithRestrictions( array() );
+	}
 	public function searchProperties($term){
 		$q = mysql_real_escape_string($term);
 		return $this->getPropertiesListWithRestrictions( array("property_name LIKE '%$q%'", "property_label LIKE '%$q%'"), 'OR' );

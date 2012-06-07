@@ -506,6 +506,22 @@ li.logout a {
 	background-image: url(../../images/genymobile-2012/logout_generic.png);
 }
 
+li.property_list a {
+	background-image: url(../../images/genymobile-2012/property_list.png);
+}
+
+li.property_add a {
+	background-image: url(../../images/genymobile-2012/property_add.png);
+}
+
+li.property_remove a {
+	background-image: url(../../images/genymobile-2012/property_remove.png);
+}
+
+li.property_edit a {
+	background-image: url(../../images/genymobile-2012/property_edit.png);
+}
+
 /* End of main dock style */
 
 /* Mainarea */
