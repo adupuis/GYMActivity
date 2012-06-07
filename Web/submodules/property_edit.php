@@ -411,16 +411,6 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 		
 	$("#property_value").trigger("liszt:updated");
 	}
-	
-	/*$("#property_type").chosen().change( function() {
-		var str = "";
-		$("select option:selected").each(function () {
-			var prop_id = $("#property_id").val();
-			var result_of_query = $.get('backend/api/get_property_form_from_type.php?id='+prop_id+'&type='+, function( data ) {
-				$("#property_dyn_form").html(data);
-			},'html');
-		});
-        }).change();*/	
 	-->
 	</script>
 	
