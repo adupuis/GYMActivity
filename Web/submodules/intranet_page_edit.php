@@ -500,7 +500,8 @@ if( $profile_authorized ) {
 				<textarea id="intranet_page_content_editor" name="intranet_page_content_editor"><?php echo $intranet_page_content_to_display ?></textarea>
 			</p>
 			<script type="text/javascript">
-				CKEDITOR.replace( 'intranet_page_content_editor' );
+				var edit = CKEDITOR.replace( 'intranet_page_content_editor' );
+				CKFinder.SetupCKEditor( edit, 'js/ckfinder/' );
 			</script>
 			
 			<p>
