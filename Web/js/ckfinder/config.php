@@ -1,4 +1,5 @@
 <?php
+session_start();
 /*
  * ### CKFinder : Configuration File - Basic Instructions
  *
@@ -60,7 +61,7 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = 'images/intranet/users_data';
+$baseUrl = '/upload/';
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
