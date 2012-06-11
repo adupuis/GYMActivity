@@ -4,6 +4,8 @@ Pour "installer" ce projet il suffit de :
 - editer la classe classes/GenyWebConfig.php si nécessaire.
 - importer le fichier create_database.sql.
 
+- (facultatif) : pour le redimensionnement des images, installer au choix "gmagick" "imagick" ou "gd"
+
 C'est tout.
 
 Dans le cas d'une mise à jour, il peut être nécessaire de mettre le schéma de la base à jour. Pour le moment cela se fait par :
