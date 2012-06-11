@@ -104,10 +104,7 @@ $config['Thumbnails'] = Array(
 Set the maximum size of uploaded images. If an uploaded image is larger, it
 gets scaled down proportionally. Set to 0 to disable this feature.
 */
-$config['Images'] = Array(
-		'maxWidth' => 800,
-		'maxHeight' => 600,
-		'quality' => 80);
+$config['Images'] = 0;
 
 /*
 RoleSessionVar : the session variable name that CKFinder must use to retrieve
