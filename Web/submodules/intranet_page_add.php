@@ -163,7 +163,8 @@ $intranet_page_author_group_name = $tmp_rights_group->name;
 				<textarea id="intranet_page_content_editor" name="intranet_page_content_editor"></textarea>
 			</p>
 			<script type="text/javascript">
-				CKEDITOR.replace( 'intranet_page_content_editor' );
+				var editor = CKEDITOR.replace( 'intranet_page_content_editor' );
+				CKFinder.setupCKEditor( editor, 'js/ckfinder/' );
 			</script>
 			
 			<p>
@@ -187,7 +188,7 @@ $intranet_page_author_group_name = $tmp_rights_group->name;
 					echo rtrim( $tags, "," );
 				?>
 			];
-			console.log( availableTags );
+			//console.log( availableTags );
 			$("#intranet_tag_name").autocomplete({
 				source: availableTags
 			});
