@@ -183,7 +183,7 @@ class image_gd extends image {
         return true;
     }
 
-    public function output($type='jpeg', array $options=array()) {
+    public function output($type='png', array $options=array()) {
         $method = "output_$type";
         if (!method_exists($this, $method))
             return false;

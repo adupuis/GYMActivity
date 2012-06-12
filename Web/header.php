@@ -132,7 +132,7 @@ echo $header_title
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="js/ckfinder/kcfinder.js"></script>
+<script type="text/javascript" src="js/kcfinder/kcfinder.js"></script>
 <script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
 
 <link rel="stylesheet" href="js/prettyPhoto_compressed_3.1.3/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
