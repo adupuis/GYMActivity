@@ -6,3 +6,17 @@
 .table_container table {
 	width: 900px;
 }
+
+td, th {
+	padding-left:7px;
+	padding-right:7px;
+	margin-top:2px;
+	border-width: 3px;
+	border-style: inset;
+	border-color: gray;
+}
+
+td {
+	margin:2px;
+}
+

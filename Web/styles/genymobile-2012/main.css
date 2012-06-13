@@ -376,6 +376,10 @@ li.notifications a {
 	background-image: url(../../images/genymobile-2012/notification.png);
 }
 
+li.reporting_ressources_view a {
+	background-image: url(../../images/genymobile-2012/reporting_ressources.png);
+}
+
 li.reporting_monthly_view a {
 	background-image: url(../../images/genymobile-2012/reporting.png);
 }

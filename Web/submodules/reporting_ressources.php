@@ -50,6 +50,7 @@ if($month < 10) $month = "0" . $month ;
 $lastday = date('t',mktime(0,0,0,$month+1,0,$year));
 $ressources_start_date = "$year-$month-01" ;
 $ressources_end_date = "$year-$month-$lastday";
+$nbday = date('d',mktime(0,0,0,$month+1,0,$year));
 
 if( isset($ressources_start_date) && $ressources_start_date != "" && isset($ressources_end_date) && $ressources_end_date != "" ){
 	if( date_parse( $ressources_start_date ) !== false && date_parse( $ressources_end_date )!== false ){
@@ -87,34 +88,32 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 		
 		if($geny_profile->is_active && $geny_profil_management->availability_date <= $end_date ){
 			
-			if( !isset( $reporting_data[$ar->profile_id] ) )
-				$reporting_data[$ar->profile_id] = array();
+			if( !isset( $reporting_data[$geny_profile->id] ) )
+				$reporting_data[$geny_profile->id] = array();
+			if( !isset( $reporting_data[$geny_profile->id][0] ) )
+				$reporting_data[$geny_profile->id][0] = array();
+			if( !isset( $reporting_data[$geny_profile->id][1] ) )
+				$reporting_data[$geny_profile->id][1] = array();
 			
-			$nbday = date('d',mktime(0,0,0,$month+1,0,$year));
-				
-			for($i=0; $i<$nbday; $i++) {
-				if( !isset( $reporting_data[$ar->profile_id][$i] ) )
-					$reporting_data[$ar->profile_id][$i] = array();
-				if( !isset( $reporting_data[$ar->profile_id][$i]["matin"] ) )
-					$reporting_data[$ar->profile_id][$i]["matin"] = array();
-				if( !isset( $reporting_data[$ar->profile_id][$i]["aprem"] ) )
-					$reporting_data[$ar->profile_id][$i]["aprem"] = array();
-								
-				for($j=0; $j<2; $j++) {
-					for($k=0; $k<4; $k++) {
-						if( !isset( $reporting_data[$ar->profile_id][$i][$j][$k] ) )
-							$reporting_data[$ar->profile_id][$i][$j][$k] = -1 ;
+			for($k=0; $k<2; $k++) {
+				for($i=1; $i<=$nbday; $i++) {
+					if( !isset( $reporting_data[$geny_profile->id][$k][$i] ) )
+						$reporting_data[$geny_profile->id][$k][$i] = array();
+									
+					for($j=0; $j<4; $j++) {
+						if( !isset( $reporting_data[$geny_profile->id][$k][$i][$j] ) )
+							$reporting_data[$geny_profile->id][$k][$i][$j] = -1 ;
 					}
 				}
 			}
 			
-			$load = $geny_activity->load;
-			$day_act = substr($geny_activity->activity_date,8,2);
-						
-			for($j=0; $j<2; $j++) {
-				for($k=0; $k<4; $k++) {
-					if($reporting_data[$ar->profile_id][$day_act][$j][$k] == -1 && $load > 0) { // PROBLEME ICI
-						$reporting_data[$ar->profile_id][$day_act][$j][$k] = $geny_assignement->project_id;
+			$load = intval($geny_activity->load);
+			$day_act = intval(substr($geny_activity->activity_date,8,2));
+			
+			for($k=0; $k<2; $k++) {
+				for($j=0; $j<4; $j++) {
+					if($reporting_data[$geny_profile->id][$k][$day_act][$j] == -1 && $load > 0) {
+						$reporting_data[$geny_profile->id][$k][$day_act][$j] = $geny_assignement->project_id;
 						$load--;
 					}
 				}
@@ -122,7 +121,6 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 		}
 	}
 }
-
 ?>
 
 <div id="mainarea">
@@ -144,23 +142,23 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 			<p>
 				<label for="month">Mois</label>
 				<select name="month" id="month" type="text" class="chzn-select"/>
-				<option value="1" <?php if(date("m") == 1) echo "selected"; ?>>Janvier</option>
-				<option value="2" <?php if(date("m") == 2) echo "selected"; ?>>Février</option>
-				<option value="3" <?php if(date("m") == 3) echo "selected"; ?>>Mars</option>
-				<option value="4" <?php if(date("m") == 4) echo "selected"; ?>>Avril</option>
-				<option value="5" <?php if(date("m") == 5) echo "selected"; ?>>Mai</option>
-				<option value="6" <?php if(date("m") == 6) echo "selected"; ?>>Juin</option>
-				<option value="7" <?php if(date("m") == 7) echo "selected"; ?>>Juillet</option>
-				<option value="8" <?php if(date("m") == 8) echo "selected"; ?>>Aout</option>
-				<option value="9" <?php if(date("m") == 9) echo "selected"; ?>>Septembre</option>
-				<option value="10" <?php if(date("m") == 10) echo "selected"; ?>>Octobre</option>
-				<option value="11" <?php if(date("m") == 11) echo "selected"; ?>>Novembre</option>
-				<option value="12" <?php if(date("m") == 12) echo "selected"; ?>>Décembre</option>
+				<option value="1" <?php if($month != NULL) { if($month == "01") echo "selected"; } else if(date("m") == 1) echo "selected"; ?>>Janvier</option>
+				<option value="2" <?php if($month != NULL) { if($month == "02") echo "selected"; } else if(date("m") == 2) echo "selected"; ?>>Février</option>
+				<option value="3" <?php if($month != NULL) { if($month == "03") echo "selected"; } else if(date("m") == 3) echo "selected"; ?>>Mars</option>
+				<option value="4" <?php if($month != NULL) { if($month == "04") echo "selected"; } else if(date("m") == 4) echo "selected"; ?>>Avril</option>
+				<option value="5" <?php if($month != NULL) { if($month == "05") echo "selected"; } else if(date("m") == 5) echo "selected"; ?>>Mai</option>
+				<option value="6" <?php if($month != NULL) { if($month == "06") echo "selected"; } else if(date("m") == 6) echo "selected"; ?>>Juin</option>
+				<option value="7" <?php if($month != NULL) { if($month == "07") echo "selected"; } else if(date("m") == 7) echo "selected"; ?>>Juillet</option>
+				<option value="8" <?php if($month != NULL) { if($month == "08") echo "selected"; } else if(date("m") == 8) echo "selected"; ?>>Aout</option>
+				<option value="9" <?php if($month != NULL) { if($month == "09") echo "selected"; } else if(date("m") == 9) echo "selected"; ?>>Septembre</option>
+				<option value="10" <?php if($month != NULL) { if($month == "10") echo "selected"; } else if(date("m") == 10) echo "selected"; ?>>Octobre</option>
+				<option value="11" <?php if($month != NULL) { if($month == "11") echo "selected"; } else if(date("m") == 11) echo "selected"; ?>>Novembre</option>
+				<option value="12" <?php if($month != NULL) { if($month == "12") echo "selected"; } else if(date("m") == 12) echo "selected"; ?>>Décembre</option>
 				</select>
 			</p>
 			<p>
 				<label for="year">Année</label>
-				<input name="year" id="year" type="text" style="padding:4px 0 4px 0;" value="<?php echo date("Y"); ?>" />
+				<input name="year" id="year" type="text" style="padding:4px 0 4px 0;" value="<?php if($year != NULL) { echo $year; } else echo date("Y"); ?>" />
 			</p>
 			<input type="submit" value="Ajuster le reporting" />
 		</form>
@@ -168,34 +166,50 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 		<p>
 			
 			<table id="reporting_load_table">
-			<thead>
-			</thead>
-			<tbody>
-			<tr><td>nom prénom</td><?php for($i=0; $i<$nbday; $i++) echo "<td>$i</td>"; ?></tr>
+			<tr><th>nom prénom</th><?php for($i=1; $i<=$nbday; $i++) echo "<th>".($i)."</th>"; ?></tr>
 			<?php
-				foreach( $reporting_data as $profile_id => $days_data ){
+				foreach( $reporting_data as $profile_id => $period_data ){
 				
 				$geny_profile->loadProfileById($profile_id);
-				
-				echo "<tr>";
-				
-				echo "<td>".GenyTools::getProfileDisplayName($geny_profile)."</td>";
-				
-					foreach( $days_data as $data ){
 					
-						foreach($data as $period => $hours) {
-							
+				echo '<tr><th rowspan="2">'.GenyTools::getProfileDisplayName($geny_profile)."</th>";
+				
+					foreach( $period_data as $period => $days_data ){
+						if($period == 1) echo "<tr>";
+						foreach($days_data as $day => $hours) {
+							if(isset($temp)) unset($temp);
+							$final_id = -1;
+							$temp = array();
+							$temp_top = 0;
 							foreach($hours as $hour) {
-								if($hour > 0) $geny_project->loadProjectById($hour); // TO_EDIT
-								echo "<td>". $geny_project->name ."</td>";
+								if(isset($temp["$hour"]) && $hour != -1) $temp["$hour"]++;
+								else if($hour != -1) $temp["$hour"] = 1;
 							}
+							foreach($temp as $id => $o) {
+								if($o > $temp_top) {
+									$final_id = $id;
+									$temp_top = $o;
+								}
+							}
+							$geny_project = new GenyProject();
+							$geny_project->loadProjectById($final_id);
+							if($geny_project->id > 0)
+							{
+								$geny_property = new GenyProperty();
+								$param = "color_project_type_". $geny_project->type_id;
+								$props = $geny_property->searchProperties($param);
+								$geny_property = $props[0];
+								$vals = $geny_property->getPropertyValues();
+								echo '<td style="background-color:'.$vals[0]->content.'" class="'.$geny_project->id.'">';
+								echo $final_id;
+								echo '</td>';
+							}
+							else echo '<td style="background-color:black;" class="empty"></td>';
 						}
+						echo "</tr>";
 					}
-					
-				echo "</tr>";
 				}
 			?>
-			</tbody>
 			</table>
 		</p>
 		</div>
