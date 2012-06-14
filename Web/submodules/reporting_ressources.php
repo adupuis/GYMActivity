@@ -28,6 +28,7 @@ function display_span_infos($id, $o, $predicted) {
 	$geny_client = new GenyClient();
 	$geny_property = new GenyProperty();
 	if($predicted) $message = "~ ";
+	else $message = "";
 	
 	$geny_project->loadProjectById($id);
 	$geny_client->loadClientById($geny_project->client_id);
@@ -46,7 +47,7 @@ function display_project($geny_project, $projects, $final_id, $predictionTotale,
 	$vals = $geny_property->getPropertyValues();
 
 	echo '<td style="background-color:'.$vals[0]->content.'" class="'.$geny_project->id.'">';
-	echo '<a href="#" class="bulle"><div id="case">'.$final_id.' | '.$predictionTotale.'</div><span>';
+	echo '<a href="#" class="bulle"><div id="case">'.$final_id.'</div><span>';
 	if($predictionTotale) echo '<div style="background-color:black">&nbsp;&nbsp;Prédiction</div>';
 	foreach($projects as $id => $o) {
 		display_span_infos($id, $o, 0);
