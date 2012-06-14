@@ -22,6 +22,41 @@
 
 include_once 'backend/api/ajax_toolbox.php';
 
+
+function display_span_infos($id, $o, $predicted) {
+	$geny_project = new GenyProject();
+	$geny_client = new GenyClient();
+	$geny_property = new GenyProperty();
+	if($predicted) $message = "~ ";
+	
+	$geny_project->loadProjectById($id);
+	$geny_client->loadClientById($geny_project->client_id);
+	$param = "color_project_type_". $geny_project->type_id;
+	$props = $geny_property->searchProperties($param);
+	$geny_property = $props[0];
+	$vals = $geny_property->getPropertyValues();
+	echo '<div style="background-color:'.$vals[0]->content.'">&nbsp;&nbsp;' . $message . $geny_client->name . " - " . $geny_project->name . " : ${o}h</div>";
+}
+
+function display_project($geny_project, $projects, $final_id, $predictionTotale, $partial_id, $predictionPartielle) {
+	$geny_property = new GenyProperty();
+	$param = "color_project_type_". $geny_project->type_id;
+	$props = $geny_property->searchProperties($param);
+	$geny_property = $props[0];
+	$vals = $geny_property->getPropertyValues();
+
+	echo '<td style="background-color:'.$vals[0]->content.'" class="'.$geny_project->id.'">';
+	echo '<a href="#" class="bulle"><div id="case">'.$final_id.' | '.$predictionTotale.'</div><span>';
+	if($predictionTotale) echo '<div style="background-color:black">&nbsp;&nbsp;Prédiction</div>';
+	foreach($projects as $id => $o) {
+		display_span_infos($id, $o, 0);
+	}
+
+	if($predictionPartielle) display_span_infos($partial_id, $predictionPartielle, 1);
+	echo '</span></a></td>';
+}
+
+
 $reporting_data = array();
 $geny_project = new GenyProject();
 $geny_profile = new GenyProfile();
@@ -170,53 +205,86 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 			
 			
 			<?php
-				foreach( $reporting_data as $profile_id => $period_data ){
+			
+			$last_predictions = array();
+			
+			foreach( $reporting_data as $profile_id => $period_data ){
 				
 				$geny_profile->loadProfileById($profile_id);
+				
+				if(!isset($last_predictions[$profile_id])) $last_predictions[$profile_id] = -1;
 				
 				$name = substr(GenyTools::getProfileDisplayName($geny_profile),0,10);
 				if($name != GenyTools::getProfileDisplayName($geny_profile)) $name = $name . "...";
 				echo '<tr><th rowspan="2"><div id="names">'.$name.'</div></th>';
 				
 					foreach( $period_data as $period => $days_data ){
+					
 						if($period == 1) echo "<tr>";
+					
 						foreach($days_data as $day => $hours) {
-							if(isset($temp)) unset($temp);
+						
+							if(isset($projects)) unset($projects);
 							$final_id = -1;
-							$temp = array();
+							$projects = array();
 							$temp_top = 0;
+							$temp_h = 0;
+						
 							foreach($hours as $hour) {
-								if(isset($temp["$hour"]) && $hour != -1) $temp["$hour"]++;
-								else if($hour != -1) $temp["$hour"] = 1;
+								if(isset($projects["$hour"]) && $hour != -1) $projects["$hour"]++;
+								else if($hour != -1) $projects["$hour"] = 1;
 							}
-							foreach($temp as $id => $o) {
+							
+							foreach($projects as $id => $o) {
 								if($o > $temp_top) {
 									$final_id = $id;
 									$temp_top = $o;
 								}
+								$temp_h += $o ;
 							}
+							
+							$predictionTotale = 0;
+							$predictionPartielle = 0;
+							$partial_id = -1;
+							
+							if(date("N", mktime(0,0,0,$month, $day, $year)) != 6 && date("N", mktime(0,0,0,$month, $day, $year)) != 7) {
+							
+								$predictionPartielle = 4 - $temp_h;
+								
+								if($predictionPartielle > 2) $predictionTotale = 1;
+								
+								if($predictionTotale || $predictionPartielle) {
+									$assignements = $geny_assignement->getActiveAssignementsListByProfileId($profile_id);
+									if(sizeof($assignements) == 1) $temp_id = $assignements[0]->project_id;
+									elseif(sizeof($assignements) >= 2) {
+										if($last_predictions[$profile_id] == -1) {
+											$temp_id = $assignements[0]->project_id;
+											$last_predictions[$profile_id] = $assignements[0]->project_id;
+										}
+										else {
+											$found_last_pred=false;
+											for($i=0; $i<=sizeof($assignements); $i++)
+											{
+												if($found_last_pred) break;
+												if($last_predictions[$profile_id] == $assignements[$i]->project_id) $found_last_pred = true;
+											}
+											if($i == sizeof($assignements)) $i = 0;
+											$temp_id = $assignements[$i]->project_id;
+											$last_predictions[$profile_id] = $assignements[$i]->project_id;
+										}
+									}
+									else $temp_id = -1 ;
+								}
+								if($predictionPartielle) $partial_id = $temp_id;
+								if($predictionTotale) $final_id = $temp_id;
+							}
+							
 							$geny_project = new GenyProject();
 							$geny_project->loadProjectById($final_id);
+							
 							if($geny_project->id > 0)
 							{
-								$geny_property = new GenyProperty();
-								$param = "color_project_type_". $geny_project->type_id;
-								$props = $geny_property->searchProperties($param);
-								$geny_property = $props[0];
-								$vals = $geny_property->getPropertyValues();
-								echo '<td style="background-color:'.$vals[0]->content.'" class="'.$geny_project->id.'">';
-								echo '<a href="#" class="bulle"><div id="case">'.$final_id.'</div><span>';
-								foreach($temp as $id => $o) {
-									$geny_project->loadProjectById($id);
-									$geny_client->loadClientById($geny_project->client_id);
-									$geny_property = new GenyProperty();
-									$param = "color_project_type_". $geny_project->type_id;
-									$props = $geny_property->searchProperties($param);
-									$geny_property = $props[0];
-									$vals = $geny_property->getPropertyValues();
-									echo '<div style="background-color:'.$vals[0]->content.'">&nbsp;&nbsp;' . $geny_client->name . " - " . $geny_project->name . " : ${o}h</div>";
-								}
-								echo '</span></a></td>';
+								display_project($geny_project, $projects, $final_id, $predictionTotale, $partial_id, $predictionPartielle);
 							}
 							else echo '<td style="background-color:#D8D8D8;" class="empty"><div id="case"></div></td>';
 						}

@@ -10,6 +10,11 @@ td, th {
 	border-color: gray;
 }
 
+td {
+	color:white;
+	text-shadow:none;
+}
+
 div#case {
 	width:34px;
 	text-align:center;
@@ -24,7 +29,7 @@ div#names {
 
 a.bulle {
 	position:relative;
-	color:#396a86;
+	/*color:#396a86;*/
 	text-decoration:none;
 	font-family:arial, verdana, sans-serif;
 	text-align:center;
@@ -50,8 +55,9 @@ a.bulle:hover span {
 	text-align:justify;
 	font-size:12px;
 	font-weight:normal;
-	min-width:200px;
+	min-width:300px;
 	max-width:400px;
+	width:auto;
 	height:auto;
 	background: white;
 	padding: 5px;
