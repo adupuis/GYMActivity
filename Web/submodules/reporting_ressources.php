@@ -166,13 +166,17 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 		<p>
 			
 			<table id="reporting_load_table">
-			<tr><th>nom prénom</th><?php for($i=1; $i<=$nbday; $i++) echo "<th>".($i)."</th>"; ?></tr>
+			<tr><th><div id="names">Nom Prénom</div></th><?php for($i=1; $i<=$nbday; $i++) echo '<th><div id="case">'.($i)."</div></th>"; ?></tr>
+			
+			
 			<?php
 				foreach( $reporting_data as $profile_id => $period_data ){
 				
 				$geny_profile->loadProfileById($profile_id);
-					
-				echo '<tr><th rowspan="2">'.GenyTools::getProfileDisplayName($geny_profile)."</th>";
+				
+				$name = substr(GenyTools::getProfileDisplayName($geny_profile),0,10);
+				if($name != GenyTools::getProfileDisplayName($geny_profile)) $name = $name . "...";
+				echo '<tr><th rowspan="2"><div id="names">'.$name.'</div></th>';
 				
 					foreach( $period_data as $period => $days_data ){
 						if($period == 1) echo "<tr>";
@@ -201,10 +205,20 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 								$geny_property = $props[0];
 								$vals = $geny_property->getPropertyValues();
 								echo '<td style="background-color:'.$vals[0]->content.'" class="'.$geny_project->id.'">';
-								echo $final_id;
-								echo '</td>';
+								echo '<a href="#" class="bulle"><div id="case">'.$final_id.'</div><span>';
+								foreach($temp as $id => $o) {
+									$geny_project->loadProjectById($id);
+									$geny_client->loadClientById($geny_project->client_id);
+									$geny_property = new GenyProperty();
+									$param = "color_project_type_". $geny_project->type_id;
+									$props = $geny_property->searchProperties($param);
+									$geny_property = $props[0];
+									$vals = $geny_property->getPropertyValues();
+									echo '<div style="background-color:'.$vals[0]->content.'">&nbsp;&nbsp;' . $geny_client->name . " - " . $geny_project->name . " : ${o}h</div>";
+								}
+								echo '</span></a></td>';
 							}
-							else echo '<td style="background-color:black;" class="empty"></td>';
+							else echo '<td style="background-color:#D8D8D8;" class="empty"><div id="case"></div></td>';
 						}
 						echo "</tr>";
 					}
