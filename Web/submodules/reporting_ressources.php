@@ -22,6 +22,8 @@
 
 include_once 'backend/api/ajax_toolbox.php';
 
+setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
+
 
 function display_span_infos($id, $o, $predicted) {
 	$geny_project = new GenyProject();
@@ -56,6 +58,32 @@ function display_project($geny_project, $projects, $final_id, $predictionTotale,
 	if($predictionPartielle) display_span_infos($partial_id, $predictionPartielle, 1);
 	echo '</span></a></td>';
 }
+
+function display_month_option($m, $month) {
+	$selected = " ";
+	$months = array(
+		0 => "",
+		1 => "Janvier",
+		2 => "Février",
+		3 => "Mars",
+		4 => "Avril",
+		5 => "Mai",
+		6 => "Juin",
+		7 => "Juillet",
+		8 => "Aout",
+		9 => "Septembre",
+		10 => "Octobre",
+		11 => "Novembre",
+		12 => "Décembre"
+	);
+	if($month != NULL) {
+		if(intval($month) == $m)
+			echo $selected = " selected ";
+	}
+	else if(date("m") == $m) echo $selected = " selected ";
+	echo '<option value="'.$m.'"'.$selected.'>'.$months[$m].'</option>';
+}
+
 
 
 $reporting_data = array();
@@ -178,18 +206,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 			<p>
 				<label for="month">Mois</label>
 				<select name="month" id="month" type="text" class="chzn-select"/>
-				<option value="1" <?php if($month != NULL) { if($month == "01") echo "selected"; } else if(date("m") == 1) echo "selected"; ?>>Janvier</option>
-				<option value="2" <?php if($month != NULL) { if($month == "02") echo "selected"; } else if(date("m") == 2) echo "selected"; ?>>Février</option>
-				<option value="3" <?php if($month != NULL) { if($month == "03") echo "selected"; } else if(date("m") == 3) echo "selected"; ?>>Mars</option>
-				<option value="4" <?php if($month != NULL) { if($month == "04") echo "selected"; } else if(date("m") == 4) echo "selected"; ?>>Avril</option>
-				<option value="5" <?php if($month != NULL) { if($month == "05") echo "selected"; } else if(date("m") == 5) echo "selected"; ?>>Mai</option>
-				<option value="6" <?php if($month != NULL) { if($month == "06") echo "selected"; } else if(date("m") == 6) echo "selected"; ?>>Juin</option>
-				<option value="7" <?php if($month != NULL) { if($month == "07") echo "selected"; } else if(date("m") == 7) echo "selected"; ?>>Juillet</option>
-				<option value="8" <?php if($month != NULL) { if($month == "08") echo "selected"; } else if(date("m") == 8) echo "selected"; ?>>Aout</option>
-				<option value="9" <?php if($month != NULL) { if($month == "09") echo "selected"; } else if(date("m") == 9) echo "selected"; ?>>Septembre</option>
-				<option value="10" <?php if($month != NULL) { if($month == "10") echo "selected"; } else if(date("m") == 10) echo "selected"; ?>>Octobre</option>
-				<option value="11" <?php if($month != NULL) { if($month == "11") echo "selected"; } else if(date("m") == 11) echo "selected"; ?>>Novembre</option>
-				<option value="12" <?php if($month != NULL) { if($month == "12") echo "selected"; } else if(date("m") == 12) echo "selected"; ?>>Décembre</option>
+				<?php for($i=1; $i<=12; $i++) display_month_option($i, $month); ?>
 				</select>
 			</p>
 			<p>
