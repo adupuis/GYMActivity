@@ -24,7 +24,6 @@ include_once 'backend/api/ajax_toolbox.php';
 
 setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
 
-
 function display_span_infos($id, $o, $predicted) {
 	$geny_project = new GenyProject();
 	$geny_client = new GenyClient();
@@ -146,19 +145,22 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 	$geny_assignement = new GenyAssignement($geny_activity->assignement_id);
 	$geny_profil_management = new GenyProfileManagementData();
 	$geny_profil_management->loadProfileManagementDataByProfileId( $ar->profile_id );
-
+	$load = intval($geny_activity->load);
+	$day_act = intval(substr($geny_activity->activity_date,8,2));
+	
 	// restriction par rapport à la date
 	if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
 		
+		// restriction par rapport au profil
 		if($geny_profile->is_active && $geny_profil_management->availability_date <= $end_date ){
 			
+			// initialisations
 			if( !isset( $reporting_data[$geny_profile->id] ) )
 				$reporting_data[$geny_profile->id] = array();
 			if( !isset( $reporting_data[$geny_profile->id][0] ) )
 				$reporting_data[$geny_profile->id][0] = array();
 			if( !isset( $reporting_data[$geny_profile->id][1] ) )
 				$reporting_data[$geny_profile->id][1] = array();
-			
 			for($k=0; $k<2; $k++) {
 				for($i=1; $i<=$nbday; $i++) {
 					if( !isset( $reporting_data[$geny_profile->id][$k][$i] ) )
@@ -169,12 +171,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 							$reporting_data[$geny_profile->id][$k][$i][$j] = -1 ;
 					}
 				}
-			}
-			
-			$load = intval($geny_activity->load);
-			$day_act = intval(substr($geny_activity->activity_date,8,2));
-			
-			for($k=0; $k<2; $k++) {
+				// construction des données
 				for($j=0; $j<4; $j++) {
 					if($reporting_data[$geny_profile->id][$k][$day_act][$j] == -1 && $load > 0) {
 						$reporting_data[$geny_profile->id][$k][$day_act][$j] = $geny_assignement->project_id;
@@ -228,16 +225,18 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 			
 			foreach( $reporting_data as $profile_id => $period_data ){
 				
+				// chargement du profil
 				$geny_profile->loadProfileById($profile_id);
-				
 				if(!isset($last_predictions[$profile_id])) $last_predictions[$profile_id] = -1;
 				
+				// affichage du nom
 				$name = substr(GenyTools::getProfileDisplayName($geny_profile),0,10);
 				if($name != GenyTools::getProfileDisplayName($geny_profile)) $name = $name . "...";
 				echo '<tr><th rowspan="2"><div id="names">'.$name.'</div></th>';
 				
 					foreach( $period_data as $period => $days_data ){
 					
+						// si c'est l'aprem on commence une nouvelle ligne (sinon la ligne a déjà été commencée par le nom)
 						if($period == 1) echo "<tr>";
 					
 						foreach($days_data as $day => $hours) {
@@ -248,11 +247,13 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 							$temp_top = 0;
 							$temp_h = 0;
 						
+							// on fait un tableau des projets avec le nb d'heures associées
 							foreach($hours as $hour) {
 								if(isset($projects["$hour"]) && $hour != -1) $projects["$hour"]++;
 								else if($hour != -1) $projects["$hour"] = 1;
 							}
 							
+							// on détermine le projet qui a eu le plus d'heure
 							foreach($projects as $id => $o) {
 								if($o > $temp_top) {
 									$final_id = $id;
@@ -261,16 +262,21 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 								$temp_h += $o ;
 							}
 							
+							// initialisation de la prédiction
 							$predictionTotale = 0;
 							$predictionPartielle = 0;
 							$partial_id = -1;
 							
+							// on exclut le week-end
 							if(date("N", mktime(0,0,0,$month, $day, $year)) != 6 && date("N", mktime(0,0,0,$month, $day, $year)) != 7) {
 							
+								// la prediction partielle est le nombre d'heures qu'il manque à la période pour être pleine
 								$predictionPartielle = 4 - $temp_h;
 								
+								// si jamais la prédiction fait plus de la moitié de la période, la prédiction sera totale
 								if($predictionPartielle > 2) $predictionTotale = 1;
 								
+								// on détermine le projet à prendre pour les prédictions
 								if($predictionTotale || $predictionPartielle) {
 									$assignements = $geny_assignement->getActiveAssignementsListByProfileId($profile_id);
 									if(sizeof($assignements) == 1) $temp_id = $assignements[0]->project_id;
@@ -300,10 +306,8 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 							$geny_project = new GenyProject();
 							$geny_project->loadProjectById($final_id);
 							
-							if($geny_project->id > 0)
-							{
-								display_project($geny_project, $projects, $final_id, $predictionTotale, $partial_id, $predictionPartielle);
-							}
+							// on affiche la vue
+							if($geny_project->id > 0) display_project($geny_project, $projects, $final_id, $predictionTotale, $partial_id, $predictionPartielle);
 							else echo '<td style="background-color:#D8D8D8;" class="empty"><div id="case"></div></td>';
 						}
 						echo "</tr>";
