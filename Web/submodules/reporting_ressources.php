@@ -287,8 +287,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_repo
 										}
 										else {
 											$found_last_pred=false;
-											for($i=0; $i<=sizeof($assignements); $i++)
-											{
+											for($i=0; $i<=sizeof($assignements); $i++) {
 												if($found_last_pred) break;
 												if($last_predictions[$profile_id] == $assignements[$i]->project_id) $found_last_pred = true;
 											}

@@ -102,7 +102,7 @@ function displayStatusNotifications($gritter_notifications,$theme="default",$sti
 // GenyTools est maintenant chargé par le loader
 // loadClass('GenyTools');
 
-GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
+if($web_config->debug) GenyTools::debug("SESSION['THEME']=".$_SESSION['THEME']." web_config->theme=".$web_config->theme);
 
 ?>
 

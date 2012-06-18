@@ -19,6 +19,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+$geny_config = new GenyWebConfig();
 $tool = new GenyTools();
 $month = date('m', time());
 $year=date('Y', time());
@@ -36,7 +37,7 @@ foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date
 }
 
 $completion = ($user_load*100)/$estimated_load;
-error_log("reporting_cra_fulfilment: completion=$completion",0);
+if($geny_config->debug) error_log("reporting_cra_fulfilment: completion=$completion",0);
 
 ?>
 
