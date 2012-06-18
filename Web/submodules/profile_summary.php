@@ -101,8 +101,8 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists("GYMActivity_ce_list_table_profile_summary_php", $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_ce_list_table_profile_summary_php"]);
+		if(array_key_exists("GYMActivity_profile_summary_table_loader_php", $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_profile_summary_table_loader_php"]);
 		}
 
 		$data_array_filters_html = array();

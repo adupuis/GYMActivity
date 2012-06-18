@@ -290,8 +290,8 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_cra_validation_table_cra_validation_php", $_COOKIE)){
-					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_cra_validation_php"]);
+				if(array_key_exists("GYMActivity_cra_validation_table_loader_php", $_COOKIE)){
+					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_table_loader_php"]);
 				}
 				
 				$data_array_filters_html = array();

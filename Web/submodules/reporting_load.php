@@ -151,8 +151,8 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_load_table_reporting_load_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_load_table_reporting_load_php"]);
+		if(array_key_exists('GYMActivity_reporting_load_table_loader_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_load_table_loader_php"]);
 		}
 		
 		$data_array_filters_html = array();

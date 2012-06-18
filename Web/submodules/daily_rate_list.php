@@ -91,8 +91,8 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_daily_rate_list_php", $_COOKIE)) {
-					$cookie = json_decode($_COOKIE["GYMActivity_daily_rate_list_php"]);
+				if(array_key_exists("GYMActivity_daily_rate_list_table_loader_php", $_COOKIE)) {
+					$cookie = json_decode($_COOKIE["GYMActivity_daily_rate_list_table_loader_php"]);
 				}
 				
 				$data_array_filters_html = array();
