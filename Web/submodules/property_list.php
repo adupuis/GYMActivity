@@ -28,11 +28,10 @@ $propertyType = new GenyPropertyType();
 	jQuery(document).ready(function(){
 	
 		var oTable = $('#propriety_list').dataTable( {
+			"bDeferRender": true,
 			"bJQueryUI": true,
 			"bStateSave": true,
 			"bAutoWidth": false,
-// 			"sScrollY": 400,
-// 			"bScrollCollapse": true,
 			"sCookiePrefix": "GYMActivity_",
 			"iCookieDuration": 60*60*24*365, // 1 year
 			"sPaginationType": "full_numbers",

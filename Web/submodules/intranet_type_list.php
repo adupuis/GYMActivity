@@ -90,6 +90,7 @@ foreach( $geny_intranet_type->getAllIntranetTypes() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#intranet_type_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

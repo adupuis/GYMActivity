@@ -142,6 +142,7 @@ foreach( $geny_idea->getAllIdeas() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#idea_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

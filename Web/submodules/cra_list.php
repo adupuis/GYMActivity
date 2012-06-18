@@ -97,6 +97,7 @@ foreach( $geny_ar->getActivityReportsByProfileId( $profile->id ) as $ar ){
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

@@ -217,6 +217,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_post_validation_workflow_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

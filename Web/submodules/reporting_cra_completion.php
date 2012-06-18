@@ -56,6 +56,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 		jQuery(document).ready(function(){
 			
 				var oTable = $('#reporting_cra_completion_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

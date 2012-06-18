@@ -156,6 +156,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#conges_deletion_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

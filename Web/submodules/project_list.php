@@ -110,6 +110,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 		jQuery(document).ready(function(){
 			
 				var oTable = $('#project_list').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

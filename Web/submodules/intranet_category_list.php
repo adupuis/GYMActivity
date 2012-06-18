@@ -111,6 +111,7 @@ foreach( $geny_intranet_category->getAllIntranetCategories() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#intranet_category_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

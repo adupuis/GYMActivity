@@ -186,6 +186,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 	jQuery(document).ready(function(){
 		
 			var oTable = $('#reporting_po_table').dataTable( {
+				"bDeferRender": true,
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,

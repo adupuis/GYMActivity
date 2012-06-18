@@ -118,6 +118,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#holiday_summary_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

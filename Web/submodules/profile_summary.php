@@ -122,6 +122,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 	?>
 	jQuery(document).ready(function(){
 		var oTable = $('#ce_list_table').dataTable( {
+			"bDeferRender": true,
 			"bJQueryUI": true,
 			"bStateSave": true,
 			"bAutoWidth": false,

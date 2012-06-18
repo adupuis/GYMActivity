@@ -99,6 +99,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 		jQuery(document).ready(function(){
 			
 				var oTable = $('#profile_list').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

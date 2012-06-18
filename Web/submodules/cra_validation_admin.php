@@ -277,6 +277,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_validation_admin_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

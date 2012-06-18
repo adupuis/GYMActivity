@@ -178,6 +178,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#intranet_page_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

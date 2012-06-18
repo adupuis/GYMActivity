@@ -118,6 +118,7 @@ foreach( $geny_daily_rate->getAllDailyRates() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#daily_rate_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

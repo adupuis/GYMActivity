@@ -197,6 +197,7 @@ $load_by_tasks_js_data = implode(",",$tmp_array);
 	jQuery(document).ready(function(){
 		
 			var oTable = $('#reporting_personal_load_table').dataTable( {
+				"bDeferRender": true,
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
