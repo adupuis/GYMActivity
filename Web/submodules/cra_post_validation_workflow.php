@@ -145,7 +145,7 @@ $data_array = array(); // Now we create an array that contains all data that wil
 $data_array_filters = array( 1 => array(), 3 => array(), 4 => array(),5 => array(), 8 => array()); // We also create a table that contains the filters data (but only for required data).
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
-$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
+$tmp_profile = new GenyProfile( );
 $activity_report_workflow = new GenyActivityReportWorkflow();
 $status = $geny_ars->getAllActivityReportStatus();
 $geny_ars = array();
@@ -159,7 +159,7 @@ foreach($workflow as $row) {
 	
 	$tmp_profile->login = $row->profile_login;
 	$tmp_profile->lastname = $row->profile_lastname;
-	$tmp_profile->firstname = $row->firstname;
+	$tmp_profile->firstname = $row->profile_firstname;
 	
 	$data_array[] = array(  $row->activity_report_id,
 				GenyTools::getProfileDisplayName($tmp_profile),
