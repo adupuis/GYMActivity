@@ -160,7 +160,7 @@ if (mysql_num_rows($result)!=0) {
 	while ($row = mysql_fetch_row($result)){
 		
 		$tmp_profile->login = $row[10];
-		$tmp_profile->name = $row[3];
+		$tmp_profile->lastname = $row[3];
 		$tmp_profile->firstname = $row[2];
 		
 		$data_array[] = array(  $row[0],
