@@ -146,45 +146,43 @@ $data_array_filters = array( 1 => array(), 3 => array(), 4 => array(),5 => array
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
 $tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
-
+$activity_report_workflow = new GenyActivityReportWorkflow();
 $status = $geny_ars->getAllActivityReportStatus();
 $geny_ars = array();
 
 foreach($status as $s)
 	$geny_ars["$s->id"] = $s;
-
-$handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
-$query = "SELECT * FROM ActivityReportWorkflow";
-$result = mysql_query($query, $handle);
-if (mysql_num_rows($result)!=0) {
-	while ($row = mysql_fetch_row($result)){
-		
-		$tmp_profile->login = $row[10];
-		$tmp_profile->lastname = $row[3];
-		$tmp_profile->firstname = $row[2];
-		
-		$data_array[] = array(  $row[0],
-					GenyTools::getProfileDisplayName($tmp_profile),
-					$row[6],
-					$row[4],
-					$row[5],
-					$row[7],
-					$row[8],
-					$geny_ar->getDayLoad($row[1],$row[6]),
-					GenyTools::getActivityReportStatusAsColoredHtml($geny_ars["$row[9]"]) );
 	
-		if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
-		$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
-		if( ! in_array($row[4],$data_array_filters[3]) )
-			$data_array_filters[3][] = $row[4];
-		if( ! in_array($row[5],$data_array_filters[4]) )
-			$data_array_filters[4][] = $row[5];
-		if( ! in_array($row[7],$data_array_filters[5]) )
-			$data_array_filters[5][] = $row[7];
-		if( ! in_array($geny_ars["$row[9]"]->name,$data_array_filters[8]) )
-			$data_array_filters[8][] = $geny_ars["$row[9]"]->name;
-	}
+$workflow = $activity_report_workflow->getActivityReportsWorkflow();
+
+foreach($workflow as $row) {
+	
+	$tmp_profile->login = $row->profile_login;
+	$tmp_profile->lastname = $row->profile_lastname;
+	$tmp_profile->firstname = $row->firstname;
+	
+	$data_array[] = array(  $row->activity_report_id,
+				GenyTools::getProfileDisplayName($tmp_profile),
+				$row->activity_date,
+				$row->project_name,
+				$row->task_name,
+				$row->client_name,
+				$row->activity_load,
+				$geny_ar->getDayLoad($row->profile_id,$row->activity_date),
+				GenyTools::getActivityReportStatusAsColoredHtml($geny_ars["$row->activity_report_status_id"]) );
+
+	if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
+	$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
+	if( ! in_array($row->project_name,$data_array_filters[3]) )
+		$data_array_filters[3][] = $row->project_name;
+	if( ! in_array($row->task_name,$data_array_filters[4]) )
+		$data_array_filters[4][] = $row->task_name;
+	if( ! in_array($row->client_name,$data_array_filters[5]) )
+		$data_array_filters[5][] = $row->client_name;
+	if( ! in_array($geny_ars["$row->activity_report_status_id"]->name,$data_array_filters[8]) )
+		$data_array_filters[8][] = $geny_ars["$row->activity_report_status_id"]->name;
 }
+
 
 ?>
 <div id="mainarea">
