@@ -127,7 +127,15 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		return $this->getProfileManagementDataListWithRestrictions( array() );
 	}
 	public function getAllBillableProfileManagementData(){
-		return $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_is_billable=true"));
+// 		return $this->getProfileManagementDataListWithRestrictions(array("profile_management_data_is_billable=true"));
+		$really_billable_profile_list = array();
+		foreach ($this->getProfileManagementDataListWithRestrictions(array("profile_management_data_is_billable=true")) as $pmd) {
+			if( $pmd->getProfile()->is_active ){
+				array_push($really_billable_profile_list,$pmd);
+			}
+		}
+		return $really_billable_profile_list;
+		
 	}
 	public function loadProfileManagementDataById($id){
 		if( ! is_numeric($id) )
