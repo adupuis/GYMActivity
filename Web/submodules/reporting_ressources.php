@@ -46,13 +46,13 @@ $param_month = getParam( 'month', date( "m" ) );
 if( intval( $param_month ) < 10 ) {
 	$param_month = "0" . intval( $param_month );
 }
-$last_day = date( 't', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
+$last_day_of_month = date( 't', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
 $ressources_start_date = $param_year . '-' . $param_month . '-01' ;
-$ressources_end_date = "$param_year-$param_month-$last_day";
+$ressources_end_date = "$param_year-$param_month-$last_day_of_month";
 $nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
 
 if( $param_year != "" && $param_month != "" && is_numeric( $param_month ) && is_numeric( $param_year ) ) {
-	if( date_parse( $ressources_start_date ) !== false && date_parse( $ressources_end_date )!== false ){
+	if( date_parse( $ressources_start_date ) && date_parse( $ressources_end_date ) ) {
 		if( $ressources_end_date >= $ressources_start_date ){
 			$start_date = $ressources_start_date;
 			$end_date = $ressources_end_date;
@@ -72,18 +72,18 @@ $ars_removed_id = $geny_activity_report_status->id;
 $geny_activity_report_status->loadActivityReportStatusByShortName( 'REFUSED' );
 $ars_refused_id = $geny_activity_report_status->id;
 
-foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $ar ){
+foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $tmp_activity_report ){
 	
 	// on charge l'activité associée 
-	$geny_activity->loadActivityById($ar->activity_id);
+	$geny_activity->loadActivityById($tmp_activity_report->activity_id);
 	
 	// restriction par rapport à la date
 	if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ) {
 	
 		// on charge toutes les informations rattachées à cet activity_report
-		$geny_profile->loadProfileById( $ar->profile_id );
+		$geny_profile->loadProfileById( $tmp_activity_report->profile_id );
 		$geny_assignement->loadAssignementById($geny_activity->assignement_id);
-		$geny_profil_management->loadProfileManagementDataByProfileId( $ar->profile_id );
+		$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_activity_report->profile_id );
 		$tmp_numeric_activity_load = intval( $geny_activity->load );
 		$day_act = intval( substr( $geny_activity->activity_date, 8, 2 ) );
 		
@@ -212,13 +212,13 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 						// on parcourt les données par jour
 						foreach( $tmp_days_data as $tmp_day => $tmp_hours_data ) {
 						
-							if( isset( $projects_list ) ) {
-								unset( $projects_list );
-							}
 							$majority_project_id = -1;
 							$projects_list = array();
 							$tmp_top_nb_hour = 0;
 							$tmp_total_nb_hour = 0;
+							$total_prediction = 0;
+							$partial_prediction = 0;
+							$predicted_project_id = -1;
 						
 							// on fait un tableau des projets avec le nb d'heures associées
 							foreach( $tmp_hours_data as $tmp_project_id ) {
@@ -238,12 +238,7 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 								}
 								$tmp_total_nb_hour += $tmp_nb_hour ;
 							}
-							
-							// par défault, on considère qu'il n'y a aucune prédiction
-							$total_prediction = 0;
-							$partial_prediction = 0;
-							$predicted_project_id = -1;
-							
+								
 							// on exclut le week-end de la prédiction : il est normal de ne pas avoir de cra le week-end...
 							if( date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $tmp_day ), intval( $param_year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $tmp_day ), intval( $param_year ) ) ) != "7") {
 							
@@ -306,8 +301,16 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 							
 								// on récupère la couleur associée au type de projet
 								$geny_properties = $geny_property->searchProperties("color_project_type_". $geny_project->type_id);
+								if( sizeof( $geny_properties == 1 ) ) {
 								$geny_property = $geny_properties[0];
 								$geny_property_values = $geny_property->getPropertyValues();
+								}
+								else if( sizeof( $geny_properties == 0 ) ) {
+									$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Aucune couleur n'est définie pour le type de projet $geny_project->type_id");
+								}
+								else if ( sizeof( $geny_properties > 1 ) ) {
+									$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id");
+								}
 								
 								// on affiche la case
 								echo '<td style="background-color:'.$geny_property_values[0]->content.'" class="'.$geny_project->id.'">';
@@ -356,6 +359,7 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 							else {
 								echo '<td class="empty"><div id="case"></div></td>';
 							}
+							unset( $projects_list );
 						}
 						echo "</tr>";
 					}
