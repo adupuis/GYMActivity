@@ -1,6 +1,6 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
-//  adupuis@genymobile.com
+//  Copyright (C) 2011 by GENYMOBILE & Jean-Charles Leneveu
+//  jcleneveu@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,6 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -34,31 +32,31 @@
 		</p>
 		 <script>
 			jQuery(document).ready(function(){
-				$("#formID").validationEngine('init');
-				// binds form submission and fields to the validation engine
-				$("#formID").validationEngine('attach');
+				$("#property_add_form").validationEngine('init');
+				$("#property_add_form").validationEngine('attach');
 			});
-			
 		</script>
-		<form id="formID" action="loader.php?module=property_edit" method="post">
+		<form id="property_add_form" action="loader.php?module=property_edit" method="post">
 			<input type="hidden" name="create_property" value="true" />
 			<p>
 				<label for="property_name">Nom</label>
-				<input name="property_name" style="padding:4px 0 4px 0;" id="property_name" type="text" class="validate[required] text-input" />
+				<input name="property_name" id="property_name" type="text" class="validate[required] text-input" />
 			</p>
 			
 			<p>
 				<label for="property_label">Label</label>
-				<input name="property_label" style="padding:4px 0 4px 0;" id="property_label" type="text" class="validate[required] text-input" />
+				<input name="property_label" id="property_label" type="text" class="validate[required] text-input" />
 			</p>
 			
 			<p>
 				<label for="property_type">Type</label>
 				<select name="property_type" class="chzn-select" id="property_type" class="validate[required] select-input">
-				<?php $propertyTypes = new GenyPropertyType();
-				foreach($propertyTypes->getPropertyTypesListWithRestrictions(array()) as $type ) {
-				echo '<option value="' . $type->id . '">' . $type->name . '</option>';
-				} ?>
+				<?php
+					$geny_property_type = new GenyPropertyType();
+					foreach($geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
+						echo '<option value="' . $tmp_property_type->id . '">' . $tmp_property_type->name . '</option>';
+					}
+				?>
 				</select>
 			</p>
 			

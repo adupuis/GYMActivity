@@ -1,6 +1,6 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
-//  adupuis@genymobile.com
+//  Copyright (C) 2012 by GENYMOBILE & Jean-Charles Leneveu
+//  jcleneveu@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -18,213 +18,272 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-
-
-$properties = new GenyProperty();
-$propertyValue = new GenyPropertyValue();
-$propertyType = new GenyPropertyType();
+// déclaration des variables générales
+$loaded_geny_property_id = -1; // identifiant de la propriété qui va être chargée dans le formulaire html
+$geny_property = new GenyProperty();
+$geny_property_option = new GenyPropertyOption();
+$geny_property_value = new GenyPropertyValue();
+$geny_property_type = new GenyPropertyType();
+$geny_property_type_id = -1;
+$geny_properties = array();
+$geny_property_options = array();
+$geny_property_values = array();
 $gritter_notifications = array();
 
-if( isset($_POST['create_property']) && $_POST['create_property'] == "true" ){
-	if( isset($_POST['property_name']) && $_POST['property_name'] != "" && isset($_POST['property_label']) && $_POST['property_label'] != "" && isset($_POST['property_type']) && $_POST['property_type'] != "" ){
-		if( $properties->insertNewProperty($_POST['property_name'], $_POST['property_label'], $_POST['property_type']) ){
-			$properties->loadPropertyByName($_POST['property_name']);
-			$propertyValue->insertNewPropertyValue("", $properties->id);
-			$gritter_notifications[] = array('status'=>'success', 'title' => 'Propriétée créé avec succès.','msg'=>"La propriété a été correctement créé.");
-			$properties->loadPropertyByName($_POST['property_name']);
+// chargement des actions à effectuer sur la propriété
+$param_action_create_property = GenyTools::getParam('create_property', 'false');
+$param_action_load_property = GenyTools::getParam('load_property', 'false');
+$param_action_edit_property = GenyTools::getParam('edit_property', 'false');
+
+// chargement des informations de la propriété à créer/éditer/charger
+$param_property_name = GenyTools::getParam('property_name', '');
+$param_property_value = GenyTools::getParam('property_value', '');
+$param_property_label = GenyTools::getParam('property_label', '');
+$param_property_type = GenyTools::getParam('property_type', -1);
+$param_property_id = GenyTools::getParam('property_id', -1);
+if(is_array($param_property_value)) {
+	$param_property_values = $param_property_value;
+}
+
+
+// Cas n°1 : création d'une nouvelle propriété (et de sa valeur associée)
+if( $param_action_create_property == "true" ) {
+	if( $param_property_name != "" && $param_property_label != "" && $param_property_type != -1 && is_numeric( $param_property_type ) ) {
+		$loaded_geny_property_id = intval( $geny_property->insertNewProperty( $param_property_name, $param_property_label, $param_property_type ) );
+		if( $loaded_geny_property_id != GENYMOBILE_FALSE ) {
+			if( $geny_property_value->insertNewPropertyValue( "", $loaded_geny_property_id ) != GENYMOBILE_FALSE ) {
+				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Propriété créée avec succès.','msg'=>"La propriété a été correctement créée." );
+			}
+			else {
+				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur lors de la création de la valeur de la propriété','msg'=>"La propriété a été correctement créé mais la valeur rattachée à cette propriété n'a pas pu être crée." );
+			}
 		}
 		else{
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur.','msg'=>"Erreur lors de la création de la propriété.");
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur.','msg'=>"Erreur lors de la création de la propriété." );
 		}
 	}
 	else {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur.','msg'=>"Certains champs obligatoires sont manquant. Merci de les remplir.");
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur.','msg'=>"Certains champs obligatoires sont manquant ou mal renseignés. Merci de les remplir." );
 	}
 }
-else if( isset($_POST['load_property']) && $_POST['load_property'] == "true" ){
-	if(isset($_POST['property_id'])){
-		$properties->loadPropertyById($_POST['property_id']);
+
+
+// Cas n°2 : chargement d'une propriété
+else if( $param_action_load_property == "true" ) {
+	if( $param_property_id != -1 && is_numeric( $param_property_id ) ) {
+		$loaded_geny_property_id = intval( $param_property_id );
 	}
 	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Chargement impossible','msg'=>"Impossible de charger la propriété : id non spécifié.");
+		$gritter_notifications[] = array('status'=>'error', 'title' => 'Chargement impossible','msg'=>"Impossible de charger la propriété : id non spécifié ou non correctement typé.");
 	}
 }
-else if( isset($_GET['load_property']) && $_GET['load_property'] == "true" ){
-	if(isset($_GET['property_id'])){
-		$properties->loadPropertyById($_GET['property_id']);
-	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Chargement impossible','msg'=>"Impossible de charger la propriété : id non spécifié.");
-	}
-}
-else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
+
+
+// Cas n°3 : édition d'une propriété
+else if( $param_action_edit_property == "true" ) {
 	
-	if(isset($_POST['property_id'])){
+	if( $param_property_id != -1 && is_numeric( $param_property_id ) ) {
 		
-		$properties->loadPropertyById($_POST['property_id']);
+		// chargement de la propriété
+		$loaded_geny_property_id = intval( $param_property_id );
+		$geny_property->loadPropertyById( $loaded_geny_property_id );
 		
-		if( isset($_POST['property_name']) && $_POST['property_name'] != "" && $properties->name != $_POST['property_name'] ){
-			$properties->updateString('property_name',$_POST['property_name']);
+		// par défaut, on considère qu'on n'a pas touché aux valeurs de la propriété
+		$are_geny_property_values_edited = false;
+		$are_geny_property_values_successfully_updated = false;
+		
+		// édition du nom
+		if( $param_property_name != "" && $geny_property->name != $param_property_name ) {
+			$geny_property->updateString( 'property_name', $param_property_name );
 		}
 		
-		if( isset($_POST['property_label']) && $_POST['property_label'] != "" && $properties->label != $_POST['property_name'] ){
-			$properties->updateString('property_label',$_POST['property_label']);
+		// édition du label
+		if( $param_property_label != "" && $geny_property->label != $param_property_label ) {
+			$geny_property->updateString( 'property_label', $param_property_label );
 		}
 		
-		if( isset($_POST['property_type']) && $_POST['property_type'] != "" && $properties->type_id != $_POST['property_type'] ){
-			$properties->updateInt('property_type_id',intval($_POST['property_type']));
+		// édition du type (WARNING : le type est un int)
+		if( $param_property_type != -1 && $geny_property->type_id != $param_property_type && is_numeric( $param_property_type ) ) {
+			$geny_property->updateInt( 'property_type_id', intval( $param_property_type ) );
 		}
 		
-		if( isset($_POST['property_value']) && $_POST['property_value'] != "" ){
+		// édition de la ou les valeur(s) de la propriété
+		if( $param_property_value != "" ) {
 		
-			$vals = $properties->getPropertyValues();
-									
-			if( isset($_POST['property_type']) ) $proptype = $_POST['property_type'];
-			else $proptype = $properties->type_id;
+			// récupération des valeurs et du type de valeurs
+			$geny_property_values = $geny_property->getPropertyValues();
+			if( $param_property_type != -1 && is_numeric( $param_property_type ) ) {
+				$geny_property_type_id = intval( $param_property_type );
+			}
+			else {
+				$geny_property_type_id = intval( $geny_property->type_id );
+			}
 			
-			switch ( $proptype ) {
+			// les valeurs sont gérées différemment en fonction du type
+			switch ( $geny_property_type_id ) {
 			
-			case 1: // BOOL
-				if($_POST['property_value'] == "0" || $_POST['property_value'] == "false") $string="false";
-				else $string="true";
-				if(count($vals)>1)
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if(count($vals) == 0)
-				{
-					$vals = new GenyPropertyValue;
-					$vals->insertNewPropertyValue('true', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if($vals[0]->content != $string)
-				{
-					$vals[0]->updateString('property_value_content',$string);
-					$vals[0]->commitUpdates();
-				}
-				break;
-				
-			case 2: // COMBOBOX
-				if(count($vals) != count($_POST['property_value']))
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = new GenyPropertyValue;
-					foreach($_POST['property_value'] as $v)
-						$vals->insertNewPropertyValue('0', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				$cpt = -1;
-				foreach($_POST['property_value'] as $e) {
-					$cpt++;
-					if( is_numeric( $e ) &&  $e != "")
-					{
-						$vals[$cpt]->updateString('property_value_content',$e);
-						$vals[$cpt]->commitUpdates();
+				case 1: // BOOL
+					
+					$geny_property->setNumberOfPropertyValues( 1 );
+					$geny_property_values = $geny_property->getPropertyValues();
+					$geny_property_value = $geny_property_values[0];
+					
+					// on détermine la nouvelle valeur (true ou false) de la propriété
+					if( $param_property_value == "0" || $param_property_value == "false" ) {
+						$new_geny_property_value = "false";
 					}
-				}
-				break;
-			
-			case 3: // SELECT
-				if(count($vals)>1)
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if(count($vals) == 0)
-				{
-					$vals = new GenyPropertyValue;
-					$vals->insertNewPropertyValue('0', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if( is_numeric( $_POST['property_value'] ) && $_POST['property_value'] != $vals[0]->content && $_POST['property_value'] != "")
-				{
-					$vals[0]->updateString('property_value_content',$_POST['property_value']);
-					$vals[0]->commitUpdates();
-				}
-				break;
-			
-			case 4; // SHORT_TEXT
-				if(count($vals)>1)
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if(count($vals) == 0)
-				{
-					$vals = new GenyPropertyValue;
-					$vals->insertNewPropertyValue('not defined', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if( $_POST['property_value'] != $vals[0]->content )
-				{
-					$vals[0]->updateString('property_value_content',$_POST['property_value']);
-					$vals[0]->commitUpdates();
-				}
-				break;
-			
-			case 5; // TEXTAREA
-				if(count($vals)>1)
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if(count($vals) == 0)
-				{
-					$vals = new GenyPropertyValue;
-					$vals->insertNewPropertyValue('', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if( $_POST['property_value'] != "" && $_POST['property_value'] != $vals->content)
-				{
-					$vals[0]->updateString('property_value_content',$_POST['property_value']);
-					$vals[0]->commitUpdates();
-				}
-				break;
-			
-			case 6; // DATE
-				if(count($vals)>1)
-				{
-					foreach($vals as $v)
-						$v->deletePropertyValue($v->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if(count($vals) == 0)
-				{
-					$vals = new GenyPropertyValue;
-					$vals->insertNewPropertyValue('', $properties->id);
-					$vals = $properties->getPropertyValues();
-				}
-				if( preg_match( '/^\d{4}-\d{1,2}-\d{1,2}$/', $_POST['property_value'] ) && $_POST['property_value'] != $vals[0]->content )
-				{
-					$vals[0]->updateString('property_value_content',$_POST['property_value']);
-					$vals[0]->commitUpdates();
-				}
-				else if(!preg_match( '/^\d{4}-\d{1,2}-\d{1,2}$/', $vals[0]->content ))
-				{
-					$vals[0]->updateString('property_value_content',"0000-00-00");
-					$vals[0]->commitUpdates();
-				}
-				break;
-			    
-			default: // problème
-				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur : mauvais type de propriété");
-				break;
-			    
+					else {
+						$new_geny_property_value = "true";
+					}
+					
+					// si la nouvelle valeur est différente de l'ancienne, on la met à jour
+					if( $geny_property_value->content != $new_geny_property_value ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString( 'property_value_content', $new_geny_property_value );
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					break;
+					
+				case 2: // SELECT MULTIPLE
+				
+					// on règle le nombre de valeurs en fonction du tableau transmis en paramètre
+					$geny_property->setNumberOfPropertyValues( count( $param_property_values ) );
+					$geny_property_values = $geny_property->getPropertyValues();
+					
+					// par défaut, on considère que tout est bien
+					$are_geny_property_values_successfully_updated = true;
+					$are_geny_property_values_edited = true;
+					
+					$tmp_property_value_id_cpt = 0;
+						
+					foreach( $param_property_values as $tmp_property_value ) {
+						if( is_numeric( $tmp_property_value ) &&  $tmp_property_value != "") {
+							$geny_property_values[$tmp_property_value_id_cpt]->updateString( 'property_value_content', $tmp_property_value );
+							if( ! $geny_property_values[$tmp_property_value_id_cpt]->commitUpdates() ) {
+								$are_geny_property_values_successfully_updated = false;
+							}
+						}
+						else {
+							$param_property_values[$tmp_property_value_id_cpt]->deletePropertyValue();
+						}
+						$tmp_property_value_id_cpt++;
+					}
+					
+					if( $are_geny_property_values_successfully_updated ) {
+						$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur(s) éditée(s)','msg'=>"Valeur(s) éditée(s) avec succès");
+					}
+					else {
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'au moins une valeur");
+					}				
+					break;
+				
+				case 3: // SELECT
+				
+					$geny_property->setNumberOfPropertyValues(1);
+					$geny_property_values = $geny_property->getPropertyValues();
+					$geny_property_value = $geny_property_values[0];
+					
+					if( is_numeric( $param_property_value ) && $param_property_value != $geny_property_value->content && $param_property_value != "" ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString( 'property_value_content', $param_property_value );
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					break;
+				
+				case 4; // SHORT_TEXT
+					
+					$geny_property->setNumberOfPropertyValues(1);
+					$geny_property_values = $geny_property->getPropertyValues();
+					$geny_property_value = $geny_property_values[0];
+					
+					if( $param_property_value != $geny_property_value->content ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString( 'property_value_content', $param_property_value );
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					break;
+				
+				case 5; // TEXTAREA
+				
+					$geny_property->setNumberOfPropertyValues(1);
+					$geny_property_values = $geny_property->getPropertyValues();
+					$geny_property_value = $geny_property_values[0];
+					
+					if( $param_property_value != "" && $param_property_value != $geny_property_value->content ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString( 'property_value_content', $param_property_value );
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					break;
+				
+				case 6; // DATE
+					
+					$geny_property->setNumberOfPropertyValues(1);
+					$geny_property_values = $geny_property->getPropertyValues();
+					$geny_property_value = $geny_property_values[0];
+					
+					if( preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) && $param_property_value != $geny_property_value->content ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString('property_value_content',$_POST['property_value']);
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					else if(!preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $geny_property_value->content )) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString('property_value_content',"0000-00-00");
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
+						}
+						else {
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
+						}
+					}
+					break;
+				
+				default: // problème : le type spécifié ne correspond à aucun type connu
+					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur : mauvais type de propriété");
+					break;
+				
 			}
 		}
 		
-		if($properties->commitUpdates()){
+		if( $geny_property->commitUpdates() || ( $are_geny_property_values_edited && $are_geny_property_values_successfully_updated ) ) {
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Propriété mise à jour avec succès.");
-			$properties->loadPropertyById($_POST['property_id']);
 		}
-		else{
+		elseif ( !$are_geny_property_values_edited ) {
+			$gritter_notifications[] = array('status'=>'success', 'title' => 'Rien à mettre à jour','msg'=>"Aucun champ n'a été modifié");
+		}
+		else {
 			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la mise à jour de la propriété.");
 		}
 	}
@@ -233,6 +292,18 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 	}
 }
 
+// chargement de la propriété dont on veut afficher les options d'édition (+ valeurs et options rattachées)
+if( $loaded_geny_property_id < 0 ) {
+	$geny_properties = $geny_property->getAllProperties();
+	if( count( $geny_properties > 0 ) ) {
+		$loaded_geny_property_id = $geny_properties[0]->id;
+	}
+}
+$geny_property->loadPropertyById( $loaded_geny_property_id );
+$geny_property_type->loadPropertyTypeById( $geny_property->type_id );
+$geny_property_values = $geny_property->getPropertyValues();
+$geny_property_value = $geny_property_values[0];
+$geny_property_options = $geny_property->getPropertyOptions();
 
 ?>
 
@@ -255,24 +326,19 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 			?>
 		</script>
 		
-		<form id="select_login_form" action="loader.php?module=property_edit" method="post">
+		<form id="select_property_form" action="loader.php?module=property_edit" method="post">
 			<input type="hidden" name="load_property" value="true" />
 			<p>
 				<label for="property_id">Sélection propriété</label>
 
 				<select name="property_id" id="property_id" onChange="submit()" class="chzn-select">
 					<?php
-						$list = $properties->getPropertiesList();
-						foreach( $list as $prop ){
-							if( (isset($_POST['property_id']) && $_POST['property_id'] == $prop->id) || (isset($_GET['property_id']) && $_GET['property_id'] == $prop->id) )
-								echo "<option value=\"".$prop->id."\" selected>".$prop->name."</option>\n";
-							else if( isset($_POST['property_name']) && $_POST['property_name'] == $prop->name )
-								echo "<option value=\"".$prop->id."\" selected>".$prop->name."</option>\n";
+						foreach( $geny_property->getAllProperties() as $tmp_geny_property ){
+							if( $loaded_geny_property_id == $tmp_geny_property->id )
+								echo "<option value=\"".$tmp_geny_property->id."\" selected>".$tmp_geny_property->name."</option>\n";
 							else
-								echo "<option value=\"".$prop->id."\">".$prop->name."</option>\n";
+								echo "<option value=\"".$tmp_geny_property->id."\">".$tmp_geny_property->name."</option>\n";
 						}
-						if( $properties->id < 0 )
-							$properties->loadPropertyById( $list[0]->id );
 					?>
 				</select>
 			</p>
@@ -280,91 +346,100 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 
 		<form id="start" action="loader.php?module=property_edit" method="post" name="form">
 			<input type="hidden" name="edit_property" value="true" />
-			<input type="hidden" name="property_id" value="<?php echo $properties->id ?>" />
+			<input type="hidden" name="property_id" value="<?php echo $loaded_geny_property_id ?>" />
 			<p>
 				<label for="property_name">Name</label>
-				<input name="property_name" style="padding:4px 0 4px 0;" id="property_name" type="text" class="validate[required] text-input" value="<?php echo $properties->name ?>"/>
+				<input name="property_name" id="property_name" type="text" class="validate[required] text-input" value="<?php echo $geny_property->name ?>"/>
 			</p>
 			
 			<p>
 				<label for="property_label">Label</label>
-				<input name="property_label" style="padding:4px 0 4px 0;" id="property_label" type="text" class="validate[required] text-input" value="<?php echo $properties->label ?>"/>
+				<input name="property_label" id="property_label" type="text" class="validate[required] text-input" value="<?php echo $geny_property->label ?>"/>
 			</p>
 			
 			<p>
 				<label for="property_type">Type</label>
 				<select name="property_type" class="chzn-select" id="property_type" class="validate[required] select-input">
-				<?php $propertyTypes = new GenyPropertyType();
-				foreach($propertyTypes->getPropertyTypesListWithRestrictions(array()) as $type ) {
-				echo '<option value="' . $type->id . '"';
-				if($type->id == $properties->type_id) echo ' selected ';
-				echo '>' . $type->name . '</option>';
-				} ?>
+				<?php
+					foreach( $geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
+						echo '<option value="' . $tmp_property_type->id . '"';
+						if( $tmp_property_type->id == $geny_property->type_id ) {
+							echo ' selected ';
+						}
+						echo '>' . $tmp_property_type->name . '</option>';
+					}
+				?>
 				</select>
 			</p>
 
 			<p>
 				<label for="property_value">Valeur</label>
 				<?php
+					$geny_property_type->loadPropertyTypeById($geny_property->type_id);
+					
+					switch($geny_property_type->shortname)
+					{
+						case "PROP_TYPE_BOOL":
+							if( $geny_property_value->content == 'true' ) {
+								$is_true_option_selected = "selected";
+								$is_false_option_selected = "";
+							}
+							else {
+								$is_true_option_selected = "";
+								$is_false_option_selected = "selected";
+							}
+							echo '<select name="property_value" class="chzn-select" id="property_value" class="validate[required] select-input">';
+							echo '<option value="1" ' . $is_true_option_selected . ' >true</option>';
+							echo '<option value="0" ' . $is_false_option_selected . ' >false</option>';
+							echo "</select>";
+							break;
+						
+						case "PROP_TYPE_SHORT_TEXT":
+							echo '<input name="property_value" id="property_value" type="text" class="validate[required] text-input" value="' . $geny_property_value->content . '"/>';
+							break;
+						
+						case "PROP_TYPE_DATE":
+							echo '<input name="property_value" id="property_value" type="text" class="validate[required,custom[date]] text-input" value="' . $geny_property_value->content . '"/>';
+							break;
+						
+						case "PROP_TYPE_LONG_TEXT":
+							echo '<textarea name="property_value" id="property_value" type="text" class="validate[required] text-input">' . $geny_property_value->content . '</textarea>';
+							break;
 
-				$propertyType = new GenyPropertyType;
-				$propertyType->loadPropertyTypeById($properties->type_id);
-				$propertyValue = $properties->getPropertyValues();
-				$propertyOption = $properties->getPropertyOptions();
-				
-				switch($propertyType->shortname)
-				{
-					case "PROP_TYPE_BOOL":
-					if($propertyValue[0]->content == 'true') { $true="selected"; $false = ""; }
-					else { $true=""; $false = "selected"; }
-					echo '<select name="property_value" class="chzn-select" id="property_value" class="validate[required] select-input">';
-					echo '<option value="1" ' . $true . ' >true</option>';
-					echo '<option value="0" ' . $false . ' >false</option>';
-					echo "</select>";
-					break;
-					
-					case "PROP_TYPE_SHORT_TEXT":
-					echo '<input name="property_value" id="property_value" type="text" class="validate[required] text-input" value="' . $propertyValue[0]->content . '"/>';
-					break;
-					
-					case "PROP_TYPE_DATE":
-					echo '<input name="property_value" id="property_value" type="text" class="validate[required,custom[date]] text-input" value="' . $propertyValue[0]->content . '"/>';
-					break;
-					
-					case "PROP_TYPE_LONG_TEXT":
-					echo '<textarea name="property_value" id="property_value" type="text" class="validate[required] text-input">' . $propertyValue[0]->content . '</textarea>';
-					break;
-
-					case "PROP_TYPE_MULTI_SELECT":
-					$multiple = 'multiple="multiple"';
-					$crochet = '[]';
-					
-					case "PROP_TYPE_LIST_SELECT":
-					if(!isset($multiple)) $multiple = "";
-					if(!isset($crochet)) $crochet = "";
-					
-					echo '<select ' . $multiple . ' style="width:350px;" name="property_value'. $crochet . '" class="chzn-select" id="property_value" class="validate[required] select-input">';
-					foreach($propertyOption as $opt) {
-						$select = "";
-						foreach($propertyValue as $v) { if($v->content == $opt->id) $select = "selected"; }
-						echo '<option value="' . $opt->id . '"' . $select . '>' . $opt->content . '</option>';
+						case "PROP_TYPE_MULTI_SELECT":
+							$is_multiple_select = array( 'multiple="multiple"', '[]' );
+						
+						case "PROP_TYPE_LIST_SELECT":
+							if(!isset($is_multiple_select)) {
+								$is_multiple_select = array( '', '' );
+							}
+							
+							echo '<select ' . $is_multiple_select[0] . ' style="width:350px;" name="property_value'. $is_multiple_select[1] . '" class="chzn-select" id="property_value" class="validate[required] select-input">';
+							foreach($geny_property_options as $geny_property_option) {
+								$is_option_selected = "";
+								foreach($geny_property_values as $geny_property_value) {
+									if( $geny_property_value->content == $geny_property_option->id ) {
+										$is_option_selected = "selected";
+									}
+								}
+								echo '<option value="' . $geny_property_option->id . '"' . $is_option_selected . '>' . $geny_property_option->content . '</option>';
+							}
+							echo "</select>";
+							echo '<input type="button" style="padding:4px;position:relative;top:-11px;margin-left:5px;" value="Supprimer" onClick="deletePropertyOption()">';
+							echo "</p>";
+							
+							
+							echo "<p>";
+							echo '<label for="property_option_add">Ajout d\'option</label>';
+							echo '<input type="text" style="padding:4px 0 4px 0;width:350px;" name="new_property_option_label" id="new_property_option_label"><input style="padding:4px;margin-left:5px;" class="button" type="button" value="Ajouter" onClick="addPropertyOption()">';
+							echo "</p>";
+							
+							break;
+						
+						default:
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Type inconnu','msg'=>"Type de valeur non reconnu.");
+							break;
 					}
-					echo "</select>";
-					echo '<input type="button" style="padding:4px;position:relative;top:-11px;margin-left:5px;" value="Supprimer" onClick="rmOpt()">';
-					echo "</p>";
-					
-					
-					echo "<p>";
-					echo '<label for="property_option_add">Ajout d\'option</label>';
-					echo '<input type="text" style="padding:4px 0 4px 0;width:350px;" name="ip" id="ip"><input style="padding:4px;margin-left:5px;" type="button" value="Ajouter" onClick="addOpt()">';
-					echo "</p>";
-					
-					break;
-					
-					default:
-					//ERROR
-					break;
-				}
 				?>
 			</p>
 			
@@ -376,45 +451,51 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 	</p>
 	
 	<script type="text/javascript">
-	<!--
-	function addOpt(){
-		var prop_id = $("#property_id").val();
-		var content = $("#ip").val();
-		if( prop_id > 0 )
-		{
-			var result_of_query = $.get('backend/api/update_property_options.php?prop_id='+prop_id+'&content='+content+'&action=add', function( data ) {
-				$("#property_value").append('<option value='+data+'>'+content+'</option>');
-				$("#ip").val("");
-				$("#property_value").trigger("liszt:updated");
-			},'html');
-		}
-	}
-	function rmOpt(){
-		var id = $("#property_value").val();
-		if($.isArray(id))
-			$.each(id, function(i, id) { 
-				if( id > 0 )
-				{
-					var result_of_query = $.get('backend/api/update_property_options.php?id='+id+'&action=delete', function( data ) {
-						if(data == 1) $("#property_value option[value="+id+"]").remove();
+	
+		function addPropertyOption(){
+			var property_id = $("#property_id").val();
+			var content = $("#new_property_option_label").val();
+			if( property_id > 0 ) {
+				$.get('backend/api/update_property_options.php?prop_id='+property_id+'&content='+content+'&action=add', function( data ) {
+					console.log("status="+data.status);
+					console.log("status_message="+data.status_message);
+					console.log("new_property_option_id"+data.new_property_option_id);
+					if( data.status == "success" ) {
+						$("#property_value").append('<option value='+data.new_property_option_id+'>'+content+'</option>');
+						$("#new_property_option_label").val("");
 						$("#property_value").trigger("liszt:updated");
-					},'html');
-				}
-			});
-		else if( id > 0 )
-		{
-			var result_of_query = $.get('backend/api/update_property_options.php?id='+id+'&action=delete', function( data ) {
-				if(data == 1) $("#property_value option[value="+id+"]").remove();
-				$("#property_value").trigger("liszt:updated");
-			},'html');
+					}
+				},'json');
+			}
 		}
-		
-	$("#property_value").trigger("liszt:updated");
-	}
-	-->
+		function deletePropertyOption(){
+			var selected_option_ids = $("#property_value").val();
+			if( $.isArray( selected_option_ids ) )
+				$.each(selected_option_ids, function(index, selected_option_id) { 
+					if( selected_option_id > 0 ) {
+						$.get('backend/api/update_property_options.php?id='+selected_option_id+'&action=delete', function( data ) {
+							if( data.status == "success" ) {
+								$("#property_value option[value="+selected_option_id+"]").remove();
+								$("#property_value").trigger("liszt:updated");
+							}
+						},'json');
+					}
+				});
+			else {
+				var selected_option_id = selected_option_ids;
+				if( selected_option_id > 0 ) {
+					$.get('backend/api/update_property_options.php?id='+selected_option_id+'&action=delete', function( data ) {
+						if( data.status == "success" ) {
+							$("#property_value option[value="+selected_option_id+"]").remove();
+							$("#property_value").trigger("liszt:updated");
+						}
+					},'json');
+				}
+			}
+		}
 	</script>
 	
-	<?php if($propertyType->id == 6) { ?>
+	<?php if( $geny_property_type->id == 6 ) {  // si on a une date, on utilise datepicker ?>
 	<script type="text/javascript">
 		$(function () {
 			$("#property_value").datepicker();
@@ -425,7 +506,7 @@ else if( isset($_POST['edit_property']) && $_POST['edit_property'] == "true" ){
 			$("#property_value").datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
 			$("#property_value").datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
 			$("#property_value").show();
-			$("#property_value").val("<?php echo $propertyValue[0]->content; ?>");
+			$("#property_value").val("<?php echo $geny_property_value->content; ?>");
 		});
 	</script>
 	<?php } ?>

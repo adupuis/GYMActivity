@@ -171,7 +171,9 @@ class GenyProject extends GenyDatabaseTools {
 		}
 	}
 	public function loadProjectById($id){
-		if($id<1) return GENYMOBILE_FALSE;
+		if($id<1) {
+			return GENYMOBILE_FALSE;
+		}
 		$projects = $this->getProjectsListWithRestrictions(array("project_id=".mysql_real_escape_string($id)));
 		$project = $projects[0];
 		if(isset($project) && $project->id > -1){

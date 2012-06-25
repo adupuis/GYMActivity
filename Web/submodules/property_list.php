@@ -1,6 +1,6 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
-//  adupuis@genymobile.com
+//  Copyright (C) 2012 by GENYMOBILE & Jean-Charles Leneveu
+//  jcleneveu@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -18,10 +18,12 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-
-$property = new GenyProperty();
-$propertyType = new GenyPropertyType();
+$geny_property = new GenyProperty();
+$geny_property_type = new GenyPropertyType();
+$geny_property_option = new GenyPropertyOption();
+$geny_property_value = new GenyPropertyValue();
+$tmp_property_value_string = "";
+$geny_property_values = array();
 
 ?>
 <script>
@@ -74,41 +76,52 @@ $propertyType = new GenyPropertyType();
 				</thead>
 				<tbody>
 				<?php
-					foreach( $property->getPropertiesList() as $prop ){
-						$propertyType->loadPropertyTypeById($prop->type_id);
-						$vals = $prop->getPropertyValues();
-						switch ($propertyType->shortname) {
+					foreach( $geny_property->getAllProperties() as $tmp_geny_property ) {
+						$geny_property_type->loadPropertyTypeById( $tmp_geny_property->type_id );
+						$geny_property_values = $tmp_geny_property->getPropertyValues();
+						switch ( $geny_property_type->shortname ) {
 						
-						case "PROP_TYPE_BOOL" :
-						case "PROP_TYPE_DATE" :
-						case "PROP_TYPE_LONG_TEXT" :
-						case "PROP_TYPE_SHORT_TEXT" :
+							case "PROP_TYPE_BOOL" :
+							case "PROP_TYPE_DATE" :
+							case "PROP_TYPE_LONG_TEXT" :
+							case "PROP_TYPE_SHORT_TEXT" :
+								
+								if( isset( $geny_property_values[0] ) ) {
+									$tmp_property_value_string = $geny_property_values[0]->content;
+								}
+								else {
+									$tmp_property_value_string = "not defined";
+								}
+								break;
 							
-							if(isset($vals[0])) $val = $vals[0]->content;
-							else $val = "not defined";
+							case "PROP_TYPE_LIST_SELECT" :
+							case "PROP_TYPE_MULTI_SELECT" :
+							
+								$tmp_property_value_string = "";
+								$tmp_string_formating_cpt = 0;
+								foreach( $geny_property_values as $geny_property_value ) {
+									if( $tmp_string_formating_cpt > 0 ) {
+										$tmp_property_value_string .= " + ";
+									}
+									$geny_property_option->loadPropertyOptionById( intval( $geny_property_value->content ) );
+									$tmp_property_value_string .= $geny_property_option->content;
+									$tmp_string_formating_cpt++;
+								}
 							break;
-						
-						case "PROP_TYPE_LIST_SELECT" :
-						case "PROP_TYPE_MULTI_SELECT" :
-						
-							$opt = new GenyPropertyOption;
-							$val = "";
-							$cpt=0;
-						    foreach($vals as $v) {
-							if($cpt > 0) $val .= " + ";
-							$opt->loadPropertyOptionById(intval($v->content));
-							$val .= $opt->content;
-							$cpt++;
-						    }
-						    break;
-						    
-						default:
-						
-						    $val = "type not correctly defined";
-						    break;
+							
+							default:
+							
+							$tmp_property_value_string = "type not correctly defined";
+							break;
 						}
 						
-						echo "<tr class='centered'><td>$prop->name</td><td>$val</td><td>$propertyType->shortname</td><td>$prop->label</td><td><a href='loader.php?module=property_edit&load_property=true&property_id=$prop->id'><img src='images/$web_config->theme/property_edit_small.png'></a></td><td><a href='loader.php?module=property_remove&property_id=$prop->id'><img src='images/$web_config->theme/property_remove_small.png'></a></td></tr>\n\t\t\t\t";
+						echo "<tr class='centered'><td>$tmp_geny_property->name</td>";
+						echo "<td>$tmp_property_value_string</td>";
+						echo "<td>$geny_property_type->shortname</td>";
+						echo "<td>$tmp_geny_property->label</td>";
+						echo "<td><a href='loader.php?module=property_edit&load_property=true&property_id=$tmp_geny_property->id'><img src='images/$web_config->theme/property_edit_small.png'></a></td>";
+						echo "<td><a href='loader.php?module=property_remove&property_id=$tmp_geny_property->id'><img src='images/$web_config->theme/property_remove_small.png'></a></td>";
+						echo "</tr>";
 					}
 				?>
 				</tbody>

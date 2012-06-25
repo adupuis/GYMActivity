@@ -1,7 +1,7 @@
 <?php
 
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
-//  adupuis@genymobile.com
+//  Copyright (C) 2011 by GENYMOBILE & Jean-Charles Leneveu
+//  jcleneveu@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -29,49 +29,82 @@ include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
 
 try {
-	if($auth_granted){
-		$tmp_prop_option = new GenyPropertyOption();
-		$content = getParam("content",-1);
-		$id = getParam("id");
-		$prop_id = getParam("prop_id");
-		$action = getParam("action","none");
+	if( $auth_granted ) {
+		$geny_property_option = new GenyPropertyOption();
+		$geny_property_option_id = -1;
+		$param_content = getParam("content", "");
+		$param_id = getParam("id", -1);
+		$param_property_id = getParam("prop_id", -1);
+		$param_action = getParam("action", "none");
 		
-		if( $action == "edit"){
-			if($id > 0){
-				$tmp_prop_option->loadPropertyOptionById($id);
-				if( $content != "" ){
-					$tmp_prop_option->updateString("property_option_content",$content);
-					if($tmp_prop_option->commitUpdates()) echo "1";
-					else echo "-1";
-				}
-				else echo "-1";
-			}
-			else echo "-1";
-		}
-		else if( $action == "add"){
-			if($prop_id > 0){
-				if($content != "")
-				{
-					if($tmp_prop_option->insertNewPropertyOption($content, $prop_id))
-					{
-						$tmp_prop_option = $tmp_prop_option->searchPropertyOptions($content);
-						if(count($tmp_prop_option) >= 1) echo $tmp_prop_option[0]->id;
-						else echo "-1";
+		if( $param_action == "edit") {
+			if( $param_id > 0 ) {
+				$geny_property_option->loadPropertyOptionById( $param_id );
+				if( $param_content != "" ) {
+					$geny_property_option->updateString( "property_option_content", $param_content );
+					if( $geny_property_option->commitUpdates() ) {
+						echo json_encode( array( "status" => "success", "status_message" => "Property option have been updated successfully.") );
+						exit;
 					}
-					else echo "-1";
+					else {
+						echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be updated, please check the parameters and server logs." ) );
+						exit;
+					}
 				}
-				else echo "-1";
+				else {
+					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Content field is empty" ) );
+					exit;
+				}
 			}
-			else echo "-1";
-		}
-		else if( $action == "delete" ){
-			if($id > 0){
-				$tmp_prop_option->loadPropertyOptionById($id);
-				if( $tmp_prop_option->deletePropertyOption() > 0 ) echo "1";
+			else {
+				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Id is empty or negative" ) );
+				exit;
 			}
-			else echo "-1";
 		}
-		else echo "-1";
+		else if( $param_action == "add" ) {
+			if( $param_property_id > 0 ) {
+				if( $param_content != "" ) {
+					$geny_property_option_id = $geny_property_option->insertNewPropertyOption( $param_content, $param_property_id );
+					if( $geny_property_option_id != -1 ) {
+						echo json_encode( array( "status" => "success", "status_message" => "Property option have been created successfully.", "new_property_option_id" => $geny_property_option_id ) );
+						exit;
+					}
+					else {
+						echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be created, please check the parameters and server logs." ) );
+						exit;
+					}
+				}
+				else {
+					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Content is empty" ) );
+					exit;
+				}
+			}
+			else {
+				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property Id is empty or negative" ) );
+				exit;
+			}
+		}
+		else if( $param_action == "delete" ) {
+			if( $param_id > 0 ) {
+				$geny_property_option->loadPropertyOptionById( $param_id );
+				if( $geny_property_option->deletePropertyOption() > 0 ) {
+					echo json_encode( array( "status" => "success", "status_message" => "Property option have been deleted successfully." ) );
+					exit;
+				}
+				else {
+					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be deleted, please check the parameters and server logs." ) );
+					exit;
+				}
+			}
+			else {
+				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Id is empty or negative" ) );
+				exit;
+			}
+		}
+		else {
+			echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Action is empty or not properly set" ) );
+			exit;
+		}
 	}
 } catch (Exception $e) {
     echo "Exception: ".$e->getMessage(), "\n";
