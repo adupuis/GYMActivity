@@ -203,31 +203,13 @@ else if( $param_action_edit_property == "true" ) {
 					break;
 				
 				case 4; // SHORT_TEXT
+				case 5; // TEXTAREA
 					
 					$geny_property->setNumberOfPropertyValues(1);
 					$geny_property_values = $geny_property->getPropertyValues();
 					$geny_property_value = $geny_property_values[0];
 					
 					if( $param_property_value != $geny_property_value->content ) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString( 'property_value_content', $param_property_value );
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
-						}
-						else {
-							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
-						}
-					}
-					break;
-				
-				case 5; // TEXTAREA
-				
-					$geny_property->setNumberOfPropertyValues(1);
-					$geny_property_values = $geny_property->getPropertyValues();
-					$geny_property_value = $geny_property_values[0];
-					
-					if( $param_property_value != "" && $param_property_value != $geny_property_value->content ) {
 						$are_geny_property_values_edited = true;
 						$geny_property_value->updateString( 'property_value_content', $param_property_value );
 						if( $geny_property_value->commitUpdates() ) {
@@ -257,16 +239,8 @@ else if( $param_action_edit_property == "true" ) {
 							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
 						}
 					}
-					else if(!preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $geny_property_value->content )) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString('property_value_content',"0000-00-00");
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array('status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès");
-						}
-						else {
-							$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur");
-						}
+					else if(!preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value )) {
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Modification impossible','msg'=>"La valeur insérée ne respecte pas le format de date YYYY-MM-DD");
 					}
 					break;
 				
@@ -303,11 +277,13 @@ $geny_property->loadPropertyById( $loaded_geny_property_id );
 $geny_property_type->loadPropertyTypeById( $geny_property->type_id );
 $geny_property_values = $geny_property->getPropertyValues();
 $geny_property_value = $geny_property_values[0];
-$geny_property_options = $geny_property->getPropertyOptions();
 
 ?>
 
 <div id="mainarea">
+	<style>
+		@import 'styles/<?php echo $web_config->theme ?>/property_edit.css';
+	</style>
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/property_edit.png">
 		<span class="property_edit">
@@ -375,7 +351,7 @@ $geny_property_options = $geny_property->getPropertyOptions();
 			<p>
 				<label for="property_value">Valeur</label>
 				<?php
-					$geny_property_type->loadPropertyTypeById($geny_property->type_id);
+					$geny_property_type->loadPropertyTypeById( $geny_property->type_id );
 					
 					switch($geny_property_type->shortname)
 					{
@@ -410,28 +386,29 @@ $geny_property_options = $geny_property->getPropertyOptions();
 							$is_multiple_select = array( 'multiple="multiple"', '[]' );
 						
 						case "PROP_TYPE_LIST_SELECT":
-							if(!isset($is_multiple_select)) {
+							if( !isset( $is_multiple_select ) ) {
 								$is_multiple_select = array( '', '' );
 							}
 							
-							echo '<select ' . $is_multiple_select[0] . ' style="width:350px;" name="property_value'. $is_multiple_select[1] . '" class="chzn-select" id="property_value" class="validate[required] select-input">';
-							foreach($geny_property_options as $geny_property_option) {
+							echo '<select ' . $is_multiple_select[0] . ' name="property_value'. $is_multiple_select[1] . '" class="chzn-select" id="property_value" class="validate[required] select-input">';
+							foreach( $geny_property->getPropertyOptions() as $tmp_property_option ) {
 								$is_option_selected = "";
 								foreach($geny_property_values as $geny_property_value) {
-									if( $geny_property_value->content == $geny_property_option->id ) {
+									if( $geny_property_value->content == $tmp_property_option->id ) {
 										$is_option_selected = "selected";
 									}
 								}
-								echo '<option value="' . $geny_property_option->id . '"' . $is_option_selected . '>' . $geny_property_option->content . '</option>';
+								echo '<option value="' . $tmp_property_option->id . '"' . $is_option_selected . '>' . $tmp_property_option->content . '</option>';
 							}
 							echo "</select>";
-							echo '<input type="button" style="padding:4px;position:relative;top:-11px;margin-left:5px;" value="Supprimer" onClick="deletePropertyOption()">';
+							echo '<input type="button" id="delete_option_button" value="Supprimer" onClick="deletePropertyOption()">';
 							echo "</p>";
 							
 							
 							echo "<p>";
 							echo '<label for="property_option_add">Ajout d\'option</label>';
-							echo '<input type="text" style="padding:4px 0 4px 0;width:350px;" name="new_property_option_label" id="new_property_option_label"><input style="padding:4px;margin-left:5px;" class="button" type="button" value="Ajouter" onClick="addPropertyOption()">';
+							echo '<input type="text" id="add_option_input" name="new_property_option_label" id="new_property_option_label">';
+							echo '<input id="add_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption()">';
 							echo "</p>";
 							
 							break;

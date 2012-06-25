@@ -15,9 +15,17 @@ td {
 	text-shadow:none;
 }
 
+.empty {
+	background-color:#D8D8D8;
+}
+
 div#case {
 	width:34px;
 	text-align:center;
+}
+
+div#predicted {
+	background-color:black;
 }
 
 div#names {
@@ -29,7 +37,6 @@ div#names {
 
 a.bulle {
 	position:relative;
-	/*color:#396a86;*/
 	text-decoration:none;
 	font-family:arial, verdana, sans-serif;
 	text-align:center;

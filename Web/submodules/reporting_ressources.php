@@ -24,75 +24,6 @@ include_once 'backend/api/ajax_toolbox.php';
 
 setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
 
-function display_span_infos( $project_id, $nb_hours, $predicted ) {
-
-	// variables générales
-	$geny_project = new GenyProject();
-	$geny_client = new GenyClient();
-	$geny_property = new GenyProperty();
-	
-	// chargement des données
-	$geny_project->loadProjectById( $project_id );
-	$geny_client->loadClientById( $geny_project->client_id );
-	
-	// si on a déduit le cra, on affiche un préfix le précisant
-	if( $predicted ) {
-		$prefix = "~ ";
-	}
-	else {
-		$prefix = "";
-	}
-	
-	// récupération de la couleur du span en fonction de type de projet
-	$geny_properties = $geny_property->searchProperties( "color_project_type_" . $geny_project->type_id );
-	$geny_property = $geny_properties[0];
-	$geny_property_values = $geny_property->getPropertyValues();
-	$geny_property_value = $geny_property_values[0];
-	
-	// affichage du div
-	echo '<div style="background-color:' . $geny_property_value->content . '">&nbsp;&nbsp;' . $prefix . $geny_client->name . " - " . $geny_project->name . " : ${nb_hours}h</div>";
-}
-
-function display_month_option( $id_displayed_month, $id_selected_moth = "") {
-	
-	// par défault, on considère que l'option n'est pas séléctionnée
-	$selected = " ";
-	
-	// liste de mois
-	$list_of_months = array(
-		0 => "",
-		1 => "Janvier",
-		2 => "Février",
-		3 => "Mars",
-		4 => "Avril",
-		5 => "Mai",
-		6 => "Juin",
-		7 => "Juillet",
-		8 => "Aout",
-		9 => "Septembre",
-		10 => "Octobre",
-		11 => "Novembre",
-		12 => "Décembre"
-	);
-	
-	// si jamais l'id du mois à afficher est le même que l'id du mois à sélectionner
-	if( $id_selected_moth != "" && $id_displayed_month != "") {
-		if( intval( $id_selected_moth ) == intval( $id_displayed_month ) ) {
-			echo $selected = " selected ";
-		}
-	}
-	
-	// si jamais il n'y avait aucune id de mois à séléctionner, on séléctionne le mois en cours par défault
-	else {
-		if( date( "m" ) == $id_displayed_month ) {
-			echo $selected = " selected ";
-		}
-	}
-	
-	// affichage de l'option
-	echo '<option value="' . $id_displayed_month . '"' . $selected . '>' . $list_of_months[$id_displayed_month] . '</option>';
-}
-
 // déclaration des variables globales
 $reporting_data = array();
 $geny_activity = new GenyActivity();
@@ -134,11 +65,11 @@ if( $param_year != "" && $param_month != "" && is_numeric( $param_month ) && is_
 }
 
 // récupération des ids de status que l'on ne désire pas voir
-$geny_activity_report_status->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+$geny_activity_report_status->loadActivityReportStatusByShortName( 'P_USER_VALIDATION' );
 $ars_p_user_approval_id = $geny_activity_report_status->id;
-$geny_activity_report_status->loadActivityReportStatusByShortName('REMOVED');
+$geny_activity_report_status->loadActivityReportStatusByShortName( 'REMOVED' );
 $ars_removed_id = $geny_activity_report_status->id;
-$geny_activity_report_status->loadActivityReportStatusByShortName('REFUSED');
+$geny_activity_report_status->loadActivityReportStatusByShortName( 'REFUSED' );
 $ars_refused_id = $geny_activity_report_status->id;
 
 foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $ar ){
@@ -215,8 +146,12 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 				<label for="month">Mois</label>
 				<select name="month" id="month" type="text" class="chzn-select"/>
 				<?php
-					for( $month_id = 1; $month_id <= 12; $month_id ++ ) {
-						display_month_option( $month_id, $param_month );
+					for( $tmp_month_id = 1; $tmp_month_id <= 12; $tmp_month_id ++ ) {
+						$is_month_option_selected = "";
+						if( intval( $tmp_month_id ) == intval( $param_month ) ) {
+							echo $is_month_option_selected = " selected ";
+						}
+						echo '<option value="' . $tmp_month_id . '"' . $is_month_option_selected . '>' . strftime( "%B", mktime(1, 1, 1, $tmp_month_id, 1, 1 ) ) . '</option>';
 					}
 				?>
 				</select>
@@ -277,26 +212,26 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 						// on parcourt les données par jour
 						foreach( $tmp_days_data as $tmp_day => $tmp_hours_data ) {
 						
-							if( isset( $tmp_projects_list ) ) {
-								unset( $tmp_projects_list );
+							if( isset( $projects_list ) ) {
+								unset( $projects_list );
 							}
 							$majority_project_id = -1;
-							$tmp_projects_list = array();
+							$projects_list = array();
 							$tmp_top_nb_hour = 0;
 							$tmp_total_nb_hour = 0;
 						
 							// on fait un tableau des projets avec le nb d'heures associées
 							foreach( $tmp_hours_data as $tmp_project_id ) {
-								if( isset( $tmp_projects_list["$tmp_project_id"] ) && $tmp_project_id != -1 ) {
-									$tmp_projects_list["$tmp_project_id"]++;
+								if( isset( $projects_list["$tmp_project_id"] ) && $tmp_project_id != -1 ) {
+									$projects_list["$tmp_project_id"]++;
 								}
 								else if( $tmp_project_id != -1 ) {
-									$tmp_projects_list["$tmp_project_id"] = 1;
+									$projects_list["$tmp_project_id"] = 1;
 								}
 							}
 							
 							// on détermine le projet qui a eu le plus d'heure
-							foreach( $tmp_projects_list as $tmp_project_id => $tmp_nb_hour ) {
+							foreach( $projects_list as $tmp_project_id => $tmp_nb_hour ) {
 								if( $tmp_nb_hour > $tmp_top_nb_hour ) {
 									$majority_project_id = $tmp_project_id;
 									$tmp_top_nb_hour = $tmp_nb_hour;
@@ -380,24 +315,46 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 								
 								// si la prédiction a détérminé la couleur de la case, on affiche qu'il s'agit d'une prédiction
 								if( $total_prediction ) {
-									echo '<div style="background-color:black">&nbsp;&nbsp;Prédiction</div>';
+									echo '<div id="predicted">&nbsp;&nbsp;Prédiction</div>';
 								}
 								
 								// quoiqu'il arrive, on affiche les projets des cra déclarés par l'utilisateur
-								foreach( $tmp_projects_list as $id => $o ) {
-									display_span_infos($id, $o, 0);
+								foreach( $projects_list as $tmp_project_id => $tmp_nb_hour ) {
+									// chargement des données
+									$geny_project->loadProjectById( $tmp_project_id );
+									$geny_client->loadClientById( $geny_project->client_id );
+									
+									// récupération de la couleur du span en fonction de type de projet
+									$geny_properties = $geny_property->searchProperties( "color_project_type_" . $geny_project->type_id );
+									$geny_property = $geny_properties[0];
+									$geny_property_values = $geny_property->getPropertyValues();
+									$geny_property_value = $geny_property_values[0];
+									
+									// affichage du div
+									echo '<div style="background-color:' . $geny_property_value->content . '">&nbsp;&nbsp;' . $geny_client->name . " - " . $geny_project->name . " : ${tmp_nb_hour}h</div>";
 								}
 								
 								// si on a fait des prédictions partielles, on affiche les cra que l'on a prédit
 								if( $partial_prediction ) {
-									display_span_infos($predicted_project_id, $partial_prediction, 1);
+									// chargement des données
+									$geny_project->loadProjectById( $predicted_project_id );
+									$geny_client->loadClientById( $geny_project->client_id );
+									
+									// récupération de la couleur du span en fonction de type de projet
+									$geny_properties = $geny_property->searchProperties( "color_project_type_" . $geny_project->type_id );
+									$geny_property = $geny_properties[0];
+									$geny_property_values = $geny_property->getPropertyValues();
+									$geny_property_value = $geny_property_values[0];
+									
+									// affichage du div
+									echo '<div style="background-color:' . $geny_property_value->content . '">&nbsp;&nbsp;~ ' . $geny_client->name . " - " . $geny_project->name . " : ${partial_prediction}h</div>";
 								}
 								
 								echo '</span></a></td>';
 							}
 							//sinon si l'id < 0, on affiche une case grise
 							else {
-								echo '<td style="background-color:#D8D8D8;" class="empty"><div id="case"></div></td>';
+								echo '<td class="empty"><div id="case"></div></td>';
 							}
 						}
 						echo "</tr>";
