@@ -407,7 +407,7 @@ $geny_property_value = $geny_property_values[0];
 							
 							echo "<p>";
 							echo '<label for="property_option_add">Ajout d\'option</label>';
-							echo '<input type="text" id="add_option_input" name="new_property_option_label" id="new_property_option_label">';
+							echo '<input type="text" id="new_property_option_label" name="new_property_option_label" id="new_property_option_label">';
 							echo '<input id="add_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption()">';
 							echo "</p>";
 							
