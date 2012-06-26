@@ -131,5 +131,5 @@ $geny_property_values = array();
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/property_add.dock.widget.php');
+	$bottomdock_items = array( 'backend/widgets/notifications.dock.widget.php','backend/widgets/property_add.dock.widget.php' );
 ?>

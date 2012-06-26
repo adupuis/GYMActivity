@@ -24,9 +24,9 @@ $geny_property_value = new GenyPropertyValue();
 $gritter_notifications = array();
 
 // chargement des paramètres
-$param_action_force_remove = GenyTools::getParam('force_remove', "false");
-$param_action_remove_property = GenyTools::getParam('remove_property', "false");
-$param_geny_property_id = GenyTools::getParam('property_id', -1);
+$param_action_force_remove = GenyTools::getParam( 'force_remove', "false" );
+$param_action_remove_property = GenyTools::getParam( 'remove_property', "false" );
+$param_geny_property_id = GenyTools::getParam( 'property_id', -1 );
 
 if( $param_action_remove_property == "true" ) {
 	if( $param_geny_property_id != -1 && is_numeric( $param_geny_property_id ) ) {
@@ -35,18 +35,18 @@ if( $param_action_remove_property == "true" ) {
 			$geny_property->loadPropertyById( $param_geny_property_id );
 		
 			if( $geny_property->deleteProperty() ) {
-				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Propriété supprimée avec succès.");
+				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Propriété supprimée avec succès." );
 			}
 			else {
-				$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la propriété de la table Properties.");
+				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur durant la suppression de la propriété de la table Properties." );
 			}
 		}
 		else {
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours.");
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Veuillez cochez la case acquittant votre compréhension de la portée de l'opération en cours." );
 		}
 	}
 	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de supprimer la propriété ','msg'=>"id non spécifié.");
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Impossible de supprimer la propriété ','msg'=>"id non spécifié." );
 	}
 }
 
@@ -104,5 +104,5 @@ if( $param_action_remove_property == "true" ) {
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/property_list.dock.widget.php','backend/widgets/property_add.dock.widget.php');
+	$bottomdock_items = array( 'backend/widgets/notifications.dock.widget.php','backend/widgets/property_list.dock.widget.php','backend/widgets/property_add.dock.widget.php' );
 ?>

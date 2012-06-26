@@ -22,7 +22,7 @@
 
 include_once 'backend/api/ajax_toolbox.php';
 
-setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
+setlocale( LC_TIME, 'fr_FR.utf8', 'fra' ); 
 
 // déclaration des variables globales
 $reporting_data = array();
@@ -58,10 +58,10 @@ if( $param_year != "" && $param_month != "" && is_numeric( $param_month ) && is_
 			$end_date = $ressources_end_date;
 		}
 		else
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : La date de fin doit être supérieure ou égale à la date de début de la période rapportée.");
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : La date de fin doit être supérieure ou égale à la date de début de la période rapportée." );
 	}
 	else
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide.");
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide." );
 }
 
 // récupération des ids de status que l'on ne désire pas voir
@@ -75,14 +75,14 @@ $ars_refused_id = $geny_activity_report_status->id;
 foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $tmp_activity_report ){
 	
 	// on charge l'activité associée 
-	$geny_activity->loadActivityById($tmp_activity_report->activity_id);
+	$geny_activity->loadActivityById( $tmp_activity_report->activity_id );
 	
 	// restriction par rapport à la date
 	if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ) {
 	
 		// on charge toutes les informations rattachées à cet activity_report
 		$geny_profile->loadProfileById( $tmp_activity_report->profile_id );
-		$geny_assignement->loadAssignementById($geny_activity->assignement_id);
+		$geny_assignement->loadAssignementById( $geny_activity->assignement_id );
 		$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_activity_report->profile_id );
 		$tmp_numeric_activity_load = intval( $geny_activity->load );
 		$day_act = intval( substr( $geny_activity->activity_date, 8, 2 ) );
@@ -164,7 +164,7 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 						echo $param_year;
 					}
 					else {
-						echo date("Y");
+						echo date( "Y" );
 					}
 				?>"/>
 			</p>
@@ -300,16 +300,16 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 							if( $majority_project_id > 0 ) {
 							
 								// on récupère la couleur associée au type de projet
-								$geny_properties = $geny_property->searchProperties("color_project_type_". $geny_project->type_id);
+								$geny_properties = $geny_property->searchProperties( "color_project_type_". $geny_project->type_id );
 								if( sizeof( $geny_properties == 1 ) ) {
 								$geny_property = $geny_properties[0];
 								$geny_property_values = $geny_property->getPropertyValues();
 								}
 								else if( sizeof( $geny_properties == 0 ) ) {
-									$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Aucune couleur n'est définie pour le type de projet $geny_project->type_id");
+									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Aucune couleur n'est définie pour le type de projet $geny_project->type_id" );
 								}
 								else if ( sizeof( $geny_properties > 1 ) ) {
-									$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id");
+									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id" );
 								}
 								
 								// on affiche la case
@@ -371,5 +371,5 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/reporting_cra_completion.dock.widget.php','backend/widgets/reporting_cra_status.dock.widget.php');
+	$bottomdock_items = array( 'backend/widgets/reporting_cra_completion.dock.widget.php','backend/widgets/reporting_cra_status.dock.widget.php' );
 ?>

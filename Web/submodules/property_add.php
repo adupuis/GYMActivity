@@ -67,5 +67,5 @@
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/notifications.dock.widget.php','backend/widgets/property_list.dock.widget.php');
+	$bottomdock_items = array( 'backend/widgets/notifications.dock.widget.php','backend/widgets/property_list.dock.widget.php' );
 ?>
