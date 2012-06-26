@@ -21,12 +21,9 @@
 // déclaration des variables générales
 $loaded_geny_property_id = -1; // identifiant de la propriété qui va être chargée dans le formulaire html
 $geny_property = new GenyProperty();
-$geny_property_option = new GenyPropertyOption();
 $geny_property_value = new GenyPropertyValue();
 $geny_property_type = new GenyPropertyType();
-$geny_property_type_id = -1;
 $geny_properties = array();
-$geny_property_options = array();
 $geny_property_values = array();
 $gritter_notifications = array();
 
@@ -41,8 +38,16 @@ $param_property_value = GenyTools::getParam( 'property_value', '' );
 $param_property_label = GenyTools::getParam( 'property_label', '' );
 $param_property_type = GenyTools::getParam( 'property_type', -1 );
 $param_property_id = GenyTools::getParam( 'property_id', -1 );
-if( is_array( $param_property_value ) ) {
+
+// si la propriété a de multiples valeurs, on homogénéise le nom de variable associé
+if( intval( $param_property_type ) == 2 ) {
 	$param_property_values = $param_property_value;
+	unset( $param_property_value );
+}
+// si à l'inverse, des valeurs multiples sont données en paramètre alors que
+// la propriété ne peut prendre qu'une valeur, on supprime l'ambiguité
+else if( is_array( $param_property_value ) ) {
+	$param_property_value = "";
 }
 
 
@@ -55,7 +60,7 @@ if( $param_action_create_property == "true" ) {
 				$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Propriété créée avec succès.','msg'=>"La propriété a été correctement créée." );
 			}
 			else {
-				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur lors de la création de la valeur de la propriété','msg'=>"La propriété a été correctement créé mais la valeur rattachée à cette propriété n'a pas pu être crée." );
+				$gritter_notifications[] = array( 'status'=>'warning', 'title' => 'Erreur lors de la création de la valeur de la propriété','msg'=>"La propriété a été correctement créé mais la valeur rattachée à cette propriété n'a pas pu être crée." );
 			}
 		}
 		else{
@@ -108,60 +113,60 @@ else if( $param_action_edit_property == "true" ) {
 		}
 		
 		// édition de la ou les valeur(s) de la propriété
-		if( $param_property_value != "" ) {
 		
-			// récupération des valeurs et du type de valeurs
-			$geny_property_values = $geny_property->getPropertyValues();
-			if( $param_property_type != -1 && is_numeric( $param_property_type ) ) {
-				$geny_property_type_id = intval( $param_property_type );
-			}
-			else {
-				$geny_property_type_id = intval( $geny_property->type_id );
-			}
-			
-			// les valeurs sont gérées différemment en fonction du type
-			switch ( $geny_property_type_id ) {
-			
-				case 1: // BOOL
-					
-					$geny_property->setNumberOfPropertyValues( 1 );
-					$geny_property_values = $geny_property->getPropertyValues();
-					$geny_property_value = $geny_property_values[0];
-					
-					// on détermine la nouvelle valeur (true ou false) de la propriété
-					if( $param_property_value == "0" || $param_property_value == "false" ) {
-						$new_geny_property_value = "false";
+		// récupération des valeurs et du type de valeurs
+		$geny_property_values = $geny_property->getPropertyValues();
+		if( $param_property_type != -1 && is_numeric( $param_property_type ) ) {
+			$geny_property_type_id = intval( $param_property_type );
+		}
+		else {
+			$geny_property_type_id = intval( $geny_property->type_id );
+		}
+		
+		// les valeurs sont gérées différemment en fonction du type
+		switch ( $geny_property_type_id ) {
+		
+			case 1: // BOOL
+				
+				$geny_property->setNumberOfPropertyValues( 1 );
+				$geny_property_values = $geny_property->getPropertyValues();
+				$geny_property_value = $geny_property_values[0];
+				
+				// on détermine la nouvelle valeur (true ou false) de la propriété
+				if( $param_property_value == "0" || $param_property_value == "false" ) {
+					$new_geny_property_value = "false";
+				}
+				else {
+					$new_geny_property_value = "true";
+				}
+				
+				// si la nouvelle valeur est différente de l'ancienne, on la met à jour
+				if( $geny_property_value->content != $new_geny_property_value ) {
+					$are_geny_property_values_edited = true;
+					$geny_property_value->updateString( 'property_value_content', $new_geny_property_value );
+					if( $geny_property_value->commitUpdates() ) {
+						$are_geny_property_values_successfully_updated = true;
+						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
 					}
 					else {
-						$new_geny_property_value = "true";
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
 					}
-					
-					// si la nouvelle valeur est différente de l'ancienne, on la met à jour
-					if( $geny_property_value->content != $new_geny_property_value ) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString( 'property_value_content', $new_geny_property_value );
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
-						}
-						else {
-							$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
-						}
-					}
-					break;
-					
-				case 2: // SELECT MULTIPLE
+				}
+				break;
 				
-					// on règle le nombre de valeurs en fonction du tableau transmis en paramètre
-					$geny_property->setNumberOfPropertyValues( count( $param_property_values ) );
-					$geny_property_values = $geny_property->getPropertyValues();
+			case 2: // SELECT MULTIPLE
+			
+				// on règle le nombre de valeurs en fonction du tableau transmis en paramètre
+				$geny_property->setNumberOfPropertyValues( count( $param_property_values ) );
+				$geny_property_values = $geny_property->getPropertyValues();
+				
+				// par défaut, on considère que tout est bien
+				$are_geny_property_values_successfully_updated = true;
+				$are_geny_property_values_edited = true;
+				
+				$tmp_property_value_id_cpt = 0;
 					
-					// par défaut, on considère que tout est bien
-					$are_geny_property_values_successfully_updated = true;
-					$are_geny_property_values_edited = true;
-					
-					$tmp_property_value_id_cpt = 0;
-						
+				if( is_array( $param_property_values ) ) {
 					foreach( $param_property_values as $tmp_property_value ) {
 						if( is_numeric( $tmp_property_value ) &&  $tmp_property_value != "") {
 							$geny_property_values[$tmp_property_value_id_cpt]->updateString( 'property_value_content', $tmp_property_value );
@@ -174,81 +179,81 @@ else if( $param_action_edit_property == "true" ) {
 						}
 						$tmp_property_value_id_cpt++;
 					}
-					
-					if( $are_geny_property_values_successfully_updated ) {
-						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur(s) éditée(s)','msg'=>"Valeur(s) éditée(s) avec succès" );
+				}
+				
+				if( $are_geny_property_values_successfully_updated ) {
+					$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur(s) éditée(s)','msg'=>"Valeur(s) éditée(s) avec succès" );
+				}
+				else {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'au moins une valeur" );
+				}				
+				break;
+			
+			case 3: // SELECT
+			
+				$geny_property->setNumberOfPropertyValues( 1 );
+				$geny_property_values = $geny_property->getPropertyValues();
+				$geny_property_value = $geny_property_values[0];
+				
+				if( is_numeric( $param_property_value ) && $param_property_value != $geny_property_value->content && $param_property_value != "" ) {
+					$are_geny_property_values_edited = true;
+					$geny_property_value->updateString( 'property_value_content', $param_property_value );
+					if( $geny_property_value->commitUpdates() ) {
+						$are_geny_property_values_successfully_updated = true;
+						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
 					}
 					else {
-						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'au moins une valeur" );
-					}				
-					break;
-				
-				case 3: // SELECT
-				
-					$geny_property->setNumberOfPropertyValues( 1 );
-					$geny_property_values = $geny_property->getPropertyValues();
-					$geny_property_value = $geny_property_values[0];
-					
-					if( is_numeric( $param_property_value ) && $param_property_value != $geny_property_value->content && $param_property_value != "" ) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString( 'property_value_content', $param_property_value );
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
-						}
-						else {
-							$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
-						}
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
 					}
-					break;
+				}
+				break;
+			
+			case 4; // SHORT_TEXT
+			case 5; // TEXTAREA
 				
-				case 4; // SHORT_TEXT
-				case 5; // TEXTAREA
-					
-					$geny_property->setNumberOfPropertyValues( 1 );
-					$geny_property_values = $geny_property->getPropertyValues();
-					$geny_property_value = $geny_property_values[0];
-					
-					if( $param_property_value != $geny_property_value->content ) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString( 'property_value_content', $param_property_value );
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
-						}
-						else {
-							$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
-						}
+				$geny_property->setNumberOfPropertyValues( 1 );
+				$geny_property_values = $geny_property->getPropertyValues();
+				$geny_property_value = $geny_property_values[0];
+				
+				if( $param_property_value != $geny_property_value->content ) {
+					$are_geny_property_values_edited = true;
+					$geny_property_value->updateString( 'property_value_content', $param_property_value );
+					if( $geny_property_value->commitUpdates() ) {
+						$are_geny_property_values_successfully_updated = true;
+						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
 					}
-					break;
-				
-				case 6; // DATE
-					
-					$geny_property->setNumberOfPropertyValues( 1 );
-					$geny_property_values = $geny_property->getPropertyValues();
-					$geny_property_value = $geny_property_values[0];
-					
-					if( preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) && $param_property_value != $geny_property_value->content ) {
-						$are_geny_property_values_edited = true;
-						$geny_property_value->updateString( 'property_value_content', $_POST['property_value'] );
-						if( $geny_property_value->commitUpdates() ) {
-							$are_geny_property_values_successfully_updated = true;
-							$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
-						}
-						else {
-							$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
-						}
+					else {
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
 					}
-					else if( !preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) ) {
-						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"La valeur insérée ne respecte pas le format d'une date valide" );
+				}
+				break;
+			
+			case 6; // DATE
+				
+				$geny_property->setNumberOfPropertyValues( 1 );
+				$geny_property_values = $geny_property->getPropertyValues();
+				$geny_property_value = $geny_property_values[0];
+				
+				if( preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) && $param_property_value != $geny_property_value->content ) {
+					$are_geny_property_values_edited = true;
+					$geny_property_value->updateString( 'property_value_content', $_POST['property_value'] );
+					if( $geny_property_value->commitUpdates() ) {
+						$are_geny_property_values_successfully_updated = true;
+						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
 					}
-					break;
-				
-				default: // problème : le type spécifié ne correspond à aucun type connu
-					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur : mauvais type de propriété" );
-					break;
-				
-			}
+					else {
+						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
+					}
+				}
+				else if( !preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) ) {
+					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"La valeur insérée ne respecte pas le format d'une date valide" );
+				}
+				break;
+			
+			default: // problème : le type spécifié ne correspond à aucun type connu
+				$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur : mauvais type de propriété" );
+				break;
+			
 		}
 		
 		if( $geny_property->commitUpdates() || ( $are_geny_property_values_edited && $are_geny_property_values_successfully_updated ) ) {
@@ -276,7 +281,12 @@ if( $loaded_geny_property_id < 0 ) {
 $geny_property->loadPropertyById( $loaded_geny_property_id );
 $geny_property_type->loadPropertyTypeById( $geny_property->type_id );
 $geny_property_values = $geny_property->getPropertyValues();
-$geny_property_value = $geny_property_values[0];
+if( isset( $geny_property_values[0] ) ) {
+	$geny_property_value = $geny_property_values[0];
+}
+else {
+	$geny_property_value = new GenyPropertyValue();
+}
 
 ?>
 
@@ -294,13 +304,6 @@ $geny_property_value = $geny_property_values[0];
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier une propriété d'administration.
 		</p>
-		
-		<script>
-			<?php
-				// Cette fonction est définie dans header.php
-				displayStatusNotifications( $gritter_notifications,$web_config->theme );
-			?>
-		</script>
 		
 		<form id="select_property_form" action="loader.php?module=property_edit" method="post">
 			<input type="hidden" name="load_property" value="true" />
@@ -351,8 +354,6 @@ $geny_property_value = $geny_property_values[0];
 			<p>
 				<label for="property_value">Valeur</label>
 				<?php
-					$geny_property_type->loadPropertyTypeById( $geny_property->type_id );
-					
 					switch( $geny_property_type->shortname )
 					{
 						case "PROP_TYPE_BOOL":
@@ -429,18 +430,29 @@ $geny_property_value = $geny_property_values[0];
 	
 	<script type="text/javascript">
 	
+		<?php displayStatusNotifications( $gritter_notifications,$web_config->theme ); ?>
+	
 		function addPropertyOption(){
 			var property_id = $("#property_id").val();
 			var content = $("#new_property_option_label").val();
 			if( property_id > 0 ) {
 				$.get('backend/api/update_property_options.php?prop_id='+property_id+'&content='+content+'&action=add', function( data ) {
-					console.log("status="+data.status);
-					console.log("status_message="+data.status_message);
-					console.log("new_property_option_id"+data.new_property_option_id);
 					if( data.status == "success" ) {
 						$("#property_value").append('<option value='+data.new_property_option_id+'>'+content+'</option>');
 						$("#new_property_option_label").val("");
 						$("#property_value").trigger("liszt:updated");
+						$.gritter.add( { title: data.title,
+								 text: data.msg,
+								 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+								 sticky: false,
+								 time: ''});
+					}
+					else {
+						$.gritter.add( { title: data.title,
+								 text: data.msg,
+								 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+								 sticky: false,
+								 time: ''});
 					}
 				},'json');
 			}
@@ -454,6 +466,18 @@ $geny_property_value = $geny_property_values[0];
 							if( data.status == "success" ) {
 								$("#property_value option[value="+selected_option_id+"]").remove();
 								$("#property_value").trigger("liszt:updated");
+								$.gritter.add( { title: data.title,
+										 text: data.msg,
+										 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+										 sticky: false,
+										 time: ''});
+							}
+							else {
+								$.gritter.add( { title: data.title,
+										 text: data.msg,
+										 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+										 sticky: false,
+										 time: ''});
 							}
 						},'json');
 					}
@@ -465,6 +489,18 @@ $geny_property_value = $geny_property_values[0];
 						if( data.status == "success" ) {
 							$("#property_value option[value="+selected_option_id+"]").remove();
 							$("#property_value").trigger("liszt:updated");
+							$.gritter.add( { title: data.title,
+								 text: data.msg,
+								 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+								 sticky: false,
+								 time: ''});
+						}
+						else {
+							$.gritter.add( { title: data.title,
+								 text: data.msg,
+								 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+								 sticky: false,
+								 time: ''});
 						}
 					},'json');
 				}

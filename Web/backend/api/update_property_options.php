@@ -43,21 +43,21 @@ try {
 				if( $param_content != "" ) {
 					$geny_property_option->updateString( "property_option_content", $param_content );
 					if( $geny_property_option->commitUpdates() ) {
-						echo json_encode( array( "status" => "success", "status_message" => "Property option have been updated successfully.") );
+						echo json_encode( array( "status" => "success", 'title' => 'Option éditée avec succès', "msg" => "L'option a été éditée avec succès !") );
 						exit;
 					}
 					else {
-						echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be updated, please check the parameters and server logs." ) );
+						echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "L'option n'a pas pu être éditée" ) );
 						exit;
 					}
 				}
 				else {
-					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Content field is empty" ) );
+					echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "Le champ : \"content\" est vide" ) );
 					exit;
 				}
 			}
 			else {
-				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Id is empty or negative" ) );
+				echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "Le champ : \"id\" est vide ou négatif" ) );
 				exit;
 			}
 		}
@@ -66,21 +66,21 @@ try {
 				if( $param_content != "" ) {
 					$geny_property_option_id = $geny_property_option->insertNewPropertyOption( $param_content, $param_property_id );
 					if( $geny_property_option_id != -1 ) {
-						echo json_encode( array( "status" => "success", "status_message" => "Property option have been created successfully.", "new_property_option_id" => $geny_property_option_id ) );
+						echo json_encode( array( "status" => "success", 'title' => 'Option créée avec succès', "msg" => "L'option a été créée avec succès", "new_property_option_id" => $geny_property_option_id ) );
 						exit;
 					}
 					else {
-						echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be created, please check the parameters and server logs." ) );
+						echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "L'option n'a pas pu être créée avec succès" ) );
 						exit;
 					}
 				}
 				else {
-					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Content is empty" ) );
+					echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "Le champ : \"content\" est vide" ) );
 					exit;
 				}
 			}
 			else {
-				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property Id is empty or negative" ) );
+				echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "Le champ : \"property_id\" est vide ou négatif" ) );
 				exit;
 			}
 		}
@@ -88,21 +88,21 @@ try {
 			if( $param_id > 0 ) {
 				$geny_property_option->loadPropertyOptionById( $param_id );
 				if( $geny_property_option->deletePropertyOption() > 0 ) {
-					echo json_encode( array( "status" => "success", "status_message" => "Property option have been deleted successfully." ) );
+					echo json_encode( array( "status" => "success", 'title' => 'Option supprimée', "msg" => "L'option a été supprimée avec succès" ) );
 					exit;
 				}
 				else {
-					echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Property option couldn't be deleted, please check the parameters and server logs." ) );
+					echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "L'option n'a pas pu être supprimée" ) );
 					exit;
 				}
 			}
 			else {
-				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Id is empty or negative" ) );
+				echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "Le champ : \"id\" est vide ou négatif" ) );
 				exit;
 			}
 		}
 		else {
-			echo json_encode( array( "status" => "error", "status_message" => "Fatal error: Action is empty or not properly set" ) );
+			echo json_encode( array( "status" => "error", 'title' => 'Erreur fatale', "msg" => "L'action est vide ou non correctement définie" ) );
 			exit;
 		}
 	}
