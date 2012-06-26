@@ -76,7 +76,7 @@ if( $param_action_remove_property == "true" ) {
 			});
 			
 		</script>
-		<form id="select_login_form" action="loader.php?module=property_remove" method="post">
+		<form id="select_property_form" action="loader.php?module=property_remove" method="post">
 			<input type="hidden" name="remove_property" value="true" />
 			<p>
 				<label for="property_id">Sélection propriété</label>

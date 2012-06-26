@@ -141,7 +141,7 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_ressources_view.css';
 		</style>
-		<form id="formID" action="loader.php?module=reporting_ressources" method="post">
+		<form id="select_ressources_date" action="loader.php?module=reporting_ressources" method="post">
 			<p>
 				<label for="month">Mois</label>
 				<select name="month" id="month" type="text" class="chzn-select"/>
@@ -302,23 +302,36 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 								// on récupère la couleur associée au type de projet
 								$geny_properties = $geny_property->searchProperties( "color_project_type_". $geny_project->type_id );
 								if( sizeof( $geny_properties == 1 ) ) {
-								$geny_property = $geny_properties[0];
-								$geny_property_values = $geny_property->getPropertyValues();
+									$geny_property = $geny_properties[0];
+									$geny_property_values = $geny_property->getPropertyValues();
+									if( sizeof( $geny_property_values ) == 1 ) {
+										$project_type_background_color = $geny_property_values[0]->content;
+									}
+									else if( sizeof( $geny_property_values ) > 1 ) {
+										$project_type_background_color = $geny_property_values[0]->content;
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte" );
+									}
+									else {
+										$project_type_background_color = "white";
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc" );
+									}
 								}
 								else if( sizeof( $geny_properties == 0 ) ) {
-									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Aucune couleur n'est définie pour le type de projet $geny_project->type_id" );
+									$project_type_background_color = "white";
+									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Aucune propriété associé au type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
 								}
-								else if ( sizeof( $geny_properties > 1 ) ) {
-									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id" );
+								else {
+									$project_type_background_color = "white";
+									$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
 								}
 								
 								// on affiche la case
-								echo '<td style="background-color:'.$geny_property_values[0]->content.'" class="'.$geny_project->id.'">';
+								echo '<td style="background-color:' . $project_type_background_color . '" class="' . $geny_project->id . '">';
 								echo '<a href="#" class="bulle"><div id="case">'.$majority_project_id.'</div><span>';
 								
 								// si la prédiction a détérminé la couleur de la case, on affiche qu'il s'agit d'une prédiction
 								if( $total_prediction ) {
-									echo '<div id="predicted">&nbsp;&nbsp;Prédiction</div>';
+									echo '<div id="predicted-span-info">Prédiction</div>';
 								}
 								
 								// quoiqu'il arrive, on affiche les projets des cra déclarés par l'utilisateur
@@ -328,13 +341,33 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 									$geny_client->loadClientById( $geny_project->client_id );
 									
 									// récupération de la couleur du span en fonction de type de projet
-									$geny_properties = $geny_property->searchProperties( "color_project_type_" . $geny_project->type_id );
-									$geny_property = $geny_properties[0];
-									$geny_property_values = $geny_property->getPropertyValues();
-									$geny_property_value = $geny_property_values[0];
+									$geny_properties = $geny_property->searchProperties( "color_project_type_". $geny_project->type_id );
+									if( sizeof( $geny_properties == 1 ) ) {
+										$geny_property = $geny_properties[0];
+										$geny_property_values = $geny_property->getPropertyValues();
+										if( sizeof( $geny_property_values ) == 1 ) {
+											$project_type_background_color = $geny_property_values[0]->content;
+										}
+										else if( sizeof( $geny_property_values ) > 1 ) {
+											$project_type_background_color = $geny_property_values[0]->content;
+											$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte" );
+										}
+										else {
+											$project_type_background_color = "white";
+											$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc" );
+										}
+									}
+									else if( sizeof( $geny_properties == 0 ) ) {
+										$project_type_background_color = "white";
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Aucune propriété associé au type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
+									}
+									else {
+										$project_type_background_color = "white";
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
+									}
 									
 									// affichage du div
-									echo '<div style="background-color:' . $geny_property_value->content . '">&nbsp;&nbsp;' . $geny_client->name . " - " . $geny_project->name . " : ${tmp_nb_hour}h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $geny_client->name . " - " . $geny_project->name . " : ${tmp_nb_hour}h</div>";
 								}
 								
 								// si on a fait des prédictions partielles, on affiche les cra que l'on a prédit
@@ -344,13 +377,33 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 									$geny_client->loadClientById( $geny_project->client_id );
 									
 									// récupération de la couleur du span en fonction de type de projet
-									$geny_properties = $geny_property->searchProperties( "color_project_type_" . $geny_project->type_id );
-									$geny_property = $geny_properties[0];
-									$geny_property_values = $geny_property->getPropertyValues();
-									$geny_property_value = $geny_property_values[0];
+									$geny_properties = $geny_property->searchProperties( "color_project_type_". $geny_project->type_id );
+									if( sizeof( $geny_properties == 1 ) ) {
+										$geny_property = $geny_properties[0];
+										$geny_property_values = $geny_property->getPropertyValues();
+										if( sizeof( $geny_property_values ) == 1 ) {
+											$project_type_background_color = $geny_property_values[0]->content;
+										}
+										else if( sizeof( $geny_property_values ) > 1 ) {
+											$project_type_background_color = $geny_property_values[0]->content;
+											$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte" );
+										}
+										else {
+											$project_type_background_color = "white";
+											$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc" );
+										}
+									}
+									else if( sizeof( $geny_properties == 0 ) ) {
+										$project_type_background_color = "white";
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Aucune propriété associé au type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
+									}
+									else {
+										$project_type_background_color = "white";
+										$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur','msg'=>"Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id ! Couleur par défaut : blanc" );
+									}
 									
 									// affichage du div
-									echo '<div style="background-color:' . $geny_property_value->content . '">&nbsp;&nbsp;~ ' . $geny_client->name . " - " . $geny_project->name . " : ${partial_prediction}h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">~ ' . $geny_client->name . " - " . $geny_project->name . " : ${partial_prediction}h</div>";
 								}
 								
 								echo '</span></a></td>';

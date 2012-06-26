@@ -320,7 +320,7 @@ $geny_property_value = $geny_property_values[0];
 			</p>
 		</form>
 
-		<form id="start" action="loader.php?module=property_edit" method="post" name="form">
+		<form id="edit_property_form" action="loader.php?module=property_edit" method="post" name="edit_property_form">
 			<input type="hidden" name="edit_property" value="true" />
 			<input type="hidden" name="property_id" value="<?php echo $loaded_geny_property_id ?>" />
 			<p>
