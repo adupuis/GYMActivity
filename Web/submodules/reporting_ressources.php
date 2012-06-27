@@ -57,11 +57,17 @@ if( $param_year != "" && $param_month != "" && is_numeric( $param_month ) && is_
 			$start_date = $ressources_start_date;
 			$end_date = $ressources_end_date;
 		}
-		else
+		else {
+			$start_date = date( "Y-m-01" );
+			$end_date = date( "Y-m-d", mktime( 0, 0, 0, date( "m" )+ 1, 0, date( "Y" ) ) );
 			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : La date de fin doit être supérieure ou égale à la date de début de la période rapportée." );
+		}
 	}
-	else
+	else {
+		$start_date = date( "Y-m-01" );
+		$end_date = date( "Y-m-d", mktime( 0, 0, 0, date( "m" )+ 1, 0, date( "Y" ) ) );
 		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide." );
+	}
 }
 
 // récupération des ids de status que l'on ne désire pas voir
@@ -195,11 +201,11 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 					}
 					
 					// affichage du nom
-					$displayed_name = substr( GenyTools::getProfileDisplayName( $geny_profile ), 0, 10 );
-					if( $displayed_name != GenyTools::getProfileDisplayName( $geny_profile ) ) {
-						$displayed_name = $displayed_name . "...";
+					$displayed_profile_name = substr( GenyTools::getProfileDisplayName( $geny_profile ), 0, 10 );
+					if( $displayed_profile_name != GenyTools::getProfileDisplayName( $geny_profile ) ) {
+						$displayed_profile_name = $displayed_profile_name . "...";
 					}
-					echo '<tr><th rowspan="2"><div id="names">' . $displayed_name . '</div></th>';
+					echo '<tr><th rowspan="2"><div id="names">' . $displayed_profile_name . '</div></th>';
 					
 					// on parcourt les données par période (matin/aprem)
 					foreach( $tmp_period_data as $tmp_period => $tmp_days_data ) {
