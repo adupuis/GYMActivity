@@ -257,7 +257,7 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 								}
 								
 								// on détermine le projet à prendre pour les prédictions
-								if( $total_prediction || $partial_prediction ) {
+								if( $partial_prediction ) {
 									$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
 									// cas simple : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
 									if( sizeof( $geny_assignements ) == 1 ) {
