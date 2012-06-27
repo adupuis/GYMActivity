@@ -1,4 +1,4 @@
-function addPropertyOption(){
+function addPropertyOption(theme){
 	var property_id = $("#property_id").val();
 	var content = $("#new_property_option_label").val();
 	if( property_id > 0 ) {
@@ -9,14 +9,14 @@ function addPropertyOption(){
 				$("#property_value").trigger("liszt:updated");
 				$.gritter.add( { title: data.title,
 							text: data.msg,
-							image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+							image: "images/"+theme+"/button_success.png",
 							sticky: false,
 							time: ''});
 			}
 			else {
 				$.gritter.add( { title: data.title,
 							text: data.msg,
-							image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+							image: "images/"+theme+"/button_error.png",
 							sticky: false,
 							time: ''});
 			}
@@ -24,7 +24,7 @@ function addPropertyOption(){
 	}
 }
 
-function deletePropertyOption(){
+function deletePropertyOption(theme){
 	var selected_option_ids = $("#property_value").val();
 	if( $.isArray( selected_option_ids ) )
 		$.each(selected_option_ids, function(index, selected_option_id) { 
@@ -35,14 +35,14 @@ function deletePropertyOption(){
 						$("#property_value").trigger("liszt:updated");
 						$.gritter.add( { title: data.title,
 									text: data.msg,
-									image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+									image: "images/"+theme+"/button_success.png",
 									sticky: false,
 									time: ''});
 					}
 					else {
 						$.gritter.add( { title: data.title,
 									text: data.msg,
-									image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+									image: "images/"+theme+"/button_error.png",
 									sticky: false,
 									time: ''});
 					}
@@ -58,14 +58,14 @@ function deletePropertyOption(){
 					$("#property_value").trigger("liszt:updated");
 					$.gritter.add( { title: data.title,
 							text: data.msg,
-							image: "images/<?php echo $web_config->theme; ?>/button_success.png",
+							image: "images/"+theme+"/button_success.png",
 							sticky: false,
 							time: ''});
 				}
 				else {
 					$.gritter.add( { title: data.title,
 							text: data.msg,
-							image: "images/<?php echo $web_config->theme; ?>/button_error.png",
+							image: "images/"+theme+"/button_error.png",
 							sticky: false,
 							time: ''});
 				}

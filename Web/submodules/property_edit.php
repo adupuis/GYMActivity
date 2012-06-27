@@ -402,14 +402,14 @@ else {
 								echo '<option value="' . $tmp_property_option->id . '"' . $is_option_selected . '>' . $tmp_property_option->content . '</option>';
 							}
 							echo "</select>";
-							echo '<input type="button" id="delete_option_button" value="Supprimer" onClick="deletePropertyOption()">';
+							echo '<input type="button" id="delete_option_button" value="Supprimer" onClick="deletePropertyOption(\''.$web_config->theme.'\')">';
 							echo "</p>";
 							
 							
 							echo "<p>";
 							echo '<label for="property_option_add">Ajout d\'option</label>';
 							echo '<input type="text" id="new_property_option_label" name="new_property_option_label" id="new_property_option_label">';
-							echo '<input id="add_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption()">';
+							echo '<input id="add_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption(\''.$web_config->theme.'\')">';
 							echo "</p>";
 							
 							break;
@@ -431,8 +431,6 @@ else {
 	<script type="text/javascript">
 	
 		<?php
-			displayStatusNotifications( $gritter_notifications, $web_config->theme );
-			
 			// si on a une date, on utilise datepicker
 			if( $geny_property_type->id == 6 ) {
 		?>
@@ -449,14 +447,17 @@ else {
 				});
 		<?php
 			}
-			
+			displayStatusNotifications( $gritter_notifications, $web_config->theme );
+		?>
+	</script>
+		<?php
 			// si on est en présence d'un input de type "select", on rajoute les fonctions js
 			// pour le rajout où la suppression d'option à la volée
 			if( $geny_property_type->id == 2 || $geny_property_type->id == 3 ) {
-				include_once 'js/manage_property_option.js';
+				echo '<script type="text/javascript" src="js/manage_property_option.js"></script>';
 			}
 		?>
-	</script>
+
 	
 	
 	
