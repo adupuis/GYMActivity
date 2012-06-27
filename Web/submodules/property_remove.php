@@ -63,16 +63,11 @@ if( $param_action_remove_property == "true" ) {
 		Ce formulaire permet de <strong>supprimer définitivement</strong> une propriété d'administration de la base de donnée.
 		</p>
 		<script>
-			<?php
-				// Cette fonction est définie dans header.php
-				displayStatusNotifications( $gritter_notifications, $web_config->theme );
-			?>
-		</script>
-		<script>
+			<?php displayStatusNotifications( $gritter_notifications, $web_config->theme ); ?>
+
 			jQuery(document).ready(function(){
-				$("#select_login_form").validationEngine('init');
-				// binds form submission and fields to the validation engine
-				$("#select_login_form").validationEngine('attach');
+				$("#select_property_form").validationEngine('init');
+				$("#select_property_form").validationEngine('attach');
 			});
 			
 		</script>
