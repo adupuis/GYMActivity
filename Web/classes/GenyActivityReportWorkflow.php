@@ -52,7 +52,6 @@ class GenyActivityReportWorkflow extends GenyDatabaseTools {
 	}
 	
 	public function getActivityReportsWorkflowWithRestrictions($restrictions){
-		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
 		$query = "SELECT * FROM ActivityReportWorkflow";
 		if(count($restrictions) > 0){
