@@ -281,7 +281,7 @@ if( $loaded_geny_property_id < 0 ) {
 $geny_property->loadPropertyById( $loaded_geny_property_id );
 $geny_property_type->loadPropertyTypeById( $geny_property->type_id );
 $geny_property_values = $geny_property->getPropertyValues();
-if( isset( $geny_property_values[0] ) ) {
+if( is_array( $geny_property_values ) && isset( $geny_property_values[0] ) ) {
 	$geny_property_value = $geny_property_values[0];
 }
 else {
@@ -311,7 +311,7 @@ else {
 				<label for="property_id">Sélection propriété</label>
 
 				<select name="property_id" id="property_id" onChange="submit()" class="chzn-select">
-					<?php
+					<?php	// on affiche toutes les propriétés et on sélectionne celui qui a été passé en paramètre
 						foreach( $geny_property->getAllProperties() as $tmp_geny_property ){
 							if( $loaded_geny_property_id == $tmp_geny_property->id )
 								echo "<option value=\"".$tmp_geny_property->id."\" selected>".$tmp_geny_property->name."</option>\n";
@@ -339,21 +339,21 @@ else {
 			<p>
 				<label for="property_type">Type</label>
 				<select name="property_type" class="chzn-select" id="property_type" class="validate[required] select-input">
-				<?php
-					foreach( $geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
-						echo '<option value="' . $tmp_property_type->id . '"';
-						if( $tmp_property_type->id == $geny_property->type_id ) {
-							echo ' selected ';
+					<?php	// on affiche tous les types possibles
+						foreach( $geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
+							echo '<option value="' . $tmp_property_type->id . '"';
+							if( $tmp_property_type->id == $geny_property->type_id ) {
+								echo ' selected ';
+							}
+							echo '>' . $tmp_property_type->name . '</option>';
 						}
-						echo '>' . $tmp_property_type->name . '</option>';
-					}
-				?>
+					?>
 				</select>
 			</p>
 
 			<p>
 				<label for="property_value">Valeur</label>
-				<?php
+				<?php	// en fonction du type de propriété, on affiche les inputs différemments
 					switch( $geny_property_type->shortname )
 					{
 						case "PROP_TYPE_BOOL":
@@ -430,99 +430,34 @@ else {
 	
 	<script type="text/javascript">
 	
-		<?php displayStatusNotifications( $gritter_notifications,$web_config->theme ); ?>
-	
-		function addPropertyOption(){
-			var property_id = $("#property_id").val();
-			var content = $("#new_property_option_label").val();
-			if( property_id > 0 ) {
-				$.get('backend/api/update_property_options.php?prop_id='+property_id+'&content='+content+'&action=add', function( data ) {
-					if( data.status == "success" ) {
-						$("#property_value").append('<option value='+data.new_property_option_id+'>'+content+'</option>');
-						$("#new_property_option_label").val("");
-						$("#property_value").trigger("liszt:updated");
-						$.gritter.add( { title: data.title,
-								 text: data.msg,
-								 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
-								 sticky: false,
-								 time: ''});
-					}
-					else {
-						$.gritter.add( { title: data.title,
-								 text: data.msg,
-								 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
-								 sticky: false,
-								 time: ''});
-					}
-				},'json');
-			}
-		}
-		function deletePropertyOption(){
-			var selected_option_ids = $("#property_value").val();
-			if( $.isArray( selected_option_ids ) )
-				$.each(selected_option_ids, function(index, selected_option_id) { 
-					if( selected_option_id > 0 ) {
-						$.get('backend/api/update_property_options.php?id='+selected_option_id+'&action=delete', function( data ) {
-							if( data.status == "success" ) {
-								$("#property_value option[value="+selected_option_id+"]").remove();
-								$("#property_value").trigger("liszt:updated");
-								$.gritter.add( { title: data.title,
-										 text: data.msg,
-										 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
-										 sticky: false,
-										 time: ''});
-							}
-							else {
-								$.gritter.add( { title: data.title,
-										 text: data.msg,
-										 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
-										 sticky: false,
-										 time: ''});
-							}
-						},'json');
-					}
+		<?php
+			displayStatusNotifications( $gritter_notifications, $web_config->theme );
+			
+			// si on a une date, on utilise datepicker
+			if( $geny_property_type->id == 6 ) {
+		?>
+				$(function () {
+					$("#property_value").datepicker();
+					$("#property_value").datepicker( "option", "showAnim", "slideDown" );
+					$("#property_value").datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$("#property_value").datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$("#property_value").datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$("#property_value").datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$("#property_value").datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$("#property_value").show();
+					$("#property_value").val("<?php echo $geny_property_value->content; ?>");
 				});
-			else {
-				var selected_option_id = selected_option_ids;
-				if( selected_option_id > 0 ) {
-					$.get('backend/api/update_property_options.php?id='+selected_option_id+'&action=delete', function( data ) {
-						if( data.status == "success" ) {
-							$("#property_value option[value="+selected_option_id+"]").remove();
-							$("#property_value").trigger("liszt:updated");
-							$.gritter.add( { title: data.title,
-								 text: data.msg,
-								 image: "images/<?php echo $web_config->theme; ?>/button_success.png",
-								 sticky: false,
-								 time: ''});
-						}
-						else {
-							$.gritter.add( { title: data.title,
-								 text: data.msg,
-								 image: "images/<?php echo $web_config->theme; ?>/button_error.png",
-								 sticky: false,
-								 time: ''});
-						}
-					},'json');
-				}
+		<?php
 			}
-		}
+			
+			// si on est en présence d'un input de type "select", on rajoute les fonctions js
+			// pour le rajout où la suppression d'option à la volée
+			if( $geny_property_type->id == 2 || $geny_property_type->id == 3 ) {
+				include_once 'js/manage_property_option.js';
+			}
+		?>
 	</script>
 	
-	<?php if( $geny_property_type->id == 6 ) {  // si on a une date, on utilise datepicker ?>
-	<script type="text/javascript">
-		$(function () {
-			$("#property_value").datepicker();
-			$("#property_value").datepicker( "option", "showAnim", "slideDown" );
-			$("#property_value").datepicker( "option", "dateFormat", "yy-mm-dd" );
-			$("#property_value").datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-			$("#property_value").datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-			$("#property_value").datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-			$("#property_value").datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-			$("#property_value").show();
-			$("#property_value").val("<?php echo $geny_property_value->content; ?>");
-		});
-	</script>
-	<?php } ?>
 	
 	
 	
