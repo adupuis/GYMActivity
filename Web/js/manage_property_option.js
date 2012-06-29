@@ -19,12 +19,12 @@
 
 function addPropertyOption(theme){
 	var property_id = $("#property_id").val();
-	var content = $("#new_property_option_label").val();
+	var content = $("#add_property_option_label").val();
 	if( property_id > 0 ) {
 		$.get('backend/api/update_property_options.php?prop_id='+property_id+'&content='+content+'&action=add', function( data ) {
 			if( data.status == "success" ) {
 				$("#property_value").append('<option value='+data.new_property_option_id+'>'+content+'</option>');
-				$("#new_property_option_label").val("");
+				$("#add_property_option_label").val("");
 				$("#property_value").trigger("liszt:updated");
 				$.gritter.add( { title: data.title,
 							text: data.msg,

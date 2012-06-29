@@ -1,16 +1,16 @@
-input#delete_option_button {
+input#delete_property_option_button {
 	padding:4px;
 	position:relative;
 	top:-11px;
 	margin-left:5px;
 }
 
-input#new_property_option_label {
+input#add_property_option_label {
 	padding:4px 0 4px 0;
 	width:350px;
 }
 
-input#add_option_button {
+input#add_property_option_button {
 	padding:4px;
 	margin-left:5px;
 }

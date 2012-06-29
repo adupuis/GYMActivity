@@ -402,14 +402,14 @@ else {
 								echo '<option value="' . $tmp_property_option->id . '"' . $is_option_selected . '>' . $tmp_property_option->content . '</option>';
 							}
 							echo "</select>";
-							echo '<input type="button" id="delete_option_button" value="Supprimer" onClick="deletePropertyOption(\''.$web_config->theme.'\')">';
+							echo '<input type="button" id="delete_property_option_button" value="Supprimer" onClick="deletePropertyOption(\''.$web_config->theme.'\')">';
 							echo "</p>";
 							
 							
 							echo "<p>";
 							echo '<label for="property_option_add">Ajout d\'option</label>';
-							echo '<input type="text" id="new_property_option_label" name="new_property_option_label" id="new_property_option_label">';
-							echo '<input id="add_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption(\''.$web_config->theme.'\')">';
+							echo '<input type="text" id="add_property_option_label" name="add_property_option_label" id="add_property_option_label">';
+							echo '<input id="add_property_option_button" class="button" type="button" value="Ajouter" onClick="addPropertyOption(\''.$web_config->theme.'\')">';
 							echo "</p>";
 							
 							break;
