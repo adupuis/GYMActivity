@@ -24,16 +24,14 @@ setlocale( LC_TIME, 'fr_FR.utf8', 'fra' );
 
 // déclaration des variables globales
 $reporting_data = array();
-$geny_activity = new GenyActivity();
+$last_prediction = array();
 $geny_project = new GenyProject();
 $geny_project_type = new GenyProjectType();
 $geny_profile = new GenyProfile();
 $geny_client = new GenyClient();
-$geny_activity_report = new GenyActivityReport();
 $geny_assignement = new GenyAssignement();
 $activity_report_ressources = new GenyActivityReportRessources();
 $geny_assignements = array();
-$geny_activity_report_status = new GenyActivityReportStatus();
 $geny_profil_management = new GenyProfileManagementData();
 $gritter_notifications = array();
 
@@ -46,33 +44,46 @@ if( intval( $param_month ) < 10 ) {
 	$param_month = "0" . intval( $param_month );
 }
 
+// si le mois et l'année données par l'utilisateur sont correctes, on crée une chaine "YYYY-MM-" qui va servir à créer facilement des dates à partir de cette chaine
 if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && strlen( $param_month ) == 2 ) {
-	$date_string = $param_year . "-" . $param_month . "-";
+	$month = intval( $param_month );
+	$year = intval( $param_year );
 	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
-
 }
+// sinon par défaut on met le mois et l'année courante
 else {
-	$date_string = date( "Y-m-" );
+	$month = intval( date( "m" ) );
+	$year = intval( date( "Y" ) );
 	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( date( "m" ) ) + 1, 0, intval( date( "Y" ) ) ) );
 }
 
-// initialisation du tableau de données par profil
+// on initialise le tableau de données par profil
 foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
-	// on charge les informations associées au profil
+
+	// on charge les informations annexes associées au profil
 	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
 	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
 	
-	// restriction de profil => on ne prend que les gens qui ont des projets et qui sont disponibles
-	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= $end_date && sizeof( $geny_assignements ) > 0 ) {
+	// restriction de profil => on ne prend que les gens qui ont des projets en cours et qui sont disponibles
+	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= ( date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ) ) && sizeof( $geny_assignements ) > 0 ) {
 		if( !isset( $reporting_data[$tmp_profile->id] ) ) {
 		
+			// si le tableau contenant l'identifiant du dernier projet prédit 
+			// de cet utilisateur n'existe pas, on l'initialise
 			if( !isset( $last_prediction[$tmp_profile->id] ) )
 				$last_prediction[$tmp_profile->id] = -1;
+			
+			// on initialise aussi le tableau contenant les données de reporting
 			$reporting_data[$tmp_profile->id] = array();
+			
+			// on ajoute le profil à la liste des profils actifs
 			$active_profile_ids[] = $tmp_profile->id;
 			
+			// on continue d'initialiser le tableau de reporting
+			// (par demi-journées, puis par journées)
 			// 0 = matin, 1 = aprem
 			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+			
 				// initialisations du tableau du matin/aprem
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day] ) ) {
 					$reporting_data[$tmp_profile->id][$half_day] = array();
@@ -101,11 +112,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 	for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
 	
 		// on concatène la date
-		$tmp_date = $date_string;
-		if($day < 10) {
-			$tmp_date .= "0";
-		}
-		$tmp_date .= $day;
+		$tmp_date = date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) );
 		
 		// on parcourt tous les cras déclarés
 		foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile_id ) as $tmp_ressources ) {
@@ -139,7 +146,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 					}
 				}
 			}
-			// EVENTUELLEMENT SI $tmp_numeric_activity_load != 0, HEURES SUP'
+			// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
 		}
 		
 		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
@@ -183,21 +190,24 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 							$last_prediction[$tmp_profile_id] = $geny_assignements[$tmp_cpt]->project_id;
 						}
 					}
+					// si il n'y a pas de projets associés, l'id est négative
 					else {
 						$predicted_project_id = -1 ;
 					}
 					
+					// ajout du cra "prédit"
 					$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
 														"nb_h" => 4 - $tmp_total_h[$half_day] ,
 														"predicted" => true ) ;
 				}
 			}
 			
-			
-			// on trouve le projet majoritaire en nb d'heures
+			// initialisation du projet majoritaire en nb d'heures
 			$majority_cra = array( "project_id" => -1,
 				"nb_h" => 0,
 				"predicted" => false );
+			
+			// on trouve le projet majoritaire en nb d'heures
 			foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
 				if( $cra["nb_h"] > $majority_cra["nb_h"] ) {
 					$majority_cra = $cra;
@@ -227,7 +237,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
 		Voici le tableau d'utilisation des ressources du mois sélectionné (par défaut le mois en cours).<br/>
-		Reporting d'utilisation des ressources entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
+		Reporting d'utilisation des ressources entre le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, 1, $year ) ); ?></strong> et le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ); ?></strong>.<br/>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_ressources_view.css';
@@ -239,7 +249,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 				<?php
 					for( $tmp_month_id = 1; $tmp_month_id <= 12; $tmp_month_id ++ ) {
 						$is_month_option_selected = "";
-						if( intval( $tmp_month_id ) == intval( $param_month ) ) {
+						if( intval( $tmp_month_id ) == intval( $month ) ) {
 							echo $is_month_option_selected = " selected ";
 						}
 						echo '<option value="' . $tmp_month_id . '"' . $is_month_option_selected . '>' . strftime( "%B", mktime(1, 1, 1, $tmp_month_id, 1, 1 ) ) . '</option>';
