@@ -18,8 +18,6 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-
 include_once 'backend/api/ajax_toolbox.php';
 
 setlocale( LC_TIME, 'fr_FR.utf8', 'fra' ); 
@@ -33,6 +31,7 @@ $geny_profile = new GenyProfile();
 $geny_client = new GenyClient();
 $geny_activity_report = new GenyActivityReport();
 $geny_assignement = new GenyAssignement();
+$activity_report_ressources = new GenyActivityReportRessources();
 $geny_assignements = array();
 $geny_activity_report_status = new GenyActivityReportStatus();
 $geny_profil_management = new GenyProfileManagementData();
@@ -46,85 +45,171 @@ $param_month = getParam( 'month', date( "m" ) );
 if( intval( $param_month ) < 10 ) {
 	$param_month = "0" . intval( $param_month );
 }
-$last_day_of_month = date( 't', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
-$ressources_start_date = $param_year . '-' . $param_month . '-01' ;
-$ressources_end_date = "$param_year-$param_month-$last_day_of_month";
-$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
 
-if( $param_year != "" && $param_month != "" && is_numeric( $param_month ) && is_numeric( $param_year ) ) {
-	if( date_parse( $ressources_start_date ) && date_parse( $ressources_end_date ) ) {
-		if( $ressources_end_date >= $ressources_start_date ){
-			$start_date = $ressources_start_date;
-			$end_date = $ressources_end_date;
-		}
-		else {
-			$start_date = date( "Y-m-01" );
-			$end_date = date( "Y-m-d", mktime( 0, 0, 0, date( "m" )+ 1, 0, date( "Y" ) ) );
-			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Erreur interne : La date de fin doit être supérieure ou égale à la date de début de la période rapportée." );
-		}
-	}
-	else {
-		$start_date = date( "Y-m-01" );
-		$end_date = date( "Y-m-d", mktime( 0, 0, 0, date( "m" )+ 1, 0, date( "Y" ) ) );
-		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide." );
-	}
+if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && strlen( $param_month ) == 2 ) {
+	$date_string = $param_year . "-" . $param_month . "-";
+	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
+
+}
+else {
+	$date_string = date( "Y-m-" );
+	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( date( "m" ) ) + 1, 0, intval( date( "Y" ) ) ) );
 }
 
-// récupération des ids de status que l'on ne désire pas voir
-$geny_activity_report_status->loadActivityReportStatusByShortName( 'P_USER_VALIDATION' );
-$ars_p_user_approval_id = $geny_activity_report_status->id;
-$geny_activity_report_status->loadActivityReportStatusByShortName( 'REMOVED' );
-$ars_removed_id = $geny_activity_report_status->id;
-$geny_activity_report_status->loadActivityReportStatusByShortName( 'REFUSED' );
-$ars_refused_id = $geny_activity_report_status->id;
-
-foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $tmp_activity_report ){
+// initialisation du tableau de données par profil
+foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
+	// on charge les informations associées au profil
+	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
+	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
 	
-	// on charge l'activité associée 
-	$geny_activity->loadActivityById( $tmp_activity_report->activity_id );
-	
-	// restriction par rapport à la date
-	if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ) {
-	
-		// on charge toutes les informations rattachées à cet activity_report
-		$geny_profile->loadProfileById( $tmp_activity_report->profile_id );
-		$geny_assignement->loadAssignementById( $geny_activity->assignement_id );
-		$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_activity_report->profile_id );
-		$tmp_numeric_activity_load = intval( $geny_activity->load );
-		$day_act = intval( substr( $geny_activity->activity_date, 8, 2 ) );
+	// restriction de profil => on ne prend que les gens qui ont des projets et qui sont disponibles
+	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= $end_date && sizeof( $geny_assignements ) > 0 ) {
+		if( !isset( $reporting_data[$tmp_profile->id] ) ) {
 		
-		// restriction par rapport au profil
-		if( $geny_profile->is_active && $geny_profil_management->availability_date <= $end_date ) {
+			if( !isset( $last_prediction[$tmp_profile->id] ) )
+				$last_prediction[$tmp_profile->id] = -1;
+			$reporting_data[$tmp_profile->id] = array();
+			$active_profile_ids[] = $tmp_profile->id;
 			
-			// initialisations du tableau de profile
-			if( !isset( $reporting_data[$geny_profile->id] ) ) {
-				$reporting_data[$geny_profile->id] = array();
-			}
 			// 0 = matin, 1 = aprem
-			for( $period = 0; $period < 2; $period ++ ) {
+			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
 				// initialisations du tableau du matin/aprem
-				if( !isset( $reporting_data[$geny_profile->id][$period] ) ) {
-					$reporting_data[$geny_profile->id][$period] = array();
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day] ) ) {
+					$reporting_data[$tmp_profile->id][$half_day] = array();
 				}
 			
 				// initialisation du tableau suivant les jours
 				for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
-					if( !isset( $reporting_data[$geny_profile->id][$period][$day] ) )
-						$reporting_data[$geny_profile->id][$period][$day] = array();
+					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day] ) )
+						$reporting_data[$tmp_profile->id][$half_day][$day] = array();
 					
-					// initialisation du tableau suivant les heures
-					for( $hour = 0; $hour < 4; $hour ++ ) {
-						if( !isset( $reporting_data[$geny_profile->id][$period][$day][$hour] ) )
-							$reporting_data[$geny_profile->id][$period][$day][$hour] = -1 ;
+					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] ) )
+						$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] = -1 ;
+					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] ) )
+						$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = false ;
+					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
+						$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
+				}
+			}
+		}
+	}
+}
+
+// on parcourt tous les profils actifs
+foreach( $active_profile_ids as $tmp_profile_id ) {
+	// et tous les jours du mois
+	for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
+	
+		// on concatène la date
+		$tmp_date = $date_string;
+		if($day < 10) {
+			$tmp_date .= "0";
+		}
+		$tmp_date .= $day;
+		
+		// on parcourt tous les cras déclarés
+		foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile_id ) as $tmp_ressources ) {
+			// la charge
+			$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
+			
+			// pour chaque demi-journée
+			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+				$tmp_total_h[$half_day] = 0;
+				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
+				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
+					$tmp_total_h[$half_day] += $cra["nb_h"];
+				}
+				// si la période n'est pas remplie
+				if( $tmp_total_h[$half_day] < 4 && $tmp_numeric_activity_load > 0) {
+					// si jamais la charge du cra en cours rentre ENTIEREMENT dans la période
+					if( $tmp_total_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
+						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
+														"nb_h" => $tmp_numeric_activity_load ,
+														"predicted" => false ) ;
+						$tmp_total_h[$half_day] += $tmp_numeric_activity_load;
+						$tmp_numeric_activity_load = 0;
+					}
+					else {
+						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
+														"nb_h" => 4 - $tmp_total_h[$half_day] ,
+														"predicted" => false ) ;
+						$tmp_numeric_activity_load -= 4 - $tmp_total_h[$half_day] ;
+						$tmp_total_h[$half_day] = 4;
+
 					}
 				}
-				// construction des données
-				for( $hour = 0; $hour < 4; $hour ++ ) {
-					if( $reporting_data[$geny_profile->id][$period][$day_act][$hour] == -1 && $tmp_numeric_activity_load > 0 ) {
-						$reporting_data[$geny_profile->id][$period][$day_act][$hour] = $geny_assignement->project_id;
-						$tmp_numeric_activity_load--;
-					}
+			}
+			// EVENTUELLEMENT SI $tmp_numeric_activity_load != 0, HEURES SUP'
+		}
+		
+		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+			if( date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $day ), intval( $param_year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $day ), intval( $param_year ) ) ) != "7") {
+				// si les cras ne sont pas complets, on prédit les cras manquants.
+				$tmp_total_h[$half_day] = 0;
+				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
+				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
+					$tmp_total_h[$half_day] += $cra["nb_h"];
 				}
+				if( $tmp_total_h[$half_day] < 4 ) {
+					$predicted_project_id = -1; // TODO
+					
+					$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
+					// cas simple : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
+					if( sizeof( $geny_assignements ) == 1 ) {
+						$predicted_project_id = $geny_assignements[0]->project_id;
+					}
+					// cas plus tordu : on détermine le projet à considérer en fonction des prédictions précédentes
+					else if( sizeof( $geny_assignements ) >= 2 ) {
+						// si il n'y a pas de précédentes prédiction, on prend le premier projet de l'utilisateur
+						if( $last_prediction[$tmp_profile_id] == -1 ) {
+							$predicted_project_id = $geny_assignements[0]->project_id;
+							$last_prediction[$tmp_profile_id] = $geny_assignements[0]->project_id;
+						}
+						// sinon, on cherche le projet qui suit la précédente prédiction
+						else {
+							// on cherche la prédiction précédente
+							for( $tmp_cpt = 0; $tmp_cpt <= sizeof( $geny_assignements ); $tmp_cpt ++ ) {
+								if( $last_prediction[$tmp_profile_id] == $geny_assignements[$tmp_cpt]->project_id ) {
+									break;
+								}
+							}
+							// on prend le projet suivant
+							$tmp_cpt++;
+							// si on a atteint la fin de la liste de projet, on prend le premier projet
+							if( $tmp_cpt == sizeof( $geny_assignements ) ) {
+								$tmp_cpt = 0;
+							}
+							$predicted_project_id = $geny_assignements[$tmp_cpt]->project_id;
+							$last_prediction[$tmp_profile_id] = $geny_assignements[$tmp_cpt]->project_id;
+						}
+					}
+					else {
+						$predicted_project_id = -1 ;
+					}
+					
+					$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
+														"nb_h" => 4 - $tmp_total_h[$half_day] ,
+														"predicted" => true ) ;
+				}
+			}
+			
+			
+			// on trouve le projet majoritaire en nb d'heures
+			$majority_cra = array( "project_id" => -1,
+				"nb_h" => 0,
+				"predicted" => false );
+			foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
+				if( $cra["nb_h"] > $majority_cra["nb_h"] ) {
+					$majority_cra = $cra;
+				}
+			}
+			
+			// mise à jour de l'id de projet majoritaire en nb d'heures
+			$reporting_data[$tmp_profile_id][$half_day][$day]["majority_project_id"] = $majority_cra["project_id"] ;
+			
+			// si le projet majoritaire a été prédit, on le précise lors de l'affichage
+			if( $majority_cra["predicted"] == true ) {
+				$reporting_data[$tmp_profile_id][$half_day][$day]["total_prediction"] = true;
 			}
 		}
 	}
@@ -188,17 +273,12 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 			?>
 			</tr>
 			<?php
-			
-				$last_predictions = array();
-				
+							
 				// on parcourt les données par profil
 				foreach( $reporting_data as $tmp_profile_id => $tmp_period_data ) {
 					
 					// chargement du profil
 					$geny_profile->loadProfileById( $tmp_profile_id );
-					if( ! isset( $last_predictions[$tmp_profile_id] ) ) {
-						$last_predictions[$tmp_profile_id] = -1;
-					}
 					
 					// affichage du nom
 					$displayed_profile_name = substr( GenyTools::getProfileDisplayName( $geny_profile ), 0, 10 );
@@ -216,131 +296,41 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 						}
 					
 						// on parcourt les données par jour
-						foreach( $tmp_days_data as $tmp_day => $tmp_hours_data ) {
-						
-							$majority_project_id = -1; // id du projet donnant la couleur à la case
-							$projects_list = array(); // listes des projets
-							$total_prediction = 0;
-							$partial_prediction = 0;
-							$predicted_project_id = -1;
-						
-							// on fait un tableau des projets avec le nb d'heures associées
-							foreach( $tmp_hours_data as $tmp_project_id ) {
-								if( isset( $projects_list["$tmp_project_id"] ) && $tmp_project_id != -1 ) {
-									$projects_list["$tmp_project_id"]++;
-								}
-								else if( $tmp_project_id != -1 ) {
-									$projects_list["$tmp_project_id"] = 1;
-								}
-							}
+						foreach( $tmp_days_data as $tmp_day => $tmp_data ) {
 							
-							// on détermine le projet qui a eu le plus d'heure
-							$tmp_top_nb_hour = 0;
-							$tmp_total_nb_hour = 0;
-							foreach( $projects_list as $tmp_project_id => $tmp_nb_hour ) {
-								if( $tmp_nb_hour > $tmp_top_nb_hour ) {
-									$majority_project_id = $tmp_project_id;
-									$tmp_top_nb_hour = $tmp_nb_hour;
-								}
-								$tmp_total_nb_hour += $tmp_nb_hour ;
-							}
-								
-							// on exclut le week-end de la prédiction : il est normal de ne pas avoir de cra le week-end...
-							if( date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $tmp_day ), intval( $param_year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $tmp_day ), intval( $param_year ) ) ) != "7") {
-							
-								// la prediction partielle est le nombre d'heures qu'il manque à la période pour être pleine
-								$partial_prediction = 4 - $tmp_total_nb_hour;
-								
-								// si jamais la prédiction fait plus de la moitié de la période, la prédiction sera totale (cad qu'elle déterminera la couleur de la case)
-								if( $partial_prediction > 2 ) {
-									$total_prediction = 1;
-								}
-								
-								// on détermine le projet à prendre pour les prédictions
-								if( $partial_prediction ) {
-									$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
-									// cas simple : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
-									if( sizeof( $geny_assignements ) == 1 ) {
-										$temp_project_id = $geny_assignements[0]->project_id;
-									}
-									// cas plus tordu : on détermine le projet à considérer en fonction des prédictions précédentes
-									else if( sizeof( $geny_assignements ) >= 2 ) {
-										// si il n'y a pas de précédentes prédiction, on prend le premier projet de l'utilisateur
-										if( $last_predictions[$tmp_profile_id] == -1 ) {
-											$temp_project_id = $geny_assignements[0]->project_id;
-											$last_predictions[$tmp_profile_id] = $geny_assignements[0]->project_id;
-										}
-										// sinon, on cherche le projet qui suit la précédente prédiction
-										else {
-											// on cherche la prédiction précédente
-											for( $tmp_cpt = 0; $tmp_cpt <= sizeof( $geny_assignements ); $tmp_cpt ++ ) {
-												if( $last_predictions[$tmp_profile_id] == $geny_assignements[$tmp_cpt]->project_id ) {
-													break;
-												}
-											}
-											// on prend le projet suivant
-											$tmp_cpt++;
-											// si on a atteint la fin de la liste de projet, on prend le premier projet
-											if( $tmp_cpt == sizeof( $geny_assignements ) ) {
-												$tmp_cpt = 0;
-											}
-											$temp_project_id = $geny_assignements[$tmp_cpt]->project_id;
-											$last_predictions[$tmp_profile_id] = $geny_assignements[$tmp_cpt]->project_id;
-										}
-									}
-									else {
-										$temp_project_id = -1 ;
-									}
-								}
-								if( $partial_prediction ) {
-									$predicted_project_id = $temp_project_id;
-								}
-								if( $total_prediction ) {
-									$majority_project_id = $temp_project_id;
-								}
-							}
-							
-							$geny_project->loadProjectById( $majority_project_id );
+							$geny_project->loadProjectById( $tmp_data["majority_project_id"] );
 								
 							// on affiche une case colorée en fonction du type de projet si l'id > 0
-							if( $majority_project_id > 0 ) {
+							if( $tmp_data["majority_project_id"] > 0 ) {
 							
 								// on récupère la couleur associée au type de projet
 								$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
 								
+								$class_of_td = $geny_project->id;
+								if( $tmp_data["total_prediction"] ) {
+									$class_of_td = "predicted_td";
+								}
+								
 								// on affiche la case
-								echo '<td style="background-color:' . $project_type_background_color . '" class="' . $geny_project->id . '">';
-								echo '<a href="#" class="bulle"><div id="case">'.$majority_project_id.'</div><span>';
+								echo '<td style="background-color:' . $project_type_background_color . '" class="' . $class_of_td . '">';
+								echo '<a href="#" class="bulle"><div id="case">' . $tmp_data["majority_project_id"] . '</div><span>';
 								
 								// si la prédiction a détérminé la couleur de la case, on affiche qu'il s'agit d'une prédiction
-								if( $total_prediction ) {
+								if( $tmp_data["total_prediction"] ) {
 									echo '<div id="predicted-span-info">Prédiction</div>';
 								}
 								
 								// quoiqu'il arrive, on affiche les projets des cra déclarés par l'utilisateur
-								foreach( $projects_list as $tmp_project_id => $tmp_nb_hour ) {
+								foreach( $tmp_data["cras"] as $cra ) {
 									// chargement des données
-									$geny_project->loadProjectById( $tmp_project_id );
+									$geny_project->loadProjectById( $cra["project_id"] );
 									$geny_client->loadClientById( $geny_project->client_id );
 									
 									// récupération de la couleur du span en fonction de type de projet
 									$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
 									
 									// affichage du div
-									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $geny_client->name . " - " . $geny_project->name . " : ${tmp_nb_hour}h</div>";
-								}
-								
-								// si on a fait des prédictions partielles, on affiche les cra que l'on a prédit
-								if( $partial_prediction ) {
-									// chargement des données
-									$geny_project->loadProjectById( $predicted_project_id );
-									$geny_client->loadClientById( $geny_project->client_id );
-									
-									// récupération de la couleur du span en fonction de type de projet
-									$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
-									
-									// affichage du div
-									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">~ ' . $geny_client->name . " - " . $geny_project->name . " : ${partial_prediction}h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $geny_client->name . " - " . $geny_project->name . " : " . $cra["nb_h"] . "h</div>";
 								}
 								
 								echo '</span></a></td>';
@@ -349,7 +339,6 @@ foreach( $geny_activity_report->getActivityReportsListWithRestrictions( array( "
 							else {
 								echo '<td class="empty"><div id="case"></div></td>';
 							}
-							unset( $projects_list );
 						}
 						echo "</tr>";
 					}
