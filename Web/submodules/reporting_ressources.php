@@ -24,7 +24,7 @@ setlocale( LC_TIME, 'fr_FR.utf8', 'fra' );
 
 // déclaration des variables globales
 $reporting_data = array();
-$last_prediction = array();
+$last_predictions = array();
 $geny_project = new GenyProject();
 $geny_project_type = new GenyProjectType();
 $geny_profile = new GenyProfile();
@@ -39,13 +39,8 @@ $gritter_notifications = array();
 $param_year = getParam( 'year', date( "Y" ) );
 $param_month = getParam( 'month', date( "m" ) );
 
-// on récupère un int qu'il faut tranformer en chaine de 2 caractères
-if( intval( $param_month ) < 10 ) {
-	$param_month = "0" . intval( $param_month );
-}
-
-// si le mois et l'année données par l'utilisateur sont correctes, on crée une chaine "YYYY-MM-" qui va servir à créer facilement des dates à partir de cette chaine
-if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && strlen( $param_month ) == 2 ) {
+// si le mois et l'année donnés par l'utilisateur sont correctes, on initialise $month et $year avec les valeurs de l'utilisateur
+if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && intval( $param_month ) > 0 && intval( $param_year ) > 0 && intval( $param_month ) <=12 ) {
 	$month = intval( $param_month );
 	$year = intval( $param_year );
 	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) );
@@ -66,117 +61,138 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 	
 	// restriction de profil => on ne prend que les gens qui ont des projets en cours et qui sont disponibles
 	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= ( date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ) ) && sizeof( $geny_assignements ) > 0 ) {
-		if( !isset( $reporting_data[$tmp_profile->id] ) ) {
 		
-			// si le tableau contenant l'identifiant du dernier projet prédit 
-			// de cet utilisateur n'existe pas, on l'initialise
-			if( !isset( $last_prediction[$tmp_profile->id] ) )
-				$last_prediction[$tmp_profile->id] = -1;
-			
-			// on initialise aussi le tableau contenant les données de reporting
-			$reporting_data[$tmp_profile->id] = array();
-			
-			// on ajoute le profil à la liste des profils actifs
-			$active_profile_ids[] = $tmp_profile->id;
-			
-			// on continue d'initialiser le tableau de reporting
-			// (par demi-journées, puis par journées)
-			// 0 = matin, 1 = aprem
-			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
-			
-				// initialisations du tableau du matin/aprem
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day] ) ) {
-					$reporting_data[$tmp_profile->id][$half_day] = array();
-				}
-			
-				// initialisation du tableau suivant les jours
-				for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
-					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day] ) )
-						$reporting_data[$tmp_profile->id][$half_day][$day] = array();
-					
-					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] ) )
-						$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] = -1 ;
-					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] ) )
-						$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = false ;
-					if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
-						$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
-				}
+		// on initialise le tableau contenant les données de reporting
+		$reporting_data[$tmp_profile->id] = array();
+		
+		// si le tableau contenant l'identifiant du dernier projet prédit 
+		// de cet utilisateur n'existe pas, on l'initialise
+		if( !isset( $last_predictions[$tmp_profile->id] ) )
+			$last_predictions[$tmp_profile->id] = -1;
+		
+		// on ajoute le profil à la liste des profils actifs
+		$active_profile_ids[] = $tmp_profile->id;
+		
+		// on continue d'initialiser le tableau de reporting
+		// (par demi-journées, puis par journées)
+		// 0 = matin, 1 = aprem
+		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+		
+			// initialisations du tableau du matin/aprem
+			if( !isset( $reporting_data[$tmp_profile->id][$half_day] ) ) {
+				$reporting_data[$tmp_profile->id][$half_day] = array();
+			}
+		
+			// initialisation du tableau suivant les jours
+			for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day] ) )
+					$reporting_data[$tmp_profile->id][$half_day][$day] = array();
+				
+				// ["majority_project_id"] contient l'id du projet ayant le plus grand nombre d'heures => il va déterminer la couleur de la case
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] ) )
+					$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] = -1 ;
+				// ["total_prediction"] est un booléen indiquant si la couleur de la case a été prédite ou si elle a été obtenue directement des cras
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] ) )
+					$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = false ;
+				// ["cras"] est un tableau contenant les projets sur lesquels l'utilisateur a travaillé
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
+					$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
 			}
 		}
 	}
 }
 
-// on parcourt tous les profils actifs
+// on parcourt tous les profils actifs précédemment trouvés
 foreach( $active_profile_ids as $tmp_profile_id ) {
 	// et tous les jours du mois
 	for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
 	
-		// on concatène la date
+		// on obtient la date au format YYYY-MM-DD
 		$tmp_date = date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) );
 		
-		// on parcourt tous les cras déclarés
+		// on parcourt tous les cras déclarés correspondant à la date et au profil
 		foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile_id ) as $tmp_ressources ) {
-			// la charge
+			
+			// on récupère la charge
 			$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
 			
 			// pour chaque demi-journée
 			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
-				$tmp_total_h[$half_day] = 0;
+			
 				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
+				$tmp_total_nb_h[$half_day] = 0;
 				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
-					$tmp_total_h[$half_day] += $cra["nb_h"];
+					$tmp_total_nb_h[$half_day] += $cra["nb_h"];
 				}
-				// si la période n'est pas remplie
-				if( $tmp_total_h[$half_day] < 4 && $tmp_numeric_activity_load > 0) {
+				
+				// si la période n'est pas remplie et que la charge n'est pas encore nulle, on ajoute un nouveau cra
+				if( $tmp_total_nb_h[$half_day] < 4 && $tmp_numeric_activity_load > 0 ) {
 					// si jamais la charge du cra en cours rentre ENTIEREMENT dans la période
-					if( $tmp_total_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
+					if( $tmp_total_nb_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
 						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
 														"nb_h" => $tmp_numeric_activity_load ,
+														"client_name" => $tmp_ressources->client_name ,
+														"project_name" => $tmp_ressources->project_name ,
+														"project_type_id" => $tmp_ressources->project_type_id ,
 														"predicted" => false ) ;
-						$tmp_total_h[$half_day] += $tmp_numeric_activity_load;
+						$tmp_total_nb_h[$half_day] += $tmp_numeric_activity_load;
 						$tmp_numeric_activity_load = 0;
 					}
 					else {
 						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
-														"nb_h" => 4 - $tmp_total_h[$half_day] ,
+														"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
+														"client_name" => $tmp_ressources->client_name ,
+														"project_name" => $tmp_ressources->project_name ,
+														"project_type_id" => $tmp_ressources->project_type_id ,
 														"predicted" => false ) ;
-						$tmp_numeric_activity_load -= 4 - $tmp_total_h[$half_day] ;
-						$tmp_total_h[$half_day] = 4;
+						$tmp_numeric_activity_load -= 4 - $tmp_total_nb_h[$half_day] ;
+						$tmp_total_nb_h[$half_day] = 4;
 
 					}
 				}
 			}
 			// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
 		}
-		
+			
+		// on parcourt par demi-journée
 		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
-			if( date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $day ), intval( $param_year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $param_month ), intval( $day ), intval( $param_year ) ) ) != "7") {
-				// si les cras ne sont pas complets, on prédit les cras manquants.
-				$tmp_total_h[$half_day] = 0;
+		
+			// on exclu la prédiction pour le week-end : il est normal de ne pas avoir de cras pour le week-end
+			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) != "7") {
+				
 				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
+				$tmp_total_nb_h[$half_day] = 0;
 				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
-					$tmp_total_h[$half_day] += $cra["nb_h"];
+					$tmp_total_nb_h[$half_day] += $cra["nb_h"];
 				}
-				if( $tmp_total_h[$half_day] < 4 ) {
-					$predicted_project_id = -1; // TODO
+				
+				// si les cras ne sont pas complets, on prédit les cras manquants.
+				if( $tmp_total_nb_h[$half_day] < 4 ) {
+					// initialisation de l'id du projet prédit
+					$predicted_project_id = -1;
 					
+					// on récupère les assignements associés au profil de l'utilisateur pour savoir à quels projets il est rattaché
 					$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
-					// cas simple : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
+					// cas n°1 : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
 					if( sizeof( $geny_assignements ) == 1 ) {
 						$predicted_project_id = $geny_assignements[0]->project_id;
 					}
-					// cas plus tordu : on détermine le projet à considérer en fonction des prédictions précédentes
+					// cas n°2 : si il n'y a pas de projets associés, l'id est négative
+					elseif( sizeof( $geny_assignements ) == 0 ) {
+						$predicted_project_id = -1 ;
+					}
+					// cas n°3 : (plus tordu) si l'utilisateur a plusieurs projets, on détermine le projet à considérer en fonction des prédictions précédentes
 					else if( sizeof( $geny_assignements ) >= 2 ) {
 						// si il n'y a pas de précédentes prédiction, on prend le premier projet de l'utilisateur
-						if( $last_prediction[$tmp_profile_id] == -1 ) {
+						if( $last_predictions[$tmp_profile_id] == -1 ) {
 							$predicted_project_id = $geny_assignements[0]->project_id;
-							$last_prediction[$tmp_profile_id] = $geny_assignements[0]->project_id;
+							$last_predictions[$tmp_profile_id] = $geny_assignements[0]->project_id;
 						}
 						// sinon, on cherche le projet qui suit la précédente prédiction
 						else {
 							// on cherche la prédiction précédente
 							for( $tmp_cpt = 0; $tmp_cpt <= sizeof( $geny_assignements ); $tmp_cpt ++ ) {
-								if( $last_prediction[$tmp_profile_id] == $geny_assignements[$tmp_cpt]->project_id ) {
+								if( $last_predictions[$tmp_profile_id] == $geny_assignements[$tmp_cpt]->project_id ) {
 									break;
 								}
 							}
@@ -187,17 +203,23 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 								$tmp_cpt = 0;
 							}
 							$predicted_project_id = $geny_assignements[$tmp_cpt]->project_id;
-							$last_prediction[$tmp_profile_id] = $geny_assignements[$tmp_cpt]->project_id;
+							$last_predictions[$tmp_profile_id] = $geny_assignements[$tmp_cpt]->project_id;
 						}
 					}
-					// si il n'y a pas de projets associés, l'id est négative
+					// cas n°4 : si on est dans aucun des cas précédents, l'id est négative par défaut
 					else {
 						$predicted_project_id = -1 ;
 					}
 					
+					$geny_project->loadProjectById( $predicted_project_id );
+					$geny_client->loadClientById( $geny_project->client_id );
+					
 					// ajout du cra "prédit"
 					$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
-														"nb_h" => 4 - $tmp_total_h[$half_day] ,
+														"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
+														"client_name" => $geny_client->name ,
+														"project_name" => $geny_project->name ,
+														"project_type_id" => $geny_project->type_id ,
 														"predicted" => true ) ;
 				}
 			}
@@ -283,7 +305,6 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 			?>
 			</tr>
 			<?php
-							
 				// on parcourt les données par profil
 				foreach( $reporting_data as $tmp_profile_id => $tmp_period_data ) {
 					
@@ -330,17 +351,14 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 									echo '<div id="predicted-span-info">Prédiction</div>';
 								}
 								
-								// quoiqu'il arrive, on affiche les projets des cra déclarés par l'utilisateur
+								// on affiche les projets des cra déclarés par l'utilisateur + les prédictions éventuelles
 								foreach( $tmp_data["cras"] as $cra ) {
-									// chargement des données
-									$geny_project->loadProjectById( $cra["project_id"] );
-									$geny_client->loadClientById( $geny_project->client_id );
 									
 									// récupération de la couleur du span en fonction de type de projet
-									$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
+									$project_type_background_color = $geny_project_type->getProjectTypeColor( $cra["project_type_id"] );
 									
 									// affichage du div
-									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $geny_client->name . " - " . $geny_project->name . " : " . $cra["nb_h"] . "h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $cra["client_name"] . " - " . $cra["project_name"] . " : " . $cra["nb_h"] . "h</div>";
 								}
 								
 								echo '</span></a></td>';

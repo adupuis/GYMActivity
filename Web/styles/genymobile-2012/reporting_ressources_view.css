@@ -17,7 +17,7 @@ td {
 }
 
 .predicted_td {
-	border-style: solid;
+	border-style: dotted;
 	border-width: 2px;
 	margin:0px;
 	border-color: black !important;

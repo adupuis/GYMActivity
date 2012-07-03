@@ -5,8 +5,9 @@
 }
 
 td, th {
-	border-width: 3px;
-	border-style: inset;
+	border-width: 1px;
+	margin:1px;
+	border-style: solid;
 	border-color: gray;
 }
 
@@ -16,9 +17,10 @@ td {
 }
 
 .predicted_td {
-	border-style: solid;
-	border-width: 3px;
-	border-color: black;
+	border-style: dotted;
+	border-width: 2px;
+	margin:0px;
+	border-color: black !important;
 }
 
 .empty {
