@@ -234,18 +234,20 @@ else if( $param_action_edit_property == "true" ) {
 				$geny_property_values = $geny_property->getPropertyValues();
 				$geny_property_value = $geny_property_values[0];
 				
-				if( preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) && $param_property_value != $geny_property_value->content ) {
-					$are_geny_property_values_edited = true;
-					$geny_property_value->updateString( 'property_value_content', $_POST['property_value'] );
-					if( $geny_property_value->commitUpdates() ) {
-						$are_geny_property_values_successfully_updated = true;
-						$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
-					}
-					else {
-						$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
+				if( checkdate( substr( $param_property_value, 5, 2 ), substr( $param_property_value, 8, 2 ), substr( $param_property_value, 0, 4 ) ) ) {
+					if( $param_property_value != $geny_property_value->content ) {
+						$are_geny_property_values_edited = true;
+						$geny_property_value->updateString( 'property_value_content', $_POST['property_value'] );
+						if( $geny_property_value->commitUpdates() ) {
+							$are_geny_property_values_successfully_updated = true;
+							$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Valeur éditée','msg'=>"Valeur éditée avec succès" );
+						}
+						else {
+							$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'une valeur" );
+						}
 					}
 				}
-				else if( !preg_match( '/^(2)([0-9]{3})-((0[0-9])|(1[0-2]))-(([0-2][0-9])|(3[0-1]))$/', $param_property_value ) ) {
+				else {
 					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"La valeur insérée ne respecte pas le format d'une date valide" );
 				}
 				break;
