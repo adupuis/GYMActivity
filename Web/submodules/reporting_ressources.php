@@ -361,7 +361,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 									$project_type_background_color = $geny_project_type->getProjectTypeColor( $cra["project_type_id"] );
 									
 									// affichage du div
-									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . $cra["client_name"] . " - " . $cra["project_name"] . " : " . $cra["nb_h"] . "h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . ( $cra["predicted"] ? '&rarr; ': '' ) . $cra["client_name"] . " - " . $cra["project_name"] . " : " . $cra["nb_h"] . "h</div>";
 								}
 								
 								echo '</span></a></td>';

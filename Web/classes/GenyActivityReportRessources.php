@@ -24,7 +24,7 @@ include_once 'GenyDatabaseTools.php';
 
 class GenyActivityReportRessources extends GenyDatabaseTools {
 	public $project_name = '';
-	public $project_type = -1;
+	public $project_type_id = -1;
 	public $client_name = '';
 	public $activity_load = -1;
 	public $project_id = -1;
@@ -33,7 +33,7 @@ class GenyActivityReportRessources extends GenyDatabaseTools {
 		parent::__construct("ActivityReportsRessources",  "activity_report_id");
 		
 		$this->project_name = '';
-		$this->project_type = -1;
+		$this->project_type_id = -1;
 		$this->client_name = '';
 		$this->activity_load = -1;
 		$this->project_id = -1;
@@ -60,7 +60,7 @@ class GenyActivityReportRessources extends GenyDatabaseTools {
 				$tmp_obj = new GenyActivityReportRessources();
 				$tmp_obj->project_id = $row[0];
 				$tmp_obj->project_name = $row[1];
-				$tmp_obj->project_type = $row[2];
+				$tmp_obj->project_type_id = $row[2];
 				$tmp_obj->client_name = $row[3];
 				$tmp_obj->activity_load = $row[4];
 				$obj_list[] = $tmp_obj;
