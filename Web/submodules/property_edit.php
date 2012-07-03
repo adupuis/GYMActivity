@@ -156,6 +156,10 @@ else if( $param_action_edit_property == "true" ) {
 				
 			case 2: // SELECT MULTIPLE
 			
+				// si il ne s'agit pas d'un tableau, on considère la valeur comme un array vide
+				if( !is_array( $param_property_values ) ) {
+					$param_property_values = array();
+				}
 				// on règle le nombre de valeurs en fonction du tableau transmis en paramètre
 				$geny_property->setNumberOfPropertyValues( count( $param_property_values ) );
 				$geny_property_values = $geny_property->getPropertyValues();
