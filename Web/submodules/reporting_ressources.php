@@ -52,7 +52,7 @@ else {
 	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( date( "m" ) ) + 1, 0, intval( date( "Y" ) ) ) );
 }
 
-// on initialise le tableau de données par profil
+// on initialise par profil
 foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 
 	// on charge les informations annexes associées au profil
@@ -211,6 +211,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 						$predicted_project_id = -1 ;
 					}
 					
+					// on charge les informations associées au projet prédit
 					$geny_project->loadProjectById( $predicted_project_id );
 					$geny_client->loadClientById( $geny_project->client_id );
 					
@@ -337,6 +338,8 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 								// on récupère la couleur associée au type de projet
 								$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
 								
+								// on détermine la classe du td : si le majority_id n'est pas prédit,
+								// il s'agit de de l'identifiant du projet, sinon il s'agit de "predicted_td" 
 								$class_of_td = $geny_project->id;
 								if( $tmp_data["total_prediction"] ) {
 									$class_of_td = "predicted_td";
