@@ -110,85 +110,85 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 		// on obtient la date au format YYYY-MM-DD
 		$tmp_date = date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) );
 		
-		// on parcourt tous les cras déclarés correspondant à la date et au profil
-		foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile_id ) as $tmp_ressources ) {
-			
-			// on récupère la charge
-			$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
-			
-			// pour chaque demi-journée
-			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
-			
-				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
-				$tmp_total_nb_h[$half_day] = 0;
-				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
-					$tmp_total_nb_h[$half_day] += $cra["nb_h"];
-				}
-				
-				// si la période n'est pas remplie et que la charge n'est pas encore nulle, on ajoute un nouveau cra
-				if( $tmp_total_nb_h[$half_day] < 4 && $tmp_numeric_activity_load > 0 ) {
-					// si jamais la charge du cra en cours rentre ENTIEREMENT dans la période
-					if( $tmp_total_nb_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
-						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
-														"nb_h" => $tmp_numeric_activity_load ,
-														"client_name" => $tmp_ressources->client_name ,
-														"project_name" => $tmp_ressources->project_name ,
-														"project_type_id" => $tmp_ressources->project_type_id ,
-														"predicted" => false ) ;
-						$tmp_total_nb_h[$half_day] += $tmp_numeric_activity_load;
-						$tmp_numeric_activity_load = 0;
-					}
-					else {
-						$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
-														"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
-														"client_name" => $tmp_ressources->client_name ,
-														"project_name" => $tmp_ressources->project_name ,
-														"project_type_id" => $tmp_ressources->project_type_id ,
-														"predicted" => false ) ;
-						$tmp_numeric_activity_load -= 4 - $tmp_total_nb_h[$half_day] ;
-						$tmp_total_nb_h[$half_day] = 4;
-
-					}
-				}
+		// par défault, on considère que le jour séléctionné n'est pas chomé
+		$is_worked_day = true;
+		// on vérifie qu'il ne s'agit pas d'un jour férié
+		$holidays = GenyTools::getHolidays($year);
+		foreach( $holidays as $holiday ) {
+			if( date( "Y-n-j", mktime( 0, 0, 0, $month, $day, $year ) ) == $holiday ) {
+				$is_worked_day = false;
 			}
-			// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
 		}
-			
-		// on parcourt par demi-journée
-		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+		// on exclu également le week-end
+		if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "6" || date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "7" ){
+			$is_worked_day = false;
+		}
 		
-			// par défault, on considère que le jour séléctionné n'est pas chomé
-			$is_worked = true;
-			// on vérifie qu'il ne s'agit pas d'un jour férié
-			$holidays = GenyTools::getHolidays($year);
-			foreach( $holidays as $holiday ) {
-				if( date( "Y-n-j", mktime( 0, 0, 0, $month, $day, $year ) ) == $holiday ) {
-					$is_worked = false;
+		if( $is_worked_day ) {
+		
+			// on parcourt tous les cras déclarés correspondant à la date et au profil
+			foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile_id ) as $tmp_ressources ) {
+				
+				// on récupère la charge
+				$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
+				
+				// pour chaque demi-journée
+				for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+				
+					// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
+					$tmp_total_nb_h[$half_day] = 0;
+					foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
+						$tmp_total_nb_h[$half_day] += $cra["nb_h"];
+					}
+					
+					// si la période n'est pas remplie et que la charge n'est pas encore nulle, on ajoute un nouveau cra
+					if( $tmp_total_nb_h[$half_day] < 4 && $tmp_numeric_activity_load > 0 ) {
+						// si jamais la charge du cra en cours rentre ENTIEREMENT dans la période
+						if( $tmp_total_nb_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
+							$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
+															"nb_h" => $tmp_numeric_activity_load ,
+															"client_name" => $tmp_ressources->client_name ,
+															"project_name" => $tmp_ressources->project_name ,
+															"project_type_id" => $tmp_ressources->project_type_id ,
+															"predicted" => false ) ;
+							$tmp_total_nb_h[$half_day] += $tmp_numeric_activity_load;
+							$tmp_numeric_activity_load = 0;
+						}
+						else {
+							$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
+															"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
+															"client_name" => $tmp_ressources->client_name ,
+															"project_name" => $tmp_ressources->project_name ,
+															"project_type_id" => $tmp_ressources->project_type_id ,
+															"predicted" => false ) ;
+							$tmp_numeric_activity_load -= 4 - $tmp_total_nb_h[$half_day] ;
+							$tmp_total_nb_h[$half_day] = 4;
+
+						}
+					}
 				}
-			}
-			// on exclu également la prédiction pour le week-end
-			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "6" || date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "7" ){
-				$is_worked = false;
+				// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
 			}
 			
-			// si le jour n'est pas chomé, on regarde si on peut faire des prédictions
-			if( $is_worked ) {
-				
+			// on parcourt par demi-journée, et on regarde si les cras 
+			// sont complets ou si on va devoir les prédire
+			for( $half_day = 0; $half_day < 2; $half_day ++ ) {
+					
 				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
 				$tmp_total_nb_h[$half_day] = 0;
 				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
 					$tmp_total_nb_h[$half_day] += $cra["nb_h"];
 				}
 				
-				// si les cras ne sont pas complets, on prédit les cras manquants.
+				// si les cras ne sont pas complets, on va devoir "deviner" le cra qui aurait dû être entré par l'utilisateur
 				if( $tmp_total_nb_h[$half_day] < 4 ) {
-					// initialisation de l'id du projet prédit
+					// initialisation de l'id du projet qui va être prédit
 					$predicted_project_id = -1;
 					
 					// on récupère les assignements associés au profil de l'utilisateur pour savoir à quels projets il est rattaché
 					$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
 					
-					// on supprime les congés des assignements
+					// on supprime les congés des assignements => on ne veut pas prédire un congé !
 					foreach( $geny_assignements as $key => $geny_assignement ) {
 						$geny_project->loadProjectById( $geny_assignement->project_id );
 						if( intval( $geny_project->type_id ) == 5 ) {
@@ -247,26 +247,26 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 														"project_type_id" => $geny_project->type_id ,
 														"predicted" => true ) ;
 				}
-			}
-			
-			// initialisation du projet majoritaire en nb d'heures
-			$majority_cra = array( "project_id" => -1,
-				"nb_h" => 0,
-				"predicted" => false );
-			
-			// on trouve le projet majoritaire en nb d'heures
-			foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
-				if( $cra["nb_h"] > $majority_cra["nb_h"] ) {
-					$majority_cra = $cra;
+				
+				// initialisation du projet majoritaire en nb d'heures
+				$majority_cra = array( "project_id" => -1,
+					"nb_h" => 0,
+					"predicted" => false );
+				
+				// on trouve le projet majoritaire en nb d'heures
+				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
+					if( $cra["nb_h"] > $majority_cra["nb_h"] ) {
+						$majority_cra = $cra;
+					}
 				}
-			}
-			
-			// mise à jour de l'id de projet majoritaire en nb d'heures
-			$reporting_data[$tmp_profile_id][$half_day][$day]["majority_project_id"] = $majority_cra["project_id"] ;
-			
-			// si le projet majoritaire a été prédit, on le précise lors de l'affichage
-			if( $majority_cra["predicted"] == true ) {
-				$reporting_data[$tmp_profile_id][$half_day][$day]["total_prediction"] = true;
+				
+				// mise à jour de l'id de projet majoritaire en nb d'heures
+				$reporting_data[$tmp_profile_id][$half_day][$day]["majority_project_id"] = $majority_cra["project_id"] ;
+				
+				// si le projet majoritaire a été prédit, on le précise lors de l'affichage
+				if( $majority_cra["predicted"] == true ) {
+					$reporting_data[$tmp_profile_id][$half_day][$day]["total_prediction"] = true;
+				}
 			}
 		}
 	}
@@ -325,7 +325,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 			<tr><th><div id="names">Nom Prénom</div></th>
 			<?php
 				for( $tmp_day_id = 1; $tmp_day_id <= $nb_day_in_month; $tmp_day_id ++ ) {
-					echo '<th><div id="case">' . ( $tmp_day_id ) . "</div></th>";
+					echo '<th><div id="case">' . $tmp_day_id . "</div></th>";
 				}
 			?>
 			</tr>
