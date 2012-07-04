@@ -187,6 +187,16 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 					
 					// on récupère les assignements associés au profil de l'utilisateur pour savoir à quels projets il est rattaché
 					$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile_id );
+					
+					// on supprime les congés des assignements
+					foreach( $geny_assignements as $key => $geny_assignement ) {
+						$geny_project->loadProjectById( $geny_assignement->project_id );
+						if( intval( $geny_project->type_id ) == 5 ) {
+							unset( $geny_assignements[$key] );
+						}
+					}
+					$geny_assignements = array_values( $geny_assignements );
+					
 					// cas n°1 : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là
 					if( sizeof( $geny_assignements ) == 1 ) {
 						$predicted_project_id = $geny_assignements[0]->project_id;
