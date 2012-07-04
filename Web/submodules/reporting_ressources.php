@@ -284,7 +284,8 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
 		Voici le tableau d'utilisation des ressources du mois sélectionné (par défaut le mois en cours).<br/>
-		Reporting d'utilisation des ressources entre le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, 1, $year ) ); ?></strong> et le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ); ?></strong>.<br/>
+		Reporting d'utilisation des ressources entre le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, 1, $year ) ); ?></strong>
+		et le <strong><?php echo date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ); ?></strong>.<br/>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_ressources_view.css';
