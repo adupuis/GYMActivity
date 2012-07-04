@@ -162,7 +162,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 			// on vérifie qu'il ne s'agit pas d'un jour férié
 			$holidays = GenyTools::getHolidays($year);
 			foreach( $holidays as $holiday ) {
-				if( date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) ) == $holiday ) {
+				if( date( "Y-n-j", mktime( 0, 0, 0, $month, $day, $year ) ) == $holiday ) {
 					$is_worked = false;
 				}
 			}
