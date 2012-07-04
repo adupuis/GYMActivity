@@ -299,7 +299,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 						if( intval( $tmp_month_id ) == intval( $month ) ) {
 							echo $is_month_option_selected = " selected ";
 						}
-						echo '<option value="' . $tmp_month_id . '"' . $is_month_option_selected . '>' . strftime( "%B", mktime(1, 1, 1, $tmp_month_id, 1, 1 ) ) . '</option>';
+						echo '<option value="' . $tmp_month_id . '"' . $is_month_option_selected . '>' . strftime( "%B", mktime( 1, 1, 1, $tmp_month_id, 1, 1 ) ) . '</option>';
 					}
 				?>
 				</select>
