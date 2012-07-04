@@ -157,8 +157,22 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 		// on parcourt par demi-journée
 		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
 		
-			// on exclu la prédiction pour le week-end : il est normal de ne pas avoir de cras pour le week-end
-			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) != "6" && date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) != "7") {
+			// par défault, on considère que le jour séléctionné n'est pas chomé
+			$is_worked = true;
+			// on vérifie qu'il ne s'agit pas d'un jour férié
+			$holidays = GenyTools::getHolidays($year);
+			foreach( $holidays as $holiday ) {
+				if( date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) ) == $holiday ) {
+					$is_worked = false;
+				}
+			}
+			// on exclu également la prédiction pour le week-end
+			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "6" || date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "7" ){
+				$is_worked = false;
+			}
+			
+			// si le jour n'est pas chomé, on regarde si on peut faire des prédictions
+			if( $is_worked ) {
 				
 				// on cherche combien on a d'heures pour cette période pour cet utilisateur en mémoire
 				$tmp_total_nb_h[$half_day] = 0;

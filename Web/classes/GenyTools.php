@@ -21,7 +21,13 @@
 
 class GenyTools {
 	static function getYearHolidays(){
-		$year = (int)date('Y');
+		return GenyTools::getHolidays(intval(date('Y')));
+	}
+	static function getHolidays($year){
+		if(!is_numeric($year) || is_null($year)) {
+			return array();
+		}
+		
 		// Liste des jours feriés
 		$arr_bank_holidays[] = $year.'-1-1'; // Jour de l'an
 		$arr_bank_holidays[] = $year.'-5-1'; // Fete du travail
