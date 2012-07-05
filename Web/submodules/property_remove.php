@@ -90,7 +90,8 @@ if( $param_action_remove_property == "true" ) {
 				</select>
 			</p>
 			<p>
-			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression de la propriété. <strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'une propriété entraîne la suppression de toutes les valeurs et de toutes les options rattachées à cette propriété !</strong>
+			<input type="checkbox" name="force_remove" value="true" class="validate[required] checkbox" /> Veuillez cocher cette case pour confirmer la suppression de la propriété.
+			<strong>La suppression est définitive et ne pourra pas être annulée. La suppression d'une propriété entraîne la suppression de toutes les valeurs et de toutes les options rattachées à cette propriété !</strong>
 			</p>
 			<p>
 				<input type="submit" value="Supprimer" /> ou <a href="loader.php?module=property_list">annuler</a>

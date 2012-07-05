@@ -53,7 +53,7 @@
 				<select name="property_type" class="chzn-select" id="property_type" class="validate[required] select-input">
 				<?php
 					$geny_property_type = new GenyPropertyType();
-					foreach($geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
+					foreach( $geny_property_type->getAllPropertyTypes() as $tmp_property_type ) {
 						echo '<option value="' . $tmp_property_type->id . '">' . $tmp_property_type->name . '</option>';
 					}
 				?>

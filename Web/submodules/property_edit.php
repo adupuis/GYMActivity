@@ -190,7 +190,7 @@ else if( $param_action_edit_property == "true" ) {
 				}
 				else {
 					$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Modification impossible','msg'=>"Erreur lors de la modification d'au moins une valeur" );
-				}				
+				}
 				break;
 			
 			case 3: // SELECT
