@@ -65,32 +65,6 @@ AND (
      p.client_id = c.client_id
 );
 
--------------------------------------------------------------------------------------------
--- ajout des options de couleurs par défaut pour le tableau d'utilisation des ressources --
--------------------------------------------------------------------------------------------
-
-INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
-(4, 'color_project_type_1', 'Régie', 4),
-(5, 'color_project_type_2', 'Forfait', 4),
-(6, 'color_project_type_3', 'Régie forfaitée', 4),
-(7, 'color_project_type_4', 'r&d', 4),
-(8, 'color_project_type_5', 'Congés', 4),
-(9, 'color_project_type_6', 'Autre', 4),
-(10, 'color_project_type_7', 'Avant vente', 4);
-
--- Uncomment to set defaut colors :
--- WARNING : you have to be sure that ids of properties are correctly set,
--- or you will set values from differents options
-
--- INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
--- (0, 4, 'red'),
--- (0, 5, 'blue'),
--- (0, 6, 'green'),
--- (0, 7, 'fuchsia'),
--- (0, 8, 'teal'),
--- (0, 9, 'grey'),
--- (0, 10, '#FFA500');
-
 --------------------------------------------------------------------------
 -- création de la vue décrivant le tableau d'utilisation des ressources --
 --------------------------------------------------------------------------
@@ -132,3 +106,37 @@ AND (
      AND
      p.client_id = c.client_id
 );
+
+
+-------------------------------------------------------------------------------------------
+-- ajout des options de couleurs par défaut pour le tableau d'utilisation des ressources --
+-------------------------------------------------------------------------------------------
+
+INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
+(4, 'color_project_type_1', 'Régie', 4),
+(5, 'color_project_type_2', 'Forfait', 4),
+(6, 'color_project_type_3', 'Régie forfaitée', 4),
+(7, 'color_project_type_4', 'r&d', 4),
+(8, 'color_project_type_5', 'Congés', 4),
+(9, 'color_project_type_6', 'Autre', 4),
+(10, 'color_project_type_7', 'Avant vente', 4);
+
+-- Uncomment to set defaut colors :
+-- WARNING : you have to be sure that ids of properties are correctly set,
+-- or you will set values from differents options
+
+-- INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
+-- (0, 4, 'red'),
+-- (0, 5, 'blue'),
+-- (0, 6, 'green'),
+-- (0, 7, 'fuchsia'),
+-- (0, 8, 'teal'),
+-- (0, 9, 'grey'),
+-- (0, 10, '#FFA500');
+
+-----------------------------------------------
+-- update de la version de la base de donnée --
+-----------------------------------------------
+UPDATE `PropertyValues` SET `property_value_content` = '5' WHERE `PropertyValues`.`property_value_id` =2;
+
+COMMIT;
