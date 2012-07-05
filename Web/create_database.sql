@@ -398,7 +398,17 @@ INSERT INTO Properties VALUES(0,'PROP_LIVE_DEBUG','Activer/desactiver le debug e
 INSERT INTO Properties VALUES(0,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
 
 -- Verrouillage de l'application.
-INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"Etat de l'application",4);
+INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"Etat de l'application",3);
+
+-- Ajout des couleurs par type de projet
+INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
+(4, 'color_project_type_1', 'Régie', 4),
+(5, 'color_project_type_2', 'Forfait', 4),
+(6, 'color_project_type_3', 'Régie forfaitée', 4),
+(7, 'color_project_type_4', 'r&d', 4),
+(8, 'color_project_type_5', 'Congés', 4),
+(9, 'color_project_type_6', 'Autre', 4),
+(10, 'color_project_type_7', 'Avant vente', 4);
 
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
@@ -409,12 +419,12 @@ CREATE TABLE PropertyOptions (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyOptions AUTO_INCREMENT=1;
 
--- Suite de l'exemple
+-- options activé/désactivé pour PROP_LIVE_DEBUG
 INSERT INTO PropertyOptions VALUES(0,'Activé',1);
 INSERT INTO PropertyOptions VALUES(0,'Désactivé',1);
 
+-- état de l'application (active, active partiellement, ou inactive)
 INSERT INTO PropertyOptions VALUES(0,'Active',3);
--- Application active et fonctionnelle mais des problèmes existent.
 INSERT INTO PropertyOptions VALUES(0,'Active - Issues',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive - Upgrade',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
@@ -430,8 +440,18 @@ CREATE TABLE PropertyValues (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 
-INSERT INTO PropertyValues VALUES(0,2,'4');
-INSERT INTO PropertyValues VALUES(0,3,'Active');
+-- insertion des valeurs des exemples ci-dessus
+INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
+(0, 1, 'true'), -- live debug
+(0, 2, '5'), -- n° de la version de la bdd
+(0, 3, '3'), -- état de l'application
+(0, 4, 'red'), -- couleur pour le type de projet "régie"
+(0, 5, 'blue'), -- couleur pour le type de projet "forfait"
+(0, 6, 'green'), -- couleur pour le type de projet "régie forfaitée"
+(0, 7, 'fuchsia'), -- couleur pour le type de projet "r&d"
+(0, 8, 'teal'), -- couleur pour le type de projet "congés"
+(0, 9, 'grey'), -- couleur pour le type de projet "autre"
+(0, 10, '#FFA500'); -- couleur pour le type de projet "avant vente"
 
 CREATE TABLE CareerEvents (
 	career_event_id int auto_increment,
@@ -564,5 +584,86 @@ CREATE TABLE IntranetHistories (
 	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE IntranetHistories AUTO_INCREMENT=1;
+
+-- création de la vue ActivityReportWorkflow
+CREATE VIEW ActivityReportWorkflow AS SELECT
+     DISTINCT ar.activity_report_id,
+     pr.profile_id,
+     pr.profile_firstname,
+     pr.profile_lastname,
+     p.project_name,
+     t.task_name,
+     a.activity_date,
+     c.client_name,
+     a.activity_load,
+     ar.activity_report_status_id,
+     pr.profile_login
+FROM 
+     Activities a,
+     ActivityReports ar,
+     ActivityReportStatus ars,
+     Tasks t,
+     Clients c,
+     Assignements ass,
+     Projects p,
+     Profiles pr 
+WHERE 
+     ar.activity_report_status_id IN (
+          SELECT activity_report_status_id 
+          FROM ActivityReportStatus 
+          WHERE activity_report_status_shortname != "P_APPROVAL" AND activity_report_status_shortname != "P_USER_VALIDATION"
+     )
+AND (
+     a.activity_id = ar.activity_id
+     AND
+     t.task_id = a.task_id
+     AND
+     ass.assignement_id = a.assignement_id
+     AND
+     p.project_id = ass.project_id
+     AND
+     pr.profile_id = ass.profile_id
+     AND
+     p.client_id = c.client_id
+);
+
+-- création de la vue décrivant le tableau d'utilisation des ressources
+CREATE VIEW ActivityReportRessources AS
+
+SELECT
+     DISTINCT
+     p.project_id,
+     p.project_name,
+     p.project_type_id,
+     c.client_name,
+     a.activity_load,
+     pr.profile_id,
+     a.activity_date
+     
+FROM 
+     Activities a,
+     ActivityReports ar,
+     ActivityReportStatus ars,
+     Clients c,
+     Assignements ass,
+     Projects p,
+     Profiles pr 
+WHERE 
+     ar.activity_report_status_id IN (
+          SELECT activity_report_status_id 
+          FROM ActivityReportStatus 
+          WHERE activity_report_status_shortname != "P_APPROVAL" AND activity_report_status_shortname != "P_USER_VALIDATION"
+     )
+AND (
+     a.activity_id = ar.activity_id
+     AND
+     ass.assignement_id = a.assignement_id
+     AND
+     p.project_id = ass.project_id
+     AND
+     pr.profile_id = ass.profile_id
+     AND
+     p.client_id = c.client_id
+);
 
 COMMIT;
