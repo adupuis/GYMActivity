@@ -1,6 +1,6 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
-//  adupuis@genymobile.com
+//  Copyright (C) 2011 by GENYMOBILE Arnaud Dupuis & Jean-Charles Leneveu
+//  adupuis@genymobile.com & jcleneveu@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// Variable to configure global behaviour
-
+// déclaration de variables générales
 $reporting_data = array();
 $geny_project = new GenyProject();
 $geny_profile = new GenyProfile();
@@ -41,35 +40,24 @@ function getPoRateForActivityReport($ar_id){
 	// if no results : try to get a daily rate with project and corresponding dates (not sure this case is allowed)
 }
 
+// création de 3 tableaux statiques contenant : les clients, les types de projet et les status
 foreach( $geny_client->getAllClients() as $client ){
 	$clients[$client->id] = $client;
 }
-
 $geny_pt = new GenyProjectType();
 foreach( $geny_pt->getAllProjectTypes() as $pt ){
 	$pts[$pt->id] = $pt;
 }
-
 $geny_ps = new GenyProjectStatus();
 foreach( $geny_ps->getAllProjectStatus() as $ps ){
 	$pss[$ps->id] = $ps;
 }
 
+// on récupère les dates fournies par l'utilisateur
 $start_date = GenyTools::getCurrentMonthFirstDayDate();
 $end_date = GenyTools::getCurrentMonthLastDayDate();
 $reporting_start_date = GenyTools::getParam('reporting_start_date',$start_date);
 $reporting_end_date = GenyTools::getParam('reporting_end_date',$end_date);
-$aggregation_level = GenyTools::getParam('reporting_aggregation_level','po');
-
-if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
-	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
-}
-if( isset($ts_cookie) && $ts_cookie == "true" )
-	$aggregation_level = "tasks";
-
-// We create a table that contains the filters data (but only for required data).
-$data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 3 => array() );
-
 if( isset($reporting_start_date) && $reporting_start_date != "" && isset($reporting_end_date) && $reporting_end_date != "" ){
 	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ){
 		if( $reporting_end_date >= $reporting_start_date ){
@@ -83,6 +71,18 @@ if( isset($reporting_start_date) && $reporting_start_date != "" && isset($report
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide. Merci de respecter le format yyyy-mm-dd.");
 }
 
+// on se sert du cookie pour savoir si il faut ventiler les projets par task
+$aggregation_level = GenyTools::getParam('reporting_aggregation_level','po');
+if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
+	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
+}
+if( isset($ts_cookie) && $ts_cookie == "true" )
+	$aggregation_level = "tasks";
+
+// création du tableau contenant les filtres 
+$data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 3 => array() );
+
+// TODO : abandonner cette méthode barbare et implémenter une vue mysql
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
 $geny_ars->loadActivityReportStatusByShortName('P_USER_VALIDATION');
@@ -162,8 +162,8 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_reporting_po_php"]);
+		if(array_key_exists('GYMActivity_reporting_po_table_loader_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_loader_php"]);
 		}
 		
 		$data_array_filters_html = array();
@@ -217,65 +217,14 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 			} );
 		});
 </script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-
-	// Load the Visualization API and the piechart package.
-	google.load('visualization', '1.0', {'packages':['corechart']});
-	
-	// Set a callback to run when the Google Visualization API is loaded.
-	google.setOnLoadCallback(drawChart);
-	
-	// Callback that creates and populates a data table, 
-	// instantiates the pie chart, passes in the data and
-	// draws it.
-	function drawChart() {
-
-		// Create the data table.
-		var data = new google.visualization.DataTable();
-		data.addColumn('string', 'Clients');
-		data.addColumn('number', 'Charge');
-		data.addRows([
-		<?php echo $load_by_clients_js_data;?>
-		]);
-
-		// Set chart options
-		var options = {'title':'Reporting de charge - charge/client - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
-				'is3D': true,
-				'width':500,
-				'height':300};
-
-		// Instantiate and draw our chart, passing in some options.
-		var chart = new google.visualization.PieChart(document.getElementById('chart_div1'));
-		chart.draw(data, options);
-		
-		// Create the data table.
-		var data3 = new google.visualization.DataTable();
-		data3.addColumn('string', 'Profiles');
-		data3.addColumn('number', 'Charge');
-		data3.addRows([
-		<?php echo $load_by_projects_js_data;?>
-		]);
-
-		// Set chart options
-		var options = {'title':'Reporting de charge - charge/projet - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
-				'is3D': true,
-				'width':800,
-				'height':300};
-
-		// Instantiate and draw our chart, passing in some options.
-		var chart3 = new google.visualization.PieChart(document.getElementById('chart_div3'));
-		chart3.draw(data3, options);
-	}
 	
 	<?php
-		// Cette fonction est définie dans header.php
 		displayStatusNotifications($gritter_notifications,$web_config->theme);
 	?>
 	
 	jQuery(document).ready(function(){
 		$("#formID").validationEngine('init');
-		// binds form submission and fields to the validation engine
 		$("#formID").validationEngine('attach');
 	});
 	
@@ -303,7 +252,6 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 		
 	});
 	
-
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
