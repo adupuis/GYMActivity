@@ -373,7 +373,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 								// il s'agit de de l'identifiant du projet, sinon il s'agit de "predicted_td" 
 								$class_of_td = $tmp_data["majority_project_id"];
 								if( $tmp_data["total_prediction"] ) {
-									$class_of_td = "predicted_td";$geny_project->type_id
+									$class_of_td = "predicted_td";
 								}
 								
 								// on affiche la case
