@@ -57,59 +57,6 @@ foreach( $geny_project_type->getAllProjectTypes() as $tmp_project_type ) {
 	$project_type_background_color[$tmp_project_type->id] = $tmp_project_type->getProjectTypeColor();
 }
 
-/*// on initialise par profil => TODO : changer ce commentaire
-foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
-
-	// on charge les informations annexes associées au profil
-	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
-	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
-	
-	// restriction de profil => on ne prend que les gens qui ont des projets en cours et qui sont disponibles
-	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= ( date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ) ) && sizeof( $geny_assignements ) > 0 ) {
-		
-		// on initialise le tableau contenant les données de reporting
-		$reporting_data[$tmp_profile->id] = array();
-		
-		// si le tableau contenant l'identifiant du dernier projet prédit 
-		// de cet utilisateur n'existe pas, on l'initialise
-		if( !isset( $last_predictions[$tmp_profile->id] ) )
-			$last_predictions[$tmp_profile->id] = -1;
-		
-		// on ajoute le profil à la liste des profils actifs
-		$active_profile_ids[] = $tmp_profile->id;
-		
-		// on continue d'initialiser le tableau de reporting
-		// (par demi-journées, puis par journées)
-		// 0 = matin, 1 = aprem
-		for( $half_day = 0; $half_day < 2; $half_day ++ ) {
-		
-			// initialisations du tableau du matin/aprem
-			if( !isset( $reporting_data[$tmp_profile->id][$half_day] ) ) {
-				$reporting_data[$tmp_profile->id][$half_day] = array();
-			}
-		
-			// initialisation du tableau suivant les jours
-			for( $day = 1; $day <= $nb_day_in_month; $day ++ ) {
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day] ) )
-					$reporting_data[$tmp_profile->id][$half_day][$day] = array();
-				
-				// ["majority_project_id"] contient l'id du projet ayant le plus grand nombre d'heures
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] ) )
-					$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] = -1 ;
-				// ["majority_project_type_id"] contient l'id du type de projet ayant le plus grand nombre d'heures => il va déterminer la couleur de la case
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_type_id"] ) )
-					$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_type_id"] = -1 ;
-				// ["total_prediction"] est un booléen indiquant si la couleur de la case a été prédite ou si elle a été obtenue directement des cras
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] ) )
-					$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = false ;
-				// ["cras"] est un tableau contenant les projets sur lesquels l'utilisateur a travaillé
-				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
-					$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
-			}
-		}
-	}
-}*/
-
 // on parcourt tous les profils
 foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 
