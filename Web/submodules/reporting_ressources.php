@@ -52,6 +52,11 @@ else {
 	$nb_day_in_month = date( 'd', mktime( 0, 0, 0, intval( date( "m" ) ) + 1, 0, intval( date( "Y" ) ) ) );
 }
 
+// initialisation du tableau de couleurs en fonction du type de projet
+foreach( $geny_project_type->getAllProjectTypes() as $tmp_project_type ) {
+	$project_type_background_color[$tmp_project_type->id] = $tmp_project_type->getProjectTypeColor();
+}
+
 // on initialise par profil
 foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 
@@ -88,9 +93,12 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day] ) )
 					$reporting_data[$tmp_profile->id][$half_day][$day] = array();
 				
-				// ["majority_project_id"] contient l'id du projet ayant le plus grand nombre d'heures => il va déterminer la couleur de la case
+				// ["majority_project_id"] contient l'id du projet ayant le plus grand nombre d'heures
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] ) )
 					$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_id"] = -1 ;
+				// ["majority_project_type_id"] contient l'id du type de projet ayant le plus grand nombre d'heures => il va déterminer la couleur de la case
+				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_type_id"] ) )
+					$reporting_data[$tmp_profile->id][$half_day][$day]["majority_project_type_id"] = -1 ;
 				// ["total_prediction"] est un booléen indiquant si la couleur de la case a été prédite ou si elle a été obtenue directement des cras
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] ) )
 					$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = false ;
@@ -146,21 +154,21 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 						// si jamais la charge du cra en cours rentre ENTIEREMENT dans la période
 						if( $tmp_total_nb_h[$half_day] + $tmp_numeric_activity_load < 4 ) {
 							$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
-															"nb_h" => $tmp_numeric_activity_load ,
-															"client_name" => $tmp_ressources->client_name ,
-															"project_name" => $tmp_ressources->project_name ,
-															"project_type_id" => $tmp_ressources->project_type_id ,
-															"predicted" => false ) ;
+															     "nb_h" => $tmp_numeric_activity_load ,
+															     "client_name" => $tmp_ressources->client_name ,
+															     "project_name" => $tmp_ressources->project_name ,
+															     "project_type_id" => $tmp_ressources->project_type_id ,
+															     "predicted" => false ) ;
 							$tmp_total_nb_h[$half_day] += $tmp_numeric_activity_load;
 							$tmp_numeric_activity_load = 0;
 						}
 						else {
 							$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $tmp_ressources->project_id ,
-															"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
-															"client_name" => $tmp_ressources->client_name ,
-															"project_name" => $tmp_ressources->project_name ,
-															"project_type_id" => $tmp_ressources->project_type_id ,
-															"predicted" => false ) ;
+															     "nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
+															     "client_name" => $tmp_ressources->client_name ,
+															     "project_name" => $tmp_ressources->project_name ,
+															     "project_type_id" => $tmp_ressources->project_type_id ,
+															     "predicted" => false ) ;
 							$tmp_numeric_activity_load -= 4 - $tmp_total_nb_h[$half_day] ;
 							$tmp_total_nb_h[$half_day] = 4;
 
@@ -241,17 +249,18 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 					
 					// ajout du cra "prédit"
 					$reporting_data[$tmp_profile_id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
-														"nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
-														"client_name" => $geny_client->name ,
-														"project_name" => $geny_project->name ,
-														"project_type_id" => $geny_project->type_id ,
-														"predicted" => true ) ;
+													     "nb_h" => 4 - $tmp_total_nb_h[$half_day] ,
+													     "client_name" => $geny_client->name ,
+													     "project_name" => $geny_project->name ,
+													     "project_type_id" => $geny_project->type_id ,
+													     "predicted" => true ) ;
 				}
 				
 				// initialisation du projet majoritaire en nb d'heures
 				$majority_cra = array( "project_id" => -1,
-					"nb_h" => 0,
-					"predicted" => false );
+						       "project_type_id" => -1,
+						       "nb_h" => 0,
+						       "predicted" => false );
 				
 				// on trouve le projet majoritaire en nb d'heures
 				foreach( $reporting_data[$tmp_profile_id][$half_day][$day]["cras"] as $cra ) {
@@ -260,8 +269,10 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 					}
 				}
 				
-				// mise à jour de l'id de projet majoritaire en nb d'heures
+				// mise à jour de l'id de projet majoritaire en nb d'heures et du type associé
 				$reporting_data[$tmp_profile_id][$half_day][$day]["majority_project_id"] = $majority_cra["project_id"] ;
+				$reporting_data[$tmp_profile_id][$half_day][$day]["majority_project_type_id"] = $majority_cra["project_type_id"] ;
+
 				
 				// si le projet majoritaire a été prédit, on le précise lors de l'affichage
 				if( $majority_cra["predicted"] == true ) {
@@ -355,23 +366,18 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 						// on parcourt les données par jour
 						foreach( $tmp_days_data as $tmp_day => $tmp_data ) {
 							
-							$geny_project->loadProjectById( $tmp_data["majority_project_id"] );
-								
 							// on affiche une case colorée en fonction du type de projet si l'id > 0
 							if( $tmp_data["majority_project_id"] > 0 ) {
-							
-								// on récupère la couleur associée au type de projet
-								$project_type_background_color = $geny_project_type->getProjectTypeColor( $geny_project->type_id );
 								
 								// on détermine la classe du td : si le majority_id n'est pas prédit,
 								// il s'agit de de l'identifiant du projet, sinon il s'agit de "predicted_td" 
-								$class_of_td = $geny_project->id;
+								$class_of_td = $tmp_data["majority_project_id"];
 								if( $tmp_data["total_prediction"] ) {
-									$class_of_td = "predicted_td";
+									$class_of_td = "predicted_td";$geny_project->type_id
 								}
 								
 								// on affiche la case
-								echo '<td style="background-color:' . $project_type_background_color . '" class="' . $class_of_td . '">';
+								echo '<td style="background-color:' . $project_type_background_color[$tmp_data["majority_project_type_id"]] . '" class="' . $class_of_td . '">';
 								echo '<a href="#" class="bulle"><div id="case">' . $tmp_data["majority_project_id"] . '</div><span>';
 								
 								// si la prédiction a détérminé la couleur de la case, on affiche qu'il s'agit d'une prédiction
@@ -381,12 +387,7 @@ foreach( $active_profile_ids as $tmp_profile_id ) {
 								
 								// on affiche les projets des cra déclarés par l'utilisateur + les prédictions éventuelles
 								foreach( $tmp_data["cras"] as $cra ) {
-									
-									// récupération de la couleur du span en fonction de type de projet
-									$project_type_background_color = $geny_project_type->getProjectTypeColor( $cra["project_type_id"] );
-									
-									// affichage du div
-									echo '<div id="span-info" style="background-color:' . $project_type_background_color . '">' . ( $cra["predicted"] ? '&rarr; ': '' ) . $cra["client_name"] . " - " . $cra["project_name"] . " : " . $cra["nb_h"] . "h</div>";
+									echo '<div id="span-info" style="background-color:' . $project_type_background_color[$cra["project_type_id"]] . '">' . ( $cra["predicted"] ? '&rarr; ': '' ) . $cra["client_name"] . " - " . $cra["project_name"] . " : " . $cra["nb_h"] . "h</div>";
 								}
 								
 								echo '</span></a></td>';
