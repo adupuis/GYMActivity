@@ -146,23 +146,28 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 			$this->group_leader_id = $profile->group_leader_id;
 			$this->technology_leader_id = $profile->technology_leader_id;
 		}
+		else {
+			GenyProfileManagementData::__construct();
+		}
 	}
 	public function loadProfileManagementDataByProfileId($id){
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
 		$profiles = $this->getProfileManagementDataListWithRestrictions(array("profile_id=$id"));
-		$profile = $profiles[0];
-		if(isset($profile) && $profile->id > -1){
-			$this->id = $profile->id;
-			$this->profile_id = $profile->profile_id;
-			$this->salary = $profile->salary;
-			$this->variable_salary = $profile->variable_salary;
-			$this->objectived_salary = $profile->objectived_salary;
-			$this->recruitement_date = $profile->recruitement_date;
-			$this->is_billable = $profile->is_billable;
-			$this->availability_date = $profile->availability_date;
-			$this->group_leader_id = $profile->group_leader_id;
-			$this->technology_leader_id = $profile->technology_leader_id;
+		if(is_array($profiles) && count($profiles) >= 1) {
+			$profile = $profiles[0];
+			if(isset($profile) && $profile->id > -1){
+				$this->id = $profile->id;
+				$this->profile_id = $profile->profile_id;
+				$this->salary = $profile->salary;
+				$this->variable_salary = $profile->variable_salary;
+				$this->objectived_salary = $profile->objectived_salary;
+				$this->recruitement_date = $profile->recruitement_date;
+				$this->is_billable = $profile->is_billable;
+				$this->availability_date = $profile->availability_date;
+				$this->group_leader_id = $profile->group_leader_id;
+				$this->technology_leader_id = $profile->technology_leader_id;
+			}
 		}
 	}
 	public function getProfile(){
