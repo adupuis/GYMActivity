@@ -97,12 +97,12 @@ foreach( $aggregations as $aggregation ) {
 
 // création du tableau contenant les filtres 
 $data_array_filters = range( 0, $nb_of_enabled_aggregations );
-foreach($data_array_filters as $key => $data) {
+foreach( $data_array_filters as $key => $data ) {
 	$data_array_filters[$key] = array();
 }
 
 // on prend tous les dailyrate dans l'intervalle donné
-foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate_start_date > \"$start_date\"", "daily_rate_end_date < \"$end_date\"" ) ) as $geny_daily_rate ) {
+foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate_start_date >= \"$start_date\"", "daily_rate_end_date <= \"$end_date\"" ) ) as $geny_daily_rate ) {
 	
 	// on crée le reporting de data
 	$reporting_data[] = array( "po_number" => $geny_daily_rate->po_number ,
@@ -113,7 +113,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 		
 	// on crée les données de filtres par la même occasion
 	$geny_profile->loadProfileById( $geny_daily_rate->profile_id );
-	$geny_project->loadProjectById($geny_daily_rate->project_id);
+	$geny_project->loadProjectById( $geny_daily_rate->project_id );
 	$geny_task->loadTaskById( $geny_daily_rate->task_id );
 	
 	if( ! in_array( $geny_daily_rate->po_number, $data_array_filters[0] ) )
@@ -245,7 +245,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			} );
 			/* Add a select menu for each TH element in the table footer */
 			$("tfoot th").each( function ( i ) {
-				if( i < <?php echo $nb_of_enabled_aggregations+4 ?> ){
+				if( i < <?php echo $nb_of_enabled_aggregations+1 ?> ){
 					this.innerHTML = indexData[i];
 					$('select', this).change( function () {
 						oTable.fnFilter( $(this).val(), i );
@@ -304,8 +304,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 		Reporting des PO entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
 		<?php
 			// TODO : regarder si on a des conditions de restriction à afficher à l'utilisateur en fonction de l'aggregation_level
-// 			if( $aggregation_level == "po" )
-// 				echo "<strong>Attention: Ces rapports excluent les congés non rémunérés !</strong>";
+// 			if( $aggregation_level["truc"] )
+// 				echo "<strong>Attention: BLABLA</strong>";
 		?>
 		</p>
 		<style>
@@ -343,16 +343,17 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			<thead>
 				<th>Po</th>
 				<?php
-					if( $aggregation_level["project"] )
+					if( $aggregation_level["project"] ) {
 						echo "<th>Projet</th>\n";
-				?>
-				<?php
-					if( $aggregation_level["task"] )
+					}
+					
+					if( $aggregation_level["task"] ) {
 						echo "<th>Tâche</th>\n";
-				?>
-				<?php
-					if( $aggregation_level["profile"] )
+					}
+					
+					if( $aggregation_level["profile"] ) {
 						echo "<th>Profil</th>\n";
+					}
 				?>
 				<th>Nbr. jours <strong>total</strong></th>
 				<th>Nbr. jours <strong>restants</strong></th>
@@ -366,9 +367,9 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 					$geny_project->loadProjectById( $data["project_id"] );
 					$geny_task->loadTaskById( $data["task_id"] );
 					echo "<tr><td>" . $data["po_number"]
-						. "</td><td>" . ( $aggregation_level["project"] ) ? $geny_project->name : ""
-						. "</td><td>" . ( $aggregation_level["task"] ) ? $geny_task->name : ""
-						. "</td><td>" . ( $aggregation_level["profile"] ) ? GenyTools::getProfileDisplayName( $geny_profile ) : ""
+						. ( ( $aggregation_level["project"] == true ) ? "</td><td>" . $geny_project->name : "" )
+						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $geny_task->name : "" )
+						. ( ( $aggregation_level["profile"] == true ) ? "</td><td>" . GenyTools::getProfileDisplayName( $geny_profile ) : "" )
 						. "</td><td>" . $data["total_nb_day_po"]
 						. "</td><td>" . "0"
 						. "</td><td>" . "0" ."</td></tr>";
@@ -378,16 +379,17 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			<tfoot>
 				<th>Po.</th>
 				<?php
-					if( $aggregation_level == "project" )
+					if( $aggregation_level["project"] ) {
 						echo "<th>Projet</th>\n";
-				?>
-				<?php
-					if( $aggregation_level == "task" )
+					}
+
+					if( $aggregation_level["task"] ) {
 						echo "<th>Tâche</th>\n";
-				?>
-				<?php
-					if( $aggregation_level == "profile" )
+					}
+
+					if( $aggregation_level["profile"] ) {
 						echo "<th>Profil</th>\n";
+					}
 				?>
 				<th>Nb. jours <strong>total</strong></th>
 				<th>Nb. jours <strong>restant</strong></th>
