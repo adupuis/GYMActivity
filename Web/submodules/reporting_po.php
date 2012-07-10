@@ -73,14 +73,15 @@ function getPoRateForActivityReport($ar_id){
 	// if no results : try to get a daily rate with project and corresponding dates (not sure this case is allowed)
 }
 
-// on se sert du cookie pour savoir si il faut ventiler les projets par task
-
+// les aggregations déterminent l'affichage et le tri des données
 $aggregations = array( "project", "task", "profile");
 
+// on se sert du cookie pour savoir par quoi il faut ventiler
 if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
 	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
 }
 
+// par défault, on considère que l'on affiche le strict minimum => aucune aggregation n'est définie
 $nb_of_enabled_aggregations = 0;
 
 foreach( $aggregations as $aggregation ) {
@@ -109,6 +110,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 				   "project_id" => $geny_daily_rate->project_id ,
 				   "task_id" => $geny_daily_rate->task_id ,
 				   "profile_id" => $geny_daily_rate->profile_id ,
+				   "nb_consumed_days" => "unknow",
+				   "nb_remaining_days" => "unknow",
 				   "total_nb_day_po" => $geny_daily_rate->po_days );
 		
 	// on crée les données de filtres par la même occasion
@@ -327,12 +330,23 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 						document.cookie = name + "=" +escape( value );
 					}
 					function aggregationLevelChanged(){
-						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', $('#reporting_aggregation_level').attr('checked'));
+						var aggregation_level = new Array();
+						aggregation_level["task"] = $('#reporting_aggregation_level_task').attr('checked') ;
+						aggregation_level["project"] = $('#reporting_aggregation_level_project').attr('checked') ;
+						aggregation_level["profile"] = $('#reporting_aggregation_level_profile').attr('checked') ;
+						console.debug( aggregation_level );
+						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', aggregation_level);
 						$('#formID').submit();
 					}
 				</script>
-				<input type="checkbox" id="reporting_aggregation_level" name="reporting_aggregation_level" value="po_details" onChange="aggregationLevelChanged()"
-				<?php if($aggregation_level == "tasks"){echo "checked";} ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
+				<input type="checkbox" id="reporting_aggregation_level_task" name="reporting_aggregation_level_task" onChange="aggregationLevelChanged()"
+				<?php if( $aggregation_level["task"] ){ echo "checked"; } ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>,<br>
+				
+				<input type="checkbox" id="reporting_aggregation_level_project" name="reporting_aggregation_level_project" onChange="aggregationLevelChanged()"
+				<?php if( $aggregation_level["project"] ){ echo "checked"; } ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>projet</strong>,<br>
+				
+				<input type="checkbox" id="reporting_aggregation_level_profile" name="reporting_aggregation_level_profile" onChange="aggregationLevelChanged()"
+				<?php if( $aggregation_level["profile"] ){ echo "checked"; } ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>profil</strong>.
 			</p>
 			<input type="submit" value="Ajuster le reporting" />
 		</form>
@@ -371,8 +385,9 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $geny_task->name : "" )
 						. ( ( $aggregation_level["profile"] == true ) ? "</td><td>" . GenyTools::getProfileDisplayName( $geny_profile ) : "" )
 						. "</td><td>" . $data["total_nb_day_po"]
-						. "</td><td>" . "0"
-						. "</td><td>" . "0" ."</td></tr>";
+						. "</td><td>" . $data["nb_consumed_days"]
+						. "</td><td>" . $data["nb_remaining_days"]
+						. "</td></tr>";
 				}
 			?>
 			</tbody>
