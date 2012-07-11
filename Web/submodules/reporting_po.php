@@ -61,18 +61,6 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 	$pss[$ps->id] = $ps;
 }
 
-function getPoRateForActivityReport($ar_id){
-	// Pseudo-code :
-	// get activity for $ar_id
-	// get project
-	// get assignement 
-	// get profile (not sure)
-	// Try to get a daily rate with profile, project, task and corresponding dates
-	// if no results : try to get a daily rate with profile, project and corresponding dates
-	// if no results : try to get a daily rate with project, tasks and corresponding dates
-	// if no results : try to get a daily rate with project and corresponding dates (not sure this case is allowed)
-}
-
 // les aggregations déterminent l'affichage et le tri des données
 $aggregations = array( "project", "task", "profile");
 
@@ -105,97 +93,62 @@ foreach( $data_array_filters as $key => $data ) {
 // on prend tous les dailyrate dans l'intervalle donné
 foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate_start_date >= \"$start_date\"", "daily_rate_end_date <= \"$end_date\"" ) ) as $geny_daily_rate ) {
 	
-	// on crée le reporting de data
-	$reporting_data[] = array( "po_number" => $geny_daily_rate->po_number ,
-				   "project_id" => $geny_daily_rate->project_id ,
-				   "task_id" => $geny_daily_rate->task_id ,
-				   "profile_id" => $geny_daily_rate->profile_id ,
-				   "nb_consumed_days" => "unknow",
-				   "nb_remaining_days" => "unknow",
-				   "total_nb_day_po" => $geny_daily_rate->po_days );
-		
+	// détermination de la "clé d'unicité" du daily_rate en fonction du type de ventilation
+	if( $aggregation_level["task"] && !$aggregation_level["profile"] ) {
+		$key = "$geny_daily_rate->po_number+$geny_daily_rate->task_id";
+	}
+	else if( $aggregation_level["profile"] && !$aggregation_level["task"] ) {
+		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id";
+	}
+	else if( !$aggregation_level["profile"] && !$aggregation_level["task"] ) {
+		$key = "$geny_daily_rate->po_number";
+	}
+	else {
+		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id+$geny_daily_rate->task_id";
+	}
+	
+	// si le po n'existe pas dans les données, on l'insère
+	if( ! isset( $reporting_data["$key"] ) ) {
+		$reporting_data["$key"] = array( "po_number" => $geny_daily_rate->po_number ,
+						"project_id" => $geny_daily_rate->project_id ,
+						"task_id" => $geny_daily_rate->task_id ,
+						"profile_id" => $geny_daily_rate->profile_id ,
+						"nb_consumed_days" => 0, // TODO
+						"nb_remaining_days" => 0, // TODO
+						"total_nb_day_po" => $geny_daily_rate->po_days );
+	}
+	// sinon, on met à jour les données additionne les données chiffrées du nouveau po avec celles des anciens po
+	else {
+		$reporting_data["$key"]["total_nb_day_po"] += $geny_daily_rate->po_days;
+		$reporting_data["$key"]["nb_remaining_days"] += 0; // TODO
+		$reporting_data["$key"]["nb_consumed_days"] += 0; // TODO
+	}
+	
 	// on crée les données de filtres par la même occasion
 	$geny_profile->loadProfileById( $geny_daily_rate->profile_id );
 	$geny_project->loadProjectById( $geny_daily_rate->project_id );
 	$geny_task->loadTaskById( $geny_daily_rate->task_id );
 	
+	// filtrage par nombre PO
 	if( ! in_array( $geny_daily_rate->po_number, $data_array_filters[0] ) )
 		$data_array_filters[0][] = $geny_daily_rate->po_number;
 	
+	// filtrage par profil si la ventilation par profil est activée
 	if( $aggregation_level["profile"] ) {
 		if( ! in_array( GenyTools::getProfileDisplayName( $geny_profile ), $data_array_filters[$nb_of_enabled_aggregations] ) )
 			$data_array_filters[$nb_of_enabled_aggregations][] = GenyTools::getProfileDisplayName( $geny_profile );
 	}
+	// filtrage par projet si la ventilation par projet est activée
 	if( $aggregation_level["project"] ) {
 		if( ! in_array( $geny_project->name, $data_array_filters[1] ) )
 			$data_array_filters[1][] = $geny_project->name;
 	}
+	// filtrage par tache si la ventilation par tâche est activée
 	if( $aggregation_level["task"] ) {
 		if( ! in_array( $geny_task->name,$data_array_filters[intval( 1 || $aggregation_level["project"] ) + 1] ) )
 			$data_array_filters[intval( 1 && $aggregation_level["project"] ) + 1][] = $geny_task->name;
 	}
 }
-
-// foreach( $geny_ar->getActivityReportsListWithRestrictions( array( "activity_report_status_id != $ars_p_user_approval_id", "activity_report_status_id != $ars_refused_id", "activity_report_status_id != $ars_removed_id" ) ) as $ar ){
-// 	$geny_activity->loadActivityById( $ar->activity_id ); // Contient la charge et l'assignement_id
-// 	// Nous ne voulons pas des absences non payé par l'entreprise dans l'aggregation par projet.
-// 	// En revanche quand le mode d'aggrégation est par tâche nous le voulons.
-// 	if( $aggregation_level["task"] || ($geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19) ){ 
-// 		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
-// 			if( !isset( $reporting_data[$ar->profile_id] ) ){
-// 				$reporting_data[$ar->profile_id] = array();
-// 				$reporting_data_tasks[$ar->profile_id] = array();
-// 			}
-// 			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) ){
-// 				$reporting_data[$ar->profile_id][$geny_activity->assignement_id] = 0;
-// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id] = array();
-// 			}
-// 			if( !isset($reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id]) )
-// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
-// 			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
-// 			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
-// 			
-// 			// Création des données de filtres par la même occasion
-// 			$geny_profile->loadProfileById( $ar->profile_id );
-// 			$geny_assignement->loadAssignementById($geny_activity->assignement_id);
-// 			$geny_project->loadProjectById($geny_assignement->project_id);
-// 			$geny_task->loadTaskById( $geny_activity->task_id );
-// 			if( ! in_array(GenyTools::getProfileDisplayName($geny_profile),$data_array_filters[0]) )
-// 				$data_array_filters[0][] = GenyTools::getProfileDisplayName($geny_profile);
-// 			if( ! in_array($clients[$geny_project->client_id]->name,$data_array_filters[1]) )
-// 				$data_array_filters[1][] = $clients[$geny_project->client_id]->name;
-// 			if( ! in_array($geny_project->name,$data_array_filters[2]) )
-// 				$data_array_filters[2][] = $geny_project->name;
-// 			if( ! in_array($geny_task->name,$data_array_filters[3]) )
-// 				$data_array_filters[3][] = $geny_task->name;
-// 		}
-// 	}
-// }
-
-// Création des données de reporting pour la charge par client ainsi que par projet
-// WARNING : on sait pas à quoi ça sert => EST-CE NORMAL ?
-// $load_by_clients = array();
-// $load_by_projects = array();
-// foreach( $reporting_data as $profile_id => $data ){
-// 	$geny_profile->loadProfileById($profile_id);
-// 	foreach( $data as $assignement_id => $total_load ){
-// 		$geny_assignement->loadAssignementById($assignement_id);
-// 		$geny_project->loadProjectById($geny_assignement->project_id);
-// 		if( !isset($load_by_clients[$clients[$geny_project->client_id]->name]) )
-// 			$load_by_clients[$clients[$geny_project->client_id]->name]=0;
-// 		if( !isset($load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]) )
-// 			$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]=0;
-// 		$load_by_clients[$clients[$geny_project->client_id]->name] += $total_load/8;
-// 		$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name] += $total_load/8;
-// 	}
-// }
-
-// $load_by_projects_js_data = "";
-// $tmp_array=array();
-// foreach( $load_by_projects as $project => $load ){
-// 	$tmp_array[]= "['$project', $load]";
-// }
-// $load_by_projects_js_data = implode(",",$tmp_array);
 
 ?>
 <script>
@@ -362,6 +315,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			<thead>
 				<th>Po</th>
 				<?php
+					// en fonction du type de ventilation, on affiche ou non différentes colonnes
 					if( $aggregation_level["project"] ) {
 						echo "<th>Projet</th>\n";
 					}
@@ -380,11 +334,19 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			</thead>
 			<tbody>
 			<?php
-
+				// pour chacune des lignes de PO précédemment générées
 				foreach( $reporting_data as $data ){
-					$geny_profile->loadProfileById( $data["profile_id"] );
-					$geny_project->loadProjectById( $data["project_id"] );
-					$geny_task->loadTaskById( $data["task_id"] );
+					// on charge les données associées si la vue est ventilée
+					if( isset( $data["profile_id"] ) && $aggregation_level["profile"] ) {
+						$geny_profile->loadProfileById( $data["profile_id"] );
+					}
+					if( isset( $data["project_id"] ) && $aggregation_level["project"] ) {
+						$geny_project->loadProjectById( $data["project_id"] );
+					}
+					if( isset( $data["task_id"] ) && $aggregation_level["task"] ) {
+						$geny_task->loadTaskById( $data["task_id"] );
+					}
+					// on affiche la ligne 
 					echo "<tr><td>" . $data["po_number"]
 						. ( ( $aggregation_level["project"] == true ) ? "</td><td>" . $geny_project->name : "" )
 						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $geny_task->name : "" )
@@ -399,6 +361,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			<tfoot>
 				<th>Po.</th>
 				<?php
+					// en fonction du type de ventilation, on affiche ou non différentes colonnes
 					if( $aggregation_level["project"] ) {
 						echo "<th>Projet</th>\n";
 					}
