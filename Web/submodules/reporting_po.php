@@ -110,12 +110,12 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	// si le po n'existe pas dans les données, on l'insère
 	if( ! isset( $reporting_data["$key"] ) ) {
 		$reporting_data["$key"] = array( "po_number" => $geny_daily_rate->po_number ,
-						"project_id" => $geny_daily_rate->project_id ,
-						"task_id" => $geny_daily_rate->task_id ,
-						"profile_id" => $geny_daily_rate->profile_id ,
-						"nb_consumed_days" => 0, // TODO
-						"nb_remaining_days" => 0, // TODO
-						"total_nb_day_po" => $geny_daily_rate->po_days );
+						 "project_id" => $geny_daily_rate->project_id ,
+						 "task_id" => $geny_daily_rate->task_id ,
+						 "profile_id" => $geny_daily_rate->profile_id ,
+						 "nb_consumed_days" => 0, // TODO
+						 "nb_remaining_days" => 0, // TODO
+						 "total_nb_day_po" => $geny_daily_rate->po_days );
 	}
 	// sinon, on met à jour les données additionne les données chiffrées du nouveau po avec celles des anciens po
 	else {
@@ -259,11 +259,6 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 		<p class="mainarea_content_intro">
 		Voici la liste des PO ventilés par bon de commande pour la période sélectionnée (par défaut le mois en cours).<br/>
 		Reporting des PO entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
-		<?php
-			// TODO : regarder si on a des conditions de restriction à afficher à l'utilisateur en fonction de l'aggregation_level
-// 			if( $aggregation_level["truc"] )
-// 				echo "<strong>Attention: BLABLA</strong>";
-		?>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
@@ -282,18 +277,18 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 					function setCookie( name, value )
 					{
 						var date = new Date();
-						date.setTime(date.getTime()+(24*60*60*365));
-						var expires = "; expires="+date.toGMTString()+";";
+						date.setTime( date.getTime() + ( 24 * 60 * 60 * 365 ) );
+						var expires = "; expires=" + date.toGMTString() + ";";
 						document.cookie = name + "=" + escape( value ) + expires;
 					}
 					function aggregationLevelChanged(){
 						var aggregation_level = new Object();
-						aggregation_level["task"] = Boolean($('#reporting_aggregation_level_task').attr('checked')) ;
-						aggregation_level["project"] = Boolean($('#reporting_aggregation_level_project').attr('checked')) ;
-						aggregation_level["profile"] = Boolean($('#reporting_aggregation_level_profile').attr('checked')) ;
-						setCookie('GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', JSON.stringify(aggregation_level));
+						aggregation_level["task"] = Boolean( $( '#reporting_aggregation_level_task' ).attr( 'checked' ) ) ;
+						aggregation_level["project"] = Boolean( $( '#reporting_aggregation_level_project' ).attr( 'checked' ) ) ;
+						aggregation_level["profile"] = Boolean( $( '#reporting_aggregation_level_profile' ).attr( 'checked' ) );
+						setCookie( 'GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', JSON.stringify( aggregation_level ) );
 						document.cookie = 'GYMActivity_reporting_po_table_loader.php=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
-						$('#formID').submit();
+						$( '#formID' ).submit();
 					}
 				</script>
 				<input type="checkbox" id="reporting_aggregation_level_task" name="reporting_aggregation_level_task" onChange="aggregationLevelChanged()"
@@ -334,8 +329,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			<tbody>
 			<?php
 				// pour chacune des lignes de PO précédemment générées
-				foreach( $reporting_data as $data ){
-					// on charge les données associées si la vue est ventilée
+				foreach( $reporting_data as $data ) {
+					// on charge le nom du profil, sinon on affiche "-"
 					if( $aggregation_level["profile"] ) {
 						if( $data["profile_id"] != NULL ) {
 							$geny_profile->loadProfileById( $data["profile_id"] );
@@ -345,6 +340,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 							$displayed_profile_name = "-";
 						}
 					}
+					// on charge le nom associé à la tâche, sinon on affiche "-"
 					if( $aggregation_level["task"] ) {
 						if( $data["task_id"] != NULL ) {
 							$geny_task->loadTaskById( $data["task_id"] );
@@ -354,10 +350,12 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 							$displayed_task_name = "-";
 						}
 					}
+					// on charge le nom du projet (quoiqu'il arrive, il y a tjs un projet par PO)
 					if( $aggregation_level["project"] ) {
 						$geny_project->loadProjectById( $data["project_id"] );
 					}
-					// on affiche la ligne 
+					// on affiche la ligne de PO formatée en HTML, en tenant compte de la ventilation grâce à l'opérateur de condition ternaire :
+					// (condition) ? "valeur si vrai" : "valeur si faux"
 					echo "<tr><td>" . $data["po_number"]
 						. ( ( $aggregation_level["project"] == true ) ? "</td><td>" . $geny_project->name : "" )
 						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $displayed_task_name : "" )
@@ -392,12 +390,6 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			</table>
 		</p>
 		</div>
-		<p>
-			<ul>
-				<li id="chart_div1"></li>
-				<li id="chart_div3"></li>
-			</ul>
-		</p>
 	</p>
 </div>
 <?php
