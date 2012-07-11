@@ -42,10 +42,10 @@ if( isset( $reporting_start_date ) && $reporting_start_date != "" && isset( $rep
 			$end_date = $reporting_end_date;
 		}
 		else
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"La date de fin doit être supérieure ou égale à la date de début de la période rapportée.");
+			$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"La date de fin doit être supérieure ou égale à la date de début de la période rapportée." );
 	}
 	else
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide. Merci de respecter le format yyyy-mm-dd.");
+		$gritter_notifications[] = array( 'status'=>'error', 'title' => 'Erreur fatale','msg'=>"Au moins une des dates fournies n'est pas une date valide. Merci de respecter le format yyyy-mm-dd." );
 }
 
 // création de 3 tableaux statiques contenant : les clients, les types de projet et les status
@@ -62,10 +62,10 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 }
 
 // les aggregations déterminent l'affichage et le tri des données
-$aggregations = array( "project", "task", "profile");
+$aggregations = array( "project", "task", "profile" );
 
 // on se sert du cookie pour savoir par quoi il faut ventiler
-if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', $_COOKIE)) {
+if( array_key_exists( 'GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', $_COOKIE ) ) {
 	$ts_cookie = get_object_vars(json_decode( $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_aggregation_state'] ));
 }
 
@@ -155,8 +155,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	var indexData = new Array();
 	<?php
 		// on charge le cookie de filtrage de datafilter
-		if(array_key_exists('GYMActivity_reporting_po_table_loader_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_loader_php"]);
+		if( array_key_exists( 'GYMActivity_reporting_po_table_loader_php', $_COOKIE ) ) {
+			$cookie = json_decode( $_COOKIE["GYMActivity_reporting_po_table_loader_php"] );
 		}
 		
 		// on génère les options de filtrage de datafilter en dynamique
@@ -165,9 +165,9 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 			$data_array_filters_html[$idx] = '<select><option value=""></option>';
 			foreach( $data as $d ){
 				if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
-					$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					$data_array_filters_html[$idx] .= '<option selected="selected" value="'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'">'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'</option>';
 				else
-					$data_array_filters_html[$idx] .= '<option value="'.htmlentities($d,ENT_QUOTES,'UTF-8').'">'.htmlentities($d,ENT_QUOTES,'UTF-8').'</option>';
+					$data_array_filters_html[$idx] .= '<option value="'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'">'.htmlentities( $d, ENT_QUOTES, 'UTF-8' ).'</option>';
 			}
 			$data_array_filters_html[$idx] .= '</select>';
 		}
@@ -215,7 +215,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	
 	<?php
 		// on affiche les notifications
-		displayStatusNotifications($gritter_notifications,$web_config->theme);
+		displayStatusNotifications( $gritter_notifications, $web_config->theme );
 	?>
 	
 	jQuery(document).ready(function(){
@@ -291,7 +291,6 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 						aggregation_level["task"] = Boolean($('#reporting_aggregation_level_task').attr('checked')) ;
 						aggregation_level["project"] = Boolean($('#reporting_aggregation_level_project').attr('checked')) ;
 						aggregation_level["profile"] = Boolean($('#reporting_aggregation_level_profile').attr('checked')) ;
-						console.debug( aggregation_level );
 						setCookie('GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', JSON.stringify(aggregation_level));
 						document.cookie = 'GYMActivity_reporting_po_table_loader.php=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
 						$('#formID').submit();
@@ -337,20 +336,32 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 				// pour chacune des lignes de PO précédemment générées
 				foreach( $reporting_data as $data ){
 					// on charge les données associées si la vue est ventilée
-					if( isset( $data["profile_id"] ) && $aggregation_level["profile"] ) {
-						$geny_profile->loadProfileById( $data["profile_id"] );
+					if( $aggregation_level["profile"] ) {
+						if( $data["profile_id"] != NULL ) {
+							$geny_profile->loadProfileById( $data["profile_id"] );
+							$displayed_profile_name = GenyTools::getProfileDisplayName( $geny_profile );
+						}
+						else {
+							$displayed_profile_name = "-";
+						}
 					}
-					if( isset( $data["project_id"] ) && $aggregation_level["project"] ) {
+					if( $aggregation_level["task"] ) {
+						if( $data["task_id"] != NULL ) {
+							$geny_task->loadTaskById( $data["task_id"] );
+							$displayed_task_name = $geny_task->name;
+						}
+						else {
+							$displayed_task_name = "-";
+						}
+					}
+					if( $aggregation_level["project"] ) {
 						$geny_project->loadProjectById( $data["project_id"] );
-					}
-					if( isset( $data["task_id"] ) && $aggregation_level["task"] ) {
-						$geny_task->loadTaskById( $data["task_id"] );
 					}
 					// on affiche la ligne 
 					echo "<tr><td>" . $data["po_number"]
 						. ( ( $aggregation_level["project"] == true ) ? "</td><td>" . $geny_project->name : "" )
-						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $geny_task->name : "" )
-						. ( ( $aggregation_level["profile"] == true ) ? "</td><td>" . GenyTools::getProfileDisplayName( $geny_profile ) : "" )
+						. ( ( $aggregation_level["task"] == true ) ? "</td><td>" . $displayed_task_name : "" )
+						. ( ( $aggregation_level["profile"] == true ) ? "</td><td>" . $displayed_profile_name : "" )
 						. "</td><td>" . $data["total_nb_day_po"]
 						. "</td><td>" . $data["nb_consumed_days"]
 						. "</td><td>" . $data["nb_remaining_days"]
@@ -390,5 +401,5 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	</p>
 </div>
 <?php
-	$bottomdock_items = array('backend/widgets/reporting_cra_completion.dock.widget.php','backend/widgets/reporting_cra_status.dock.widget.php');
+	$bottomdock_items = array( 'backend/widgets/reporting_cra_completion.dock.widget.php', 'backend/widgets/reporting_cra_status.dock.widget.php' );
 ?>
