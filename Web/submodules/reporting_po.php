@@ -77,8 +77,8 @@ function getPoRateForActivityReport($ar_id){
 $aggregations = array( "project", "task", "profile");
 
 // on se sert du cookie pour savoir par quoi il faut ventiler
-if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
-	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
+if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', $_COOKIE)) {
+	$ts_cookie = get_object_vars(json_decode( $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_aggregation_state'] ));
 }
 
 // par défault, on considère que l'on affiche le strict minimum => aucune aggregation n'est définie
@@ -87,7 +87,7 @@ $nb_of_enabled_aggregations = 0;
 foreach( $aggregations as $aggregation ) {
 	$aggregation_level["$aggregation"] = (bool) GenyTools::getParam( 'reporting_aggregation_level_'.$aggregation, false );
 	if( isset( $ts_cookie ) ) {
-		if( isset( $ts_cookie["$aggregation"] ) && $ts_cookie["$aggregation"] = true ) {
+		if( isset( $ts_cookie["$aggregation"] ) && $ts_cookie["$aggregation"] == true ) {
 			$aggregation_level["$aggregation"] = true;
 		}
 	}
@@ -230,6 +230,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 				"bStateSave": true,
 				"bAutoWidth": false,
 				"sCookiePrefix": "GYMActivity_",
+				"iCookieDuration": 60*60*24*365, // 1 year
 				"sPaginationType": "full_numbers",
 				"oLanguage": {
 					"sSearch": "Recherche :",
@@ -327,15 +328,18 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 				<script>
 					function setCookie( name, value )
 					{
-						document.cookie = name + "=" +escape( value );
+						var date = new Date();
+						date.setTime(date.getTime()+(24*60*60*365));
+						var expires = "; expires="+date.toGMTString()+";";
+						document.cookie = name + "=" + escape( value ) + expires;
 					}
 					function aggregationLevelChanged(){
-						var aggregation_level = new Array();
-						aggregation_level["task"] = $('#reporting_aggregation_level_task').attr('checked') ;
-						aggregation_level["project"] = $('#reporting_aggregation_level_project').attr('checked') ;
-						aggregation_level["profile"] = $('#reporting_aggregation_level_profile').attr('checked') ;
+						var aggregation_level = new Object();
+						aggregation_level["task"] = Boolean($('#reporting_aggregation_level_task').attr('checked')) ;
+						aggregation_level["project"] = Boolean($('#reporting_aggregation_level_project').attr('checked')) ;
+						aggregation_level["profile"] = Boolean($('#reporting_aggregation_level_profile').attr('checked')) ;
 						console.debug( aggregation_level );
-						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', aggregation_level);
+						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', JSON.stringify(aggregation_level));
 						$('#formID').submit();
 					}
 				</script>
