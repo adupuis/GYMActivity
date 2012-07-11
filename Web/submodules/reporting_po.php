@@ -132,7 +132,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	}
 	if( $aggregation_level["task"] ) {
 		if( ! in_array( $geny_task->name,$data_array_filters[intval( 1 || $aggregation_level["project"] ) + 1] ) )
-			$data_array_filters[intval( 1 || $aggregation_level["project"] ) + 1][] = $geny_task->name;
+			$data_array_filters[intval( 1 && $aggregation_level["project"] ) + 1][] = $geny_task->name;
 	}
 }
 
@@ -339,7 +339,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 						aggregation_level["project"] = Boolean($('#reporting_aggregation_level_project').attr('checked')) ;
 						aggregation_level["profile"] = Boolean($('#reporting_aggregation_level_profile').attr('checked')) ;
 						console.debug( aggregation_level );
-						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', JSON.stringify(aggregation_level));
+						setCookie('GYMActivity_reporting_po_table_reporting_po_php_aggregation_state', JSON.stringify(aggregation_level));
+						document.cookie = 'GYMActivity_reporting_po_table_loader.php=; expires=Thu, 01-Jan-70 00:00:01 GMT;';
 						$('#formID').submit();
 					}
 				</script>
