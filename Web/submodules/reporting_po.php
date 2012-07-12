@@ -18,43 +18,56 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-function getConsumedDaysFromAssignementAndTaskIds( $assignement_id = -1, $task_id = -1 ) {
+// fonction retournant le nombre de jours de consommés en fonction d'un assignement, d'une tache et d'une date
+function getConsumedDaysFromAssignementAndTaskIds( $assignement_id = -1, $task_id = -1, $start_date = "0000-00-00", $end_date = "9999-12-31" ) {
+	// on a besoin d'une activité
 	$geny_activity = new GenyActivity();
 	
+	// on initialise la charge
 	$total_load = ( float ) 0;
 	
+	// si l'identifiant de la tache est négatif, on prend toutes les tâches
 	if( $task_id != -1 ) {
-		// WARNING & TODO : AJOUTER DES RESTRICTIONS DE DATE
-		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $assignement_id" ) ) as $geny_activity ) {
+		// on additionne la charge associée
+		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $assignement_id", "activity_date >= \"$start_date\"", "activity_date <= \"$end_date\"" ) ) as $geny_activity ) {
 			$total_load += ( float ) $geny_activity->load;
 		}
 	}
+	// sinon on ne prend que la tâche donnée 
 	else {
-		// WARNING & TODO : AJOUTER DES RESTRICTIONS DE DATE
-		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "assignement_id = $assignement_id" ) ) as $geny_activity ) {
+		// on additionne la charge associée à chacun des couples assignement + tâche
+		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "assignement_id = $assignement_id", "activity_date > \"$start_date\"", "activity_date < \"$end_date\"" ) ) as $geny_activity ) {
 			$total_load += ( float ) $geny_activity->load;
 		}
 	}
 	
+	// on retourne la charge totale divisée par le nb total d'heure par jour pour obtenir le nb de jour déjà consommés
 	return ( ( float ) $total_load ) / ( ( float ) 8.0 ) ;
 }
 
-function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project_id = -1, $task_id = -1 ) {
+// focntion retournant le nombre de jours consommés en fonction d'un identifiant de profil, de projet, de tache et de la date
+function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project_id = -1, $task_id = -1, $start_date = "0000-00-00", $end_date = "9999-12-31" ) {
+	// on a besoin de déterminer un assignement en fonction du projet et du profile
 	$geny_assignement = new GenyAssignement();
 	
+	// si l'id du profil est négative, on considère que l'on prend tous les profils associés au projet
 	if( $profile_id != -1 ) {
 		$list_of_assignements = $geny_assignement->getAssignementsListByProjectIdAndProfileId( $project_id, $profile_id );
 	}
+	// sinon on trouve l'assignement rattché au couple unique projet + profil
 	else {
 		$list_of_assignements = $geny_assignement->getAssignementsListByProjectId( $project_id );
 	}
 	
+	// on initialise le nb total de jours consommés
 	$total_consumed_days = 0;
 	
+	// on additionne la charge associée à chacun des assignements précédemment trouvés 
 	foreach( $list_of_assignements as $geny_assignement ) {
-		$total_consumed_days += getConsumedDaysFromAssignementAndTaskIds( $geny_assignement->id , $task_id ) ;
+		$total_consumed_days += getConsumedDaysFromAssignementAndTaskIds( $geny_assignement->id , $task_id, $start_date, $end_date ) ;
 	}
 	
+	// on retourne le nb total de jours
 	return $total_consumed_days;
 }
 
@@ -75,9 +88,9 @@ $start_date = GenyTools::getCurrentMonthFirstDayDate();
 $end_date = GenyTools::getCurrentMonthLastDayDate();
 $reporting_start_date = GenyTools::getParam( 'reporting_start_date', $start_date );
 $reporting_end_date = GenyTools::getParam( 'reporting_end_date', $end_date );
-if( isset( $reporting_start_date ) && $reporting_start_date != "" && isset( $reporting_end_date ) && $reporting_end_date != "" ){
-	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ){
-		if( $reporting_end_date >= $reporting_start_date ){
+if( isset( $reporting_start_date ) && $reporting_start_date != "" && isset( $reporting_end_date ) && $reporting_end_date != "" ) {
+	if( date_parse( $reporting_start_date ) !== false && date_parse( $reporting_end_date )!== false ) {
+		if( $reporting_end_date >= $reporting_start_date ) {
 			$start_date = $reporting_start_date;
 			$end_date = $reporting_end_date;
 		}
@@ -136,19 +149,19 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 	// détermination de la "clé d'unicité" et le nombre de jours consommés du daily_rate en fonction du type de ventilation
 	if( $aggregation_level["task"] && !$aggregation_level["profile"] ) {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->task_id";
-		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, $geny_daily_rate->task_id );
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, $geny_daily_rate->task_id, $start_date, $end_date );
 	}
 	else if( $aggregation_level["profile"] && !$aggregation_level["task"] ) {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id";
-		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, -1 );
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, -1, $start_date, $end_date );
 	}
 	else if( !$aggregation_level["profile"] && !$aggregation_level["task"] ) {
 		$key = "$geny_daily_rate->po_number";
-		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, -1 );
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, -1, $start_date, $end_date );
 	}
 	else {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id+$geny_daily_rate->task_id";
-		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, $geny_daily_rate->task_id );
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, $geny_daily_rate->task_id, $start_date, $end_date );
 	}
 	
 	// si le po n'existe pas dans les données, on l'insère
