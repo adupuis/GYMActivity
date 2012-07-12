@@ -25,7 +25,7 @@ function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project
 	$geny_activity = new GenyActivity();
 	
 	// si l'id du profil est négative, on considère que l'on prend tous les profils associés au projet
-	if( $profile_id != -1 ) {
+	if( $profile_id != -1 && $profile_id != NULL ) {
 		$list_of_assignements = $geny_assignement->getAssignementsListByProjectIdAndProfileId( $project_id, $profile_id );
 	}
 	// sinon on trouve l'assignement rattché au couple unique projet + profil
@@ -42,7 +42,7 @@ function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project
 		$total_load = ( float ) 0;
 		
 		// si l'identifiant de la tache est négatif, on prend toutes les tâches
-		if( $task_id != -1 ) {
+		if( $task_id != -1 && $task_id != NULL ) {
 			// on additionne la charge associée
 			foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $geny_assignement->id", "activity_date >= \"$start_date\"", "activity_date <= \"$end_date\"" ) ) as $geny_activity ) {
 				$total_load += ( float ) $geny_activity->load;
