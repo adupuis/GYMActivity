@@ -18,6 +18,46 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+function getConsumedDaysFromAssignementAndTaskIds( $assignement_id = -1, $task_id = -1 ) {
+	$geny_activity = new GenyActivity();
+	
+	$total_load = ( float ) 0;
+	
+	if( $task_id != -1 ) {
+		// WARNING & TODO : AJOUTER DES RESTRICTIONS DE DATE
+		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $assignement_id" ) ) as $geny_activity ) {
+			$total_load += ( float ) $geny_activity->load;
+		}
+	}
+	else {
+		// WARNING & TODO : AJOUTER DES RESTRICTIONS DE DATE
+		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "assignement_id = $assignement_id" ) ) as $geny_activity ) {
+			$total_load += ( float ) $geny_activity->load;
+		}
+	}
+	
+	return ( ( float ) $total_load ) / ( ( float ) 8.0 ) ;
+}
+
+function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project_id = -1, $task_id = -1 ) {
+	$geny_assignement = new GenyAssignement();
+	
+	if( $profile_id != -1 ) {
+		$list_of_assignements = $geny_assignement->getAssignementsListByProjectIdAndProfileId( $project_id, $profile_id );
+	}
+	else {
+		$list_of_assignements = $geny_assignement->getAssignementsListByProjectId( $project_id );
+	}
+	
+	$total_consumed_days = 0;
+	
+	foreach( $list_of_assignements as $geny_assignement ) {
+		$total_consumed_days += getConsumedDaysFromAssignementAndTaskIds( $geny_assignement->id , $task_id ) ;
+	}
+	
+	return $total_consumed_days;
+}
+
 // déclaration de variables générales
 $reporting_data = array();
 $geny_project = new GenyProject();
@@ -93,18 +133,22 @@ foreach( $data_array_filters as $key => $data ) {
 // on prend tous les dailyrate dans l'intervalle donné
 foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate_start_date >= \"$start_date\"", "daily_rate_end_date <= \"$end_date\"" ) ) as $geny_daily_rate ) {
 	
-	// détermination de la "clé d'unicité" du daily_rate en fonction du type de ventilation
+	// détermination de la "clé d'unicité" et le nombre de jours consommés du daily_rate en fonction du type de ventilation
 	if( $aggregation_level["task"] && !$aggregation_level["profile"] ) {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->task_id";
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, $geny_daily_rate->task_id );
 	}
 	else if( $aggregation_level["profile"] && !$aggregation_level["task"] ) {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id";
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, -1 );
 	}
 	else if( !$aggregation_level["profile"] && !$aggregation_level["task"] ) {
 		$key = "$geny_daily_rate->po_number";
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( -1, $geny_daily_rate->project_id, -1 );
 	}
 	else {
 		$key = "$geny_daily_rate->po_number+$geny_daily_rate->profile_id+$geny_daily_rate->task_id";
+		$nb_consumed_days = getConsumedDaysFromProfileProjectAndTaskIds( $geny_daily_rate->profile_id, $geny_daily_rate->project_id, $geny_daily_rate->task_id );
 	}
 	
 	// si le po n'existe pas dans les données, on l'insère
@@ -113,15 +157,15 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 						 "project_id" => $geny_daily_rate->project_id ,
 						 "task_id" => $geny_daily_rate->task_id ,
 						 "profile_id" => $geny_daily_rate->profile_id ,
-						 "nb_consumed_days" => 0, // TODO
-						 "nb_remaining_days" => 0, // TODO
+						 "nb_consumed_days" => $nb_consumed_days,
+						 "nb_remaining_days" =>  $geny_daily_rate->po_days - $nb_consumed_days,
 						 "total_nb_day_po" => $geny_daily_rate->po_days );
 	}
 	// sinon, on met à jour les données additionne les données chiffrées du nouveau po avec celles des anciens po
 	else {
 		$reporting_data["$key"]["total_nb_day_po"] += $geny_daily_rate->po_days;
-		$reporting_data["$key"]["nb_remaining_days"] += 0; // TODO
-		$reporting_data["$key"]["nb_consumed_days"] += 0; // TODO
+		$reporting_data["$key"]["nb_consumed_days"] += $nb_consumed_days;
+		$reporting_data["$key"]["nb_remaining_days"] = $reporting_data["$key"]["total_nb_day_po"] - $reporting_data["$key"]["nb_consumed_days"];
 	}
 	
 	// on crée les données de filtres par la même occasion
@@ -323,14 +367,14 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 					}
 				?>
 				<th>Nbr. jours <strong>total</strong></th>
-				<th>Nbr. jours <strong>restants</strong></th>
 				<th>Nbr. jours <strong>consommés</strong></th>
+				<th>Nbr. jours <strong>restants</strong></th>
 			</thead>
 			<tbody>
 			<?php
 				// pour chacune des lignes de PO précédemment générées
 				foreach( $reporting_data as $data ) {
-					// on charge le nom du profil, sinon on affiche "-"
+					// on charge le nom du profil associé si il existe, sinon on affiche "-"
 					if( $aggregation_level["profile"] ) {
 						if( $data["profile_id"] != NULL ) {
 							$geny_profile->loadProfileById( $data["profile_id"] );
@@ -340,7 +384,7 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 							$displayed_profile_name = "-";
 						}
 					}
-					// on charge le nom associé à la tâche, sinon on affiche "-"
+					// on charge le nom associé à la tâche si elle existe, sinon on affiche "-"
 					if( $aggregation_level["task"] ) {
 						if( $data["task_id"] != NULL ) {
 							$geny_task->loadTaskById( $data["task_id"] );
@@ -384,8 +428,8 @@ foreach( $geny_daily_rate->getDailyRatesListWithRestrictions( array( "daily_rate
 					}
 				?>
 				<th>Nb. jours <strong>total</strong></th>
-				<th>Nb. jours <strong>restant</strong></th>
 				<th>Nb. jours <strong>consommé</strong></th>
+				<th>Nb. jours <strong>restant</strong></th>
 			</tfoot>
 			</table>
 		</p>
