@@ -18,37 +18,11 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-// fonction retournant le nombre de jours de consommés en fonction d'un assignement, d'une tache et d'une date
-function getConsumedDaysFromAssignementAndTaskIds( $assignement_id = -1, $task_id = -1, $start_date = "0000-00-00", $end_date = "9999-12-31" ) {
-	// on a besoin d'une activité
-	$geny_activity = new GenyActivity();
-	
-	// on initialise la charge
-	$total_load = ( float ) 0;
-	
-	// si l'identifiant de la tache est négatif, on prend toutes les tâches
-	if( $task_id != -1 ) {
-		// on additionne la charge associée
-		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $assignement_id", "activity_date >= \"$start_date\"", "activity_date <= \"$end_date\"" ) ) as $geny_activity ) {
-			$total_load += ( float ) $geny_activity->load;
-		}
-	}
-	// sinon on ne prend que la tâche donnée 
-	else {
-		// on additionne la charge associée à chacun des couples assignement + tâche
-		foreach( $geny_activity->getActivitiesListWithRestrictions( array( "assignement_id = $assignement_id", "activity_date > \"$start_date\"", "activity_date < \"$end_date\"" ) ) as $geny_activity ) {
-			$total_load += ( float ) $geny_activity->load;
-		}
-	}
-	
-	// on retourne la charge totale divisée par le nb total d'heure par jour pour obtenir le nb de jour déjà consommés
-	return ( ( float ) $total_load ) / ( ( float ) 8.0 ) ;
-}
-
-// focntion retournant le nombre de jours consommés en fonction d'un identifiant de profil, de projet, de tache et de la date
+// fonction retournant le nombre de jours consommés en fonction d'un identifiant de profil, de projet, de tache et de la date
 function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project_id = -1, $task_id = -1, $start_date = "0000-00-00", $end_date = "9999-12-31" ) {
-	// on a besoin de déterminer un assignement en fonction du projet et du profile
+	// on a besoin de déterminer un assignement et d'une activité
 	$geny_assignement = new GenyAssignement();
+	$geny_activity = new GenyActivity();
 	
 	// si l'id du profil est négative, on considère que l'on prend tous les profils associés au projet
 	if( $profile_id != -1 ) {
@@ -62,9 +36,27 @@ function getConsumedDaysFromProfileProjectAndTaskIds( $profile_id = -1, $project
 	// on initialise le nb total de jours consommés
 	$total_consumed_days = 0;
 	
-	// on additionne la charge associée à chacun des assignements précédemment trouvés 
+	// on additionne la nb de jours consommés associée à chacun des jours consommés des assignements précédemment trouvés 
 	foreach( $list_of_assignements as $geny_assignement ) {
-		$total_consumed_days += getConsumedDaysFromAssignementAndTaskIds( $geny_assignement->id , $task_id, $start_date, $end_date ) ;
+		// on initialise la charge
+		$total_load = ( float ) 0;
+		
+		// si l'identifiant de la tache est négatif, on prend toutes les tâches
+		if( $task_id != -1 ) {
+			// on additionne la charge associée
+			foreach( $geny_activity->getActivitiesListWithRestrictions( array( "task_id = $task_id", "assignement_id = $geny_assignement->id", "activity_date >= \"$start_date\"", "activity_date <= \"$end_date\"" ) ) as $geny_activity ) {
+				$total_load += ( float ) $geny_activity->load;
+			}
+		}
+		// sinon on ne prend que la tâche donnée 
+		else {
+			// on additionne la charge associée à chacun des couples assignement + tâche
+			foreach( $geny_activity->getActivitiesListWithRestrictions( array( "assignement_id = $geny_assignement->id", "activity_date > \"$start_date\"", "activity_date < \"$end_date\"" ) ) as $geny_activity ) {
+				$total_load += ( float ) $geny_activity->load;
+			}
+		}
+		// on additionne au nombre de jours consommés la charge divisée par 8
+		$total_consumed_days += ( ( float ) $total_load ) / ( ( float ) 8.0 ) ;
 	}
 	
 	// on retourne le nb total de jours
