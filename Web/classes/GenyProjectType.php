@@ -83,12 +83,52 @@ class GenyProjectType extends GenyDatabaseTools {
 		}
 	}
 	public function loadProjectTypeById($id){
-		$objects = $this->getProjectTypeListWithRestrictions(array("project_type_id=".mysql_real_escape_string($id)));
+		$objects = $this->getProjectTypesListWithRestrictions(array("project_type_id=".mysql_real_escape_string($id)));
 		$object = $objects[0];
 		if(isset($object) && $object->id > -1){
 			$this->id = $object->id;
 			$this->name = $object->name;
 			$this->description = $object->description;
+		}
+	}
+	public function getProjectTypeColor($id=0){
+		if($id > 0 && is_numeric($id)) {
+			$this->loadProjectTypeById($id);
+		}
+		if($this->id > 0) {
+			$geny_property = new GenyProperty();
+			$geny_properties = $geny_property->searchProperties( "color_project_type_". $this->id );
+			if( sizeof( $geny_properties == 1 ) ) {
+				$geny_property = $geny_properties[0];
+				$geny_property_values = $geny_property->getPropertyValues();
+				if( sizeof( $geny_property_values ) == 1 ) {
+					return $geny_property_values[0]->content;
+				}
+				else if( sizeof( $geny_property_values ) > 1 ) {
+					if($this->config->debug) {
+						GenyTools::debug("Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte");
+					}
+					return $geny_property_values[0]->content;
+				}
+				else {
+					if($this->config->debug) {
+						GenyTools::debug("Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc");
+					}
+					return "white";
+				}
+			}
+			else if( sizeof( $geny_properties == 0 ) ) {
+				if($this->config->debug) {
+					GenyTools::debug("Erreur interne : Aucune propriété associé au type de projet $geny_project->type_id ! Couleur par défaut : blanc");
+				}
+				return "white";
+			}
+			else {
+				if($this->config->debug) {
+					GenyTools::debug("Erreur interne : Plusieurs couleurs sont définies pour le type de projet $geny_project->type_id ! Couleur par défaut : blanc");
+				}
+				return "white";
+			}
 		}
 	}
 }

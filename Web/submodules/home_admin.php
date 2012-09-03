@@ -6,7 +6,9 @@
 				include 'backend/widgets/api_key.dock.widget.php';
 			if( $profile->rights_group_id == 1 ){
 				include 'backend/widgets/profile_add.dock.widget.php'; 
-				include 'backend/widgets/profile_list.dock.widget.php'; 
+				include 'backend/widgets/profile_list.dock.widget.php';
+				include 'backend/widgets/property_list.dock.widget.php';
+				include 'backend/widgets/property_add.dock.widget.php';
 			}
 			if( $profile->rights_group_id == 1 || $profile->rights_group_id == 2 ){
 				include 'backend/widgets/client_add.dock.widget.php'; 

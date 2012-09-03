@@ -376,6 +376,10 @@ li.notifications a {
 	background-image: url(../../images/genymobile-2012/notification.png);
 }
 
+li.reporting_ressources_view a {
+	background-image: url(../../images/genymobile-2012/reporting_ressources.png);
+}
+
 li.reporting_monthly_view a {
 	background-image: url(../../images/genymobile-2012/reporting.png);
 }
@@ -504,6 +508,22 @@ li.intranet_page_list a {
 
 li.logout a {
 	background-image: url(../../images/genymobile-2012/logout_generic.png);
+}
+
+li.property_list a {
+	background-image: url(../../images/genymobile-2012/property_list.png);
+}
+
+li.property_add a {
+	background-image: url(../../images/genymobile-2012/property_add.png);
+}
+
+li.property_remove a {
+	background-image: url(../../images/genymobile-2012/property_remove.png);
+}
+
+li.property_edit a {
+	background-image: url(../../images/genymobile-2012/property_edit.png);
 }
 
 /* End of main dock style */

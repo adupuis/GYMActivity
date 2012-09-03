@@ -61,8 +61,8 @@ $reporting_start_date = GenyTools::getParam('reporting_start_date',$start_date);
 $reporting_end_date = GenyTools::getParam('reporting_end_date',$end_date);
 $aggregation_level = GenyTools::getParam('reporting_aggregation_level','po');
 
-if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php_task_state', $_COOKIE)) {
-	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_reporting_po_php_task_state'];
+if(array_key_exists('GYMActivity_reporting_po_table_loader_php_task', $_COOKIE)) {
+	$ts_cookie = $_COOKIE['GYMActivity_reporting_po_table_loader_php_task'];
 }
 if( isset($ts_cookie) && $ts_cookie == "true" )
 	$aggregation_level = "tasks";
@@ -162,8 +162,8 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_po_table_reporting_po_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_reporting_po_php"]);
+		if(array_key_exists('GYMActivity_reporting_po_table_loader_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_po_table_loader_php"]);
 		}
 		
 		$data_array_filters_html = array();
@@ -186,6 +186,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 	jQuery(document).ready(function(){
 		
 			var oTable = $('#reporting_po_table').dataTable( {
+				"bDeferRender": true,
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,
@@ -340,7 +341,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 						document.cookie = name + "=" +escape( value );
 					}
 					function aggregationLevelChanged(){
-						setCookie('GYMActivity_reporting_po_table_reporting_po_php_task_state', $('#reporting_aggregation_level').attr('checked'));
+						setCookie('GYMActivity_reporting_po_table_loader_php_task', $('#reporting_aggregation_level').attr('checked'));
 						$('#formID').submit();
 					}
 				</script>

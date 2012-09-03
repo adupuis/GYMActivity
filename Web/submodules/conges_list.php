@@ -125,6 +125,7 @@ date_default_timezone_set('Europe/Paris');
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#conges_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,
