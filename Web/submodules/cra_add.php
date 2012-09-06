@@ -62,7 +62,7 @@ foreach( $geny_client->getAllClients() as $client ){
 					<option value=""></option>
 					<?php
 						$geny_assignements = new GenyAssignement();
-						$pn = array();
+						$pns = array();
 						foreach( $geny_assignements->getActiveAssignementsListByProfileId( $profile->id ) as $assignement ){
 							$p = new GenyProject( $assignement->project_id );
 							if( $p->type_id != 5 && $p->status_id != 2 && $p->status_id != 3 ){
