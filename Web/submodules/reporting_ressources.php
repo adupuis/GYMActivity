@@ -64,10 +64,14 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
 	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
 	
-	// on supprime les congés des assignements 
+	// on supprime les congés, les projets dont la date est finie, et les projets fermés, en pause et perdus
 	foreach( $geny_assignements as $key => $geny_assignement ) {
 		$geny_project->loadProjectById( $geny_assignement->project_id );
-		if( intval( $geny_project->type_id ) == 5 ) {
+		if( intval( $geny_project->type_id ) == 5 ||
+		    $geny_project->end_date < date("Y-m-d") ||
+		    intval( $geny_project->status_id ) == 2 ||
+		    intval( $geny_project->status_id == 3 ) || 
+		    intval( $geny_project->status_id == 8 ) ){
 			unset( $geny_assignements[$key] );
 		}
 	}
