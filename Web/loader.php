@@ -32,10 +32,12 @@ if( file_exists( 'submodules/'.$submod.'.php.meta' ) ){
 	include_once('submodules/'.$submod.'.php.meta');
 }
 include_once 'header.php';
-if($web_config->debug) GenyTools::debug("load_menu=$load_menu");
-if($load_menu == "true")
+if($web_config->debug) {
+	GenyTools::debug("load_menu=$load_menu");
+}
+if($load_menu == "true"){
 	include_once 'menu.php';
-
+}
 ?>
 
 <div id="wrapper">
