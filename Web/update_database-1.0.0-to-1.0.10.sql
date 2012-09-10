@@ -20,9 +20,9 @@
 SET NAMES 'utf8';
 START TRANSACTION;
 
------------------------------------------------
+-- ---------------------------------------------
 -- création de la vue ActivityReportWorkflow --
------------------------------------------------
+-- ---------------------------------------------
 
 CREATE VIEW ActivityReportWorkflow AS SELECT
      DISTINCT ar.activity_report_id,
@@ -65,9 +65,9 @@ AND (
      p.client_id = c.client_id
 );
 
---------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
 -- création de la vue décrivant le tableau d'utilisation des ressources --
---------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
 
 CREATE VIEW ActivityReportRessources AS
 
@@ -108,9 +108,9 @@ AND (
 );
 
 
--------------------------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------------------
 -- ajout des options de couleurs par défaut pour le tableau d'utilisation des ressources --
--------------------------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------------------
 
 INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
 (4, 'color_project_type_1', 'Régie', 4),
@@ -134,9 +134,9 @@ INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `pro
 -- (0, 9, 'grey'),
 -- (0, 10, '#FFA500');
 
------------------------------------------------
+-- ---------------------------------------------
 -- update de la version de la base de donnée --
------------------------------------------------
+-- ---------------------------------------------
 UPDATE `PropertyValues` SET `property_value_content` = '5' WHERE `PropertyValues`.`property_value_id` =2;
 
 COMMIT;
