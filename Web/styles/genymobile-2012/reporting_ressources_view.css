@@ -72,9 +72,9 @@ a.bulle:hover span {
 	color:white;
 	text-shadow:none;
 	display: block;
-	position: absolute;
-	top: -10px;
-	left: 40px;
+	position: fixed;
+	bottom: 25px;
+	right: 25px;
 	text-align:justify;
 	font-size:12px;
 	font-weight:normal;
