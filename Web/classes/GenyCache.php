@@ -57,7 +57,15 @@ class GenyCache {
 	// Write the cache onto disk
 	public function storeCache(){
 		// TODO: encrypt content
-		file_put_contents("$this->m_cache_directory/$this->m_cache_file",$this->buffer());
+		file_put_contents("$this->m_cache_directory/$this->m_cache_file","<?php \$stored_expiration_timestamp=$this->m_expiration_timestamp; \$stored_cache='".base64_encode($this->buffer())."' ; ?>";
+	}
+	
+	// Load cache from file
+	public function loadCache(){
+		$content = file_get_contents("$this->m_cache_directory/$this->m_cache_file");
+		// decrypt
+		eval($uncrypted_content);
+		$this->setBuffer( base64_decode($stored_cache));
 	}
 	
 // Accessors
