@@ -126,7 +126,8 @@ echo $header_title
 <script src="js/formValidator/js/jquery.validationEngine-fr.js" type="text/javascript"></script>  
 <script src="js/formValidator/js/jquery.validationEngine.js" type="text/javascript"></script>
 <script src="js/jquery.listselect.js" type="text/javascript"></script>
-<script src="js/DataTables/media/js/jquery.dataTables.min.js" type="text/javascript"></script> 
+<script src="js/DataTables/media/js/jquery.dataTables.js" type="text/javascript"></script> 
+<script src="js/DataTables/media/js/FixedColumns.js" type="text/javascript"></script> 
 <script type="text/javascript" src="js/Gritter/js/jquery.gritter.min.js"></script>
 <script type="text/javascript" src="js/jquery.datepick.js"></script>
 <script type="text/javascript" src="js/jquery.datepick-GYMActivity.js"></script>

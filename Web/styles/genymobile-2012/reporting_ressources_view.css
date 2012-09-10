@@ -1,7 +1,6 @@
 .table_container {
 	width: 700px;
 	margin: auto;
-	overflow-x:scroll;
 }
 
 td, th {
@@ -9,6 +8,10 @@ td, th {
 	margin:1px;
 	border-style: solid;
 	border-color: gray;
+}
+
+th {
+	
 }
 
 td {
@@ -29,6 +32,7 @@ td {
 
 div#case {
 	width:34px;
+	height:30px;
 	text-align:center;
 }
 
@@ -43,9 +47,8 @@ div#predicted-span-info {
 
 div#names {
 	width:100px;
-	height:30px;
+	height:20px;
 	text-align:center;
-	margin-top:13px;
 }
 
 a.bulle {

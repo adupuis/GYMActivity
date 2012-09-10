@@ -339,6 +339,7 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 		<p>
 			
 			<table id="reporting_load_table">
+			<thead>
 			<tr><th><div id="names">Nom Prénom</div></th>
 			<?php
 				for( $tmp_day_id = 1; $tmp_day_id <= $nb_day_in_month; $tmp_day_id ++ ) {
@@ -346,6 +347,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				}
 			?>
 			</tr>
+			</thead>
+			<tbody>
 			<?php
 				// on parcourt les données par profil
 				foreach( $reporting_data as $tmp_profile_id => $tmp_period_data ) {
@@ -354,18 +357,14 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					$geny_profile->loadProfileById( $tmp_profile_id );
 					
 					// affichage du nom
-					$displayed_profile_name = substr( GenyTools::getProfileDisplayName( $geny_profile ), 0, 10 );
-					if( $displayed_profile_name != GenyTools::getProfileDisplayName( $geny_profile ) ) {
-						$displayed_profile_name = $displayed_profile_name . "...";
-					}
-					echo '<tr><th rowspan="2"><div id="names">' . $displayed_profile_name . '</div></th>';
+					echo '<tr><td rowspan="2"><div id="names">' . GenyTools::getProfileDisplayName( $geny_profile ) . '</div></td>';
 					
 					// on parcourt les données par période (matin/aprem)
 					foreach( $tmp_period_data as $tmp_period => $tmp_days_data ) {
 					
 						// si c'est l'aprem on commence une nouvelle ligne (sinon la ligne a déjà été commencée par le nom du profil)
 						if( $tmp_period == 1 ) {
-							echo "<tr>";
+							echo '<tr><td rowspan="2"><div id="names">' . GenyTools::getProfileDisplayName( $geny_profile ) . '</div></td>';
 						}
 					
 						// on parcourt les données par jour
@@ -406,6 +405,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					}
 				}
 			?>
+			</tbody>
+			<tfoot></tfoot>
 			</table>
 		</p>
 		</div>
@@ -414,3 +415,18 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 <?php
 	$bottomdock_items = array( 'backend/widgets/reporting_cra_completion.dock.widget.php','backend/widgets/reporting_cra_status.dock.widget.php' );
 ?>
+
+<script>
+$(document).ready( function () {
+    var oTable = $('#reporting_load_table').dataTable( {
+        "sScrollX": "100%",
+        "sScrollXInner": "150%",
+        "bScrollCollapse": true,
+        "bPaginate": false,
+        "aoColumnDefs": [
+		{ "bSortable": false, "aTargets": [ "_all" ] }
+	]
+    } );
+    new FixedColumns( oTable );
+} );
+</script>
