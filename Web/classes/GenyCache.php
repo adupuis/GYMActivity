@@ -91,7 +91,10 @@ class GenyCache {
 	}
 	
 	public function isCacheExpired(){
-		if()
+		if( $this->expirationTimestamp() < time() ){
+			return true;
+		}
+		return false;
 	}
 	
 // Accessors
