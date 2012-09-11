@@ -69,13 +69,12 @@ a.bulle:hover {
 }
 
 a.bulle:hover span {
-	z-index : 1000;
 	color:white;
 	text-shadow:none;
 	display: block;
 	position: fixed;
-	bottom: 5%;
-	right: 5%;
+	bottom: 25px;
+	right: 25px;
 	text-align:justify;
 	font-size:12px;
 	font-weight:normal;
