@@ -57,9 +57,9 @@ class GenyCache {
 	// Write the cache onto disk
 	public function storeCache(){
 		// Encrypt content
-		$content = "<?php \$stored_expiration_timestamp=$this->m_expiration_timestamp; \$stored_cache='".base64_encode($this->buffer())."' ; ?>";
+		$content = "\$stored_expiration_timestamp=$this->m_expiration_timestamp;\n\$stored_cache='".base64_encode($this->buffer())."';";
 		$encrypted_content = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->encryptionKey()), $content, MCRYPT_MODE_CBC, md5(md5($this->encryptionKey()))));
-
+		
 		$result = file_put_contents("$this->m_cache_directory/$this->m_cache_file",$encrypted_content);
 		if($result === false){
 			return false;
@@ -80,7 +80,7 @@ class GenyCache {
 		$decrypted_content = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($this->encryptionKey()), base64_decode($encrypted_content), MCRYPT_MODE_CBC, md5(md5($this->encryptionKey()))), "\0");
 		eval($decrypted_content);
 		if( isset($stored_cache) && isset($stored_expiration_timestamp) ){
-			$this->setBuffer( $stored_cache ); // $stored_cache is defined in the php eval()-ed.
+			$this->setBuffer( base64_decode($stored_cache) ); // $stored_cache is defined in the php eval()-ed.
 			$this->setExpirationTimestamp($stored_expiration_timestamp);
 			return true;
 		}

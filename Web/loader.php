@@ -19,19 +19,26 @@
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 include 'classes/GenyTools.php';
+include 'classes/GenyCache.php';
 
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Home';
 $required_group_rights = 6;
+$is_cached = false;
+$expiration_freq = 24*60*60; // in seconds
+$dyn_params = array();
 
 $load_menu = GenyTools::getParam("load_menu","true");
 $load_bottomdock = GenyTools::getParam("load_bottomdock","true");
-// Here is the code for submodule metadata loading
 $submod = GenyTools::getParam("module","bork");
+$force_refresh = (bool) GenyTools::getParam("force_refresh",false);
+
 if( file_exists( 'submodules/'.$submod.'.php.meta' ) ){
 	include_once('submodules/'.$submod.'.php.meta');
 }
+
 include_once 'header.php';
+
 if($web_config->debug) {
 	GenyTools::debug("load_menu=$load_menu");
 }
@@ -41,22 +48,50 @@ if($load_menu == "true"){
 ?>
 
 <div id="wrapper">
-<!-- 	<span id="load"> </span> -->
 	<div id="content">
 		<?php
 			// Here is the code for submodule loading
-			if( file_exists( 'submodules/'.$submod.'.php' ) )
+			if( $is_cached === true ) {
+				// détermination du chemin du cache
+				$path = $submod;
+				foreach($dyn_params as $param) {
+					$path.= '-' . $param . '=' . GenyTools::getParam($param,"non_defined");
+				}
+				$path.='.php';
+				
+				$geny_cache = new GenyCache( "./cache", $path, "ABCD123456789azerty", time() + $expiration_freq );
+				
+				// affichage de l'url pour rafraichir la page
+				/*if( preg_match( '', $_SERVER['REQUEST_URI'] ) ) {
+					$refresh_url = $_SERVER['REQUEST_URI'] . "&force_refresh=true";
+				}
+				else {
+					$refresh_url = $_SERVER['REQUEST_URI'] . "?force_refresh=true";
+				}*/
+				// si la page est en cache et valide, on l'affiche
+				if( $geny_cache->loadCache() && ! $geny_cache->isCacheExpired() && ! $force_refresh ) {
+					echo $geny_cache->getCache();
+				}
+				// sinon on la regenère
+				else {
+					$geny_cache->setExpirationTimestamp( time() + $expiration_freq );
+					$geny_cache->startCaching();
+					if( file_exists( 'submodules/'.$submod.'.php' ) )
+						include_once('submodules/'.$submod.'.php');
+					else
+						include_once('submodules/bork.php');
+					$geny_cache->stopCaching();
+					$geny_cache->storeCache();
+				}
+			}
+			else if( file_exists( 'submodules/'.$submod.'.php' ) )
 				include_once('submodules/'.$submod.'.php');
 			else
 				include_once('submodules/bork.php');
 		?>
 	</div>
 </div>
-<!--<div id='separator_top'></div>
-<div id='bottomdock'>
-<h3 class='italic'>Liens rapides</h3>
-<div id='services' class='widget clearfix'>
-<ul>-->
+
 <?php
 	if( $load_bottomdock == "true" ) {
 		if( !isset( $bottomdock_items ) ) {
@@ -74,41 +109,9 @@ if($load_menu == "true"){
 		echo "</ul>\n</div>\n</div>\n<div id='separator_bottom'></div>";
 	}
 ?>
-<!--</ul>
-</div>
-</div>
-<div id='separator_bottom'></div>-->
+
 <?php
 include_once 'footer.php';
 ?>
 
 <script type="text/javascript"> $(".chzn-select").chosen();</script>
-
-<!--<script type="text/javascript">
-	$(document).ready(function() {
-		$('#sdt_menu li a').click(function(){
-			var destHref = $(this).attr('href');
-			var reg = new RegExp("module=", "g");
-			var table = destHref.split(reg);
-			console.log("Résultat du split[1]="+table[1]);
-// 			var toLoad = destHref+' #content';
-			var toLoad = "submodules/"+table[1]+".php";
-			$('#content').hide('fast',loadContent);  
-			$('#load').remove();  
-			$('#wrapper').append('<span id="load">LOADING...</span>');  
-			$('#load').fadeIn('normal');
-			function loadContent() {  
-				$('#content').load(toLoad,'',showNewContent())  
-			}  
-			function showNewContent() {  
-				$('#content').show('normal',hideLoader());  
-			}  
-			function hideLoader() {  
-// 				$('#load').fadeOut('normal');  
-			}  
-			return false;  
-		});  
-	}); 
-</script>-->
-
-
