@@ -43,7 +43,7 @@ class GenyCache {
 		ob_start();
 	}
 	
-	// Stop caching and save the cahced data in the current buffer (over any previous content)
+	// Stop caching and save the cached data in the current buffer (over any previous content). Flush the cache buffer too.
 	public function stopCaching(){
 		$this->setBuffer( ob_get_contents() );
 		ob_end_flush();
@@ -56,16 +56,21 @@ class GenyCache {
 	
 	// Write the cache onto disk
 	public function storeCache(){
-		// TODO: encrypt content
-		file_put_contents("$this->m_cache_directory/$this->m_cache_file","<?php \$stored_expiration_timestamp=$this->m_expiration_timestamp; \$stored_cache='".base64_encode($this->buffer())."' ; ?>";
+		// Encrypt content
+		$content = "<?php \$stored_expiration_timestamp=$this->m_expiration_timestamp; \$stored_cache='".base64_encode($this->buffer())."' ; ?>";
+		$encrypted_content = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->encryptionKey()), $content, MCRYPT_MODE_CBC, md5(md5($this->encryptionKey()))));
+
+		file_put_contents("$this->m_cache_directory/$this->m_cache_file",$encrypted_content);
 	}
 	
 	// Load cache from file
 	public function loadCache(){
-		$content = file_get_contents("$this->m_cache_directory/$this->m_cache_file");
 		// decrypt
-		eval($uncrypted_content);
-		$this->setBuffer( base64_decode($stored_cache));
+		$encrypted_content = file_get_contents("$this->m_cache_directory/$this->m_cache_file");
+		$decrypted_content = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($this->encryptionKey()), base64_decode($encrypted_content), MCRYPT_MODE_CBC, md5(md5($this->encryptionKey()))), "\0");
+		eval($decrypted_content);
+		$this->setBuffer( $stored_cache ); // $stored_cache is defined in the php eval()-ed.
+		$this->setExpirationTimestamp($stored_expiration_timestamp);
 	}
 	
 // Accessors
