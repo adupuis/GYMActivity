@@ -45,9 +45,15 @@ if($web_config->debug) {
 if($load_menu == "true"){
 	include_once 'menu.php';
 }
+
+if( $is_cached === true ) {
+	echo '<form id="force_refresh_cache" method="POST" action=".'. $_SERVER['REQUEST_URI'] . '">
+	      <input type="hidden" name="force_refresh" value="true">
+	      <input type="submit" class="force_refresh_cache" value="Rafraichir le cache"></form>';
+}
 ?>
 
-<div id="wrapper">
+<div id="<?php echo ( $is_cached === true ) ? "wrapper-cache" : "wrapper" ;?>">
 	<div id="content">
 		<?php
 			// Here is the code for submodule loading
@@ -61,13 +67,6 @@ if($load_menu == "true"){
 				
 				$geny_cache = new GenyCache( "./cache", $path, "ABCD123456789azerty", time() + $expiration_freq );
 				
-				// affichage de l'url pour rafraichir la page
-				/*if( preg_match( '', $_SERVER['REQUEST_URI'] ) ) {
-					$refresh_url = $_SERVER['REQUEST_URI'] . "&force_refresh=true";
-				}
-				else {
-					$refresh_url = $_SERVER['REQUEST_URI'] . "?force_refresh=true";
-				}*/
 				// si la page est en cache et valide, on l'affiche
 				if( $geny_cache->loadCache() && ! $geny_cache->isCacheExpired() && ! $force_refresh ) {
 					echo $geny_cache->getCache();

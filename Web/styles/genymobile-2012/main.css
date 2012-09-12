@@ -142,6 +142,9 @@ form input[type=text],input[type=password] {
 	width: 400px;
 }
 
+input.force_refresh_cache {
+	margin:25px 0 -150px -150px;
+}
 
 form textarea {
 /* 	width: 245px; */
@@ -173,6 +176,14 @@ a#home_logo:hover {
 #wrapper {
 /* 	background-color: red; */
 	margin-top: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+/* 	margin-bottom: 30px; */
+}
+
+#wrapper-cache {
+/* 	background-color: red; */
+	margin-top: 50px;
 	margin-left: 10px;
 	margin-right: 10px;
 /* 	margin-bottom: 30px; */

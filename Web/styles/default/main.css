@@ -127,6 +127,10 @@ form input[type=text] {
 	width: 245px;
 }
 
+input.force_refresh_cache {
+	margin:25px 0 -150px -180px;
+}
+
 form textarea {
 	width: 245px;
 }
@@ -1010,7 +1014,6 @@ table.object_list > tr:nth-child(odd){
 	right: 20px;
 	bottom: 30px;*/
 }
-
 
 .holiday_summary_edit {
 	line-height: 30px;
