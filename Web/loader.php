@@ -55,6 +55,7 @@ if( $is_cached === true ) {
 ?>
 
 <div id="<?php echo ( $is_cached === true ) ? "wrapper-cache" : "wrapper" ;?>">
+	<!--       <span id="load"> </span> -->
 	<div id="content">
 		<?php
 			// Here is the code for submodule loading
@@ -115,3 +116,29 @@ include_once 'footer.php';
 ?>
 
 <script type="text/javascript"> $(".chzn-select").chosen();</script>
+<!--<script type="text/javascript">
+   $(document).ready(function() {
+           $('#sdt_menu li a').click(function(){
+                   var destHref = $(this).attr('href');
+                   var reg = new RegExp("module=", "g");
+                   var table = destHref.split(reg);
+                   console.log("Résultat du split[1]="+table[1]);
+//                         var toLoad = destHref+' #content';
+                   var toLoad = "submodules/"+table[1]+".php";
+                   $('#content').hide('fast',loadContent);  
+                   $('#load').remove();  
+                   $('#wrapper').append('<span id="load">LOADING...</span>');  
+                   $('#load').fadeIn('normal');
+                   function loadContent() {  
+                           $('#content').load(toLoad,'',showNewContent())  
+                   }  
+                   function showNewContent() {  
+                           $('#content').show('normal',hideLoader());  
+                   }  
+                   function hideLoader() {  
+//                                 $('#load').fadeOut('normal');  
+                   }  
+                   return false;  
+           });  
+   }); 
+</script>-->
