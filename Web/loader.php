@@ -49,7 +49,8 @@ if($load_menu == "true"){
 if( $is_cached === true ) {
 	echo '<form id="force_refresh_cache" method="POST" action=".'. $_SERVER['REQUEST_URI'] . '">
 	      <input type="hidden" name="force_refresh" value="true">
-	      <input type="submit" class="force_refresh_cache" value="Rafraichir le cache"></form>';
+	      <input type="submit" class="force_refresh_button" value="Rafraichir le cache">
+	      <span class="force_refresh_text">Cette page est issue du cache, il se peut que les informations qu\'elle contient soient périmées.</span></form>';
 }
 ?>
 

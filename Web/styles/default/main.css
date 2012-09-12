@@ -127,8 +127,12 @@ form input[type=text] {
 	width: 245px;
 }
 
-input.force_refresh_cache {
+input.force_refresh_button {
 	margin:25px 0 -150px -180px;
+}
+
+span.force_refresh_text {
+	margin-left:15px;
 }
 
 form textarea {
