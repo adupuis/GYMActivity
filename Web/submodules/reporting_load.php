@@ -151,13 +151,13 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_load_table_reporting_load_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_load_table_reporting_load_php"]);
+		if(array_key_exists('GYMActivity_reporting_load_table_loader_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_load_table_loader_php"]);
 		}
 		
 		$data_array_filters_html = array();
 		foreach( $data_array_filters as $idx => $data ){
-			error_log("\$idx=$idx",0);
+			//error_log("\$idx=$idx",0);
 			$data_array_filters_html[$idx] = '<select><option value=""></option>';
 			foreach( $data as $d ){
 				if( isset($cookie) && htmlspecialchars_decode(urldecode($cookie->aaSearchCols[$idx][0]),ENT_QUOTES) == htmlspecialchars_decode($d,ENT_QUOTES) )
@@ -171,10 +171,11 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 			echo "indexData[$idx] = '$html';\n";
 		}
 	?>
-	
+		
 	jQuery(document).ready(function(){
 		
 			var oTable = $('#reporting_load_table').dataTable( {
+				"bDeferRender": true,
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,

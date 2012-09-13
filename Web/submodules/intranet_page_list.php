@@ -45,8 +45,8 @@ foreach( $geny_intranet_page_status->getAllIntranetPageStatus() as $status ) {
 }
 
 $geny_profile = new GenyProfile();
-foreach( $geny_profile->getAllProfiles() as $profile ) {
-	$profiles[$profile->id] = $profile;
+foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
+	$profiles[$tmp_profile->id] = $tmp_profile;
 }
 
 foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
@@ -63,21 +63,21 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	
 	$profile_authorized_to_view = false;
 	$intranet_page_status_id = $tmp->status_id;
-	if( $intranet_page_status_id == 1 ) {
+	if( $intranet_page_status_id == 1 ) { // brouillon
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2  ||   /* superuser */
 		    $profile->id == $tmp->profile_id ) {
 			$profile_authorized_to_view = true;
 		}
 	}
-	else if( $intranet_page_status_id == 2 ) {
+	else if( $intranet_page_status_id == 2 ) { // visible par le groupe
 		if( $profile->rights_group_id == 1  || /* admin */
 		    $profile->rights_group_id == 2  ||   /* superuser */
 		    $profile->rights_group_id == $intranet_page_profile->rights_group_id ) {
 			$profile_authorized_to_view = true;
 		}
 	}
-	else {
+	else { // publié
 		$profile_authorized_to_view = true;
 	}
 	
@@ -116,7 +116,8 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 	}
 	
 	if( $profile->rights_group_id == 1  || /* admin */
-	    $profile->rights_group_id == 2  /* superuser */ ) {
+	    $profile->rights_group_id == 2  || /* superuser */
+	    $profile->id == $tmp->profile_id ) /* créateur de la page */ {
 		$remove = "<a href=\"loader.php?module=intranet_page_remove&intranet_page_id=$tmp->id\" title=\"Supprimer définitivement la page Intranet\"><img src=\"images/$web_config->theme/intranet_page_remove_small.png\" alt=\"Supprimer définitivement la page Intranet\"></a>";
 	}
 	else {
@@ -150,8 +151,8 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 		<script>
 			var indexData = new Array();
 			<?php
-				if( array_key_exists( "GYMActivity_intranet_page_list_php", $_COOKIE ) ) {
-					$cookie = json_decode( $_COOKIE["GYMActivity_intranet_page_list_php"] );
+				if( array_key_exists( "GYMActivity_intranet_page_list_table_loader_php", $_COOKIE ) ) {
+					$cookie = json_decode( $_COOKIE["GYMActivity_intranet_page_list_table_loader_php"] );
 				}
 				
 				$data_array_filters_html = array();
@@ -177,6 +178,7 @@ foreach( $geny_intranet_page->getAllIntranetPages() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#intranet_page_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

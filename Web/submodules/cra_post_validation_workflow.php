@@ -140,39 +140,49 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POS
 	
 }
 
-// Now we create an array that contains all data that will be displayed in our table
-$data_array = array();
-// We also create a table that contains the filters data (but only for required data).
-$data_array_filters = array( 1 => array(), 3 => array(), 4 => array(),5 => array(), 8 => array());
+
+$data_array = array(); // Now we create an array that contains all data that will be displayed in our table
+$data_array_filters = array( 1 => array(), 3 => array(), 4 => array(),5 => array(), 8 => array()); // We also create a table that contains the filters data (but only for required data).
 $geny_ar = new GenyActivityReport();
 $geny_ars = new GenyActivityReportStatus();
-$geny_ars_approval = new GenyActivityReportStatus();
-$geny_ars_approval->loadActivityReportStatusByShortName('P_APPROVAL');
-$geny_ars_user_validation = new GenyActivityReportStatus();
-$geny_ars_user_validation->loadActivityReportStatusByShortName('P_USER_VALIDATION');
-$geny_client = new GenyClient();
-foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_report_status_id != ".$geny_ars_approval->id,"activity_report_status_id != ".$geny_ars_user_validation->id) ) as $ar ){
-	// Let's use some server load here...
-	$tmp_activity = new GenyActivity( $ar->activity_id );
-	$geny_ars->loadActivityReportStatusById( $ar->status_id );
-	$tmp_task = new GenyTask( $tmp_activity->task_id );
-	$tmp_assignement = new GenyAssignement( $tmp_activity->assignement_id );
-	$tmp_project = new GenyProject( $tmp_assignement->project_id );
-	$tmp_profile = new GenyProfile( $tmp_assignement->profile_id );
-	$geny_client->loadClientById($tmp_project->client_id);
-	$data_array[] = array( $ar->id,GenyTools::getProfileDisplayName($tmp_profile),$tmp_activity->activity_date,$tmp_project->name,$tmp_task->name,$geny_client->name,$tmp_activity->load,$geny_ar->getDayLoad($tmp_profile->id,$tmp_activity->activity_date),GenyTools::getActivityReportStatusAsColoredHtml($geny_ars) );
+$tmp_profile = new GenyProfile( );
+$activity_report_workflow = new GenyActivityReportWorkflow();
+$status = $geny_ars->getAllActivityReportStatus();
+$geny_ars = array();
+
+foreach($status as $s)
+	$geny_ars["$s->id"] = $s;
 	
+$workflow = $activity_report_workflow->getActivityReportsWorkflow();
+
+foreach($workflow as $row) {
+	
+	$tmp_profile->login = $row->profile_login;
+	$tmp_profile->lastname = $row->profile_lastname;
+	$tmp_profile->firstname = $row->profile_firstname;
+	
+	$data_array[] = array(  $row->activity_report_id,
+				GenyTools::getProfileDisplayName($tmp_profile),
+				$row->activity_date,
+				$row->project_name,
+				$row->task_name,
+				$row->client_name,
+				$row->activity_load,
+				$geny_ar->getDayLoad($row->profile_id,$row->activity_date),
+				GenyTools::getActivityReportStatusAsColoredHtml($geny_ars["$row->activity_report_status_id"]) );
+
 	if( ! in_array(GenyTools::getProfileDisplayName($tmp_profile),$data_array_filters[1]) )
-		$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
-	if( ! in_array($tmp_project->name,$data_array_filters[3]) )
-		$data_array_filters[3][] = $tmp_project->name;
-	if( ! in_array($tmp_task->name,$data_array_filters[4]) )
-		$data_array_filters[4][] = $tmp_task->name;
-	if( ! in_array($geny_client->name,$data_array_filters[5]) )
-		$data_array_filters[5][] = $geny_client->name;
-	if( ! in_array($geny_ars->name,$data_array_filters[8]) )
-		$data_array_filters[8][] = $geny_ars->name;
+	$data_array_filters[1][] = GenyTools::getProfileDisplayName($tmp_profile);
+	if( ! in_array($row->project_name,$data_array_filters[3]) )
+		$data_array_filters[3][] = $row->project_name;
+	if( ! in_array($row->task_name,$data_array_filters[4]) )
+		$data_array_filters[4][] = $row->task_name;
+	if( ! in_array($row->client_name,$data_array_filters[5]) )
+		$data_array_filters[5][] = $row->client_name;
+	if( ! in_array($geny_ars["$row->activity_report_status_id"]->name,$data_array_filters[8]) )
+		$data_array_filters[8][] = $geny_ars["$row->activity_report_status_id"]->name;
 }
+
 
 ?>
 <div id="mainarea">
@@ -191,8 +201,8 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_cra_post_validation_workflow_table_cra_post_validation_workflow_php", $_COOKIE)) {
-					$cookie = json_decode($_COOKIE["GYMActivity_cra_post_validation_workflow_table_cra_post_validation_workflow_php"]);
+				if(array_key_exists("GYMActivity_cra_post_validation_workflow_table_loader_php", $_COOKIE)) {
+					$cookie = json_decode($_COOKIE["GYMActivity_cra_post_validation_workflow_table_loader_php"]);
 				}
 				
 				$data_array_filters_html = array();
@@ -217,6 +227,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_post_validation_workflow_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

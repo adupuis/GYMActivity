@@ -252,8 +252,8 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_cra_validation_admin_table_cra_validation_admin_php", $_COOKIE)){
-					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_admin_table_cra_validation_admin_php"]);
+				if(array_key_exists("GYMActivity_cra_validation_admin_table_loader_php", $_COOKIE)){
+					$cookie = json_decode($_COOKIE["GYMActivity_cra_validation_admin_table_loader_php"]);
 				}
 				
 				$data_array_filters_html = array();
@@ -277,6 +277,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_validation_admin_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

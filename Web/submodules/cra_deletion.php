@@ -156,6 +156,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#cra_deletion_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

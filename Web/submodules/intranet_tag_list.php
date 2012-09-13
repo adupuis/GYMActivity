@@ -90,6 +90,7 @@ foreach( $geny_intranet_tag->getAllIntranetTags() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#intranet_tag_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

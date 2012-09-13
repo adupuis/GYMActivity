@@ -107,7 +107,7 @@ class GenyPropertyOption extends GenyDatabaseTools {
 		if( ! is_numeric($id) )
 			return GENYMOBILE_FALSE;
 		$p_os = $this->getPropertyOptionsListWithRestrictions(array("property_option_id=$id"));
-		$p_o = $p_os[0];
+		if(isset($p_os[0])) $p_o = $p_os[0];
 		if(isset($p_o) && $p_o->id > -1){
 			$this->id = $p_o->id;
 			$this->content = $p_o->content;
