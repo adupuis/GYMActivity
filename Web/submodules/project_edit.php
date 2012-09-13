@@ -27,6 +27,12 @@ $geny_project = new GenyProject();
 $geny_ptr = new GenyProjectTaskRelation();
 $geny_profile = new GenyProfile();
 $geny_assignement = new GenyAssignement();
+$geny_client = new GenyClient();
+$clients = array();
+
+foreach( $geny_client->getAllClients() as $client ){
+	$clients[$client->id] = $client;
+}
 
 if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 	if( isset($_POST['project_name']) && isset($_POST['project_start_date']) && isset($_POST['project_end_date']) ){
@@ -265,11 +271,11 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 						$projects = $geny_project->getAllProjects();
 						foreach( $projects as $project ){
 							if( (isset($_POST['project_id']) && $_POST['project_id'] == $project->id) || (isset($_GET['project_id']) && $_GET['project_id'] == $project->id) )
-								echo "<option value=\"".$project->id."\" selected>".$project->name."</option>\n";
+								echo "<option value=\"".$project->id."\" selected>".$clients[$project->client_id]->name." - $p->name"."</option>\n";
 							else if( isset($_POST['project_name']) && $_POST['project_name'] == $project->name)
-								echo "<option value=\"".$project->id."\" selected>".$project->name."</option>\n";
+								echo "<option value=\"".$project->id."\" selected>".$clients[$project->client_id]->name." - $p->name</option>\n";
 							else
-								echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
+								echo "<option value=\"".$project->id."\">".$clients[$project->client_id]->name." - $p->name</option>\n";
 						}
 						if( $geny_project->id < 0 )
 							$geny_project->loadProjectById( $projects[0]->id );
