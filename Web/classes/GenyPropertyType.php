@@ -91,6 +91,9 @@ class GenyPropertyType extends GenyDatabaseTools {
 // 		mysql_close();
 		return $p_t_list;
 	}
+	public function getAllPropertyTypes() {
+		return $this->getPropertyTypesListWithRestrictions( array() );
+	}
 	public function searchPropertyTypes($term){
 		$q = mysql_real_escape_string($term);
 		return $this->getPropertyTypesListWithRestrictions( array("property_type_name LIKE '%$q%'") );

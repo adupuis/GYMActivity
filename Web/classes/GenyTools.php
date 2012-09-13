@@ -21,7 +21,13 @@
 
 class GenyTools {
 	static function getYearHolidays(){
-		$year = (int)date('Y');
+		return GenyTools::getHolidays(intval(date('Y')));
+	}
+	static function getHolidays($year){
+		if(!is_numeric($year) || is_null($year)) {
+			return array();
+		}
+		
 		// Liste des jours feriés
 		$arr_bank_holidays[] = $year.'-1-1'; // Jour de l'an
 		$arr_bank_holidays[] = $year.'-5-1'; // Fete du travail
@@ -98,7 +104,14 @@ class GenyTools {
 			$ret = $_POST[$param];
 		else if( isset($_GET[$param]))
 			$ret = $_GET[$param];
-		return htmlentities($ret,ENT_QUOTES,'UTF-8');
+		if(!is_array($ret))
+			return htmlentities($ret,ENT_QUOTES,'UTF-8');
+		else {
+			foreach($ret as $key => $val) {
+				$ret["$key"] = htmlentities($val,ENT_QUOTES,'UTF-8');
+			}
+			return $ret;
+		}
 	}
 	static function sortMultiArrayCaseInsensitive( $array, $key ) {
 		// example: $array = sortMultiArrayCaseInsensitive( $array, "key" );

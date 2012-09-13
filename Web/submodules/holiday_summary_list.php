@@ -91,8 +91,8 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 		<script>
 			var indexData = new Array();
 			<?php
-				if(array_key_exists("GYMActivity_holiday_summary_list_php", $_COOKIE)) {
-					$cookie = json_decode($_COOKIE["GYMActivity_holiday_summary_list_php"]);
+				if(array_key_exists("GYMActivity_holiday_summary_list_table_loader_php", $_COOKIE)) {
+					$cookie = json_decode($_COOKIE["GYMActivity_holiday_summary_list_table_loader_php"]);
 				}
 				
 				$data_array_filters_html = array();
@@ -118,6 +118,7 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#holiday_summary_list_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

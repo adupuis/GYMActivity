@@ -1,0 +1,20 @@
+input#delete_property_option_button {
+	padding:4px;
+	position:relative;
+	top:-11px;
+	margin-left:5px;
+}
+
+input#add_property_option_label {
+	padding:4px 0 4px 0;
+	width:350px;
+}
+
+input#add_property_option_button {
+	padding:4px;
+	margin-left:5px;
+}
+
+select#property_value {
+	width:350px;
+}

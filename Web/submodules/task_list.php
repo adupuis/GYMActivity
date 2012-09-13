@@ -29,6 +29,7 @@ $geny_task = new GenyTask();
 	jQuery(document).ready(function(){
 	
 		var oTable = $('#task_list').dataTable( {
+			"bDeferRender": true,
 			"bJQueryUI": true,
 			"bStateSave": true,
 			"bAutoWidth": false,

@@ -61,6 +61,7 @@ error_log("reporting_cra_status took ".(time() - $debug_start_time)." seconds to
 	jQuery(document).ready(function(){
 		
 			var oTable = $('#reporting_cra_status_table').dataTable( {
+				"bDeferRender": true,
 				"bJQueryUI": true,
 				"bStateSave": true,
 				"bAutoWidth": false,

@@ -142,6 +142,13 @@ form input[type=text],input[type=password] {
 	width: 400px;
 }
 
+input.force_refresh_button {
+	margin:25px 0 -150px -150px;
+}
+
+span.force_refresh_text {
+	margin-left:15px;
+}
 
 form textarea {
 /* 	width: 245px; */
@@ -173,6 +180,14 @@ a#home_logo:hover {
 #wrapper {
 /* 	background-color: red; */
 	margin-top: 150px;
+	margin-left: 10px;
+	margin-right: 10px;
+/* 	margin-bottom: 30px; */
+}
+
+#wrapper-cache {
+/* 	background-color: red; */
+	margin-top: 50px;
 	margin-left: 10px;
 	margin-right: 10px;
 /* 	margin-bottom: 30px; */
@@ -376,6 +391,10 @@ li.notifications a {
 	background-image: url(../../images/genymobile-2012/notification.png);
 }
 
+li.reporting_ressources_view a {
+	background-image: url(../../images/genymobile-2012/reporting_ressources.png);
+}
+
 li.reporting_monthly_view a {
 	background-image: url(../../images/genymobile-2012/reporting.png);
 }
@@ -504,6 +523,22 @@ li.intranet_page_list a {
 
 li.logout a {
 	background-image: url(../../images/genymobile-2012/logout_generic.png);
+}
+
+li.property_list a {
+	background-image: url(../../images/genymobile-2012/property_list.png);
+}
+
+li.property_add a {
+	background-image: url(../../images/genymobile-2012/property_add.png);
+}
+
+li.property_remove a {
+	background-image: url(../../images/genymobile-2012/property_remove.png);
+}
+
+li.property_edit a {
+	background-image: url(../../images/genymobile-2012/property_edit.png);
 }
 
 /* End of main dock style */

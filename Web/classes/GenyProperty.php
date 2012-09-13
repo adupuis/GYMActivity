@@ -1,5 +1,5 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
+//  Copyright (C) 2012 by GENYMOBILE & Arnaud Dupuis
 //  adupuis@genymobile.com
 //  http://www.genymobile.com
 // 
@@ -107,6 +107,9 @@ class GenyProperty extends GenyDatabaseTools {
 // 		mysql_close();
 		return $prop_list;
 	}
+	public function getAllProperties(){
+		return $this->getPropertiesListWithRestrictions( array() );
+	}
 	public function searchProperties($term){
 		$q = mysql_real_escape_string($term);
 		return $this->getPropertiesListWithRestrictions( array("property_name LIKE '%$q%'", "property_label LIKE '%$q%'"), 'OR' );
@@ -161,6 +164,35 @@ class GenyProperty extends GenyDatabaseTools {
 		
 		$type = new GenyPropertyType( $this->type_id );
 		return $type;
+	}
+	
+	// Méthode permettant de définir le nombre de valeurs de la propriété
+	
+	public function setNumberOfPropertyValues($nb_wanted_of_values=0, $id=0){
+		if( is_numeric( $id ) ){
+			if( $id == 0 && $this->id > 0 )
+				$id = $this->id;
+			if( $id <= 0 )
+				return -1;
+
+			$tmp_property = new GenyProperty( $id );
+			$tmp_property_value = new GenyPropertyValue();
+			$tmp_property_values = $tmp_property->getPropertyValues();
+			$orinal_nb_of_values = count( $tmp_property_values );
+			
+			if( $orinal_nb_of_values < $nb_wanted_of_values ) {
+				$property_value_number_to_add = $nb_wanted_of_values - $orinal_nb_of_values;
+				for( $cpt=0; $cpt < $property_value_number_to_add; $cpt++ ) {
+					$tmp_property_value->insertNewPropertyValue( '-1', $id );
+				}
+			}
+			if( $orinal_nb_of_values > $nb_wanted_of_values ) {
+				$property_value_number_to_remove = $orinal_nb_of_values - $nb_wanted_of_values;
+				for( $cpt=0; $cpt < $property_value_number_to_remove; $cpt++ ) {
+					$tmp_property_values[$cpt]->deletePropertyValue();
+				}
+			}
+		}
 	}
 }
 ?>

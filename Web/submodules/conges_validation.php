@@ -268,6 +268,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				$("#formID").validationEngine('attach');
 				
 				var oTable = $('#conges_validation_table').dataTable( {
+					"bDeferRender": true,
 					"bJQueryUI": true,
 					"bStateSave": true,
 					"bAutoWidth": false,

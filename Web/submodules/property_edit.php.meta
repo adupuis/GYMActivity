@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Edition d\'une propriété';
+$required_group_rights = 1;
+?>

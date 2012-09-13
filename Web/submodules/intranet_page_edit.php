@@ -500,7 +500,8 @@ if( $profile_authorized ) {
 				<textarea id="intranet_page_content_editor" name="intranet_page_content_editor"><?php echo $intranet_page_content_to_display ?></textarea>
 			</p>
 			<script type="text/javascript">
-				CKEDITOR.replace( 'intranet_page_content_editor' );
+				var editor = CKEDITOR.replace( 'intranet_page_content_editor' );
+				CKFinder.setupCKEditor( editor, 'js/ckfinder/' );
 			</script>
 			
 			<p>
@@ -527,7 +528,7 @@ if( $profile_authorized ) {
 					echo rtrim( $tags, "," );
 				?>
 			];
-			console.log( availableTags );
+			//console.log( availableTags );
 			$("#intranet_tag_name").autocomplete({
 				source: availableTags
 			});

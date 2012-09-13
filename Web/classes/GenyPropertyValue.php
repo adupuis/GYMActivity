@@ -54,7 +54,7 @@ class GenyPropertyValue extends GenyDatabaseTools {
 	public function insertNewPropertyValue($content,$property_id){
 		if( ! is_numeric($property_id) )
 			return GENYMOBILE_FALSE;
-		$query = "INSERT INTO PropertyValues VALUES(0,'".mysql_real_escape_string($content)."',$property_id)";
+		$query = "INSERT INTO PropertyValues VALUES(0," . $property_id . ",'" . mysql_real_escape_string($content)."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyPropertyValue MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
