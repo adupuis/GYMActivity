@@ -78,8 +78,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 	}
 	$geny_assignements = array_values( $geny_assignements );
 	
-	// restriction de profil => on ne prend que les gens qui ont des projets en cours et qui sont disponibles
-	if( $tmp_profile->is_active && $geny_profil_management->availability_date <= ( date( "Y-m-d", mktime( 0, 0, 0, $month, $nb_day_in_month, $year ) ) ) && sizeof( $geny_assignements ) > 0 ) {
+	// restriction de profil => on ne prend que les gens qui ont des projets en cours
+	if( $tmp_profile->is_active && sizeof( $geny_assignements ) > 0 ) {
 		
 		// on initialise le tableau contenant les données de reporting
 		$reporting_data[$tmp_profile->id] = array();
