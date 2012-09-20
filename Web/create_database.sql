@@ -72,7 +72,7 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_availability_date date not null,
 	profile_management_data_group_leader_id int not null default 5,
 	profile_management_data_technology_leader_id int not null default 5,
-	profile_management_data_category int not null default 5, -- category value is a property, values are taken in the PROP_PROFILE_TYPE property's values.
+	profile_management_data_category int not null default 0, -- category value is a property, values are taken in the PROP_PROFILE_TYPE property's values.
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(profile_management_data_group_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
