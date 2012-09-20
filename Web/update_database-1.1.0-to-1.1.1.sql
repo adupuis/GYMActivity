@@ -17,6 +17,12 @@
 -- Free Software Foundation, Inc.,
 -- 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+-- From DB version 6 and above the update script shall define 3 properties : AUTO_UPDATE_ENABLED, AUTO_UPDATE_OLD_DB_VERSION and AUTO_UPDATE_NEW_DB_VERSION.
+-- Those properties are to be defined as SQL comments, one per line with only one space between double dash and property name and none after that.
+-- AUTO_UPDATE_ENABLED=1
+-- AUTO_UPDATE_OLD_DB_VERSION=5
+-- AUTO_UPDATE_NEW_DB_VERSION=6
+
 SET NAMES 'utf8';
 START TRANSACTION;
 
