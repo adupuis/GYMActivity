@@ -59,12 +59,7 @@ UPDATE Profiles SET profile_password = MD5('admin') WHERE profile_id=1;
 INSERT INTO Profiles VALUES (2,'test','ALongFirstName','AVeryLongLastName','test','admin@genymobile.com',true,false,3);
 UPDATE Profiles SET profile_password = MD5('test') WHERE profile_id=2;
 ALTER TABLE Profiles AUTO_INCREMENT = 1;
-INSERT INTO Profiles VALUES (3,'cravalec','Cédric','Ravalec','genymobile','cravalec@genymobile.com',true,true,1);
-UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=3;
-INSERT INTO Profiles VALUES (4,'azettor','Angélique','Zettor','genymobile','azettor@genymobile.com',true,true,1);
-UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=4;
-INSERT INTO Profiles VALUES (5,'adupuis','Arnaud','Dupuis','genymobile','adupuis@genymobile.com',true,true,1);
-UPDATE Profiles SET profile_password = MD5('genymobile') WHERE profile_id=5;
+
 
 CREATE TABLE ProfileManagementData (
 	profile_management_data_id int auto_increment,
@@ -77,6 +72,7 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_availability_date date not null,
 	profile_management_data_group_leader_id int not null default 5,
 	profile_management_data_technology_leader_id int not null default 5,
+	profile_management_data_category int not null default 0, -- category value is a property, values are taken in the PROP_PROFILE_TYPE property's values.
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(profile_management_data_group_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
@@ -116,8 +112,6 @@ CREATE TABLE Clients (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Clients AUTO_INCREMENT = 1;
 INSERT INTO Clients VALUES(1,'GENYMOBILE');
-INSERT INTO Clients VALUES(NULL,'Orange Vallée');
-INSERT INTO Clients VALUES(NULL,'JCDecaux');
 
 CREATE TABLE ProjectTypes (
 	project_type_id int auto_increment,
@@ -209,12 +203,6 @@ CREATE TABLE ProjectTaskRelations (
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProjectTaskRelations AUTO_INCREMENT = 1;
--- INSERT INTO ProjectTaskRelations VALUES(NULL,1,1);
--- INSERT INTO ProjectTaskRelations VALUES(NULL,3,1);
--- INSERT INTO ProjectTaskRelations VALUES(NULL,1,2);
--- INSERT INTO ProjectTaskRelations VALUES(NULL,3,2);
--- INSERT INTO ProjectTaskRelations VALUES(NULL,1,3);
--- INSERT INTO ProjectTaskRelations VALUES(NULL,3,3);
 
 INSERT INTO `ProjectTaskRelations` VALUES (NULL,1,3),(NULL,3,3),(NULL,1,2),(NULL,3,2),(NULL,1,1),(NULL,3,1),(NULL,1,4),(NULL,1,5),(NULL,1,6),(NULL,2,7),(NULL,2,8),(NULL,2,9),(NULL,2,10),(NULL,2,11),(NULL,2,12),(NULL,2,13),(NULL,2,14),(NULL,2,15),(NULL,2,16),(NULL,2,17),(NULL,2,18),(NULL,2,19),(NULL,2,20),(NULL,3,4),(NULL,3,5),(NULL,3,6),(NULL,4,7),(NULL,4,8),(NULL,4,9),(NULL,4,10),(NULL,4,11),(NULL,4,12),(NULL,4,13),(NULL,4,14),(NULL,4,15),(NULL,4,16),(NULL,4,17),(NULL,4,18),(NULL,4,19),(NULL,4,20);
 
@@ -229,7 +217,6 @@ CREATE TABLE Assignements (
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
--- INSERT INTO `Assignements` VALUES (NULL,3,1,0),(NULL,4,1,0),(NULL,5,1,0),(NULL,3,4,0),(NULL,3,2,0),(NULL,4,2,0),(NULL,5,2,0),(NULL,3,3,0),(NULL,4,3,0),(NULL,5,3,0),(NULL,4,4,0),(NULL,5,4,0);
 
 CREATE TABLE DailyRates (
 	daily_rate_id int auto_increment,
@@ -402,13 +389,16 @@ INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"Etat de l'application",3);
 
 -- Ajout des couleurs par type de projet
 INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
-(4, 'color_project_type_1', 'Régie', 4),
-(5, 'color_project_type_2', 'Forfait', 4),
-(6, 'color_project_type_3', 'Régie forfaitée', 4),
-(7, 'color_project_type_4', 'r&d', 4),
-(8, 'color_project_type_5', 'Congés', 4),
-(9, 'color_project_type_6', 'Autre', 4),
-(10, 'color_project_type_7', 'Avant vente', 4);
+(4, 'COLOR_PROJECT_TYPE_1', 'Régie', 4),
+(5, 'COLOR_PROJECT_TYPE_2', 'Forfait', 4),
+(6, 'COLOR_PROJECT_TYPE_3', 'Régie forfaitée', 4),
+(7, 'COLOR_PROJECT_TYPE_4', 'r&d', 4),
+(8, 'COLOR_PROJECT_TYPE_5', 'Congés', 4),
+(9, 'COLOR_PROJECT_TYPE_6', 'Autre', 4),
+(10, 'COLOR_PROJECT_TYPE_7', 'Avant vente', 4);
+
+--  Ajout des propriétés concernant le type de profil
+INSERT INTO Properties VALUES(11,'PROP_PROFILE_TYPE',"Type de profil d'un collaborateur.",3);
 
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
@@ -430,6 +420,16 @@ INSERT INTO PropertyOptions VALUES(0,'Inactive - Upgrade',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive',3);
 
+-- Liste des types de profil disponible
+INSERT INTO PropertyOptions VALUES(0,'C IA',11);
+INSERT INTO PropertyOptions VALUES(0,'C IC',11);
+INSERT INTO PropertyOptions VALUES(0,'C Junior 1',11);
+INSERT INTO PropertyOptions VALUES(0,'C Junior 2',11);
+INSERT INTO PropertyOptions VALUES(0,'C Senior 1',11);
+INSERT INTO PropertyOptions VALUES(0,'C Senior 2',11);
+INSERT INTO PropertyOptions VALUES(0,'C Expert',11);
+INSERT INTO PropertyOptions VALUES(0,'C Management',11);
+
 -- C'est dans cette table que vont les valeurs séléctionnées. Dans l'exemple ci-dessus il y aurait 1 ou 2 (les id d'une des deux options possible)
 CREATE TABLE PropertyValues (
 	property_value_id int auto_increment,
@@ -443,7 +443,7 @@ ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 -- insertion des valeurs des exemples ci-dessus
 INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
 (0, 1, 'true'), -- live debug
-(0, 2, '5'), -- n° de la version de la bdd
+(0, 2, '6'), -- n° de la version de la bdd
 (0, 3, '3'), -- état de l'application
 (0, 4, 'red'), -- couleur pour le type de projet "régie"
 (0, 5, 'blue'), -- couleur pour le type de projet "forfait"

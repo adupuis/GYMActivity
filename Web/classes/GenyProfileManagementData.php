@@ -33,6 +33,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public $availability_date = '1979-01-01';
 	public $group_leader_id = -1;
 	public $technology_leader_id = -1;
+	public $category = -1;
 	public $profile_object = GENYMOBILE_FALSE;
 	public function __construct($id = -1){
 		parent::__construct("ProfileManagementData",
@@ -49,7 +50,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
-	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5){
+	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5, $pmd_category=12){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
@@ -71,7 +72,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if( $pmd_is_billable != 'true' && $pmd_is_billable != 'false' && $pmd_is_billable != 0 && $pmd_is_billable != 1)
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is)";
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is,$pmd_category)";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
@@ -84,7 +85,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public function getProfileManagementDataListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_variable_salary,profile_management_data_objectived_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id  FROM ProfileManagementData";
+		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_variable_salary,profile_management_data_objectived_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id,profile_management_data_category FROM ProfileManagementData";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -112,6 +113,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 				$tmp_pmd->availability_date = $row[7];
 				$tmp_pmd->group_leader_id = $row[8];
 				$tmp_pmd->technology_leader_id = $row[9];
+				$tmp_pmd->category = $row[10];
 				$tmp_pmd->profile_object = new GenyProfile( $tmp_pmd->profile_id );
 				$pmd_list[] = $tmp_pmd;
 			}
@@ -153,6 +155,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 			$this->availability_date = $profile->availability_date;
 			$this->group_leader_id = $profile->group_leader_id;
 			$this->technology_leader_id = $profile->technology_leader_id;
+			$this->category = $profile->category;
 		}
 		else {
 			GenyProfileManagementData::__construct();
@@ -175,6 +178,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 				$this->availability_date = $profile->availability_date;
 				$this->group_leader_id = $profile->group_leader_id;
 				$this->technology_leader_id = $profile->technology_leader_id;
+				$this->category = $profile->category;
 			}
 		}
 	}
