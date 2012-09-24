@@ -39,6 +39,11 @@ $gritter_notifications = array();
 $param_year = getParam( 'year', date( "Y" ) );
 $param_month = getParam( 'month', date( "m" ) );
 
+// Traquons un peu le temps perdu !
+$debug_timer = time();
+$debug_intermediate_timer = time();
+$web_config->debug = true;
+
 // si le mois et l'année donnés par l'utilisateur sont correctes, on initialise $month et $year avec les valeurs de l'utilisateur
 if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && intval( $param_month ) > 0 && intval( $param_year ) > 0 && intval( $param_month ) <=12 ) {
 	$month = intval( $param_month );
@@ -57,12 +62,26 @@ foreach( $geny_project_type->getAllProjectTypes() as $tmp_project_type ) {
 	$project_type_background_color[$tmp_project_type->id] = $tmp_project_type->getProjectTypeColor();
 }
 
+
+if( $web_config->debug ){
+	GenyTools::debug("[reporting_ressources] elapsed time since beginning, before profiles crossing. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+	$debug_intermediate_timer = time();
+}
+
 // on parcourt tous les profils
 foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 
 	// on charge les informations annexes associées au profil
 	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after profiles loading. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after active assignements loading. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	
 	// on supprime les congés, les projets dont la date est finie, et les projets fermés, en pause et perdus
 	foreach( $geny_assignements as $key => $geny_assignement ) {
@@ -77,6 +96,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 		}
 	}
 	$geny_assignements = array_values( $geny_assignements );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after projects cleaning. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	
 	// restriction de profil => on ne prend que les gens qui ont des projets en cours
 	if( $tmp_profile->is_active && sizeof( $geny_assignements ) > 0 ) {
@@ -115,6 +138,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
 					$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
 			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after checking all ays of the month. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
+			}
 		
 			// on obtient la date au format YYYY-MM-DD
 			$tmp_date = date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) );
@@ -128,15 +155,27 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					$is_worked_day = false;
 				}
 			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after day off remonving. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
+			}
 			// on exclu également le week-end
 			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "6" || date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "7" ){
 				$is_worked_day = false;
+			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after removing weekends. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
 			}
 			
 			if( $is_worked_day ) {
 				
 				// on parcourt tous les cras déclarés correspondant à la date et au profil
 				foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile->id ) as $tmp_ressources ) {
+					if( $web_config->debug ){
+						GenyTools::debug("[reporting_ressources] elapsed time since beginning, after activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId (début de boucle). Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+						$debug_intermediate_timer = time();
+					}
 					
 					// on récupère la charge
 					$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
@@ -177,6 +216,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 						}
 					}
 					// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
+				}
+				if( $web_config->debug ){
+					GenyTools::debug("[reporting_ressources] elapsed time since beginning, after CRA crawling. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+					$debug_intermediate_timer = time();
 				}
 				
 				// on parcourt par demi-journée, et on regarde si les cras 
@@ -282,6 +325,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					if( $majority_cra["predicted"] == true ) {
 						$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = true;
 					}
+				}
+				if( $web_config->debug ){
+					GenyTools::debug("[reporting_ressources] elapsed time since beginning, after prediction. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+					$debug_intermediate_timer = time();
 				}
 			}
 		}
