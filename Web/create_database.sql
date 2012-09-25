@@ -398,7 +398,7 @@ INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `pro
 (10, 'COLOR_PROJECT_TYPE_7', 'Avant vente', 4);
 
 --  Ajout des propriétés concernant le type de profil
-INSERT INTO Properties VALUES(11,'PROP_PROFILE_TYPE',"Type de profil d'un collaborateur.",3);
+INSERT INTO Properties VALUES(11,'PROP_PROFILE_CATEGORY',"Catégorie de profil d'un collaborateur.",3);
 
 CREATE TABLE PropertyOptions (
 	property_option_id int auto_increment,
@@ -420,7 +420,7 @@ INSERT INTO PropertyOptions VALUES(0,'Inactive - Upgrade',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive',3);
 
--- Liste des types de profil disponible
+-- Liste des catégories de profil disponible
 INSERT INTO PropertyOptions VALUES(0,'C IA',11);
 INSERT INTO PropertyOptions VALUES(0,'C IC',11);
 INSERT INTO PropertyOptions VALUES(0,'C Junior 1',11);

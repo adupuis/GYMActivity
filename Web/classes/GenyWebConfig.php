@@ -48,6 +48,7 @@ class GenyWebConfig {
 		$this->company_index_logo = "logo_genymobile.jpg";
 		$this->gmail_username = "yourusername";
 		$this->gmail_password = "yourpassword";
+		$this->default_profile_category = "C Senior 1";
 	}
 }
 ?>
