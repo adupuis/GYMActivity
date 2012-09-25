@@ -33,8 +33,11 @@ $geny_profile = new GenyProfile();
 $geny_pmd = new GenyProfileManagementData();
 $geny_pmd->setDebug(true);
 
+$param_load_profile = GenyTools::getParam("load_profile","false");
+$param_profile_id   = GenyTools::getParam("profile_id",null);
+
 if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
-	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) && isset($_POST['pmd_variable_salary']) && isset($_POST['pmd_objectived_salary']) && isset($_POST['technology_leader_id']) && isset($_POST['group_leader_id']) ){
+	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) && isset($_POST['pmd_variable_salary']) && isset($_POST['pmd_objectived_salary']) && isset($_POST['technology_leader_id']) && isset($_POST['group_leader_id']) && isset($_POST['pmd_category']) ){
 		$profile_login = $_POST['profile_login'];
 		$profile_firstname = $_POST['profile_firstname'];
 		$profile_lastname = $_POST['profile_lastname'];
@@ -51,11 +54,12 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$pmd_objectived_salary = $_POST['pmd_objectived_salary'];
 		$pmd_group_leader_id = $_POST['group_leader_id'];
 		$pmd_technology_leader_id = $_POST['technology_leader_id'];
+		$pmd_category = $_POST['pmd_category'];
 		if( $geny_profile->insertNewProfile('NULL',$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id) ){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil créé avec succès.");
 			$geny_profile->loadProfileByLogin($profile_login);
 			if($geny_profile->id > 0){
-				$pmd_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_group_leader_id,$pmd_technology_leader_id);
+				$pmd_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_group_leader_id,$pmd_technology_leader_id,$pmd_category);
 				GenyTools::debug("profile_edit.php pmd_id=$pmd_id after a call to insertNewProfileManagementData.");
 				if( $pmd_id <= 0)
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur chargement','msg'=>"Erreur lors du chargement des données de management du profil.");
@@ -73,10 +77,10 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 	}
 }
 
-else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
-	if(isset($_POST['profile_id'])){
-		$geny_profile->loadProfileById($_POST['profile_id']);
-		GenyTools::debug("profile_edit.php: \$_POST['profile_id']=".$_POST['profile_id']." \$geny_profile->id=".$geny_profile->id);
+else if( $param_load_profile == "true" ){
+	if(isset($param_profile_id)){
+		$geny_profile->loadProfileById($param_profile_id);
+		GenyTools::debug("profile_edit.php: \$_POST['profile_id']=".$param_profile_id." \$geny_profile->id=".$geny_profile->id);
 		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
 		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
 			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
@@ -96,29 +100,29 @@ else if( isset($_POST['load_profile']) && $_POST['load_profile'] == "true" ){
 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
 	}
 }
-else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
-	if(isset($_GET['profile_id'])){
-		$geny_profile->loadProfileById($_GET['profile_id']);
-		GenyTools::debug("profile_edit.php: \$_GET['profile_id']=".$_GET['profile_id']." \$geny_profile->id=".$geny_profile->id);
-		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
-		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
-			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
-			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,123,1000,"1979-01-01","true","1979-01-01");
-			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
-			$grg = new GenyRightsGroup();
-			$gn = new GenyNotification();
-			$grg->loadRightsGroupByName('Admins');
-			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
-			$grg->loadRightsGroupByName('SuperUsers');
-			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
-			// Enfin il faut recharger les données de management avec le groupe qui vient d'être créé
-			$geny_pmd->loadProfileManagementDataById( $geny_pmd_new_id );
-		}
-	}
-	else  {
-		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
-	}
-}
+// else if( isset($_GET['load_profile']) && $_GET['load_profile'] == "true" ){
+// 	if(isset($_GET['profile_id'])){
+// 		$geny_profile->loadProfileById($_GET['profile_id']);
+// 		GenyTools::debug("profile_edit.php: \$_GET['profile_id']=".$_GET['profile_id']." \$geny_profile->id=".$geny_profile->id);
+// 		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
+// 		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
+// 			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
+// 			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,123,1000,"1979-01-01","true","1979-01-01");
+// 			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
+// 			$grg = new GenyRightsGroup();
+// 			$gn = new GenyNotification();
+// 			$grg->loadRightsGroupByName('Admins');
+// 			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+// 			$grg->loadRightsGroupByName('SuperUsers');
+// 			$gn->insertNewGroupNotification($grg->id,"Un nouveau profil management a été créé pour ".GenyTools::getProfileDisplayName($geny_profile).". Merci de compléter les informations." );
+// 			// Enfin il faut recharger les données de management avec le groupe qui vient d'être créé
+// 			$geny_pmd->loadProfileManagementDataById( $geny_pmd_new_id );
+// 		}
+// 	}
+// 	else  {
+// 		$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de charger le profil utilisateur ','msg'=>"id non spécifié.");
+// 	}
+// }
 else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 	if(isset($_POST['profile_id'])){
 		$geny_profile->loadProfileById($_POST['profile_id']);
@@ -179,6 +183,9 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 		}
 		if( isset($_POST['technology_leader_id']) && $_POST['technology_leader_id'] != "" && $geny_pmd->technology_leader_id != $_POST['technology_leader_id'] ){
 			$geny_pmd->updateInt('profile_management_data_technology_leader_id',$_POST['technology_leader_id']);
+		}
+		if( isset($_POST['pmd_category']) && $_POST['pmd_category'] != "" && $geny_pmd->category != $_POST['pmd_category'] ){
+			$geny_pmd->updateInt('profile_management_data_category',$_POST['pmd_category']);
 		}
 		if($geny_pmd->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Données de management du profil mis à jour avec succès.");
@@ -342,6 +349,25 @@ else{
 				?>
 				</select>
 			</p>
+			<strong>CATEGORY ---------</strong><br/>
+			<p>
+				<label for="pmd_category">Catégorie</label>
+				<select name="pmd_category" id="pmd_category" class="chzn-select">
+					<?php
+					$geny_property = new GenyProperty();
+					$geny_property->loadPropertyByName('PROP_PROFILE_CATEGORY');
+					foreach( $geny_property->getPropertyOptions() as $option ){
+						if($option->content == $geny_pmd->category){
+							echo "<option value='".$option->id."' selected>".$option->content."</option>";
+						}
+						else{
+							echo "<option value='".$option->id."'>".$option->content."</option>";
+						}
+					}
+					?>
+				</select>
+			</p>
+			<strong>--------- CATEGORY</strong><br/>
 			<p>
 				<label for="pmd_is_billable">Profil facturable</label>
 				<select name="pmd_is_billable" id="pmd_is_billable" >
