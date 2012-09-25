@@ -349,7 +349,6 @@ else{
 				?>
 				</select>
 			</p>
-			<strong>CATEGORY ---------</strong><br/>
 			<p>
 				<label for="pmd_category">Catégorie</label>
 				<select name="pmd_category" id="pmd_category" class="chzn-select">
@@ -357,7 +356,7 @@ else{
 					$geny_property = new GenyProperty();
 					$geny_property->loadPropertyByName('PROP_PROFILE_CATEGORY');
 					foreach( $geny_property->getPropertyOptions() as $option ){
-						if($option->content == $geny_pmd->category){
+						if($option->id == $geny_pmd->category){
 							echo "<option value='".$option->id."' selected>".$option->content."</option>";
 						}
 						else{
