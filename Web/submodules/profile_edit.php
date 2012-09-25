@@ -367,7 +367,6 @@ else{
 					?>
 				</select>
 			</p>
-			<strong>--------- CATEGORY</strong><br/>
 			<p>
 				<label for="pmd_is_billable">Profil facturable</label>
 				<select name="pmd_is_billable" id="pmd_is_billable" >
