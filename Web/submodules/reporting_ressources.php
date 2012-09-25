@@ -35,6 +35,24 @@ $geny_assignements = array();
 $geny_profil_management = new GenyProfileManagementData();
 $gritter_notifications = array();
 
+// Mise en cache des clients
+$cached_clients = array();
+foreach( $geny_client->getAllClients() as $client ){
+	$cached_clients[$client->id] = $client;
+}
+
+// Mise en cache des profils
+$cached_profiles = array();
+foreach( $geny_profile->getAllProfiles() as $prof ){
+	$cached_profiles[$prof->id] = $prof;
+}
+
+// Mise en cache des projets
+$cached_projects = array();
+foreach( $geny_project->getAllProjects() as $proj ){
+	$cached_projects[$proj->id] = $proj;
+}
+
 // récupération des paramètres rentrés par l'utilisateur
 $param_year = getParam( 'year', date( "Y" ) );
 $param_month = getParam( 'month', date( "m" ) );
@@ -42,7 +60,7 @@ $param_month = getParam( 'month', date( "m" ) );
 // Traquons un peu le temps perdu !
 $debug_timer = time();
 $debug_intermediate_timer = time();
-$web_config->debug = true;
+// $web_config->debug = true;
 
 // si le mois et l'année donnés par l'utilisateur sont correctes, on initialise $month et $year avec les valeurs de l'utilisateur
 if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && intval( $param_month ) > 0 && intval( $param_year ) > 0 && intval( $param_month ) <=12 ) {
@@ -69,7 +87,7 @@ if( $web_config->debug ){
 }
 
 // on parcourt tous les profils
-foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
+foreach( $cached_profiles as $tmp_profile ) {
 
 	// on charge les informations annexes associées au profil
 	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
@@ -85,7 +103,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 	
 	// on supprime les congés, les projets dont la date est finie, et les projets fermés, en pause et perdus
 	foreach( $geny_assignements as $key => $geny_assignement ) {
-		$geny_project->loadProjectById( $geny_assignement->project_id );
+// 		$geny_project->loadProjectById( $geny_assignement->project_id );
+		$geny_project = $cached_projects[$geny_assignement->project_id];
 		if( intval( $geny_project->type_id ) == 5 ||
 		    $geny_project->end_date < date("Y-m-d",  mktime( 0, 0, 0, intval( $param_month ), 1, intval( $param_year ) ) ) ||
 		    $geny_project->start_date > date("Y-m-d",  mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) ) ||
@@ -239,7 +258,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 						
 						// cas n°1 : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là (si les dates correspondent)
 						if( sizeof( $geny_assignements ) == 1 ) {
-							$geny_project->loadProjectById( $geny_assignements[0]->project_id );
+// 							$geny_project->loadProjectById( $geny_assignements[0]->project_id );
+							$geny_project = $cached_projects[$geny_assignements[0]->project_id];
 							if( $geny_project->start_date < date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
 							    && $geny_project->end_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) ) ) {
 								$predicted_project_id = $geny_assignements[0]->project_id;
@@ -254,7 +274,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 							if( $last_predictions[$tmp_profile->id] == -1 ) {
 								$predicted_project_id = -1;
 								foreach( $geny_assignements as $geny_assignement ) {
-									$geny_project->loadProjectById( $geny_assignement->project_id );
+// 									$geny_project->loadProjectById( $geny_assignement->project_id );
+									$geny_project = $cached_projects[$geny_assignement->project_id];
 									if( $geny_project->start_date < date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
 									&& $geny_project->end_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) ) ) {
 										$predicted_project_id = $geny_assignement->project_id;
@@ -278,7 +299,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 									if( $tmp_cpt == sizeof( $geny_assignements ) ) {
 										$tmp_cpt = 0;
 									}
-									$geny_project->loadProjectById( $geny_assignements[$tmp_cpt]->project_id );
+// 									$geny_project->loadProjectById( $geny_assignements[$tmp_cpt]->project_id );
+									$geny_project = $cached_projects[$geny_assignements[$tmp_cpt]->project_id];
 									$predicted_project_id = $geny_assignements[$tmp_cpt]->project_id;
 									$last_predictions[$tmp_profile->id] = $geny_assignements[$tmp_cpt]->project_id;
 								} while( $geny_project->start_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
@@ -291,8 +313,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 						}
 						
 						// on charge les informations associées au projet prédit
-						$geny_project->loadProjectById( $predicted_project_id );
-						$geny_client->loadClientById( $geny_project->client_id );
+// 						$geny_project->loadProjectById( $predicted_project_id );
+						$geny_project = $cached_projects[$predicted_project_id];
+// 						$geny_client->loadClientById( $geny_project->client_id );
+						$geny_client = $cached_clients[$geny_project->client_id];
 						
 						// ajout du cra "prédit"
 						$reporting_data[$tmp_profile->id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
@@ -401,7 +425,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				foreach( $reporting_data as $tmp_profile_id => $tmp_period_data ) {
 					
 					// chargement du profil
-					$geny_profile->loadProfileById( $tmp_profile_id );
+// 					$geny_profile->loadProfileById( $tmp_profile_id );
+					$geny_profile = $cached_profiles[$tmp_profile_id];
 					
 					// affichage du nom
 					echo '<tr><td rowspan="2"><div id="names">' . GenyTools::getProfileDisplayName( $geny_profile ) . '</div></td>';
