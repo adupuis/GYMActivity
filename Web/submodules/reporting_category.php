@@ -31,7 +31,10 @@ $gritter_notifications = array();
 $param_year = GenyTools::getParam("year",date('Y', time()));
 $param_num_cp = GenyTools::getParam("num_cp",25);
 $param_num_rtt = GenyTools::getParam("num_rtt",10);
-$num_days_in_year = GenyTools::getWorkedDaysList( strtotime("$year-01-01"), strtotime("$year-12-31") );
+$num_days_in_year = count(GenyTools::getWorkedDaysList( strtotime("$year-01-01"), strtotime("$year-12-31") ));
+
+echo "<strong>Nombre de jours dans l'année: $num_days_in_year</strong><br/>";
+echo "<strong>Nombre de jours facturable dans l'année: ".($num_days_in_year - $param_num_cp - $param_num_rtt)."</strong><br/>";
 
 // We create a table that contains the filters data (but only for required data).
 $data_array_filters = array( 0 => array() );
@@ -45,42 +48,34 @@ foreach( $geny_property->getPropertyOptions() as $option ){
 	$reporting_data[$option->id] = 0;
 }
 
-foreach( $geny_pmd as $ar ){
+foreach( $geny_pmd->getAllProfileManagementData() as $pmd ){
+	$reporting_data[$pmd->category]++;
+	echo "Adding ".$pmd->getProfile()->login." catgory: ".$pmd->category."<br/>";
 	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
 	// Nous ne voulons pas des absences non payé par l'entreprise dans l'aggregation par projet.
 	// En revanche quand le mode d'aggrégation est par tâche nous le voulons.
-	if( $aggregation_level == "tasks" || ($geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19) ){ 
-		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
-			if( !isset( $reporting_data[$ar->profile_id] ) ){
-				$reporting_data[$ar->profile_id] = array();
-				$reporting_data_tasks[$ar->profile_id] = array();
-			}
-			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) ){
-				$reporting_data[$ar->profile_id][$geny_activity->assignement_id] = 0;
-				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id] = array();
-			}
-			if( !isset($reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id]) )
-				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
-			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
-			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
-			
-			// Création des données de filtres par la même occasion
-			$geny_profile->loadProfileById( $ar->profile_id );
-			$geny_assignement->loadAssignementById($geny_activity->assignement_id);
-			$geny_project->loadProjectById($geny_assignement->project_id);
-			$geny_task->loadTaskById( $geny_activity->task_id );
-			if( ! in_array(GenyTools::getProfileDisplayName($geny_profile),$data_array_filters[0]) )
-				$data_array_filters[0][] = GenyTools::getProfileDisplayName($geny_profile);
-			if( ! in_array($clients[$geny_project->client_id]->name,$data_array_filters[1]) )
-				$data_array_filters[1][] = $clients[$geny_project->client_id]->name;
-			if( ! in_array($geny_project->name,$data_array_filters[2]) )
-				$data_array_filters[2][] = $geny_project->name;
-			if( ! in_array($geny_task->name,$data_array_filters[3]) )
-				$data_array_filters[3][] = $geny_task->name;
-		}
-	}
+// 	if( $aggregation_level == "tasks" || ($geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19) ){ 
+// 		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
+// 			if( !isset( $reporting_data[$ar->profile_id] ) ){
+// 				$reporting_data[$ar->profile_id] = array();
+// 				$reporting_data_tasks[$ar->profile_id] = array();
+// 			}
+// 			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) ){
+// 				$reporting_data[$ar->profile_id][$geny_activity->assignement_id] = 0;
+// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id] = array();
+// 			}
+// 			if( !isset($reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id]) )
+// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
+// 			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
+// 			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
+// 		}
+// 	}
 }
-
+echo ">>>>>>>>>>>><br/>";
+foreach ($reporting_data as $idx => $d){
+	echo "<strong>$idx: ".$property_options[$idx]->content.": </strong>$d<br/>";
+}
+echo "<<<<<<<<<<<<<<br/>";
 // Création des données de reporting pour la charge par client ainsi que par projet
 $load_by_clients = array();
 $load_by_projects = array();
