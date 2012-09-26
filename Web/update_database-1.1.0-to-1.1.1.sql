@@ -28,5 +28,6 @@ START TRANSACTION;
 
 -- Ajout d'une colonne category
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_category int not null default 0 AFTER profile_management_data_technology_leader_id;
+ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default null AFTER profile_management_data_category;
 
 COMMIT;
