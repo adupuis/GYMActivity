@@ -187,6 +187,9 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 		if( isset($_POST['pmd_category']) && $_POST['pmd_category'] != "" && $geny_pmd->category != $_POST['pmd_category'] ){
 			$geny_pmd->updateInt('profile_management_data_category',$_POST['pmd_category']);
 		}
+		if( isset($_POST['pmd_resignation_date']) && $_POST['pmd_resignation_date'] != "" && $geny_pmd->resignation_date != $_POST['pmd_resignation_date'] ){
+			$geny_pmd->updateString('profile_management_data_resignation_date',$_POST['pmd_resignation_date']);
+		}
 		if($geny_pmd->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Données de management du profil mis à jour avec succès.");
 			$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
@@ -417,6 +420,18 @@ else{
 					$( "#pmd_availability_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
 					$( "#pmd_availability_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
 					$( "#pmd_availability_date" ).datepicker( "option", "firstDay", 1 );
+					
+					$( "#pmd_resignation_date" ).datepicker();
+					$( "#pmd_resignation_date" ).datepicker('setDate', new Date());
+					$( "#pmd_resignation_date" ).datepicker( "option", "showAnim", "slideDown" );
+					$( "#pmd_resignation_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+					$( "#pmd_resignation_date" ).datepicker( "option", "defaultDate", "<?php echo $geny_pmd->resignation_date ?>" );
+					$( "#pmd_resignation_date" ).datepicker( "setDate", "<?php echo $geny_pmd->resignation_date ?>" );
+					$( "#pmd_resignation_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
+					$( "#pmd_resignation_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
+					$( "#pmd_resignation_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
+					$( "#pmd_resignation_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
+					$( "#pmd_resignation_date" ).datepicker( "option", "firstDay", 1 );
 				});
 			</script>
 			<p>
@@ -426,6 +441,10 @@ else{
 			<p>
 				<label for="pmd_availability_date">Date de disponibilité</label>
 				<input name="pmd_availability_date" id="pmd_availability_date" type="text" class="validate[required,custom[date]] text-input" />
+			</p>
+			<p>
+				<label for="pmd_resignation_date">Date de démission</label>
+				<input name="pmd_resignation_date" id="pmd_resignation_date" type="text" class="validate[custom[date]] text-input" />
 			</p>
 			<p>
 				<input type="submit" value="Modifier" /> ou <a href="loader.php?module=profile_list">annuler</a>
