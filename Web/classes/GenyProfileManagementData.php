@@ -53,7 +53,6 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
-	# ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default null AFTER profile_management_data_category;
 	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5, $pmd_category=12, $pmd_resignation_date=''){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
@@ -76,7 +75,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if( $pmd_is_billable != 'true' && $pmd_is_billable != 'false' && $pmd_is_billable != 0 && $pmd_is_billable != 1)
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is,$pmd_category,$pmd_resignation_date)";
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is,$pmd_category,'".mysql_real_escape_string($pmd_resignation_date)."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
