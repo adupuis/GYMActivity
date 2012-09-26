@@ -84,7 +84,12 @@ else if( $param_load_profile == "true" ){
 		$geny_pmd->loadProfileManagementDataByProfileId( $geny_profile->id );
 		if( $geny_profile->id > 0 && $geny_pmd->id <= 0 ){
 			// Dans ce cas nous avons un profil mais pas de profilemanagementdata, il faut donc les créer
+			$geny_pmd->setDebug(true);
 			$geny_pmd_new_id = $geny_pmd->insertNewProfileManagementData($geny_profile->id,12345,123,1000,"1979-01-01","true","1979-01-01");
+			$geny_pmd->setDebug(false);
+			if( $geny_pmd_new_id < 0 ){
+				$gritter_notifications[] = array('status'=>'error', 'title' => 'Impossible de créer les données de management ','msg'=>"Erreur lors de l'insertion des données dans la base de données'.");
+			}
 			// Comme les données sont des données par défaut il faut notifier les groupes adéquates.
 			$grg = new GenyRightsGroup();
 			$gn = new GenyNotification();
@@ -444,7 +449,7 @@ else{
 			</p>
 			<p>
 				<label for="pmd_resignation_date">Date de démission</label>
-				<input name="pmd_resignation_date" id="pmd_resignation_date" type="text" class="validate[custom[date]] text-input" />
+				<input name="pmd_resignation_date" id="pmd_resignation_date" type="text"  /> <!--class="validate[custom[date]] text-input"-->
 			</p>
 			<p>
 				<input type="submit" value="Modifier" /> ou <a href="loader.php?module=profile_list">annuler</a>
