@@ -34,8 +34,8 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public $group_leader_id = -1;
 	public $technology_leader_id = -1;
 	public $category = -1;
-	public $resignation_date = '';
-	public $profile_object = GENYMOBILE_FALSE;
+	public $resignation_date = '9999-12-31';
+	public $profile_object = null;
 	public function __construct($id = -1){
 		parent::__construct("ProfileManagementData",
 				    "profile_management_data_id");
@@ -45,7 +45,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		$this->recruitement_date = '1979-01-01';
 		$this->is_billable = false;
 		$this->availability_date = '1979-01-01';
-		$this->profile_object = -1;
+		$this->profile_object = null;
 		$this->group_leader_id = -1;
 		$this->technology_leader_id = -1;
 		$this->category = -1;
@@ -53,7 +53,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
-	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5, $pmd_category=12, $pmd_resignation_date=''){
+	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5, $pmd_category=12, $pmd_resignation_date='9999-12-31'){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
@@ -191,7 +191,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public function getProfile(){
 		if( $this->id <= 0 )
 			return GENYMOBILE_FALSE;
-		if( $this->profile_object == -1 )
+		if( isset( $this->profile_object ) && ( $this->profile_object ) == "GenyProfile" )
 			$this->profile_object = new $GenyProfile( $this->profile_id );
 		return $this->profile_object ;
 	}

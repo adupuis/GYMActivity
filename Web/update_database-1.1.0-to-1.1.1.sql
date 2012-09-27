@@ -19,6 +19,7 @@
 
 -- From DB version 6 and above the update script shall define 3 properties : AUTO_UPDATE_ENABLED, AUTO_UPDATE_OLD_DB_VERSION and AUTO_UPDATE_NEW_DB_VERSION.
 -- Those properties are to be defined as SQL comments, one per line with only one space between double dash and property name and none after that.
+-- DB version will be checked by a command like : mysql -s --skip-column-names -D GYMActivity -e "select property_value_content from PropertyValues where property_id=(select property_id from Properties where property_name='PROP_DB_VERSION');"
 -- AUTO_UPDATE_ENABLED=1
 -- AUTO_UPDATE_OLD_DB_VERSION=5
 -- AUTO_UPDATE_NEW_DB_VERSION=6
@@ -28,6 +29,6 @@ START TRANSACTION;
 
 -- Ajout d'une colonne category
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_category int not null default 0 AFTER profile_management_data_technology_leader_id;
-ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default null AFTER profile_management_data_category;
+ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default '9999-12-31' AFTER profile_management_data_category;
 
 COMMIT;
