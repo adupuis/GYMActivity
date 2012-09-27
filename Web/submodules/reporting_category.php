@@ -23,6 +23,8 @@
 include_once 'backend/api/ajax_toolbox.php';
 
 $reporting_data = array();
+$reporting_data_etp = array();
+$reporting_data_etp_conges = array();
 $geny_pmd = new GenyProfileManagementData();
 $geny_property = new GenyProperty;
 $gritter_notifications = array();
@@ -30,11 +32,16 @@ $gritter_notifications = array();
 // Params of the script
 $param_year = GenyTools::getParam("year",date('Y', time()));
 $param_num_cp = GenyTools::getParam("num_cp",25);
-$param_num_rtt = GenyTools::getParam("num_rtt",10);
 $num_days_in_year = count(GenyTools::getWorkedDaysList( strtotime("$year-01-01"), strtotime("$year-12-31") ));
+$num_billable_days_in_year = GenyTools::getParam("billable_days_in_year",218);
+$param_num_rtt = GenyTools::getParam("num_rtt",$num_days_in_year-$param_num_cp-$num_billable_days_in_year);
+$cp_by_work_day = $param_num_cp/$num_days_in_year;
+$rtt_by_work_day = $param_num_rtt/$num_days_in_year;
 
-echo "<strong>Nombre de jours dans l'année: $num_days_in_year</strong><br/>";
-echo "<strong>Nombre de jours facturable dans l'année: ".($num_days_in_year - $param_num_cp - $param_num_rtt)."</strong><br/>";
+// echo "<strong>Nombre de jours dans l'année: $num_days_in_year</strong><br/>";
+// echo "<strong>Nombre de jours facturable dans l'année: $num_billable_days_in_year</strong><br/>";
+// echo "<strong>Nombre de CP dans l'année: $param_num_cp</strong><br/>";
+// echo "<strong>Nombre de RTT dans l'année: $param_num_rtt</strong><br/>";
 
 // We create a table that contains the filters data (but only for required data).
 $data_array_filters = array( 0 => array() );
@@ -50,68 +57,55 @@ foreach( $geny_property->getPropertyOptions() as $option ){
 
 foreach( $geny_pmd->getAllProfileManagementData() as $pmd ){
 	$reporting_data[$pmd->category]++;
-	echo "Adding ".$pmd->getProfile()->login." catgory: ".$pmd->category."<br/>";
-	$geny_activity = new GenyActivity( $ar->activity_id ); // Contient la charge et l'assignement_id
-	// Nous ne voulons pas des absences non payé par l'entreprise dans l'aggregation par projet.
-	// En revanche quand le mode d'aggrégation est par tâche nous le voulons.
-// 	if( $aggregation_level == "tasks" || ($geny_activity->task_id != 8 && $geny_activity->task_id != 12 && $geny_activity->task_id != 19) ){ 
-// 		if( $geny_activity->activity_date >= $start_date && $geny_activity->activity_date <= $end_date ){
-// 			if( !isset( $reporting_data[$ar->profile_id] ) ){
-// 				$reporting_data[$ar->profile_id] = array();
-// 				$reporting_data_tasks[$ar->profile_id] = array();
-// 			}
-// 			if( !isset($reporting_data[$ar->profile_id][$geny_activity->assignement_id]) ){
-// 				$reporting_data[$ar->profile_id][$geny_activity->assignement_id] = 0;
-// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id] = array();
-// 			}
-// 			if( !isset($reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id]) )
-// 				$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] = 0;
-// 			$reporting_data[$ar->profile_id][$geny_activity->assignement_id] += $geny_activity->load;
-// 			$reporting_data_tasks[$ar->profile_id][$geny_activity->assignement_id][$geny_activity->task_id] += $geny_activity->load;
-// 		}
-// 	}
-}
-echo ">>>>>>>>>>>><br/>";
-foreach ($reporting_data as $idx => $d){
-	echo "<strong>$idx: ".$property_options[$idx]->content.": </strong>$d<br/>";
-}
-echo "<<<<<<<<<<<<<<br/>";
-// Création des données de reporting pour la charge par client ainsi que par projet
-$load_by_clients = array();
-$load_by_projects = array();
-foreach( $reporting_data as $profile_id => $data ){
-	$geny_profile->loadProfileById($profile_id);
-	foreach( $data as $assignement_id => $total_load ){
-		$geny_assignement->loadAssignementById($assignement_id);
-		$geny_project->loadProjectById($geny_assignement->project_id);
-		if( !isset($load_by_clients[$clients[$geny_project->client_id]->name]) )
-			$load_by_clients[$clients[$geny_project->client_id]->name]=0;
-		if( !isset($load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]) )
-			$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name]=0;
-		$load_by_clients[$clients[$geny_project->client_id]->name] += $total_load/8;
-		$load_by_projects[$clients[$geny_project->client_id]->name."/".$geny_project->name] += $total_load/8;
+// 	echo "Adding ".$pmd->getProfile()->login." catgory: ".$pmd->category."<br/>";
+	$reporting_start_date = "$year-01-01";
+	$reporting_end_date = "$year-12-31";
+	if( $pmd->recruitement_date > $reporting_start_date ){
+		$reporting_start_date = $pmd->recruitement_date;
 	}
+// 	echo " -* testing which is the lesser between ".$pmd->resignation_date." and ".$reporting_end_date."<br/>";
+	if( preg_match('/^\d\d\d\d\-\d\d-\d\d/',$pmd->resignation_date) === 1 && $pmd->resignation_date < $reporting_end_date ){
+		$reporting_end_date = $pmd->resignation_date;
+	}
+	if( ! isset($reporting_data_etp[$pmd->category]) ){
+		$reporting_data_etp[$pmd->category]=0;
+	}
+	$tmp_worked_days = count(GenyTools::getWorkedDaysList( strtotime($reporting_start_date), strtotime($reporting_end_date) ));
+	$billable_days = $tmp_worked_days - ($cp_by_work_day*$tmp_worked_days + $rtt_by_work_day*$tmp_worked_days);
+// 	echo " * For ".$pmd->getProfile()->login." start_date=$reporting_start_date stop_date=$reporting_end_date wich means wrked_days=$tmp_worked_days billable_days=$billable_days (cp=".($cp_by_work_day*$tmp_worked_days)." RTT=".($rtt_by_work_day*$tmp_worked_days).")<br/>";
+	$reporting_data_etp[$pmd->category] += $tmp_worked_days;
+	$reporting_data_etp_conges[$pmd->category] += $billable_days;
 }
-$load_by_clients_js_data = "";
+// echo ">>>>>>>>>>>><br/>";
+$js_data_count = "";
 $tmp_array=array();
-foreach( $load_by_clients as $client => $load ){
-	$tmp_array[]= "['$client', $load]";
+foreach ($reporting_data as $idx => $d){
+// 	echo "<strong>$idx: ".$property_options[$idx]->content.": </strong>$d<br/>";
+	$tmp_array[]= "['".$property_options[$idx]->content."', $d]";
 }
-$load_by_clients_js_data = implode(",",$tmp_array);
-
-$load_by_projects_js_data = "";
+$js_data_count = implode(",",$tmp_array);
+// echo "<<<<<<<<<<<<<<br/>";
+// echo ">>>>>>> ETP >>>>><br/>";
+$js_data_etp = "";
 $tmp_array=array();
-foreach( $load_by_projects as $project => $load ){
-	$tmp_array[]= "['$project', $load]";
+// foreach ($reporting_data_etp as $idx => $d){
+// // 	echo "<strong>$idx: ".$property_options[$idx]->content.": </strong>".($d/$num_days_in_year)."<br/>";
+// 	$tmp_array[]= "['".$property_options[$idx]->content."', ".round($d/$num_days_in_year,2)."]";
+// }
+// echo "<<<<<<<<<<<<<<br/>";
+// echo ">>>>>>> ETP Congés >>>>><br/>";
+foreach ($reporting_data_etp_conges as $idx => $d){
+// 	echo "<strong>$idx: ".$property_options[$idx]->content.": </strong>".round($d/$num_billable_days_in_year,2)."<br/>";
+	$tmp_array[]= "['".$property_options[$idx]->content."', ".round($d/$num_billable_days_in_year,2)."]";
 }
-$load_by_projects_js_data = implode(",",$tmp_array);
-
+// echo "<<<<<<<<<<<<<<br/>";
+$js_data_etp=implode(",",$tmp_array);
 ?>
 <script>
 	var indexData = new Array();
 	<?php
-		if(array_key_exists('GYMActivity_reporting_load_table_loader_php', $_COOKIE)) {
-			$cookie = json_decode($_COOKIE["GYMActivity_reporting_load_table_loader_php"]);
+		if(array_key_exists('GYMActivity_reporting_category_table_loader_php', $_COOKIE)) {
+			$cookie = json_decode($_COOKIE["GYMActivity_reporting_category_table_loader_php"]);
 		}
 		
 		$data_array_filters_html = array();
@@ -158,7 +152,7 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 			} );
 			/* Add a select menu for each TH element in the table footer */
 			$("tfoot th").each( function ( i ) {
-				if( i < <?php if($aggregation_level == "project"){echo "3";}else{echo "4";} ?> ){
+				if( i < 1 ){
 					this.innerHTML = indexData[i];
 					$('select', this).change( function () {
 						oTable.fnFilter( $(this).val(), i );
@@ -183,16 +177,16 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 
 		// Create the data table.
 		var data = new google.visualization.DataTable();
-		data.addColumn('string', 'Clients');
-		data.addColumn('number', 'Charge');
+		data.addColumn('string', 'Catégorie');
+		data.addColumn('number', 'Effectif');
 		data.addRows([
-		<?php echo $load_by_clients_js_data;?>
+		<?php echo $js_data_count;?>
 		]);
 
 		// Set chart options
-		var options = {'title':'Reporting de charge - charge/client - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
+		var options = {'title':'Effectifs pour <?php echo "$year" ?>',
 				'is3D': true,
-				'width':500,
+				'width':800,
 				'height':300};
 
 		// Instantiate and draw our chart, passing in some options.
@@ -201,14 +195,14 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 		
 		// Create the data table.
 		var data3 = new google.visualization.DataTable();
-		data3.addColumn('string', 'Profiles');
-		data3.addColumn('number', 'Charge');
+		data3.addColumn('string', 'Catégorie');
+		data3.addColumn('number', 'ETP');
 		data3.addRows([
-		<?php echo $load_by_projects_js_data;?>
+		<?php echo $js_data_etp;?>
 		]);
 
 		// Set chart options
-		var options = {'title':'Reporting de charge - charge/projet - Entre <?php echo "$start_date" ?> et <?php echo "$end_date" ?>',
+		var options = {'title':'ETP pour <?php echo "$year" ?>',
 				'is3D': true,
 				'width':800,
 				'height':300};
@@ -228,32 +222,6 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 		// binds form submission and fields to the validation engine
 		$("#formID").validationEngine('attach');
 	});
-	
-	$(function() {
-		$( "#reporting_start_date" ).datepicker();
-		$( "#reporting_start_date" ).datepicker( "option", "showAnim", "slideDown" );
-		$( "#reporting_start_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-		$( "#reporting_start_date" ).datepicker('setDate', <?php echo "'".$start_date."'"; ?>);
-		$( "#reporting_start_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-		$( "#reporting_start_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-		$( "#reporting_start_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-		$( "#reporting_start_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-		$( "#reporting_start_date" ).datepicker( "option", "firstDay", 1 );
-		$( "#reporting_end_date" ).datepicker();
-		$( "#reporting_end_date" ).datepicker( "option", "showAnim", "slideDown" );
-		$( "#reporting_end_date" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
-		$( "#reporting_end_date" ).datepicker('setDate', <?php echo "'".$end_date."'"; ?>);
-		$( "#reporting_end_date" ).datepicker( "option", "dayNames", ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] );
-		$( "#reporting_end_date" ).datepicker( "option", "dayNamesShort", ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] );
-		$( "#reporting_end_date" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
-		$( "#reporting_end_date" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
-		$( "#reporting_end_date" ).datepicker( "option", "firstDay", 1 );
-		
-		$( "#reporting_start_date" ).change( function(){ $( "#reporting_end_date" ).val( $( "#reporting_start_date" ).val() ) } );
-		
-	});
-	
-
 </script>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -264,41 +232,28 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des CRA ventilés par collaborateurs, par client et par projet pour la période sélectionnée (par défaut le mois en cours).<br/>
-		Reporting des CRA entre le <strong><?php echo $start_date; ?></strong> et le <strong><?php echo $end_date; ?></strong>.<br/>
-		<?php
-			if( $aggregation_level == "project" )
-				echo "<strong>Attention: Ces rapports excluent les congés non rémunérés !</strong>";
-		?>
+		Voici la liste des collaborateurs de <?php echo $web_config->company_name; ?> ventilés par effectifs par catégorie et par ETP. Ce reporting concerne l'année <?php echo $param_year ; ?><br/>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
 		</style>
-		<form id="formID" action="loader.php?module=reporting_load" method="post">
+		<form id="formID" action="loader.php?module=reporting_category" method="post">
 			<p>
-				<label for="reporting_start_date">Date de début</label>
-				<input name="reporting_start_date" id="reporting_start_date" type="text" class="validate[required,custom[date]] text-input" />
+				<label for="billable_days_in_year">Nombre de jours facturables</label>
+				<input name="billable_days_in_year" id="billable_days_in_year" type="text" class="validate[required] text-input" value="<?php echo $num_billable_days_in_year ; ?>" />
 			</p>
 			<p>
-				<label for="reporting_end_date">Date de fin</label>
-				<input name="reporting_end_date" id="reporting_end_date" type="text" class="validate[required,custom[date]] text-input" />
+				<label for="year">Année concernée</label>
+				<input name="year" id="year" type="text" class="validate[required] text-input" value="<?php echo $param_year ; ?>" />
+			</p>
+			<!--<p>
+				<label for="num_cp">Nbr jours CP</label>
+				<input name="num_cp" id="num_cp" type="text" class="validate[required] text-input" value="<?php echo $param_num_cp ; ?>" />
 			</p>
 			<p>
-				<script>
-					function setCookie( name, value )
-					{
-						var date = new Date();
-						date.setTime(date.getTime()+(days*24*60*60*365));
-						var expires = "; expires="+date.toGMTString();
-						document.cookie = name + "=" +escape( value )+expires;
-					}
-					function aggregationLevelChanged(){
-						setCookie('GYMActivity_reporting_load_table_reporting_load_php_task_state', $('#reporting_aggregation_level').attr('checked'));
-						$('#formID').submit();
-					}
-				</script>
-				<input type="checkbox" id="reporting_aggregation_level" name="reporting_aggregation_level" value="tasks" onChange="aggregationLevelChanged()" <?php if($aggregation_level == "tasks"){echo "checked";} ?> /> <strong>Cochez</strong> la case pour ventiler la charge par <strong>tâche</strong>, <strong>décocher</strong> pour ventiler par <strong>projet</strong>.
-			</p>
+				<label for="num_rtt">Nbr jours RTT</label>
+				<input name="num_rtt" id="num_rtt" type="text" class="validate[required] text-input" value="<?php echo $param_num_rtt ; ?>" />
+			</p>-->
 			<input type="submit" value="Ajuster le reporting" />
 		</form>
 		<div class="table_container">
@@ -306,51 +261,21 @@ $load_by_projects_js_data = implode(",",$tmp_array);
 			
 			<table id="reporting_load_table">
 			<thead>
-				<th>Collab.</th>
-				<th>Client</th>
-				<th>Projet</th>
-				<?php
-					if( $aggregation_level == "tasks" )
-						echo "<th>Tâche</th>\n";
-				?>
-				<th>Nbr. <strong>jours</strong></th>
+				<th>Catégorie</th>
+				<th>Effectif</th>
+				<th>ETP</th>
 			</thead>
 			<tbody>
 			<?php
-				if( $aggregation_level == "tasks" ){
-					foreach( $reporting_data_tasks as $profile_id => $data ){
-						$geny_profile->loadProfileById($profile_id);
-						foreach( $data as $assignement_id => $tasks ){
-							$geny_assignement->loadAssignementById($assignement_id);
-							$geny_project->loadProjectById($geny_assignement->project_id);
-							foreach ( $tasks as $task_id => $task_load ){
-								$geny_task->loadTaskById( $task_id );
-								echo "<tr><td>".GenyTools::getProfileDisplayName($geny_profile)."</td><td>".$clients[$geny_project->client_id]->name."</td><td>".$geny_project->name."</td><td>".$geny_task->name."</td><td>".($task_load/8)."</td></tr>";
-							}
-						}
-					}
-				}
-				else {
-					foreach( $reporting_data as $profile_id => $data ){
-						$geny_profile->loadProfileById($profile_id);
-						foreach( $data as $assignement_id => $total_load ){
-							$geny_assignement->loadAssignementById($assignement_id);
-							$geny_project->loadProjectById($geny_assignement->project_id);
-							echo "<tr><td>".GenyTools::getProfileDisplayName($geny_profile)."</td><td>".$clients[$geny_project->client_id]->name."</td><td>".$geny_project->name."</td><td>".($total_load/8)."</td></tr>";
-						}
-					}
+				foreach ($reporting_data as $idx => $d){
+					echo "<tr><td>".$property_options[$idx]->content."</td><td>$d</td><td>".(round($reporting_data_etp[$idx]/$num_days_in_year,2))."</td>";
 				}
 			?>
 			</tbody>
 			<tfoot>
-				<th>Collab.</th>
-				<th>Client</th>
-				<th>Projet</th>
-				<?php
-					if( $aggregation_level == "tasks" )
-						echo "<th>Tâche</th>\n";
-				?>
-				<th>Nbr. <strong>jours</strong></th>
+				<th>Catégorie</th>
+				<th>Effectif</th>
+				<th>ETP</th>
 			</tfoot>
 			</table>
 		</p>
