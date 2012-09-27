@@ -38,6 +38,7 @@ $param_num_rtt = GenyTools::getParam("num_rtt",$num_days_in_year-$param_num_cp-$
 $cp_by_work_day = $param_num_cp/$num_days_in_year;
 $rtt_by_work_day = $param_num_rtt/$num_days_in_year;
 
+// echo "<strong>Date d'aujourd'hui: ".date('Y-m-d', time())."</strong><br/>";
 // echo "<strong>Nombre de jours dans l'année: $num_days_in_year</strong><br/>";
 // echo "<strong>Nombre de jours facturable dans l'année: $num_billable_days_in_year</strong><br/>";
 // echo "<strong>Nombre de CP dans l'année: $param_num_cp</strong><br/>";
@@ -56,7 +57,6 @@ foreach( $geny_property->getPropertyOptions() as $option ){
 }
 
 foreach( $geny_pmd->getAllProfileManagementData() as $pmd ){
-	$reporting_data[$pmd->category]++;
 // 	echo "Adding ".$pmd->getProfile()->login." catgory: ".$pmd->category."<br/>";
 	$reporting_start_date = "$year-01-01";
 	$reporting_end_date = "$year-12-31";
@@ -75,6 +75,8 @@ foreach( $geny_pmd->getAllProfileManagementData() as $pmd ){
 // 	echo " * For ".$pmd->getProfile()->login." start_date=$reporting_start_date stop_date=$reporting_end_date wich means wrked_days=$tmp_worked_days billable_days=$billable_days (cp=".($cp_by_work_day*$tmp_worked_days)." RTT=".($rtt_by_work_day*$tmp_worked_days).")<br/>";
 	$reporting_data_etp[$pmd->category] += $tmp_worked_days;
 	$reporting_data_etp_conges[$pmd->category] += $billable_days;
+	if($reporting_end_date > date('Y-m-d', time()))
+		$reporting_data[$pmd->category]++;
 }
 // echo ">>>>>>>>>>>><br/>";
 $js_data_count = "";
@@ -227,12 +229,12 @@ $js_data_etp=implode(",",$tmp_array);
 	<p class="mainarea_title">
 		<img src="images/<?php echo $web_config->theme; ?>/reporting_generic.png"></img>
 		<span class="reporting_monthly_view">
-			Reporting de charge
+			Reporting ETP
 		</span>
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des collaborateurs de <?php echo $web_config->company_name; ?> ventilés par effectifs par catégorie et par ETP. Ce reporting concerne l'année <?php echo $param_year ; ?><br/>
+		Voici la liste des collaborateurs de <?php echo $web_config->company_name; ?> ventilés par effectifs par catégorie et par ETP. Ce reporting concerne l'année <?php echo $param_year ; ?>.<br/>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/reporting_monthly_view.css';
