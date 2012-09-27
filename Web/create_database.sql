@@ -112,7 +112,7 @@ CREATE TABLE Clients (
 	primary key(client_id)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Clients AUTO_INCREMENT = 1;
-INSERT INTO Clients VALUES(1,'GENYMOBILE');
+INSERT INTO Clients VALUES(1,'Genymobile');
 
 CREATE TABLE ProjectTypes (
 	project_type_id int auto_increment,
@@ -430,6 +430,9 @@ INSERT INTO PropertyOptions VALUES(0,'C Senior 1',11);
 INSERT INTO PropertyOptions VALUES(0,'C Senior 2',11);
 INSERT INTO PropertyOptions VALUES(0,'C Expert',11);
 INSERT INTO PropertyOptions VALUES(0,'C Management',11);
+INSERT INTO PropertyOptions VALUES(0,'C Stagiaire',11);
+INSERT INTO PropertyOptions VALUES(0,'C Sous-Traitant',11);
+INSERT INTO PropertyOptions VALUES(0,'C Hors Effectifs',11);
 
 -- C'est dans cette table que vont les valeurs séléctionnées. Dans l'exemple ci-dessus il y aurait 1 ou 2 (les id d'une des deux options possible)
 CREATE TABLE PropertyValues (
