@@ -60,8 +60,8 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 		$tmp_project = new GenyProject( $tmp_input_ga->project_id );
 		$time_project_start_date = strtotime( $tmp_project->start_date );
 		$time_project_end_date = strtotime( $tmp_project->end_date );
-		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 ){ // Projet dans le status en pause ou fermé.
-			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé soit en pause.");
+		if( $tmp_project->status_id == 2 || $tmp_project->status_id == 3 || $tmp_project->status_id == 8 ){ // Projet dans le status en pause, perdu ou fermé.
+			$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"il n'est pas possible de remplir un rapport d'activité pour ce projet car il est soit fermé, soit en pause, soit perdu.");
 		}
 		else if( ($_POST['date_selection_type'] == "interval" && $time_assignement_start_date >= $time_project_start_date && $time_assignement_end_date <= $time_project_end_date) || ( $_POST['date_selection_type'] == "days_list" && count($time_assignement_days_list) > 0 ) ){
 			$ok_count=0;
