@@ -31,4 +31,9 @@ START TRANSACTION;
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_category int not null default 0 AFTER profile_management_data_technology_leader_id;
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default '9999-12-31' AFTER profile_management_data_category;
 
+-- ---------------------------------------------
+-- update de la version de la base de donnée --
+-- ---------------------------------------------
+UPDATE `PropertyValues` SET `property_value_content` = '6' WHERE `PropertyValues`.`property_id` = (SELECT property_id FROM Properties WHERE property_name = 'PROP_DB_VERSION');
+
 COMMIT;
