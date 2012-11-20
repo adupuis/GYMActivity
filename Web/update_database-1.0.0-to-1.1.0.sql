@@ -137,6 +137,6 @@ INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `pro
 -- ---------------------------------------------
 -- update de la version de la base de donnée --
 -- ---------------------------------------------
-UPDATE `PropertyValues` SET `property_value_content` = '5' WHERE `PropertyValues`.`property_value_id` =2;
+UPDATE `PropertyValues` SET `property_value_content` = '5' WHERE `PropertyValues`.`property_id` = (SELECT property_id FROM Properties WHERE property_name = 'PROP_DB_VERSION');
 
 COMMIT;
