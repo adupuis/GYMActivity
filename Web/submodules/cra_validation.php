@@ -349,10 +349,6 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 				} );
 			
 			});
-			
-			function onCheckBoxSelectAll(){
-				$("#cra_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
-			}
 			$(function() {
 				$( "#radio" ).buttonset();
 				$( "#chkBoxSelectAll" ).button();
@@ -370,7 +366,7 @@ foreach( $geny_ar->getActivityReportsListWithRestrictions( array("activity_repor
 			</style>
 			<ul>
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+					<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#cra_validation_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 				<li id="radio">
 					<input type="radio" id="radio1" name="cra_action" value="validate_cra" /><label for="radio1">Valider</label>
