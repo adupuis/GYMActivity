@@ -118,7 +118,7 @@ else if( isset($_POST['edit_client']) && $_POST['edit_client'] == "true" ){
 			</p>
 		</form>
 
-		<form id="start" action="client_edit.php" method="post">
+		<form id="start" action="loader.php?module=client_edit" method="post">
 			<input type="hidden" name="edit_client" value="true" />
 			<input type="hidden" name="client_id" value="<?php echo $geny_client->id ?>" />
 			<p>
