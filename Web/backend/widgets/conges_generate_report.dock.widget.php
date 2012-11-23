@@ -21,7 +21,7 @@
 
 ?>
 
-<li class="conges_list">
+<li class="holiday_summary_edit">
 	<a href="submodules/generate_conges_report.php" target="_blank">
 		<span class="dock_item_title">Report Excel Congés</span><br/>
 		<span class="dock_item_content">Génère un rapport Excel contenant la liste des congés du mois en cours.</span>
