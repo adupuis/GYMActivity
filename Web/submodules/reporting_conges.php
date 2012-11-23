@@ -7,6 +7,8 @@
 
 require_once 'Spreadsheet/Excel/Writer.php';
 include_once '../classes/GenyWebConfig.php';
+include_once '../classes/GenyActivityReportWorkflow.php';
+include_once '../classes/GenyActivityReportStatus.php';
 
 $web_config = new GenyWebConfig();
 $month = date('m', time());
@@ -18,7 +20,7 @@ $workbook = new Spreadsheet_Excel_Writer();
 // $workbook->setVersion(8);
 
 // Création d'une feuille de travail
-$worksheet =& $workbook->addWorksheet('My first worksheet');
+$worksheet =& $workbook->addWorksheet('Congés');
 $worksheet->setInputEncoding('utf-8');
 $worksheet->setColumn(0,4,30);
 
@@ -37,18 +39,36 @@ $format_title->setVAlign('vcenter');
 $format_center =& $workbook->addFormat();
 $format_center->setHAlign('center');
 
-// Les données actuelles
+// On affiche les headers
 $worksheet->write(0, 0, 'Collaborateur',$format_title);
 $worksheet->write(0, 1, 'Date',$format_title);
-$worksheet->write(0, 2, 'Type de conges',$format_title);
-$worksheet->write(0, 3, 'Societe',$format_title);
+$worksheet->write(0, 2, "Type de cong\xE9s",$format_title);
+$worksheet->write(0, 3, "Soci\xE9t\xE9",$format_title);
 $worksheet->write(0, 4, 'Charge en jour',$format_title);
 
-$worksheet->write(1, 0, 'John Smith',$format_center);
-$worksheet->write(1, 1, '2012-06-23',$format_center);
-$worksheet->write(1, 2, 'R.T.T',$format_center);
-$worksheet->write(1, 3, 'Genymobile',$format_center);
-$worksheet->write(1, 4, 1,$format_center);
+$activity_report_workflow = new GenyActivityReportWorkflow();
+$workflow = $activity_report_workflow->getActivityReportsWorkflow();
+$geny_ars_approved = new GenyActivityReportStatus();
+$geny_ars_approved->loadActivityReportStatusByShortName('APPROVED');
+$geny_ars_billed = new GenyActivityReportStatus();
+$geny_ars_billed->loadActivityReportStatusByShortName('BILLED');
+$geny_ars_paid = new GenyActivityReportStatus();
+$geny_ars_paid->loadActivityReportStatusByShortName('PAID');
+$geny_ars_close = new GenyActivityReportStatus();
+$geny_ars_close->loadActivityReportStatusByShortName('CLOSE');
+
+foreach($workflow as $row) {
+	// Oh mon dieu et dire que j'ose écrire ça et que ça me fait même sourrire !
+	// TODO: Il faudra quand même mettre 'Congés' dans une property
+	if( $row->project_name == 'Congés' && ($row->activity_report_status_id == $geny_ars_approved->id || $row->activity_report_status_id == $geny_ars_billed->id || $row->activity_report_status_id == $geny_ars_paid->id || $row->activity_report_status_id == $geny_ars_close->id) ){
+		$worksheet->write(1, 0, "$row->profile_lastname $row->profile_firstname",$format_center);
+		$worksheet->write(1, 1, $row->activity_date,$format_center);
+		$worksheet->write(1, 2, $row->task_name,$format_center);
+		$worksheet->write(1, 3, $row->client_name,$format_center);
+		$worksheet->write(1, 4, $row->activity_load/8,$format_center);
+		
+	}
+}
 
 // Envoi du fichier
 $workbook->send($filename);
