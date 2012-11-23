@@ -31,6 +31,10 @@ START TRANSACTION;
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_category int not null default 0 AFTER profile_management_data_technology_leader_id;
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation_date date default '9999-12-31' AFTER profile_management_data_category;
 
+-- Mise à jour du nom des tâches de congés payés.
+UPDATE Tasks SET task_name = 'Maladie - Maternite <1an' WHERE task_name='Maladie/Maternite <1an';
+UPDATE Tasks SET task_name = 'Maladie - Maternite >1an' WHERE task_name='Maladie/Maternite >1an';
+
 -- ---------------------------------------------
 -- update de la version de la base de donnée --
 -- ---------------------------------------------
