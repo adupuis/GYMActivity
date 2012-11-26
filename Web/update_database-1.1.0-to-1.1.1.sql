@@ -35,6 +35,10 @@ ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_resignation
 UPDATE Tasks SET task_name = 'Maladie - Maternite <1an' WHERE task_name='Maladie/Maternite <1an';
 UPDATE Tasks SET task_name = 'Maladie - Maternite >1an' WHERE task_name='Maladie/Maternite >1an';
 
+-- Ajout d'une propriété détenant la liste des projets à entrer dans le reporting de congés.
+INSERT INTO Properties VALUES(NULL,'CONGES_REPORT_PROJECT_NAMES',"Liste des projets entrant dans le reporting cong&eacute;s (s&eacute;par&eacute;s par une virgule sans espace)",4);
+INSERT INTO PropertyValues VALUES(NULL, (SELECT property_id FROM Properties WHERE property_name = 'CONGES_REPORT_PROJECT_NAMES'),'2,4' );
+
 -- ---------------------------------------------
 -- update de la version de la base de donnée --
 -- ---------------------------------------------

@@ -10,6 +10,9 @@ include_once '../classes/GenyWebConfig.php';
 include_once '../classes/GenyActivityReportWorkflow.php';
 include_once '../classes/GenyActivityReportStatus.php';
 include_once '../classes/GenyTools.php';
+include_once '../classes/GenyProperty.php';
+include_once '../classes/GenyPropertyValue.php';
+include_once '../classes/GenyProject.php';
 
 function convertToUtf8($string) {
 	$new_string = str_replace("/","\x2F",$string);
@@ -63,10 +66,24 @@ $geny_ars_paid->loadActivityReportStatusByShortName('PAID');
 $geny_ars_close = new GenyActivityReportStatus();
 $geny_ars_close->loadActivityReportStatusByShortName('CLOSE');
 
+// TODO: Il faut que cette propriété soit une multi... Mais là franchement j'en peut plus du PHP !
+$prop = new GenyProperty();
+$prop->loadPropertyByName('CONGES_REPORT_PROJECT_NAMES');
+$prop_values = $prop->getPropertyValues();
+if( sizeof($prop_values) > 1 ){
+	GenyTools::debug("[generate_conges_report] there is more than 1 value in CONGES_REPORT_PROJECT_NAMES, only the first one is used.");
+}
+
+$projects = array();
+foreach (explode(',',html_entity_decode($prop_values[0]->content)) as $project_id){
+	$tmp_proj = new GenyProject($project_id);
+	$projects[] = $tmp_proj->name;
+	GenyTools::debug("[generate_conges_report] new project for id: $project_id. Object id:".$tmp_proj->id." name : ".$tmp_proj->name);
+}
+
 foreach($workflow as $row) {
-	// Oh mon dieu et dire que j'ose écrire ça et que ça me fait même sourrire !
-	// TODO: Il faudra quand même mettre 'Congés' dans une property
-	if( $row->project_name == 'Congés' && ($row->activity_report_status_id == $geny_ars_approved->id || $row->activity_report_status_id == $geny_ars_billed->id || $row->activity_report_status_id == $geny_ars_paid->id || $row->activity_report_status_id == $geny_ars_close->id) ){
+	GenyTools::debug("[generate_conges_report] $row->project_name.");
+	if( in_array($row->project_name, $projects ) && ($row->activity_report_status_id == $geny_ars_approved->id || $row->activity_report_status_id == $geny_ars_billed->id || $row->activity_report_status_id == $geny_ars_paid->id || $row->activity_report_status_id == $geny_ars_close->id) ){
 		if( ! array_key_exists($row->task_name, $worksheets) ) {
 			// Création d'une feuille de travail
 			$worksheet =& $workbook->addWorksheet(convertToUtf8($row->task_name));
