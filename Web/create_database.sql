@@ -422,6 +422,7 @@ INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
 INSERT INTO PropertyOptions VALUES(0,'Inactive',3);
 
 -- Liste des catégories de profil disponible
+INSERT INTO PropertyOptions VALUES(0,'C Stagiaire',11);
 INSERT INTO PropertyOptions VALUES(0,'C IA',11);
 INSERT INTO PropertyOptions VALUES(0,'C IC',11);
 INSERT INTO PropertyOptions VALUES(0,'C Junior 1',11);
