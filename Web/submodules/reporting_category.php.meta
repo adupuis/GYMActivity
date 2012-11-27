@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Reporting ETP';
+$required_group_rights = array(1,2,4,5);
+?>

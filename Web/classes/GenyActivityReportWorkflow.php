@@ -64,7 +64,7 @@ class GenyActivityReportWorkflow extends GenyDatabaseTools {
 			}
 		}
 		if( $this->config->debug )
-			error_log("[GYMActivity::DEBUG] GenyActivityReport MySQL query : $query",0);
+			error_log("[GYMActivity::DEBUG] GenyActivityReportsWorkflowWithRestrictions MySQL query : $query",0);
 		$result = mysql_query($query, $this->handle);
 		$obj_list = array();
 		if (mysql_num_rows($result) != 0){

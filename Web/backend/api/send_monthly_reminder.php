@@ -91,9 +91,9 @@ try {
 				$mail = $smtp->send($to, $headers, $body);
 
 				if (PEAR::isError($mail)) {
-					$json_messages[] = array("status" => "error", "status_message" => $mail->getMessage() );
+					$json_messages[] = array("status" => "error", "status_message" => "Error sending message to $to. Error message: ".$mail->getMessage() );
 				} else {
-					$json_messages[] = array("status" => "success", "status_message" => "Message successfully sent." );
+					$json_messages[] = array("status" => "success", "status_message" => "Message successfully sent to $to." );
 				}
 			}
 			

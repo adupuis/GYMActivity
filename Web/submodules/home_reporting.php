@@ -10,6 +10,7 @@
 				include 'backend/widgets/reporting_ressources_view.dock.widget.php';
 				include 'backend/widgets/reporting_cra_completion.dock.widget.php';
 				include 'backend/widgets/reporting_cra_status.dock.widget.php';
+				include 'backend/widgets/reporting_category.dock.widget.php';
 			}
 		?>
 	</ul>

@@ -190,10 +190,6 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 				} );
 			
 			});
-			
-			function onCheckBoxSelectAll(){
-				$("#conges_deletion_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
-			}
 		</script>
 		<script>
 			<?php
@@ -212,7 +208,7 @@ if(isset($_POST['conges_action']) && ($_POST['conges_action'] == "conges_deletio
 			</style>
 			<ul>
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+				<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#conges_deletion_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 			</ul>
 			<p>

@@ -65,7 +65,7 @@ foreach( $geny_client->getAllClients() as $client ){
 						$pns = array();
 						foreach( $geny_assignements->getActiveAssignementsListByProfileId( $profile->id ) as $assignement ){
 							$p = new GenyProject( $assignement->project_id );
-							if( $p->type_id != 5 && $p->status_id != 2 && $p->status_id != 3 ){
+							if( $p->type_id != 5 && $p->status_id != 2 && $p->status_id != 3 && $p->status_id != 8 ){
 								// WARNING: Il n'y a pas de protection contre les doublons
 								$key = $clients[$p->client_id]->name." - $p->name";
 								$pns["$key"] = array("id" => $assignement->id, "description" => $p->description );
