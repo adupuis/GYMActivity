@@ -35,9 +35,32 @@ $geny_assignements = array();
 $geny_profil_management = new GenyProfileManagementData();
 $gritter_notifications = array();
 
+// Mise en cache des clients
+$cached_clients = array();
+foreach( $geny_client->getAllClients() as $client ){
+	$cached_clients[$client->id] = $client;
+}
+
+// Mise en cache des profils
+$cached_profiles = array();
+foreach( $geny_profile->getAllProfiles() as $prof ){
+	$cached_profiles[$prof->id] = $prof;
+}
+
+// Mise en cache des projets
+$cached_projects = array();
+foreach( $geny_project->getAllProjects() as $proj ){
+	$cached_projects[$proj->id] = $proj;
+}
+
 // récupération des paramètres rentrés par l'utilisateur
 $param_year = getParam( 'year', date( "Y" ) );
 $param_month = getParam( 'month', date( "m" ) );
+
+// Traquons un peu le temps perdu !
+$debug_timer = time();
+$debug_intermediate_timer = time();
+// $web_config->debug = true;
 
 // si le mois et l'année donnés par l'utilisateur sont correctes, on initialise $month et $year avec les valeurs de l'utilisateur
 if( is_numeric( $param_year ) && is_numeric( $param_month ) && strlen( $param_year ) == 4 && intval( $param_month ) > 0 && intval( $param_year ) > 0 && intval( $param_month ) <=12 ) {
@@ -57,16 +80,31 @@ foreach( $geny_project_type->getAllProjectTypes() as $tmp_project_type ) {
 	$project_type_background_color[$tmp_project_type->id] = $tmp_project_type->getProjectTypeColor();
 }
 
+
+if( $web_config->debug ){
+	GenyTools::debug("[reporting_ressources] elapsed time since beginning, before profiles crossing. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+	$debug_intermediate_timer = time();
+}
+
 // on parcourt tous les profils
-foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
+foreach( $cached_profiles as $tmp_profile ) {
 
 	// on charge les informations annexes associées au profil
 	$geny_profil_management->loadProfileManagementDataByProfileId( $tmp_profile->id );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after profiles loading. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	$geny_assignements = $geny_assignement->getActiveAssignementsListByProfileId( $tmp_profile->id );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after active assignements loading. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	
 	// on supprime les congés, les projets dont la date est finie, et les projets fermés, en pause et perdus
 	foreach( $geny_assignements as $key => $geny_assignement ) {
-		$geny_project->loadProjectById( $geny_assignement->project_id );
+// 		$geny_project->loadProjectById( $geny_assignement->project_id );
+		$geny_project = $cached_projects[$geny_assignement->project_id];
 		if( intval( $geny_project->type_id ) == 5 ||
 		    $geny_project->end_date < date("Y-m-d",  mktime( 0, 0, 0, intval( $param_month ), 1, intval( $param_year ) ) ) ||
 		    $geny_project->start_date > date("Y-m-d",  mktime( 0, 0, 0, intval( $param_month ) + 1, 0, intval( $param_year ) ) ) ||
@@ -77,6 +115,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 		}
 	}
 	$geny_assignements = array_values( $geny_assignements );
+	if( $web_config->debug ){
+		GenyTools::debug("[reporting_ressources] elapsed time since beginning, after projects cleaning. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+		$debug_intermediate_timer = time();
+	}
 	
 	// restriction de profil => on ne prend que les gens qui ont des projets en cours
 	if( $tmp_profile->is_active && sizeof( $geny_assignements ) > 0 ) {
@@ -115,6 +157,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				if( !isset( $reporting_data[$tmp_profile->id][$half_day][$day]["cras"] ) )
 					$reporting_data[$tmp_profile->id][$half_day][$day]["cras"] = array() ;
 			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after checking all ays of the month. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
+			}
 		
 			// on obtient la date au format YYYY-MM-DD
 			$tmp_date = date( "Y-m-d", mktime( 0, 0, 0, $month, $day, $year ) );
@@ -128,15 +174,27 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					$is_worked_day = false;
 				}
 			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after day off remonving. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
+			}
 			// on exclu également le week-end
 			if( date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "6" || date( "N", mktime( 0, 0, 0, intval( $month ), intval( $day ), intval( $year ) ) ) == "7" ){
 				$is_worked_day = false;
+			}
+			if( $web_config->debug ){
+				GenyTools::debug("[reporting_ressources] elapsed time since beginning, after removing weekends. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+				$debug_intermediate_timer = time();
 			}
 			
 			if( $is_worked_day ) {
 				
 				// on parcourt tous les cras déclarés correspondant à la date et au profil
 				foreach( $activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId( $tmp_date, $tmp_profile->id ) as $tmp_ressources ) {
+					if( $web_config->debug ){
+						GenyTools::debug("[reporting_ressources] elapsed time since beginning, after activity_report_ressources->getActivityReportsRessourcesFromDateAndProfileId (début de boucle). Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+						$debug_intermediate_timer = time();
+					}
 					
 					// on récupère la charge
 					$tmp_numeric_activity_load = intval( $tmp_ressources->activity_load );
@@ -178,6 +236,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					}
 					// éventuellement, si $tmp_numeric_activity_load != 0, on a des heures sup'
 				}
+				if( $web_config->debug ){
+					GenyTools::debug("[reporting_ressources] elapsed time since beginning, after CRA crawling. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+					$debug_intermediate_timer = time();
+				}
 				
 				// on parcourt par demi-journée, et on regarde si les cras 
 				// sont complets ou si on va devoir les prédire
@@ -196,7 +258,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 						
 						// cas n°1 : l'utilisateur n'est rattaché qu'à un seul projet => on prend celui-là (si les dates correspondent)
 						if( sizeof( $geny_assignements ) == 1 ) {
-							$geny_project->loadProjectById( $geny_assignements[0]->project_id );
+// 							$geny_project->loadProjectById( $geny_assignements[0]->project_id );
+							$geny_project = $cached_projects[$geny_assignements[0]->project_id];
 							if( $geny_project->start_date < date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
 							    && $geny_project->end_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) ) ) {
 								$predicted_project_id = $geny_assignements[0]->project_id;
@@ -211,7 +274,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 							if( $last_predictions[$tmp_profile->id] == -1 ) {
 								$predicted_project_id = -1;
 								foreach( $geny_assignements as $geny_assignement ) {
-									$geny_project->loadProjectById( $geny_assignement->project_id );
+// 									$geny_project->loadProjectById( $geny_assignement->project_id );
+									$geny_project = $cached_projects[$geny_assignement->project_id];
 									if( $geny_project->start_date < date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
 									&& $geny_project->end_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) ) ) {
 										$predicted_project_id = $geny_assignement->project_id;
@@ -235,7 +299,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 									if( $tmp_cpt == sizeof( $geny_assignements ) ) {
 										$tmp_cpt = 0;
 									}
-									$geny_project->loadProjectById( $geny_assignements[$tmp_cpt]->project_id );
+// 									$geny_project->loadProjectById( $geny_assignements[$tmp_cpt]->project_id );
+									$geny_project = $cached_projects[$geny_assignements[$tmp_cpt]->project_id];
 									$predicted_project_id = $geny_assignements[$tmp_cpt]->project_id;
 									$last_predictions[$tmp_profile->id] = $geny_assignements[$tmp_cpt]->project_id;
 								} while( $geny_project->start_date > date( "Y-m-d",  mktime( 0, 0, 0, $month, $day, $year ) )
@@ -248,8 +313,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 						}
 						
 						// on charge les informations associées au projet prédit
-						$geny_project->loadProjectById( $predicted_project_id );
-						$geny_client->loadClientById( $geny_project->client_id );
+// 						$geny_project->loadProjectById( $predicted_project_id );
+						$geny_project = $cached_projects[$predicted_project_id];
+// 						$geny_client->loadClientById( $geny_project->client_id );
+						$geny_client = $cached_clients[$geny_project->client_id];
 						
 						// ajout du cra "prédit"
 						$reporting_data[$tmp_profile->id][$half_day][$day]["cras"][] = array( "project_id" => $predicted_project_id ,
@@ -282,6 +349,10 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 					if( $majority_cra["predicted"] == true ) {
 						$reporting_data[$tmp_profile->id][$half_day][$day]["total_prediction"] = true;
 					}
+				}
+				if( $web_config->debug ){
+					GenyTools::debug("[reporting_ressources] elapsed time since beginning, after prediction. Total: ".(time()-$debug_timer)." Intermediate: ".(time()-$debug_intermediate_timer).".");
+					$debug_intermediate_timer = time();
 				}
 			}
 		}
@@ -354,7 +425,8 @@ foreach( $geny_profile->getAllProfiles() as $tmp_profile ) {
 				foreach( $reporting_data as $tmp_profile_id => $tmp_period_data ) {
 					
 					// chargement du profil
-					$geny_profile->loadProfileById( $tmp_profile_id );
+// 					$geny_profile->loadProfileById( $tmp_profile_id );
+					$geny_profile = $cached_profiles[$tmp_profile_id];
 					
 					// affichage du nom
 					echo '<tr><td rowspan="2"><div id="names">' . GenyTools::getProfileDisplayName( $geny_profile ) . '</div></td>';

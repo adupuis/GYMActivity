@@ -311,10 +311,6 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 				} );
 				
 			});
-			
-			function onCheckBoxSelectAll(){
-				$("#cra_validation_admin_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
-			}
 			$(function() {
 				$( "#radio" ).buttonset();
 				$( "#chkBoxSelectAll" ).button();
@@ -334,7 +330,7 @@ foreach( $geny_ar->getActivityReportsByReportStatusId( $geny_ars->id ) as $ar ){
 <!-- 			<input type="hidden" name="validate_cra" value="true" /> -->
 			<ul style="display: inline; color: black;">
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+					<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#cra_validation_admin_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 				<li id="radio">
 					<input type="radio" id="radio0" name="cra_action" value="user_validate_cra" /><label for="radio0">Validation utilisateur</label>

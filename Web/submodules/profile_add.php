@@ -125,6 +125,23 @@ $geny_rg = new GenyRightsGroup();
 				</select>
 			</p>
 			<p>
+				<label for="pmd_category">Catégorie</label>
+				<select name="pmd_category" id="pmd_category" class="chzn-select"	>
+					<?php
+					$geny_property = new GenyProperty();
+					$geny_property->loadPropertyByName('PROP_PROFILE_CATEGORY');
+					foreach( $geny_property->getPropertyOptions() as $option ){
+						if($option->content == $web_config->default_profile_category){
+							echo "<option value='".$option->id."' selected>".$option->content."</option>";
+						}
+						else{
+							echo "<option value='".$option->id."'>".$option->content."</option>";
+						}
+					}
+					?>
+				</select>
+			</p>
+			<p>
 				<label for="pmd_is_billable">Profil facturable</label>
 				<select name="pmd_is_billable" id="pmd_is_billable" >
 					<option value="true" selected>Oui</option>

@@ -29,6 +29,7 @@ $geny_pmd = new GenyProfileManagementData();
 $geny_pmd->loadProfileManagementDataByProfileId($geny_profile->id);
 $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
+$geny_profile_category_option = new GenyPropertyOption( $geny_pmd->category );
 
 $data_array = array();
 $data_array_filters = array( 0 => array(), 2 => array('Über positif','Positif','Neutre','Négatif','Faute') );
@@ -185,6 +186,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Groupe : </strong> <?php echo $geny_rights_group->name ; ?>
 			</li>
 			<li>
+				<strong>Catégorie : </strong> <?php echo $geny_profile_category_option->content ; ?><br/>
 				<strong>Facturable : </strong> <?php if($geny_pmd->is_billable){ echo 'Oui' ;}else{echo 'Non';} ?><br/>
 				<strong>Date de recrutement : </strong> <?php echo $geny_pmd->recruitement_date ;?><br/>
 				<strong>Salaire (brut annuel) : </strong> <?php echo $geny_pmd->salary ;?> &euro;<br/>

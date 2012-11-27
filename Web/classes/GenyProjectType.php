@@ -100,21 +100,23 @@ class GenyProjectType extends GenyDatabaseTools {
 			$geny_properties = $geny_property->searchProperties( "color_project_type_". $this->id );
 			if( sizeof( $geny_properties == 1 ) ) {
 				$geny_property = $geny_properties[0];
-				$geny_property_values = $geny_property->getPropertyValues();
-				if( sizeof( $geny_property_values ) == 1 ) {
-					return $geny_property_values[0]->content;
-				}
-				else if( sizeof( $geny_property_values ) > 1 ) {
-					if($this->config->debug) {
-						GenyTools::debug("Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte");
+				if( isset($geny_property) && is_a($geny_property, "GenyProperty") ){
+					$geny_property_values = $geny_property->getPropertyValues();
+					if( sizeof( $geny_property_values ) == 1 ) {
+						return $geny_property_values[0]->content;
 					}
-					return $geny_property_values[0]->content;
-				}
-				else {
-					if($this->config->debug) {
-						GenyTools::debug("Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc");
+					else if( sizeof( $geny_property_values ) > 1 ) {
+						if($this->config->debug) {
+							GenyTools::debug("Attention : au moins 2 couleurs sont définies pour le type de projet $geny_project->type_id ! Seule la première couleur a été prise en compte");
+						}
+						return $geny_property_values[0]->content;
 					}
-					return "white";
+					else {
+						if($this->config->debug) {
+							GenyTools::debug("Attention : aucune couleur n'est définie pour le type de projet bien qu'il y ait une propriété associée $geny_project->type_id ! Couleur par défaut : blanc");
+						}
+						return "white";
+					}
 				}
 			}
 			else if( sizeof( $geny_properties == 0 ) ) {

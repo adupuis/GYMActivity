@@ -302,10 +302,6 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 				} );
 			
 			});
-			
-			function onCheckBoxSelectAll(){
-				$("#conges_validation_table").find(':checkbox').attr('checked', $('#chkBoxSelectAll').attr('checked'));
-			}
 			$(function() {
 				$( "#radio" ).buttonset();
 				$( "#chkBoxSelectAll" ).button();
@@ -324,7 +320,7 @@ else if(isset($_POST['validate_conges']) && $_POST['validate_conges'] == "true")
 			</style>
 			<ul>
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+				<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#conges_validation_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 				<li id="radio">
 					<input type="radio" id="radio1" name="conges_action" value="validate_conges" /><label for="radio1">Valider</label>

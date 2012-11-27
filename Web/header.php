@@ -64,7 +64,7 @@ try {
 	$pv = new GenyPropertyValue();
 	$state_pv = $pv->getPropertyValuesByPropertyId(3);
 	$s = array_shift($state_pv);
-	if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+	if(isset($set) && ($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
 		session_destroy();
 		header("Location: index.php");
 		exit();
@@ -134,6 +134,7 @@ echo $header_title
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
 <script src="js/prettyPhoto_compressed_3.1.3/js/jquery.prettyPhoto.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/GYMActivity-Helpers.js"></script>
 
 <link rel="stylesheet" href="js/prettyPhoto_compressed_3.1.3/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
 

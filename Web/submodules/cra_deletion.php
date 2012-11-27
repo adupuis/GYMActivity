@@ -212,7 +212,7 @@ if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "cra_deletion") ){
 			</style>
 			<ul>
 				<li>
-					<input type="checkbox" id="chkBoxSelectAll" onClick="onCheckBoxSelectAll()" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
+				<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#cra_deletion_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
 				</li>
 			</ul>
 			<p>
