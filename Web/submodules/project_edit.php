@@ -129,6 +129,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			}
 		}
 		if( isset($_POST['project_profiles']) && count($_POST['project_profiles']) > 0 ){
+			GenyTools::debug("Updating project_profiles : \$_POST['project_profiles'] : ".join($_POST['project_profiles']));
 // 			$old_assignements = $geny_assignement->getAssignementsListByProjectId($geny_project->id);
 			$active_assignements = $geny_assignement->getActiveAssignementsListByProjectId( $geny_project->id );
 // 			$old_overtime_states = array();
@@ -145,11 +146,13 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 			$active_assignements_by_profile_id = array();
 			foreach( $active_assignements as $ass){
 				$assigned_profile_id[] = $ass->profile_id;
+				GenyTools::debug(" * Adding $ass->profile_id to active_assignements_by_profile_id");
 				$active_assignements_by_profile_id[$ass->profile_id] = $ass;
 			}
 			$new_profile_id = array();
 			foreach ($_POST['project_profiles'] as $key => $value){
 				$new_profile_id[] = $value;
+				GenyTools::debug(" + Adding $value to new_profile_id");
 			}
 			
 			$notif = new GenyNotification();
@@ -397,7 +400,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				<label for="profiles_checkboxgroup">Attributions</label>
 				<select name="project_profiles[]" multiple class="profileslistselect chzn-select" data-placeholder="Choisissez un ou plusieurs profils...">
 				<?php
-					$current_project_profiles = $geny_profile->getAllProfilesByProjectId( $geny_project->id );
+					$current_project_profiles = $geny_profile->getAllActiveProfilesByProjectId( $geny_project->id );
 					foreach( $geny_profile->getAllProfiles() as $p ) {
 						if( in_array( $p, $current_project_profiles ) ) {
 							echo "<option value=\"$p->id\" selected>".GenyTools::getProfileDisplayName( $p )."</option>";
