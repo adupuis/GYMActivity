@@ -28,7 +28,7 @@ $gritter_notifications = array();
 
 if(isset($_POST['create_conges']) && $_POST['create_conges'] == "true" ){
 	$html_worked_days_table = '';
-	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) && isset($_POST['task_id']) ){
+	if( isset($_POST['assignement_start_date']) && isset($_POST['assignement_end_date']) && isset($_POST['assignement_id']) && isset($_POST['task_id']) && isset($_POST['assignement_load']) ){
 		$time_assignement_start_date = strtotime($_POST['assignement_start_date']);
 		$time_assignement_end_date = strtotime($_POST['assignement_end_date']);
 		$tmp_input_ga = new GenyAssignement( $_POST['assignement_id'] );
