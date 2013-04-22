@@ -150,10 +150,13 @@ $activity_report_workflow = new GenyActivityReportWorkflow();
 $status = $geny_ars->getAllActivityReportStatus();
 $geny_ars = array();
 
-foreach($status as $s)
+foreach($status as $s){
 	$geny_ars["$s->id"] = $s;
-	
-$workflow = $activity_report_workflow->getActivityReportsWorkflow();
+}
+
+$activity_report_workflow->setDebug(true);
+$workflow = $activity_report_workflow->getActivityReportsWorkflowFrom(intval(date('Y'))."-01-01");
+$activity_report_workflow->setDebug(false);
 
 foreach($workflow as $row) {
 	
@@ -196,6 +199,7 @@ foreach($workflow as $row) {
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier l'état des CRAs dans le workflow.<br />
 		<strong class="important_note">Important :</strong> Ce formulaire contient tous les rapports déjà validés (validation utilisateur et management) et affiche leurs états d'avancement dans le workflow.<br />
+		<strong class="important_note">Important :</strong> Ce formulaire ne contient que les rapports depuis le 1er janvier.<br />
 		</p>
 		<script>
 			

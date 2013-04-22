@@ -90,6 +90,18 @@ class GenyActivityReportWorkflow extends GenyDatabaseTools {
 		return $this->getActivityReportsWorkflowWithRestrictions( array() );
 	}
 	
+	public function getActivityReportsWorkflowFrom($date){
+		if (substr_count($date, '-') == 2) {
+			list($y, $m, $d) = explode('-', $date);
+			if( checkdate($m, $d, sprintf('%04u', $y)) ){
+				return $this->getActivityReportsWorkflowWithRestrictions( array("activity_date >= \"$date\"") );
+			}
+			else{
+				return GENY_FALSE;
+			}
+		}
+	}
+	
 	public function commitUpdates(){
 		return GENY_FALSE;
 	}	
