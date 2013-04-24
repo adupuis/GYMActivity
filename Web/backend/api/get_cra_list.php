@@ -75,6 +75,10 @@ try {
 		$data = json_encode($cra_reports);
 		echo $data;
 	}
+	else{
+		echo json_encode( array( "status" => "error", "status_message" => "Fatal error: authorization refused." ) );
+		exit;
+	}
 } catch (Exception $e) {
     echo "Exception: ".$e->getMessage(), "\n";
 }
