@@ -32,17 +32,19 @@ try {
 	$clients = array();
 	if($auth_granted){
 		$activity_report_workflow = new GenyActivityReportWorkflow();
-		$results = array();
+		$cra_reports = array();
 		$query = array();
 		// project doit être le MD5 du nom du projet.
-		$param_project = getParam("project");
+		$param_project_md5 = getParam("project_md5");
 		$param_start_date = getParam("start_date");
 		$param_end_date = getParam("end_date");
 		$param_profile_id = getParam("profile_id");
+		$param_profile_login = getParam("profile_login");
 		$param_client_name = getParam("client_name");
+		$param_activity_report_status_shortname = getParam("activity_report_status_shortname");
 		
-		if( $param_project != "" ){
-			$query[] = "MD5(project_name)=\"$param_project\"";
+		if( $param_project_md5 != "" ){
+			$query[] = "MD5(project_name)=\"$param_project_md5\"";
 		}
 		if( $param_start_date != "" ){
 			$query[] = "activity_date>=\"$param_start_date\"";
@@ -53,14 +55,24 @@ try {
 		if( $param_profile_id != "" ){
 			$query[] = "profile_id=$param_profile_id";
 		}
+		if( $param_profile_login != "" ){
+			$query[] = "profile_login=\"$param_profile_login\"";
+		}
 		if( $param_client_name != "" ){
 			$query[] = "client_name=\"$param_client_name\"";
 		}
-		
-		foreach( $results as $c ){
-			$clients[] = array( "value" => $c->id, "label" => $c->name );
+		if( $param_activity_report_status_shortname != "" ){
+			$ars = new GenyActivityReportStatus();
+			$ars->loadActivityReportStatusByShortName($param_activity_report_status_shortname);
+			if( $ars->id > 0 ){
+				$query[] = "activity_report_status_id=".$ars->id;
+			}
 		}
-		$data = json_encode($clients);
+		$activity_report_workflow->setDebug(true);
+		foreach( $activity_report_workflow->getActivityReportsWorkflowWithRestrictions($query) as $c ){
+			$cra_reports[] = array( "activity_report_id" => $c->activity_report_id, "profile_id" => $c->profile_id, "profile_firstname" => $c->profile_firstname, "profile_lastname" => $c->profile_lastname, "project_name" => $c->project_name, "task_name" => $c->task_name, "activity_date" => $c->activity_date, "client_name" => $c->client_name, "activity_load" => $c->activity_load, "activity_report_status_id" => $c->activity_report_status_id, "profile_login" => $c->profile_login );
+		}
+		$data = json_encode($cra_reports);
 		echo $data;
 	}
 } catch (Exception $e) {
