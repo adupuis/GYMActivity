@@ -41,6 +41,7 @@ try {
 		$param_profile_id = getParam("profile_id");
 		$param_profile_login = getParam("profile_login");
 		$param_client_name = getParam("client_name");
+		$param_project_name = getParam("project_name");
 		$param_activity_report_status_shortname = getParam("activity_report_status_shortname");
 		
 		if( $param_project_md5 != "" ){
@@ -60,6 +61,9 @@ try {
 		}
 		if( $param_client_name != "" ){
 			$query[] = "client_name=\"$param_client_name\"";
+		}
+		if( $param_project_name != "" ){
+			$query[] = "project_name=\"$param_project_name\"";
 		}
 		if( $param_activity_report_status_shortname != "" ){
 			$ars = new GenyActivityReportStatus();
