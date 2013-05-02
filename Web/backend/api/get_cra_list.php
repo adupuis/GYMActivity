@@ -36,6 +36,7 @@ try {
 		$query = array();
 		// project doit être le MD5 du nom du projet.
 		$param_project_md5 = getParam("project_md5");
+		$param_project_id = getParam("project_id");
 		$param_start_date = getParam("start_date");
 		$param_end_date = getParam("end_date");
 		$param_profile_id = getParam("profile_id");
@@ -45,6 +46,10 @@ try {
 		
 		if( $param_project_md5 != "" ){
 			$query[] = "MD5(project_name)=\"$param_project_md5\"";
+		}
+		if( is_numeric($param_project_id) && $param_project_id > 0 ){
+			$project = new GenyProject( $param_project_id );
+			$query[] = "project_name=\"".$project->name."\"";
 		}
 		if( $param_start_date != "" ){
 			$query[] = "activity_date>=\"$param_start_date\"";
