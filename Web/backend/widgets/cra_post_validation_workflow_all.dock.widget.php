@@ -22,10 +22,10 @@
 ?>
 
 <li class="cra_admin_generic">
-	<a href="loader.php?module=cra_post_validation_workflow">
-		<span class="dock_item_title">Workflow CRA</span><br/>
+	<a href="loader.php?module=cra_post_validation_workflow_all">
+		<span class="dock_item_title">Workflow CRA [all]</span><br/>
 		<span class="dock_item_content">
-			Worflow des CRA <strong>post-validation</strong>. C'est ici que vous validez les suppressions post-validations ou que vous faites toute autre opération permettant de faire avancer les rapports dans le workflow.
+			Worflow des CRA <strong>post-validation</strong>. Depuis le début de l'activité.
 		</span>
 	</a>
 </li>
