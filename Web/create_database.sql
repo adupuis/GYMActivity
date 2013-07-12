@@ -380,13 +380,13 @@ CREATE TABLE Properties (
 ALTER TABLE Properties AUTO_INCREMENT=1;
 
 -- Exemple de propriété
-INSERT INTO Properties VALUES(0,'PROP_LIVE_DEBUG','Activer/desactiver le debug en live.',1);
+INSERT INTO Properties VALUES(1,'PROP_LIVE_DEBUG','Activer/desactiver le debug en live.',1);
 
 -- Version du schéma de la base de donnée
-INSERT INTO Properties VALUES(0,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
+INSERT INTO Properties VALUES(2,'PROP_DB_VERSION','Version du schéma de la base de données.',4);
 
 -- Verrouillage de l'application.
-INSERT INTO Properties VALUES(0,'PROP_APP_STATE',"Etat de l'application",3);
+INSERT INTO Properties VALUES(3,'PROP_APP_STATE',"Etat de l'application",3);
 
 -- Ajout des couleurs par type de projet
 INSERT INTO `Properties` (`property_id`, `property_name`, `property_label`, `property_type_id`) VALUES
@@ -411,29 +411,29 @@ CREATE TABLE PropertyOptions (
 ALTER TABLE PropertyOptions AUTO_INCREMENT=1;
 
 -- options activé/désactivé pour PROP_LIVE_DEBUG
-INSERT INTO PropertyOptions VALUES(0,'Activé',1);
-INSERT INTO PropertyOptions VALUES(0,'Désactivé',1);
+INSERT INTO PropertyOptions VALUES(NULL,'Activé',1);
+INSERT INTO PropertyOptions VALUES(NULL,'Désactivé',1);
 
 -- état de l'application (active, active partiellement, ou inactive)
-INSERT INTO PropertyOptions VALUES(0,'Active',3);
-INSERT INTO PropertyOptions VALUES(0,'Active - Issues',3);
-INSERT INTO PropertyOptions VALUES(0,'Inactive - Upgrade',3);
-INSERT INTO PropertyOptions VALUES(0,'Inactive - Maintenance',3);
-INSERT INTO PropertyOptions VALUES(0,'Inactive',3);
+INSERT INTO PropertyOptions VALUES(NULL,'Active',3);
+INSERT INTO PropertyOptions VALUES(NULL,'Active - Issues',3);
+INSERT INTO PropertyOptions VALUES(NULL,'Inactive - Upgrade',3);
+INSERT INTO PropertyOptions VALUES(NULL,'Inactive - Maintenance',3);
+INSERT INTO PropertyOptions VALUES(NULL,'Inactive',3);
 
 -- Liste des catégories de profil disponible
-INSERT INTO PropertyOptions VALUES(0,'C Stagiaire',11);
-INSERT INTO PropertyOptions VALUES(0,'C IA',11);
-INSERT INTO PropertyOptions VALUES(0,'C IC',11);
-INSERT INTO PropertyOptions VALUES(0,'C Junior 1',11);
-INSERT INTO PropertyOptions VALUES(0,'C Junior 2',11);
-INSERT INTO PropertyOptions VALUES(0,'C Senior 1',11);
-INSERT INTO PropertyOptions VALUES(0,'C Senior 2',11);
-INSERT INTO PropertyOptions VALUES(0,'C Expert',11);
-INSERT INTO PropertyOptions VALUES(0,'C Management',11);
-INSERT INTO PropertyOptions VALUES(0,'C Stagiaire',11);
-INSERT INTO PropertyOptions VALUES(0,'C Sous-Traitant',11);
-INSERT INTO PropertyOptions VALUES(0,'C Hors Effectifs',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Stagiaire',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C IA',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C IC',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Junior 1',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Junior 2',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Senior 1',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Senior 2',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Expert',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Management',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Stagiaire',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Sous-Traitant',11);
+INSERT INTO PropertyOptions VALUES(NULL,'C Hors Effectifs',11);
 
 -- C'est dans cette table que vont les valeurs séléctionnées. Dans l'exemple ci-dessus il y aurait 1 ou 2 (les id d'une des deux options possible)
 CREATE TABLE PropertyValues (
@@ -447,16 +447,16 @@ ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 
 -- insertion des valeurs des exemples ci-dessus
 INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
-(0, 1, 'true'), -- live debug
-(0, 2, '6'), -- n° de la version de la bdd
-(0, 3, '3'), -- état de l'application
-(0, 4, 'red'), -- couleur pour le type de projet "régie"
-(0, 5, 'blue'), -- couleur pour le type de projet "forfait"
-(0, 6, 'green'), -- couleur pour le type de projet "régie forfaitée"
-(0, 7, 'fuchsia'), -- couleur pour le type de projet "r&d"
-(0, 8, 'teal'), -- couleur pour le type de projet "congés"
-(0, 9, 'grey'), -- couleur pour le type de projet "autre"
-(0, 10, '#FFA500'); -- couleur pour le type de projet "avant vente"
+(NULL, 1, 'true'), -- live debug
+(NULL, 2, '6'), -- n° de la version de la bdd
+(NULL, 3, '3'), -- état de l'application
+(NULL, 4, 'red'), -- couleur pour le type de projet "régie"
+(NULL, 5, 'blue'), -- couleur pour le type de projet "forfait"
+(NULL, 6, 'green'), -- couleur pour le type de projet "régie forfaitée"
+(NULL, 7, 'fuchsia'), -- couleur pour le type de projet "r&d"
+(NULL, 8, 'teal'), -- couleur pour le type de projet "congés"
+(NULL, 9, 'grey'), -- couleur pour le type de projet "autre"
+(NULL, 10, '#FFA500'); -- couleur pour le type de projet "avant vente"
 
 CREATE TABLE CareerEvents (
 	career_event_id int auto_increment,
