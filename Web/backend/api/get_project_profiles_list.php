@@ -19,8 +19,10 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include '../../rights_groups.php';
+
 session_start();
-$required_group_rights = 2;
+$required_group_rights = array(Admins,TopManagers);
 $auth_granted = false;
 
 header('Content-Type: application/json;charset=UTF-8');

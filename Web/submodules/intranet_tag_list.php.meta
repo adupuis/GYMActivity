@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Liste des tags de l\'Intranet';
-$required_group_rights = array(1,2);
+$required_group_rights = array(Admins, TopManagers);
 ?>

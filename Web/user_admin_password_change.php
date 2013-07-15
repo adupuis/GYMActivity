@@ -19,9 +19,12 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+
+include 'rights_groups.php';
+
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Mise à jour du mot de passe';
-$required_group_rights = 6;
+$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, Externes, GroupLeaders);
 $disable_password_reset_redirection = true;
 
 include_once 'header.php';

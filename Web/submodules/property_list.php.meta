@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Liste des propriétés d\'administration';
-$required_group_rights = 1;
+$required_group_rights = array(Admins);
 ?>
