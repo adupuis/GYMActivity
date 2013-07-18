@@ -19,8 +19,10 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include_once '../../rights_groups.php';
+
 session_start();
-$required_group_rights = 6;
+$required_group_rights = array(ADM, TM, USR, TL, REP, EXT, GL);
 $auth_granted = false;
 $authorized_auth_method="session";
 

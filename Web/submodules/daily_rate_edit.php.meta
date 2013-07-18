@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Edition TJM';
-$required_group_rights = array(1,2,4);
+$required_group_rights = array(ADM, TM, TL, GL);
 ?>

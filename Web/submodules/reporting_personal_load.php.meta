@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Reporting de charge';
-$required_group_rights = 6;
+$required_group_rights = array(ADM, TM, USR, TL, REP, EXT, GL);
 ?>

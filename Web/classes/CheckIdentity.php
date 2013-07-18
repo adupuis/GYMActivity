@@ -32,8 +32,7 @@ class CheckIdentity {
 				return false;
 		}
 		else{
-			if( $tmp_profile->rights_group_id > $needed_rights)
-				return false;
+			return false;
 		}
 		if(!$tmp_profile->is_active)
 			return false;

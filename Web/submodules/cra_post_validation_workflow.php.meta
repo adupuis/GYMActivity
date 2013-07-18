@@ -1,4 +1,4 @@
 <?php
 $header_title = 'GENYMOBILE - Validation CRA';
-$required_group_rights = 2;
+$required_group_rights = array(ADM, TM);
 ?>

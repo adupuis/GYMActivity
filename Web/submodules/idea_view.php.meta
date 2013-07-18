@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Visualisation idée';
-$required_group_rights = 5;
+$required_group_rights = array(ADM, TM, USR, TL, REP, GL);
 ?>
