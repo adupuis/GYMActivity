@@ -20,11 +20,11 @@
 
 include 'classes/GenyTools.php';
 include 'classes/GenyCache.php';
-include 'rights_groups.php';
+include_once 'rights_groups.php';
 
 // Variable to configure global behaviour
 $header_title = '%COMPANY_NAME% - Home';
-$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, Externes, GroupLeaders);
+$required_group_rights = array(ADM, TM, USR, TL, REP, EXT, GL);
 $is_cached = false;
 $expiration_freq = 24*60*60; // in seconds
 $dyn_params = array();

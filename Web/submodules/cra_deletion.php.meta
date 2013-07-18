@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Suppression CRA';
-$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, Externes, GroupLeaders);
+$required_group_rights = array(ADM, TM, USR, TL, REP, EXT, GL);
 ?>

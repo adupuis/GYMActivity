@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Liste tâches';
-$required_group_rights = array(Admins, TopManagers);
+$required_group_rights = array(ADM, TM);
 ?>

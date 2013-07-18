@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Reporting ETP';
-$required_group_rights = array(Admins, TopManagers, TechnologyLeaders, Reporters, GroupLeaders);
+$required_group_rights = array(ADM, TM, TL, REP, GL);
 ?>

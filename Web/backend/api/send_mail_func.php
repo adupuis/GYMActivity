@@ -19,9 +19,9 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-include '../../rights_groups.php';
+include_once '../../rights_groups.php';
 
-$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, Externes, GroupLeaders);
+$required_group_rights = array(ADM, TM, USR, TL, REP, EXT, GL);
 
 include_once 'Mail.php';
 include_once 'ajax_toolbox.php';

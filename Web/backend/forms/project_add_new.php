@@ -1,10 +1,10 @@
 <?php
 
-include '../../rights_groups.php';
+include_once '../../rights_groups.php';
 
 // Variable to configure global behaviour
 $header_title = 'GenY Mobile - Projects Admin - Add new';
-$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, GroupLeaders);
+$required_group_rights = array(ADM, TM, USR, TL, REP, GL);
 
 include_once 'header.php';
 include_once 'menu.php';

@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Ajout congés';
-$required_group_rights = array(Admins, TopManagers, Users, TechnologyLeaders, Reporters, GroupLeaders);
+$required_group_rights = array(ADM, TM, USR, TL, REP, GL);
 ?>

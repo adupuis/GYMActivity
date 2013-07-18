@@ -1,4 +1,4 @@
 <?php
 $header_title = '%COMPANY_NAME% - Edition Solde de congés';
-$required_group_rights = array(Admins, TopManagers);
+$required_group_rights = array(ADM, TM);
 ?>
