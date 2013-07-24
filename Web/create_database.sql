@@ -452,7 +452,7 @@ ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 -- insertion des valeurs des exemples ci-dessus
 INSERT INTO `PropertyValues` (`property_value_id`, `property_id`, `property_value_content`) VALUES
 (NULL, 1, 'true'), -- live debug
-(NULL, 2, '6'), -- n° de la version de la bdd
+(NULL, 2, '7'), -- n° de la version de la bdd
 (NULL, 3, '3'), -- état de l'application
 (NULL, 4, 'red'), -- couleur pour le type de projet "régie"
 (NULL, 5, 'blue'), -- couleur pour le type de projet "forfait"
