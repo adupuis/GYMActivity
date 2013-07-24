@@ -155,10 +155,14 @@ CREATE TABLE Projects (
 	project_end_date date,
 	project_type_id int,
 	project_status_id int,
+	project_pm1_id int,
+	project_pm2_id int,
 	primary key(project_id),
 	foreign key(client_id) references Clients(client_id) ON DELETE CASCADE,
 	foreign key(project_type_id) references ProjectTypes(project_type_id) ON DELETE CASCADE,
-	foreign key(project_status_id) references ProjectStatus(project_status_id) ON DELETE CASCADE
+	foreign key(project_status_id) references ProjectStatus(project_status_id) ON DELETE CASCADE,
+	foreign key(project_pm1_id) references Profiles(profile_id) ON DELETE CASCADE,
+	foreign key(project_pm2_id) references Profiles(profile_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Projects AUTO_INCREMENT = 1;
 INSERT INTO Projects VALUES(1,'Administratif 2011','Tâches administratives (travaux internes, management, etc.).',1,'Paris','2011-01-01','2011-12-31',2,1);
