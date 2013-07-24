@@ -134,7 +134,7 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				$("tfoot th").each( function ( i ) {
-					if( i < 8){
+					if( i < 10){
 						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -170,6 +170,8 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 				<th>Type</th>
 				<th>Status</th>
 				<th>Description</th>
+				<th>PM1</th>
+				<th>PM2</th>
 				<th>Éditer</th>
 				<th>Supprimer</th>
 			</thead>
@@ -182,7 +184,9 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 						return 'images/'.$web_config->theme.'/button_error_small.png';
 				}
 				foreach( $geny_project->getAllProjects() as $tmp ){
-					echo "<tr><td>$tmp->name</td><td>".$clients["$tmp->client_id"]->name."</td><td>$tmp->location</td><td>$tmp->start_date</td><td>$tmp->end_date</td><td>".$pts["$tmp->type_id"]->name."</td><td>".$pss["$tmp->status_id"]->name."</td><td>$tmp->description</td><td><a href='loader.php?module=project_edit&load_project=true&project_id=$tmp->id' title='Editer le project'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer le projet'></a></td><td><a href='loader.php?module=project_remove&project_id=$tmp->id' title='Supprimer définitivement le project'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement le projet'></a></td></tr>";
+					$pm1_prf = new GenyProfile( $tmp->pm1_id );
+					$pm2_prf = new GenyProfile( $tmp->pm2_id );
+					echo "<tr><td>$tmp->name</td><td>".$clients["$tmp->client_id"]->name."</td><td>$tmp->location</td><td>$tmp->start_date</td><td>$tmp->end_date</td><td>".$pts["$tmp->type_id"]->name."</td><td>".$pss["$tmp->status_id"]->name."</td><td>$tmp->description</td><td>".GenyTools::getProfileDisplayName($pm1_prf)."</td><td>".GenyTools::getProfileDisplayName($pm2_prf)."</td><td><a href='loader.php?module=project_edit&load_project=true&project_id=$tmp->id' title='Editer le project'><img src='images/$web_config->theme/project_edit_small.png' alt='Editer le projet'></a></td><td><a href='loader.php?module=project_remove&project_id=$tmp->id' title='Supprimer définitivement le project'><img src='images/$web_config->theme/project_remove_small.png' alt='Supprimer définitivement le projet'></a></td></tr>";
 				}
 			?>
 			</tbody>
@@ -195,6 +199,8 @@ foreach( $geny_ps->getAllProjectStatus() as $ps ){
 				<th>Type</th>
 				<th>Status</th>
 				<th>Description</th>
+				<th>PM1</th>
+				<th>PM2</th>
 				<th>Éditer</th>
 				<th>Supprimer</th>
 			</tfoot>
