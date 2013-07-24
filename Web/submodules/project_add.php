@@ -157,6 +157,26 @@ $geny_profile = new GenyProfile();
 				</select>
 			</p>
 			<p>
+				<label for="project_pm1_id">Project Manager 1</label>
+				<select name="project_pm1_id" id="project_pm1_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="project_pm2_id">Project Manager 2</label>
+				<select name="project_pm2_id" id="project_pm2_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+					}
+				?>
+				</select>
+			</p>
+			<p>
 				<input type="checkbox" name="project_allow_overtime" value="true" /> Autoriser les heures supplémentaires pour tout les collaborateurs. Cette opération autorisera tous les collaborateurs ajoutés au projet à ce moment. C'est un mode de groupe afin de faciliter une opération de masse, pour autoriser les heures supplémentaires par collaborateur rendez vous sur la page de <a href="/assignement_list.php">gestion des affectactions</a>. 
 			</p>
 			<p>

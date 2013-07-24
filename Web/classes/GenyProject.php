@@ -32,6 +32,8 @@ class GenyProject extends GenyDatabaseTools {
 	public $end_date = '0000-00-00';
 	public $type_id = -1;
 	public $status_id = -1;
+	public $mp1_id = -1;
+	public $mp2_id = -1;
 	public function __construct($id = -1){
 		parent::__construct("Projects",  "project_id");
 		$this->id = -1;
@@ -43,6 +45,8 @@ class GenyProject extends GenyDatabaseTools {
 		$this->end_date = '0000-00-00';
 		$this->type_id = -1;
 		$this->status_id = -1;
+		$this->pm1_id = -1;
+		$this->pm2_id = -1;
 		if($id > -1)
 			$this->loadProjectById($id);
 	}
@@ -78,8 +82,8 @@ class GenyProject extends GenyDatabaseTools {
 		}
 		return -1;
 	}
-	public function insertNewProject($project_name,$project_description,$project_client,$project_location,$project_start_date,$project_end_date,$project_type_id,$project_status_id){
-		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).")";
+	public function insertNewProject($project_name,$project_description,$project_client,$project_location,$project_start_date,$project_end_date,$project_type_id,$project_status_id,$project_pm1_id=-1,$project_pm2_id=-1){
+		$query = "INSERT INTO Projects VALUES(NULL,'".mysql_real_escape_string($project_name)."','".mysql_real_escape_string($project_description)."',".mysql_real_escape_string($project_client).",'".mysql_real_escape_string($project_location)."','".mysql_real_escape_string($project_start_date)."','".mysql_real_escape_string($project_end_date)."',".mysql_real_escape_string($project_type_id).",".mysql_real_escape_string($project_status_id).",".mysql_real_escape_string($project_pm1_id).",".mysql_real_escape_string($project_pm2_id).")";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProject MySQL query : $query",0);
 		if(mysql_query($query,$this->handle))
@@ -90,7 +94,7 @@ class GenyProject extends GenyDatabaseTools {
 	public function getProjectsListWithRestrictions($restrictions){
 		// $restrictions is in the form of array("project_id=1","project_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT project_id,project_name,project_description,client_id,project_location,project_start_date,project_end_date,project_type_id,project_status_id FROM Projects";
+		$query = "SELECT project_id,project_name,project_description,client_id,project_location,project_start_date,project_end_date,project_type_id,project_status_id,project_pm1_id,project_pm2_id FROM Projects";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			foreach($restrictions as $key => $value) {
@@ -116,6 +120,8 @@ class GenyProject extends GenyDatabaseTools {
 				$tmp_project->end_date = $row[6];
 				$tmp_project->type_id = $row[7];
 				$tmp_project->status_id = $row[8];
+				$tmp_project->pm1_id = $row[9];
+				$tmp_project->pm2_id = $row[10];
 				$project_list[] = $tmp_project;
 			}
 		}
@@ -168,6 +174,8 @@ class GenyProject extends GenyDatabaseTools {
 			$this->end_date = $project->end_date;
 			$this->type_id = $project->type_id;
 			$this->status_id = $project->status_id;
+			$this->pm1_id = $project->pm1_id;
+			$this->pm2_id = $project->pm2_id;
 		}
 	}
 	public function loadProjectById($id){
@@ -186,6 +194,8 @@ class GenyProject extends GenyDatabaseTools {
 			$this->end_date = $project->end_date;
 			$this->type_id = $project->type_id;
 			$this->status_id = $project->status_id;
+			$this->pm1_id = $project->pm1_id;
+			$this->pm2_id = $project->pm2_id;
 		}
 	}
 }

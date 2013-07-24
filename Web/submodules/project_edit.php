@@ -36,7 +36,7 @@ foreach( $geny_client->getAllClients() as $client ){
 
 if( isset($_POST['create_project']) && $_POST['create_project'] == "true" ){
 	if( isset($_POST['project_name']) && isset($_POST['project_start_date']) && isset($_POST['project_end_date']) ){
-		if( $geny_project->insertNewProject($_POST['project_name'],$_POST['project_description'],$_POST['project_client'],$_POST['project_location'],$_POST['project_start_date'],$_POST['project_end_date'],$_POST['project_type'],$_POST['project_status']) > -1 ){
+		if( $geny_project->insertNewProject($_POST['project_name'],$_POST['project_description'],$_POST['project_client'],$_POST['project_location'],$_POST['project_start_date'],$_POST['project_end_date'],$_POST['project_type'],$_POST['project_status'],$_POST['project_pm1_id'],$_POST['project_pm2_id']) > -1 ){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Projet créé avec succès.");
 			$geny_project->loadProjectByName( $_POST['project_name'] );
 			foreach ($_POST['project_tasks'] as $key => $value){
@@ -109,6 +109,12 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 		}
 		if( isset($_POST['project_status']) && $_POST['project_status'] != "" ){
 			$geny_project->updateInt('project_status_id',$_POST['project_status']);
+		}
+		if( isset($_POST['project_pm1_id']) && $_POST['project_pm1_id'] != "" ){
+			$geny_project->updateInt('project_pm1_id',$_POST['project_pm1_id']);
+		}
+		if( isset($_POST['project_pm2_id']) && $_POST['project_pm2_id'] != "" ){
+			$geny_project->updateInt('project_pm2_id',$_POST['project_pm2_id']);
 		}
 		if( isset($_POST['project_tasks']) && count($_POST['project_tasks']) > 0 ){
 			if($geny_ptr->deleteAllProjectTaskRelationsByProjectId( $geny_project->id )){
@@ -196,21 +202,6 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				else
 					$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du profil $tmp_profile->login.");
 			}
-			
-// 			WARNING: Cet ancien code est une cause de bug majeur !!!
-// 			if($geny_assignement->deleteAllAssignementsByProjectId( $geny_project->id )){
-// 				foreach ($_POST['project_profiles'] as $key => $value){
-// 					$tmp_profile = new GenyProfile( $value );
-// 					$tmp_overtime_allowed = 'false';
-// 					if( isset( $old_overtime_states[$tmp_profile->id] ) )
-// 						$tmp_overtime_allowed = $old_overtime_states[$tmp_profile->id];
-// 					if ($geny_assignement->insertNewAssignement('NULL', $tmp_profile->id, $geny_project->id,$tmp_overtime_allowed) ) {
-// 						$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil $tmp_profile->login ajoutée au projet.");
-// 					}
-// 					else
-// 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du profil $tmp_profile->login.");
-// 				}
-// 			}
 		}
 		if($geny_project->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Projet mis à jour avec succès.");
@@ -407,6 +398,36 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 						}
 						else {
 							echo "<option value=\"$p->id\" title=\"$p->firstname $p->lastname\">".GenyTools::getProfileDisplayName( $p )."</option>";
+						}
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="project_pm1_id">Project Manager 1</label>
+				<select name="project_pm1_id" id="project_pm1_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						if( $pfl->id == $geny_project->pm1_id ){
+							echo "<option value=\"".$pfl->id."\" selected>".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+						else{
+							echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+					}
+				?>
+				</select>
+			</p>
+			<p>
+				<label for="project_pm2_id">Project Manager 2</label>
+				<select name="project_pm2_id" id="project_pm2_id" class="chzn-select">
+				<?php
+					foreach( $geny_profile->getProfilesListWithRestrictions( array("rights_group_id=".$geny_rg->getIdByShortname('ADM'), "rights_group_id=".$geny_rg->getIdByShortname('TM'), "rights_group_id=".$geny_rg->getIdByShortname('TL') ), "OR" ) as $pfl ){
+						if( $pfl->id == $geny_project->pm2_id ){
+							echo "<option value=\"".$pfl->id."\" selected>".GenyTools::getProfileDisplayName($pfl)."</option>\n";
+						}
+						else{
+							echo "<option value=\"".$pfl->id."\">".GenyTools::getProfileDisplayName($pfl)."</option>\n";
 						}
 					}
 				?>
