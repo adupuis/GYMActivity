@@ -32,8 +32,8 @@ class GenyProject extends GenyDatabaseTools {
 	public $end_date = '0000-00-00';
 	public $type_id = -1;
 	public $status_id = -1;
-	public $mp1_id = -1;
-	public $mp2_id = -1;
+	public $pm1_id = -1;
+	public $pm2_id = -1;
 	public function __construct($id = -1){
 		parent::__construct("Projects",  "project_id");
 		$this->id = -1;
