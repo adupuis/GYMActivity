@@ -19,6 +19,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include_once '../../rights_groups.php';
 session_start();
 function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
@@ -28,7 +29,7 @@ try {
     $checkId_obj = new CheckIdentity();
     $profiles = array();
     if(isset($_SESSION['LOGGEDIN']) &&  $_SESSION['LOGGEDIN'] == 1){
-	if( $checkId_obj->isAllowed($_SESSION['USERID'],6) ){
+	if( $checkId_obj->isAllowed($_SESSION['USERID'],array(ADM,TM,TL,GL,REP,EXT,USR)) ){
 		$project_id = -1;
 		$assignement_id = -1;
 		if(isset($_POST['project_id']))
