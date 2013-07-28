@@ -21,6 +21,8 @@
 
 include_once "classes/GenyWebConfig.php";
 include_once 'classes/GenyPropertyValue.php';
+include_once 'classes/GenyPropertyOption.php';
+include_once 'classes/GenyProperty.php';
 include_once 'classes/GenyTools.php';
 
 
@@ -81,20 +83,28 @@ $web_config = new GenyWebConfig();
 		else if($_GET['reason'] == 'forbidden')
 			echo '<div id="status_error"><p>Accès refusé. Cette tentative d\'accès a été enregistrée et rapportée.</p></div>';
 	}
+	$prop = new GenyProperty();
+	$prop->loadPropertyByName("PROP_APP_STATE");
+	$pvs = $prop->getPropertyValues();
 	$pv = new GenyPropertyValue();
 	$state_pv = $pv->getPropertyValuesByPropertyId(3);
+	if( count($pvs) == 1 ){
+		$state_pv = $pvs;
+	}
 	$s = array_shift($state_pv);
+	$popt = new GenyPropertyOption($s->content);
 	GenyTools::debug("\$s->content: $s->content");
-	if( $s->content == 'Active - Issues' ){
+	GenyTools::debug("\$popt->content: $popt->content");
+	if( $popt->content == 'Active - Issues' ){
 		echo '<div id="app_state" class="app_state_warning"><p>Des problèmes ont été rapportés sur cette version de GYMActivity.</p></div>';
 	}
-	else if($s->content == 'Inactive - Upgrade'){
+	else if($popt->content == 'Inactive - Upgrade'){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est en cours de mise à jour. Connexion impossible.</p></div>';
 	}
-	else if($s->content == 'Inactive - Maintenance' ){
+	else if($popt->content == 'Inactive - Maintenance' ){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est en cours de maintenance. Connexion impossible.</p></div>';
 	}
-	else if($s->content == 'Inactive' ){
+	else if($popt->content == 'Inactive' ){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est inaccessible pour le moment. Connexion impossible.</p></div>';
 	}
 ?>

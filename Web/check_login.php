@@ -25,6 +25,8 @@ include_once 'classes/GenyWebConfig.php';
 include_once 'classes/GenyProfile.php';
 include_once 'classes/GenyAccessLog.php';
 include_once 'classes/GenyPropertyValue.php';
+include_once 'classes/GenyPropertyOption.php';
+include_once 'classes/GenyProperty.php';
 include_once 'classes/GenyRightsGroup.php';
 
 
@@ -62,11 +64,19 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 			$_SESSION['THEME'] = 'default';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );
 		$tmp_group   = new GenyRightsGroup( $tmp_profile->rights_group_id );
+		$prop = new GenyProperty();
+		$prop->loadPropertyByName("PROP_APP_STATE");
+		$pvs = $prop->getPropertyValues();
 		$pv = new GenyPropertyValue();
 		$state_pv = $pv->getPropertyValuesByPropertyId(3);
+		if( count($pvs) >= 1 ){
+			$state_pv = $pvs;
+		}
 		$s = array_shift($state_pv);
+		$popt = new GenyPropertyOption($s->content);
 		error_log("[GYMActivity::DEBUG] check_login.php: \$s->content: $s->content",0);
-		if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+		error_log("[GYMActivity::DEBUG] check_login.php: \$popt->content: $popt->content",0);
+		if(($popt->content == 'Inactive - Upgrade' || $popt->content == 'Inactive - Maintenance' || $popt->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
 			session_destroy();
 			header("Location: index.php");
 			exit();
