@@ -30,6 +30,52 @@ header('Content-Type: application/json;charset=UTF-8');
 include_once 'ajax_authent_checking.php';
 include_once 'ajax_toolbox.php';
 
+// This API call takes 2 parameters :
+//   - api_key : your API key as a string
+//   - project_id : the id of the project you want to get info from.
+//
+// It returns, a JSON array of the following shape :
+// If successfull :
+// {
+// 	"status":"success",
+// 	"status_message":"Information retrieved successfully.",
+// 	"data":{
+// 		"id":"84",
+// 		"name":"Test",
+// 		"description":"test PM",
+// 		"status_id":"1",
+// 		"location":"Paris",
+// 		"type":{
+// 			"type_id":"1",
+// 			"type_name":"R\u00e9gie",
+// 			"type_decription":"Employ\u00e9 \u00e0 disposition du client dans les bureaux du client."
+// 		},
+// 		"pm1":{
+// 			"pm1_id":"14",
+// 			"pm1_firstname":"Daniel",
+// 			"pm1_lastname":"Fages",
+// 			"pm1_login":"dfages",
+// 			"pm1_email":"dfages@genymobile.com"
+// 		},
+// 		"pm2":{
+// 			"pm2_id":"11",
+// 			"pm2_firstname":"Quentin",
+// 			"pm2_lastname":"D\u00e9sert",
+// 			"pm2_login":"qdesert",
+// 			"pm2_email":"qdesert@genymobile.com"
+// 		},
+// 		"start_date":"2013-07-24",
+// 		"end_date":"2013-07-24"
+// 	}
+// }
+//
+// If unsuccessfull :
+// {
+// 	"status":"error",
+// 	"status_message":"<THE ERROR MESSAGE>"
+// }
+
+
 try {
 	$ces = array();
 	if($auth_granted){
@@ -81,7 +127,7 @@ try {
 				) );
 			}
 			else{
-				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: career_event couldn't be load, please check the parameters." ) );
+				echo json_encode( array( "status" => "error", "status_message" => "Fatal error: project couldn't be load, please check the parameters." ) );
 				exit;
 			}
 		}
