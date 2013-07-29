@@ -142,7 +142,9 @@ if(isset($_POST['create_cra']) && $_POST['create_cra'] == "true" ){
 					}
 				}
 			}
-			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$created_reports rapport(s) enregistré(s) (en attente de validation utilisateur).<br/><strong>N'oubliez pas de les valider.</strong>");
+			if( $created_reports > 0){
+				$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"$created_reports rapport(s) enregistré(s) (en attente de validation utilisateur).<br/><strong>N'oubliez pas de les valider.</strong>");
+			}
 // 			WARNING: Ne surtout pas envoyer de notification à la création !!
 // 			if($ok_count > 0){
 // 				$notif = new GenyNotification();
