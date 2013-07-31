@@ -24,9 +24,12 @@ include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyPropertyOption.php';
 include_once 'classes/GenyProperty.php';
 include_once 'classes/GenyTools.php';
+include_once 'classes/GenyAccessLog.php';
+
 
 
 $web_config = new GenyWebConfig();
+$gal = new GenyAccessLog();
 
 ?>
 <!DOCTYPE html>
@@ -80,8 +83,10 @@ $web_config = new GenyWebConfig();
 			echo '<div id="status_error"><p>Login échoué.</p></div>';
 		else if($_GET['reason'] == 'authrequired')
 			echo '<div id="status_error"><p>Authentification requise.</p></div>';
-		else if($_GET['reason'] == 'forbidden')
+		else if($_GET['reason'] == 'forbidden'){
+			$gal->insertSimpleAccessLog("UNAUTHORIZED_ACCESS");
 			echo '<div id="status_error"><p>Accès refusé. Cette tentative d\'accès a été enregistrée et rapportée.</p></div>';
+		}
 	}
 	$prop = new GenyProperty();
 	$prop->loadPropertyByName("PROP_APP_STATE");
