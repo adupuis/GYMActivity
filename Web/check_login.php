@@ -28,38 +28,60 @@ include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyPropertyOption.php';
 include_once 'classes/GenyProperty.php';
 include_once 'classes/GenyRightsGroup.php';
-
+include_once 'extensions/GoogleAppsAuthentication/GoogleAppsAuthentication.php';
 
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
 
-if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
+if (isset($_POST['googleapps'])) {
+	getGoogleAccount('title=' . 'connection gymactivity');
+}	
+
+if (isset($_GET['openid_ext1_value_email'])) {
+	$email = $_GET['openid_ext1_value_email'];
+}
+
+
+if(isset($email) || (isset($_POST['geny_username']) && isset($_POST['geny_password'])) ){
 	trim($_POST['geny_username']);
 	trim($_POST['geny_password']);
 
 	$username = md5($_POST["geny_username"]);
 	$passwd = md5($_POST["geny_password"]);
-
-	if(!preg_match("/^[-a-z0-9 ']{4,12}+$/i",$_POST['geny_username'])){
-	    echo "Username error";
-	    $gal->insertSimpleAccessLog(BAD_USERNAME_FORMAT);
-	    exit();
+	
+	if (! isset ( $email )) {
+		if (! preg_match ( "/^[-a-z0-9 ']{4,12}+$/i", $_POST ['geny_username'] )) {
+			echo "Username error";
+			$gal->insertSimpleAccessLog ( BAD_USERNAME_FORMAT );
+			exit ();
+		}
 	}
 
 	$handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
 	mysql_select_db($web_config->db_name);
-	$query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd'";
-
+	
+	if (isset ( $email )) {
+		$query = "SELECT profile_id,profile_login FROM Profiles WHERE profile_email='$email';";
+	} else {
+		$query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd';";
+	}
+			
 	$result = mysql_query($query, $handle);
 
 	if (mysql_num_rows($result)!=0) {
 		//mark as valid user
 		session_regenerate_id();
 		$sqldata = mysql_fetch_assoc($result);
+		if (isset ( $email )) {
+			$username = md5 ( $sqldata ['profile_login'] );
+		}
 		$_SESSION['USERID'] = $username;
 		$_SESSION['LOGGEDIN'] = true;
+		$_SESSION['EMAIL'] = $email;
 		if(file_exists("styles/".$_POST['geny_theme']."/main.css"))
 			$_SESSION['THEME'] = $_POST['geny_theme'];
+		else if(file_exists("styles/genymobile-2012/main.css"))
+			$_SESSION['THEME'] = "genymobile-2012";
 		else
 			$_SESSION['THEME'] = 'default';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );

@@ -120,6 +120,11 @@ $gal = new GenyAccessLog();
 	}
 ?>
 </form>
+
+<p style="margin:600px auto 0;text-align:center;display:block;"></p>
+<form id="start" action="check_login.php" method="post">
+	<input type="submit" value="se connecter avec google" id="googleapps" name="googleapps"/>
+</form>
 <p id="credits">&copy; 2011-2012 <strong>Genymobile</strong>.</p>
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
