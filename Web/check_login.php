@@ -90,7 +90,7 @@ if(isset($_GET['module']) || $_POST['module']) {
 			new GApps_OpenID_Discovery ( $consumer, null, $config ['cache'] );
 			
 			try {
-				$auth_request = $consumer->begin ("genymobile.com");
+				$auth_request = $consumer->begin ($web_config->googleapps_domain);
 				if (! is_object ( $auth_request ))
 					die ( 'Auth request object error. Try again' );
 			} catch ( Exception $error ) {
