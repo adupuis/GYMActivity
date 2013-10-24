@@ -123,6 +123,7 @@ $gal = new GenyAccessLog();
 
 <p style="margin:600px auto 0;text-align:center;display:block;"></p>
 <form id="start" action="check_login.php" method="post">
+	<input type="hidden" name="module" value="login">
 	<input type="submit" value="se connecter avec google" id="googleapps" name="googleapps"/>
 </form>
 <p id="credits">&copy; 2011-2012 <strong>Genymobile</strong>.</p>

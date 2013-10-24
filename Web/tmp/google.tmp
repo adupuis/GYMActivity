@@ -1,0 +1,35 @@
+a:2:{s:28:"_gapps_openid_genymobile.com";s:67:"https://www.google.com/accounts/o8/site-xrds?ns=2&hd=genymobile.com";s:81:"_gapps_openid_https://www.google.com/accounts/o8/site-xrds?ns=2&hd=genymobile.com";s:3409:"<?xml version="1.0" encoding="UTF-8"?>
+<xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://docs.oasis-open.org/xri/xrd/2009/01#canonicalize-raw-octets" />
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+</ds:SignedInfo>
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>
+MIIDTzCCArigAwIBAgIGR09PUAM/MA0GCSqGSIb3DQEBBQUAMEYxCzAJBgNVBAYTAlVTMRMwEQYDVQQKEwpHb29nbGUgSW5jMSIwIAYDVQQDExlHb29nbGUgSW50ZXJuZXQgQXV0aG9yaXR5MB4XDTEzMTAyMzAwMDAwMFoXDTEzMTAyNTAwMDAwMFowVjELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExEzARBgNVBAoTCkdvb2dsZSBJbmMxHTAbBgNVBAMTFGhvc3RlZC1pZC5nb29nbGUuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDjIj1Subw/DVIhvvraG2/udNpHJaoLIMC2Do9cchEoNfI1A56jaF1qxdsuW0zbcKBHLO19HI3xkXbn4hdE3E3zTJDhPbpu6MNlQ3gay7XEXglBOxjZTtIxAI8K8Hf0o1rnZwptVb+rVw4tMI0777CkXmHrB3ukRN8X+p0i+J87+QIDAQABo4IBNjCCATIwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwHQYDVR0OBBYEFF0ezukjUzGyAV2i2LlRdjN7c3IvMB8GA1UdIwQYMBaAFL/AMOv1QxE+Z7qekfv8atrjaxIkMFsGA1UdHwRUMFIwUKBOoEyGSmh0dHA6Ly93d3cuZ3N0YXRpYy5jb20vR29vZ2xlSW50ZXJuZXRBdXRob3JpdHkvR29vZ2xlSW50ZXJuZXRBdXRob3JpdHkuY3JsMGYGCCsGAQUFBwEBBFowWDBWBggrBgEFBQcwAoZKaHR0cDovL3d3dy5nc3RhdGljLmNvbS9Hb29nbGVJbnRlcm5ldEF1dGhvcml0eS9Hb29nbGVJbnRlcm5ldEF1dGhvcml0eS5jcnQwDQYJKoZIhvcNAQEFBQADgYEAdNS8DGqmAhEpF5RhEK2ItyLXpgNE7qYe2Hyo/NBejGB/ZJR7rEyNVSVF7jtoWpg/047OSOsNqlIHIITFw6/guiuRCSL4ONF0zFO4kDEWbiYv8CnVaQzCCQXkoYATDSFNLyLL4QOYtwqzyTglkC93OGRu7KNH2lRKtS902yaO5C8=</ds:X509Certificate>
+<ds:X509Certificate>
+MIICsDCCAhmgAwIBAgIDFXfhMA0GCSqGSIb3DQEBBQUAME4xCzAJBgNVBAYTAlVTMRAwDgYDVQQKEwdFcXVpZmF4MS0wKwYDVQQLEyRFcXVpZmF4IFNlY3VyZSBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkwHhcNMTIxMjEyMTU1ODUwWhcNMTMxMjMxMTU1ODUwWjBGMQswCQYDVQQGEwJVUzETMBEGA1UEChMKR29vZ2xlIEluYzEiMCAGA1UEAxMZR29vZ2xlIEludGVybmV0IEF1dGhvcml0eTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAye23pIucV+eEPkB9hPSP0XFjU5nneXQUr0SZMyCSjXvlKAy6rWxJfoNfNFlOCnowzdDXxFdF7dWq1nMmzq0yE7jXDx07393cCDaob1FEm8rWIFJztyaHNWrbqeXUWaUr/GcZOfqTGBhs3t0lig4zFEfC7wFQeeT9adGnwKziV28CAwEAAaOBozCBoDAfBgNVHSMEGDAWgBRI5mj5K9KylddH2CMgEE8zmJCf1DAdBgNVHQ4EFgQUv8Aw6/VDET5nup6R+/xq2uNrEiQwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAQYwOgYDVR0fBDMwMTAvoC2gK4YpaHR0cDovL2NybC5nZW90cnVzdC5jb20vY3Jscy9zZWN1cmVjYS5jcmwwDQYJKoZIhvcNAQEFBQADgYEAvprjecFG+iJsxzEFZUNgujFQodUovxOWZshcnDW7fZ7mTlk3zpeVJrGPZzhaDhvuJjIfKqHweFB7gwB+ARlIjNvrPq86fpVg0NOTawALkSqOUMl3MynBQO+spR7EHcRbADQ/JemfTEh2YcflvZqhEFBfurZkX0eTANq98ZvVfpg=</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</ds:Signature>
+<XRD>
+<CanonicalID>genymobile.com</CanonicalID>
+<Service priority="0">
+<Type>http://specs.openid.net/auth/2.0/server</Type>
+<Type>http://openid.net/srv/ax/1.0</Type>
+<Type>http://specs.openid.net/extensions/ui/1.0/mode/popup</Type>
+<Type>http://specs.openid.net/extensions/ui/1.0/icon</Type>
+<Type>http://specs.openid.net/extensions/pape/1.0</Type>
+<URI>https://www.google.com/a/genymobile.com/o8/ud?be=o8</URI>
+</Service>
+<Service priority="0" xmlns:openid="http://namespace.google.com/openid/xmlns">
+<Type>http://www.iana.org/assignments/relation/describedby</Type>
+<MediaType>application/xrds+xml</MediaType>
+<openid:URITemplate>https://www.google.com/accounts/o8/user-xrds?uri={%uri}</openid:URITemplate>
+<openid:NextAuthority>hosted-id.google.com</openid:NextAuthority>
+</Service>
+</XRD>
+</xrds:XRDS>
+";}
