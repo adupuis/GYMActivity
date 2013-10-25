@@ -35,6 +35,7 @@ class GenyWebConfig {
 	public $company_index_logo = "";
 	public $gmail_username = "";
 	public $gmail_password = "";
+	public $googleapps_domain = "";
 	public function __construct(){
 		$this->db_host = "localhost";
 		$this->db_user = "genymobile";
@@ -49,6 +50,7 @@ class GenyWebConfig {
 		$this->gmail_username = "yourusername";
 		$this->gmail_password = "yourpassword";
 		$this->default_profile_category = "C Senior 1" ;
+		$this->googleapps_domain = "genymobile.com";
 	}
 }
 ?>
