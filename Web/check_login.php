@@ -52,7 +52,7 @@ class FileCache {
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
 
-if(isset($_GET['module']) || $_POST['module']) {
+if(isset($_GET['googleconnect']) || isset($_POST['googleconnect'])) {
 	
 	require_once 'Auth/OpenID/Consumer.php';
 	require_once 'Auth/OpenID/AX.php';
@@ -69,7 +69,7 @@ if(isset($_GET['module']) || $_POST['module']) {
 	
 	//Return URL
 	$config['return_server'] = ($_SERVER["HTTPS"]?'https://':'http://').$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'];
-	$config['return_url'] = $config['return_server'].$_SERVER['REQUEST_URI']."?module=return";
+	$config['return_url'] = $config['return_server'].$_SERVER['REQUEST_URI']."?googleconnect=return";
 	
 	//Cache for google discovery (much faster)
 	$config['cache'] = new FileCache($config['tmp_path']);
@@ -77,9 +77,9 @@ if(isset($_GET['module']) || $_POST['module']) {
 	//Open id lib has many warnig and notices
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_USER_NOTICE);
 	
-	$module = $_GET['module']?$_GET['module']:$_POST['module'];
+	$googleconnect = $_GET['googleconnect']?$_GET['googleconnect']:$_POST['googleconnect'];
 	
-	switch ($module) {
+	switch ($googleconnect) {
 		
 		/**
 		 * Process login

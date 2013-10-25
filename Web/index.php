@@ -74,10 +74,13 @@ $gal = new GenyAccessLog();
 			echo "<input type='hidden' name='referer' value='".$_SERVER['HTTP_REFERER']."'/>";
 		}
 	?>
-	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
+	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target --> 
+	
 	<p>
 		<input type="submit" value="Login" />
 	</p>
+	
+	
 	<!--<p>
 		<a class="submit" href="#finish">Envoyer</a> ou <a href="#start">annuler</a>
 	</p>-->
@@ -123,8 +126,8 @@ $gal = new GenyAccessLog();
 
 <p style="margin:600px auto 0;text-align:center;display:block;"></p>
 <form id="start" action="check_login.php" method="post">
-	<input type="hidden" name="module" value="login">
-	<input type="submit" value="se connecter avec google" id="googleapps" name="googleapps"/>
+	<input type="hidden" name="googleconnect" value="login"/>
+	<center><input type="image" src="images/google_connect_button.png" /></center>
 </form>
 <p id="credits">&copy; 2011-2012 <strong>Genymobile</strong>.</p>
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
