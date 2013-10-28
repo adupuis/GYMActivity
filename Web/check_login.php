@@ -69,7 +69,7 @@ if(isset($_GET['googleconnect']) || isset($_POST['googleconnect'])) {
 	
 	//Return URL
 	$config['return_server'] = ($_SERVER["HTTPS"]?'https://':'http://').$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'];
-	$config['return_url'] = $config['return_server'].$_SERVER['REQUEST_URI']."?googleconnect=return";
+	$config['return_url'] = $config['return_server'].$_SERVER['REQUEST_URI']."?geny_theme=".$_POST['geny_theme']."&googleconnect=return";
 	
 	//Cache for google discovery (much faster)
 	$config['cache'] = new FileCache($config['tmp_path']);
@@ -200,8 +200,8 @@ if(isset($email) || (isset($_POST['geny_username']) && isset($_POST['geny_passwo
 		$_SESSION['EMAIL'] = $email;
 		if(file_exists("styles/".$_POST['geny_theme']."/main.css"))
 			$_SESSION['THEME'] = $_POST['geny_theme'];
-		else if(file_exists("styles/genymobile-2012/main.css"))
-			$_SESSION['THEME'] = "genymobile-2012";
+		else if(file_exists("styles/".$_GET['geny_theme']."/main.css"))
+			$_SESSION['THEME'] = $_GET['geny_theme'];
 		else
 			$_SESSION['THEME'] = 'default';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );

@@ -44,7 +44,7 @@ $gal = new GenyAccessLog();
 </head>
 <body>
 <p style="margin:60px auto 0;text-align:center;display:block;"><img id='main_logo' src='images/default/<?php echo $web_config->company_index_logo ?>' /></p>
-<form id="start" action="check_login.php" method="post">
+<form id="start" name="start" action="check_login.php" method="post">
 	<h1>Login GENYMOBILE - Apps</h1>
 
 	<p>
@@ -125,10 +125,17 @@ $gal = new GenyAccessLog();
 </form>
 
 <p style="margin:600px auto 0;text-align:center;display:block;"></p>
-<form id="start" action="check_login.php" method="post">
+<form id="start_bis" action="check_login.php" method="post">
 	<input type="hidden" name="googleconnect" value="login"/>
+	<input type="hidden" name="geny_theme" id="geny_theme_bis" value="" />
+			
+	<script type="text/javascript" language="JavaScript">
+		document.getElementById('geny_theme_bis').value = document.start.geny_theme.value;
+	</script>
+	
 	<center><input type="image" src="images/google_connect_button.png" /></center>
 </form>
+
 <p id="credits">&copy; 2011-2012 <strong>Genymobile</strong>.</p>
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script src="js/chosen/chosen.jquery.js" type="text/javascript"></script>
