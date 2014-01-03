@@ -18,12 +18,25 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+include_once 'backend/api/ajax_toolbox.php';
+
 // Variable to configure global behaviour
-
-
 $geny_ptr = new GenyProjectTaskRelation();
 date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
+
+// récupération du paramètre rentré par l'utilisateur (filtre sur l'annee)
+$param_year = getParam( 'year', date( "Y" ) );
+
+// si l'année donnée par l'utilisateur est correcte, on initialise $year avec les valeurs de l'utilisateur
+if( is_numeric( $param_year )&& strlen( $param_year ) == 4 && intval( $param_year ) > 0 ) {
+	$year = intval( $param_year );
+}
+// sinon par défaut on met le mois et l'année courante
+else {
+	$year = intval( date( "Y" ) );
+}
+
 
 if(isset($_POST['cra_action']) && ($_POST['cra_action'] == "delete_cra" || $_POST['cra_action'] == "bill_cra" || $_POST['cra_action'] == "pay_cra" || $_POST['cra_action'] == "close_cra" || $_POST['cra_action'] == "deletion_cra" ) ){
 	if( isset( $_POST['activity_report_id'] ) ){
@@ -155,7 +168,7 @@ foreach($status as $s){
 }
 
 $activity_report_workflow->setDebug(true);
-$workflow = $activity_report_workflow->getActivityReportsWorkflowFrom(intval(date('Y'))."-01-01");
+$workflow = $activity_report_workflow->getActivityReportsWorkflowFromTo(intval($year)."-01-01", intval($year)."-12-31");
 $activity_report_workflow->setDebug(false);
 
 foreach($workflow as $row) {
@@ -199,7 +212,7 @@ foreach($workflow as $row) {
 		<p class="mainarea_content_intro">
 		Ce formulaire permet de modifier l'état des CRAs dans le workflow.<br />
 		<strong class="important_note">Important :</strong> Ce formulaire contient tous les rapports déjà validés (validation utilisateur et management) et affiche leurs états d'avancement dans le workflow.<br />
-		<strong class="important_note">Important :</strong> Ce formulaire ne contient que les rapports depuis le 1er janvier.<br />
+		<strong class="important_note">Important :</strong> Ce formulaire ne contient que les rapports depuis le <strong>1er janvier <?php echo $year; ?></strong> au <strong>31 décembre <?php echo $year; ?></strong><br />
 		</p>
 		<script>
 			
@@ -280,8 +293,18 @@ foreach($workflow as $row) {
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/cra_validation_admin.css';
 		</style>
+		
+		<form id="select_cra_year" action="loader.php?module=cra_post_validation_workflow" method="post">
+			<p>
+				<label for="year">Année</label>
+				<input name="year" id="year" type="text" value="<?php echo $year;?>"/>
+			</p>
+			<input type="submit" value="Ajuster le workflow CRA" />
+		</form>
+		
 		<form id="formID" action="loader.php?module=cra_post_validation_workflow" method="post" class="table_container">
 <!-- 			<input type="hidden" name="validate_cra" value="true" /> -->
+			<input  type="hidden" name="year" id="year" value="<?php echo $year;?>"/>
 			<ul style="display: inline; color: black;">
 				<li>
 				<input type="checkbox" id="chkBoxSelectAll" onClick="toggleCheck('#cra_post_validation_workflow_table')" /><label for="chkBoxSelectAll"> Tout (dé)séléctionner</label>
