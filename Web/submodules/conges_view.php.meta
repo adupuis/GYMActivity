@@ -1,0 +1,4 @@
+<?php
+$header_title = '%COMPANY_NAME% - Tableau congés collaborateurs';
+$required_group_rights = 5;
+?>

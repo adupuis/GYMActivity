@@ -37,8 +37,8 @@ class GenyWebConfig {
 	public $gmail_password = "";
 	public function __construct(){
 		$this->db_host = "localhost";
-		$this->db_user = "genymobile";
-		$this->db_password = "toto";
+		$this->db_user = "root";
+		$this->db_password = "root";
 		$this->theme = "default";
 		$this->debug = false;
 		$this->db_name = "GYMActivity";
