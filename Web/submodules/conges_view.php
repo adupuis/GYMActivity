@@ -175,7 +175,7 @@ date_default_timezone_set('Europe/Paris');
 						<th>Nom</th>
 						<?php
 						for ($cpt=-15; $cpt <=15; $cpt++) {
-							print "<th>" . date('d.m',strtotime($cpt . " days")) . "</th>";
+							print "<th style='font-size:10px;'>" . date('d.m',strtotime($cpt . " days")) . "</th>";
 						}
 						?>
 					</thead>
@@ -196,10 +196,10 @@ date_default_timezone_set('Europe/Paris');
 							for ($cpt=-15; $cpt <=15; $cpt++) {
 								$currentdate = date('Y.m.d',strtotime($cpt . " days"));
 								if (isset($holidays[$tmp->id]) && isset($holidays[$tmp->id][$currentdate]) && $holidays[$tmp->id][$currentdate] == true) {
-									echo "<td style='background-color:#A376E4'></td>"; //violet = en conges
+									echo "<td style='background-color:#A376E4; border:1px solid #B7B7B7'></td>"; //gris = en conges
 								}
 								else {
-									echo "<td style='background-color:#A3E476'></td>"; //vert = dispo
+									echo "<td style='background-color:#A3E476; border:1px solid #eeeeee'></td>"; //vert = dispo
 								}
 							}
 							echo "</tr>";
@@ -214,7 +214,7 @@ date_default_timezone_set('Europe/Paris');
 						<th>Nom</th>
 						<?php
 						for ($cpt=-15; $cpt <=15; $cpt++) {
-							print "<th>" . date('d.m',strtotime($cpt . " days")) . "</th>";
+							print "<th style='font-size:10px;'>" . date('d.m',strtotime($cpt . " days")) . "</th>";
 						}
 						?>
 					</tfoot>
