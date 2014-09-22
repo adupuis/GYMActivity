@@ -198,6 +198,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Group Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->group_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?><br/>
 				<strong>Technology Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->technology_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?>
 			</li>
+<!--
 			<?php
 				if( ($prev_hs_cp->count_acquired - $prev_hs_cp->count_taken) > 0 && $prev_hs_cp->count_remaining > 0 ){
 			?>
@@ -234,6 +235,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?><br/>
 				<strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?>
 			</li>
+-->
 			<?php
 				$cp_pmd = new GenyProfileManagementData();
 				$cp_pmd->loadProfileManagementDataByProfileId($geny_profile->id);

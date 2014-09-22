@@ -68,7 +68,7 @@ $geny_ic = new GenyIntranetCategory();
 			<span class="sdt_active"></span>
 			<span class="sdt_wrap">
 				<span class="sdt_link"><?php echo $profile->login ?></span>
-				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<br/>Congés dispo : <?php echo $hs_remaining;?> j<br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
+				<span class="sdt_descr"><?php echo $profile->firstname." ".$profile->lastname ; ?><br/><br/><span class="sdt_descr_more">CRA remplies: <?php echo $completion; ?>%<!--<br/>Congés dispo : <?php echo $hs_remaining;?> j--><br/>Notif. non lues : <span id='menu_notification_count'>7</span></span></span>
 			</span>
 		</a>
 	</li>
