@@ -24,7 +24,9 @@
 date_default_timezone_set('Europe/Paris');
 
 ?>
-
+<style>
+	@import 'styles/<?php echo $web_config->theme ?>/conges_view.css';
+</style>
 
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -189,18 +191,22 @@ date_default_timezone_set('Europe/Paris');
 					foreach( $profile->getAllProfiles() as $tmp ){
 						if ($groups[$tmp->rights_group_id]->name != "Externes" && $tmp->is_active) {
 							echo "<tr>";
-							//echo "<td>$tmp->id</td>";
 							echo "<td>$tmp->login</td>";
 							echo "<td>$tmp->firstname</td>";
 							echo "<td>$tmp->lastname</td>";
 							for ($cpt=-15; $cpt <=15; $cpt++) {
 								$currentdate = date('Y-m-d',strtotime($cpt . " days"));
+								$class = 'case_free';
 								if (isset($holidays[$tmp->id]) && isset($holidays[$tmp->id][$currentdate]) && $holidays[$tmp->id][$currentdate] == true) {
-									echo "<td style='background-color:#DBA831; border:1px solid #eeeeee'></td>"; //bleu = en conges
+									$class = 'case_conges';
 								}
-								else {
-									echo "<td style='background-color:#A3E476; border:1px solid #eeeeee'></td>"; //blanc = dispo
+								else if (date('N', strtotime($currentdate)) >= 6) {
+									$class = 'case_weekend';
 								}
+								if (strtotime($currentdate) === strtotime('today')) {
+									$class = $class . ' case_today';
+								}
+								echo "<td class='$class'></td>";
 							}
 							echo "</tr>";
 						}
