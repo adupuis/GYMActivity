@@ -41,7 +41,7 @@ class GenyTools {
 		$easter = easter_date($year);
 		$arr_bank_holidays[] = date($year.'-n-j', $easter + 86400); // Paques
 		$arr_bank_holidays[] = date($year.'-n-j', $easter + (86400*39)); // Ascension
-		$arr_bank_holidays[] = date($year.'-n-j', $easter + (86400*50)); // Pentecote
+		// $arr_bank_holidays[] = date($year.'-n-j', $easter + (86400*50)); // Pentecote (férié mais travaillé)
 		return $arr_bank_holidays;
 	}
 	// Cette fonction prend deux dates en arguments sous forme de timestamp UNIX.
@@ -127,5 +127,3 @@ class GenyTools {
 		return $sorted_arr;
 	}
 }
-
-?>
