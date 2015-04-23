@@ -44,7 +44,7 @@ foreach( $geny_pmd->getAllBillableProfileManagementData() as $pmd ){
 // 	if( $p->rights_group_id <= 5 ){
 		$user_load=0;
 		foreach( $worked_days as $day ){
-			$user_load += $geny_ar->getDayLoad($p->id,$day);
+			$user_load += $geny_ar->getDayLoadValidatedByUser($p->id,$day);
 		}
 		$user_completion_data[$p->id] = array( "profile_object" => $p, "completion" => round(($user_load*100)/$estimated_load,0) );
 // 	}

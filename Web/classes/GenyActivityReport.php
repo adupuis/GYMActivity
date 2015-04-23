@@ -138,7 +138,29 @@ class GenyActivityReport extends GenyDatabaseTools {
 		else
 			return array();
 	}
-	
+	public function getDayLoadValidatedByUser($profile_id,$date){
+		if( ! is_numeric($profile_id))
+			return -1;
+		$ars_validation = new GenyActivityReportStatus();
+		$ars_validation->loadActivityReportStatusByShortName('P_USER_VALIDATION');
+		$ars_removal = new GenyActivityReportStatus();
+		$ars_removal->loadActivityReportStatusByShortName('P_REMOVAL');
+		$ars_removed = new GenyActivityReportStatus();
+		$ars_removed->loadActivityReportStatusByShortName('REMOVED');
+		$ars_refused = new GenyActivityReportStatus();
+		$ars_refused->loadActivityReportStatusByShortName('REFUSED');
+		$query = "select ifnull(sum(activity_load),0) as activity_day_load from Activities where activity_date='".mysql_real_escape_string($date)."' AND activity_id in (select activity_id from ActivityReports where profile_id=$profile_id AND activity_report_status_id != ".$ars_validation->id." AND activity_report_status_id != ".$ars_removal->id." AND activity_report_status_id != ".$ars_removed->id." AND activity_report_status_id != ".$ars_refused->id.")";
+		if( $this->config->debug )
+			error_log( "[GYMActivity::DEBUG] GenyActivityReport::getDayLoad MySQL query : $query", 0 );
+		$result = mysql_query($query,$this->handle);
+		if( mysql_num_rows($result) != 0 ){
+			while ($row = mysql_fetch_row($result)){
+				return $row[0];
+			}
+		}
+		else
+			return -1;
+	}
 	public function getDayLoadByProfileIdAndTaskId( $profile_id, $task_id ) {
 		if( !is_numeric( $profile_id ) ) {
 			return -1;
