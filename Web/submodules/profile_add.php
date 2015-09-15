@@ -48,7 +48,7 @@ $geny_rg = new GenyRightsGroup();
 			<input type="hidden" name="create_profile" value="true" />
 			<p>
 				<label for="profile_login">Login</label>
-				<input name="profile_login" id="profile_login" type="text" class="validate[required,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_login" id="profile_login" type="text" class="validate[required,length[2,100]] text-input" />
 			</p>
 			<script>
 				function updateVals() {

@@ -259,7 +259,7 @@ else{
 			<input type="hidden" name="profile_id" value="<?php echo $geny_profile->id ?>" />
 			<p>
 				<label for="profile_login">Login</label>
-				<input name="profile_login" id="profile_login" value="<?php echo $geny_profile->login ?>" type="text" class="validate[optional,custom[onlyLetter],length[2,100]] text-input" />
+				<input name="profile_login" id="profile_login" value="<?php echo $geny_profile->login ?>" type="text" class="validate[optional,length[2,100]] text-input" />
 			</p>
 			<p>
 				<label for="profile_firstname">Prénom</label>
