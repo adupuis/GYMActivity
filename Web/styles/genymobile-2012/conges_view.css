@@ -1,0 +1,18 @@
+.case_conges {
+	background-color:#DBA831;
+	border:1px solid #eeeeee;
+}
+.case_weekend {
+	background-color:#DDDDDD;
+	border:1px solid #eeeeee;
+}
+.case_free {
+	background-color:#A3E476;
+	border:1px solid #eeeeee;
+}
+.case_today {
+	border-style: solid;
+	border-right: 2px solid #ffaaaa;
+	border-left: 2px solid #ffaaaa;
+}
+

@@ -40,7 +40,7 @@ $hs_remaining = $hs_cp->count_remaining + $hs_rtt->count_remaining;
 
 foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date)) as $day ){
 	$estimated_load += 8;
-	$user_load += $geny_ar->getDayLoad($profile->id,$day);
+	$user_load += $geny_ar->getDayLoadValidatedByUser($profile->id,$day);
 }
 
 $completion = round(($user_load*100)/$estimated_load,1);
