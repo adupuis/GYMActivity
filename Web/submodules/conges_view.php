@@ -37,7 +37,7 @@ date_default_timezone_set('Europe/Paris');
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Overview des congés collaborateurs -15/+15 jours.<br />
+		Overview des congés collaborateurs -10/+30 jours.<br />
 		</p>
 		<script>
 			
@@ -150,8 +150,8 @@ date_default_timezone_set('Europe/Paris');
 		
 		<?php
 		// create the filters
-		$dateStart = date('Y.m.d',strtotime("-15 days"));
-		$dateEnd = date('Y.m.d',strtotime("+15 days"));
+		$dateStart = date('Y.m.d',strtotime("-10 days"));
+		$dateEnd = date('Y.m.d',strtotime("+30 days"));
 		
 		// retrieve all days off with good filter
 		$filter = array();
@@ -176,7 +176,7 @@ date_default_timezone_set('Europe/Paris');
 						<th>Prénom</th>
 						<th>Nom</th>
 						<?php
-						for ($cpt=-15; $cpt <=15; $cpt++) {
+						for ($cpt=-10; $cpt <=30; $cpt++) {
 							print "<th style='font-size:10px;'>" . date('d.m',strtotime($cpt . " days")) . "</th>";
 						}
 						?>
@@ -194,7 +194,7 @@ date_default_timezone_set('Europe/Paris');
 							echo "<td>$tmp->login</td>";
 							echo "<td>$tmp->firstname</td>";
 							echo "<td>$tmp->lastname</td>";
-							for ($cpt=-15; $cpt <=15; $cpt++) {
+							for ($cpt=-10; $cpt <=30; $cpt++) {
 								$currentdate = date('Y-m-d',strtotime($cpt . " days"));
 								$class = 'case_free';
 								if (isset($holidays[$tmp->id]) && isset($holidays[$tmp->id][$currentdate]) && $holidays[$tmp->id][$currentdate] == true) {
@@ -219,7 +219,7 @@ date_default_timezone_set('Europe/Paris');
 						<th>Prénom</th>
 						<th>Nom</th>
 						<?php
-						for ($cpt=-15; $cpt <=15; $cpt++) {
+						for ($cpt=-10; $cpt <=30; $cpt++) {
 							print "<th style='font-size:10px;'>" . date('d.m',strtotime($cpt . " days")) . "</th>";
 						}
 						?>
