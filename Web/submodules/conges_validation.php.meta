@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $header_title = '%COMPANY_NAME% - Validation congés';
-$required_group_rights = 5;
+$required_group_rights = 6;
 ?>
