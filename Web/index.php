@@ -71,8 +71,8 @@ $web_config = new GenyWebConfig();
 
 	<p>
 		<a href="<?php echo $auth_url ?>">
-		     <img id="google-login" src="images/google.png" alt="Login with google" />
-               </a>
+		     <img id="google-login" src="images/google_signin.png" alt="Login with google" />
+		</a>
 	</p>
 
 	<p>
