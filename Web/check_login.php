@@ -26,15 +26,15 @@ include_once 'classes/GenyProfile.php';
 include_once 'classes/GenyAccessLog.php';
 include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyRightsGroup.php';
-include_once 'oauth.php';
+include_once 'classes/GenyTools.php';
 
 
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
 
 if (isset($_GET['code'])) {
-    $google_client = create_google_client();
-    $oauth_email = get_google_email($_GET['code']);
+    $google_client = GenyTools::create_google_client();
+    $oauth_email = GenyTools::get_google_email($_GET['code']);
 }
 
 

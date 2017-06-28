@@ -23,9 +23,7 @@ include_once "classes/GenyWebConfig.php";
 include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyTools.php';
 
-include_once 'oauth.php';
-
-$client = create_google_client();
+$client = GenyTools::create_google_client();
 $auth_url = $client->createAuthUrl();
 
 $web_config = new GenyWebConfig();
