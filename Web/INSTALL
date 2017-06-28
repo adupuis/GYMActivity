@@ -25,3 +25,20 @@ Attention toute fois : les updates sont incrémentales, c'est à dire que si vou
 Dans mysql.
 
 Arnaud.
+
+
+Google signin
+=============
+
+On the [Google developers console](https://console.developers.google.com)
+Follow [these instructions](https://developers.google.com/identity/sign-in/web/devconsole-project) to create valid API keys but fill the `Authorized redirect URI` field with :
+
+```
+    http://<your hostname>/check_login.php
+```
+
+You can then download the json secrets file and put it in
+`client_secrets.json`. Make sure that this file is not served by your web
+server.
+
+
