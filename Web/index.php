@@ -23,6 +23,8 @@ include_once "classes/GenyWebConfig.php";
 include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyTools.php';
 
+$client = GenyTools::create_google_client();
+$auth_url = $client->createAuthUrl();
 
 $web_config = new GenyWebConfig();
 
@@ -64,6 +66,13 @@ $web_config = new GenyWebConfig();
 		</select>
 	</p>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
+
+	<p>
+		<a href="<?php echo $auth_url ?>">
+		     <img id="google-login" src="images/google_signin.png" alt="Login with google" />
+		</a>
+	</p>
+
 	<p>
 		<input type="submit" value="Login" />
 	</p>

@@ -26,27 +26,40 @@ include_once 'classes/GenyProfile.php';
 include_once 'classes/GenyAccessLog.php';
 include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyRightsGroup.php';
+include_once 'classes/GenyTools.php';
 
 
 $web_config = new GenyWebConfig();
 $gal = new GenyAccessLog();
 
-if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
+if (isset($_GET['code'])) {
+    $google_client = GenyTools::create_google_client();
+    $oauth_email = GenyTools::get_google_email($_GET['code']);
+}
+
+
+if(isset($oauth_email) || isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 	trim($_POST['geny_username']);
 	trim($_POST['geny_password']);
 
 	$username = md5($_POST["geny_username"]);
 	$passwd = md5($_POST["geny_password"]);
 
-	if(!preg_match("/^[-a-z0-9 ']{4,12}+$/i",$_POST['geny_username'])){
-	    echo "Username error";
-	    $gal->insertSimpleAccessLog(BAD_USERNAME_FORMAT);
-	    exit();
+	if (!isset($oauth_email)) {
+	    if(!preg_match("/^[-a-z0-9 ']{4,12}+$/i",$_POST['geny_username'])){
+		echo "Username error";
+		$gal->insertSimpleAccessLog(BAD_USERNAME_FORMAT);
+		exit();
+	    }
 	}
 
 	$handle = mysql_connect($web_config->db_host,$web_config->db_user,$web_config->db_password);
 	mysql_select_db($web_config->db_name);
-	$query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd'";
+	if (isset($oauth_email)){
+	    $query = "SELECT profile_id,profile_login FROM Profiles WHERE profile_email='$oauth_email';";
+	} else {
+	    $query = "SELECT profile_id,profile_login FROM Profiles WHERE md5(profile_login)='$username' AND profile_password='$passwd';";
+	}
 
 	$result = mysql_query($query, $handle);
 
@@ -54,6 +67,9 @@ if(isset($_POST['geny_username']) && isset($_POST['geny_password']) ){
 		//mark as valid user
 		session_regenerate_id();
 		$sqldata = mysql_fetch_assoc($result);
+		if(isset($oauth_email)) {
+		    $username = md5($sqldata['profile_login']);
+		}
 		$_SESSION['USERID'] = $username;
 		$_SESSION['LOGGEDIN'] = true;
 		if(file_exists("styles/".$_POST['geny_theme']."/main.css"))

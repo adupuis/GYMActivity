@@ -19,6 +19,13 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+require_once 'third_parties/google-api-php-client-2.1.3/vendor/autoload.php';
+
+// needed by google client. Also seems like a php property can be used
+// so we should test without it before
+// date_default_timezone_set('UTC');
+
+
 class GenyTools {
 	static function getYearHolidays(){
 		return GenyTools::getHolidays(intval(date('Y')));
@@ -126,4 +133,23 @@ class GenyTools {
 		}
 		return $sorted_arr;
 	}
+
+	static function get_google_email($oauth_code) {
+	    $client = create_google_client();
+	    $client->fetchAccessTokenWithAuthCode($oauth_code);
+	    $access_token = $client->getAccessToken();
+	    $oauth2Service = new Google_Service_Oauth2($client);
+	    $me = $oauth2Service->userinfo_v2_me->get();
+	    $email = $me->getEmail();
+	    return $email;
+	}
+
+	static function create_google_client(){
+	    $client = new Google_Client();
+	    $client->setAuthConfig('client_secrets.json');
+	    $client->addScope('profile');
+	    $client->addScope('email');
+	    return $client;
+	}
+
 }
