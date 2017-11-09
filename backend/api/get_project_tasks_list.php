@@ -23,6 +23,11 @@ session_start();
 function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }
+
+spl_autoload_register(function ($class_name) {
+    include '../../classes/'.$class_name . '.php';
+});
+
 header('Content-Type: application/json;charset=UTF-8');
 try {
     $checkId_obj = new CheckIdentity();

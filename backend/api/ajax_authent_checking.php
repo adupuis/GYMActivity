@@ -23,6 +23,10 @@ function __autoload($class_name) {
     include '../../classes/'.$class_name . '.php';
 }
 
+spl_autoload_register(function ($class_name) {
+    include '../../classes/'.$class_name . '.php';
+});
+
 date_default_timezone_set('Europe/Paris');
 $access_loger = new GenyAccessLog();
 $profile = -1;
