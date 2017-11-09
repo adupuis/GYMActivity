@@ -39,6 +39,15 @@ INSERT INTO RightsGroups VALUES(5,'Reporters','REP','Read only access for variou
 INSERT INTO RightsGroups VALUES(6,'Externes','EXT','Les profiles entrants dans ce groupe sont les externes à GENYMOBILE fournissant un travail facturé (ou coutant) tel que : les Freelances, les fournisseurs, les sous-traitants, etc.');
 INSERT INTO RightsGroups VALUES(7,'GroupLeaders','GL','Groupe des Group Leaders (manager administratifs, etc.).');
 
+CREATE TABLE Countries (
+	country_id int auto_increment,
+	country_name varchar(250) not null default 'Undefined',
+	primary key(country_id),
+	unique key(country_name)
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE Countries AUTO_INCREMENT = 1;
+INSERT INTO Countries VALUES(1,'France');
+INSERT INTO Countries VALUES(1,'USA');
 
 CREATE TABLE Profiles (
 	profile_id int auto_increment,
@@ -74,10 +83,12 @@ CREATE TABLE ProfileManagementData (
 	profile_management_data_technology_leader_id int not null default 5,
 	profile_management_data_category int not null default 0, -- category value is a property, values are taken in the PROP_PROFILE_TYPE property's values.
 	profile_management_data_resignation_date date default '9999-12-31',
+	profile_management_data_country_id int not null,
 	primary key(profile_management_data_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(profile_management_data_group_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
-	foreign key(profile_management_data_technology_leader_id) references Profiles(profile_id) ON DELETE CASCADE
+	foreign key(profile_management_data_technology_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
+	foreign key(profile_management_data_country_id ) references Countries(country_id) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
