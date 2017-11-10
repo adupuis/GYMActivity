@@ -35,6 +35,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public $technology_leader_id = -1;
 	public $category = -1;
 	public $resignation_date = '9999-12-31';
+	public $country_id = -1;
 	public $profile_object = null;
 	public function __construct($id = -1){
 		parent::__construct("ProfileManagementData",
@@ -50,10 +51,11 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		$this->technology_leader_id = -1;
 		$this->category = -1;
 		$this->resignation_date = '';
+		$this->$country_id = -1;
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
-	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=5,$pmd_tl_is=5, $pmd_category=12, $pmd_resignation_date='9999-12-31'){
+	public function insertNewProfileManagementData($profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,$pmd_recruitement_date,$pmd_is_billable,$pmd_availability_date,$pmd_gl_id=1,$pmd_tl_is=1, $pmd_category=12, $pmd_resignation_date='9999-12-31',$pmd_country_id=1){
 		if( ! is_numeric($profile_id) )
 			return GENYMOBILE_FALSE;
 		
@@ -75,7 +77,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		if( $pmd_is_billable != 'true' && $pmd_is_billable != 'false' && $pmd_is_billable != 0 && $pmd_is_billable != 1)
 			return GENYMOBILE_FALSE;
 		
-		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is,$pmd_category,'".mysql_real_escape_string($pmd_resignation_date)."')";
+		$query = "INSERT INTO ProfileManagementData VALUES(0,$profile_id,$pmd_salary,$pmd_variable_salary,$pmd_objectived_salary,'".mysql_real_escape_string($pmd_recruitement_date)."',".$pmd_is_billable.",'".mysql_real_escape_string($pmd_availability_date)."',$pmd_gl_id,$pmd_tl_is,$pmd_category,'".mysql_real_escape_string($pmd_resignation_date)."',$pmd_country_id)";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyProfileManagementData MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
@@ -88,7 +90,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 	public function getProfileManagementDataListWithRestrictions($restrictions,$restriction_type = "AND"){
 		// $restrictions is in the form of array("profile_id=1","profile_status_id=2")
 		$last_index = count($restrictions)-1;
-		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_variable_salary,profile_management_data_objectived_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id,profile_management_data_category, profile_management_data_resignation_date FROM ProfileManagementData";
+		$query = "SELECT profile_management_data_id,profile_id,profile_management_data_salary,profile_management_data_variable_salary,profile_management_data_objectived_salary,profile_management_data_recruitement_date,profile_management_data_is_billable,profile_management_data_availability_date,profile_management_data_group_leader_id,profile_management_data_technology_leader_id,profile_management_data_category, profile_management_data_resignation_date,profile_management_data_country_id FROM ProfileManagementData";
 		if(count($restrictions) > 0){
 			$query .= " WHERE ";
 			$op = mysql_real_escape_string($restriction_type);
@@ -118,6 +120,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 				$tmp_pmd->technology_leader_id = $row[9];
 				$tmp_pmd->category = $row[10];
 				$tmp_pmd->resignation_date = $row[11];
+				$tmp_pmd->country_id = $row[12];
 				$tmp_pmd->profile_object = new GenyProfile( $tmp_pmd->profile_id );
 				$pmd_list[] = $tmp_pmd;
 			}
@@ -161,6 +164,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 			$this->technology_leader_id = $profile->technology_leader_id;
 			$this->category = $profile->category;
 			$this->resignation_date = $profile->resignation_date;
+			$this->country_id = $profile->country_id;
 		}
 		else {
 			GenyProfileManagementData::__construct();
@@ -185,6 +189,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 				$this->technology_leader_id = $profile->technology_leader_id;
 				$this->category = $profile->category;
 				$this->resignation_date = $profile->resignation_date;
+				$this->country_id = $profile->country_id;
 			}
 		}
 	}

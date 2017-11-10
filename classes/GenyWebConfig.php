@@ -40,7 +40,7 @@ class GenyWebConfig {
 		$this->db_user = "genymobile";
 		$this->db_password = "toto";
 		$this->theme = "default";
-		$this->debug = false;
+		$this->debug = true;
 		$this->db_name = "GYMActivity";
 		$this->company_name = "Genymobile";
 		$this->version = "1.1.11";

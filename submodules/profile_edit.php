@@ -37,7 +37,7 @@ $param_load_profile = GenyTools::getParam("load_profile","false");
 $param_profile_id   = GenyTools::getParam("profile_id",null);
 
 if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
-	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) && isset($_POST['pmd_variable_salary']) && isset($_POST['pmd_objectived_salary']) && isset($_POST['technology_leader_id']) && isset($_POST['group_leader_id']) && isset($_POST['pmd_category']) ){
+	if( isset($_POST['profile_login']) && isset($_POST['profile_firstname']) && isset($_POST['profile_lastname']) && isset($_POST['profile_password']) && isset($_POST['profile_email']) && isset($_POST['rights_group_id']) && isset($_POST['pmd_availability_date']) && isset($_POST['pmd_is_billable']) && isset($_POST['pmd_recruitement_date']) && isset($_POST['pmd_salary']) && isset($_POST['pmd_variable_salary']) && isset($_POST['pmd_objectived_salary']) && isset($_POST['technology_leader_id']) && isset($_POST['group_leader_id']) && isset($_POST['pmd_category']) && isset($_POST['pmd_country']) ){
 		$profile_login = $_POST['profile_login'];
 		$profile_firstname = $_POST['profile_firstname'];
 		$profile_lastname = $_POST['profile_lastname'];
@@ -55,6 +55,7 @@ if( isset($_POST['create_profile']) && $_POST['create_profile'] == "true" ){
 		$pmd_group_leader_id = $_POST['group_leader_id'];
 		$pmd_technology_leader_id = $_POST['technology_leader_id'];
 		$pmd_category = $_POST['pmd_category'];
+		$pmd_country = $_POST['pmd_country'];
 		if( $geny_profile->insertNewProfile('NULL',$profile_login,$profile_firstname,$profile_lastname,$profile_password,$profile_email,$profile_is_active,$profile_needs_password_reset,$rights_group_id) ){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Profil créé avec succès.");
 			$geny_profile->loadProfileByLogin($profile_login);
@@ -194,6 +195,9 @@ else if( isset($_POST['edit_profile']) && $_POST['edit_profile'] == "true" ){
 		}
 		if( isset($_POST['pmd_resignation_date']) && $_POST['pmd_resignation_date'] != "" && $geny_pmd->resignation_date != $_POST['pmd_resignation_date'] ){
 			$geny_pmd->updateString('profile_management_data_resignation_date',$_POST['pmd_resignation_date']);
+		}
+		if( isset($_POST['pmd_country']) && $_POST['pmd_country'] != "" && $geny_pmd->country_id != $_POST['pmd_country'] ){
+			$geny_pmd->updateInt('profile_management_data_country_id',$_POST['pmd_country']);
 		}
 		if($geny_pmd->commitUpdates()){
 			$gritter_notifications[] = array('status'=>'success', 'title' => 'Succès','msg'=>"Données de management du profil mis à jour avec succès.");
@@ -384,6 +388,22 @@ else{
 						else{
 							echo "<option value=\"true\">Oui</option>\n<option value=\"false\" selected>Non</option>\n";
 						}
+					?>
+				</select>
+			</p>
+			<p>
+				<label for="pmd_country">Pays</label>
+				<select name="pmd_country" id="pmd_country" >
+					<?php
+                        $country = new GenyCountry();
+                        foreach($country->getAllCountries() as $c){
+                            if($c->id == $geny_pmd->country_id){
+                                echo "<option value='".$c->id."' selected>".$c->name."</option>";
+                            }
+                            else{
+                                echo "<option value='".$c->id."'>".$c->name."</option>";
+                            }
+                        }
 					?>
 				</select>
 			</p>
