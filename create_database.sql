@@ -47,7 +47,7 @@ CREATE TABLE Countries (
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ALTER TABLE Countries AUTO_INCREMENT = 1;
 INSERT INTO Countries VALUES(1,'France');
-INSERT INTO Countries VALUES(1,'USA');
+INSERT INTO Countries VALUES(2,'USA');
 
 CREATE TABLE Profiles (
 	profile_id int auto_increment,
