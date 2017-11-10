@@ -149,6 +149,22 @@ $geny_rg = new GenyRightsGroup();
 				</select>
 			</p>
 			<p>
+				<label for="pmd_country">Pays</label>
+				<select name="pmd_country" id="pmd_country" >
+					<?php
+                        $country = new GenyCountry();
+                        foreach($country->getAllCountries() as $c){
+                            if($c->id == $geny_pmd->country_id){
+                                echo "<option value='".$c->id."' selected>".$c->name."</option>";
+                            }
+                            else{
+                                echo "<option value='".$c->id."'>".$c->name."</option>";
+                            }
+                        }
+					?>
+				</select>
+			</p>
+			<p>
 				<label for="pmd_salary">Salaire fixe (€ brut/an)</label>
 				<input name="pmd_salary" id="pmd_salary" value="0" type="text" class="validate[required,custom[reallyOnlyNumber]] text-input" />
 			</p>
