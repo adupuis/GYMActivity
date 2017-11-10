@@ -401,7 +401,7 @@ else if( isset($_POST['edit_project']) && $_POST['edit_project'] == "true" ){
 				<select name="project_profiles[]" multiple class="profileslistselect chzn-select" data-placeholder="Choisissez un ou plusieurs profils...">
 				<?php
 					$current_project_profiles = $geny_profile->getAllActiveProfilesByProjectId( $geny_project->id );
-					foreach( $geny_profile->getAllProfiles() as $p ) {
+					foreach( $geny_profile->getProfileByActivation(1) as $p ) {
 						if( in_array( $p, $current_project_profiles ) ) {
 							echo "<option value=\"$p->id\" selected>".GenyTools::getProfileDisplayName( $p )."</option>";
 						}

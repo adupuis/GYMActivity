@@ -52,7 +52,7 @@ $geny_profile = new GenyProfile();
 				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez un profil...">
 					<option value=""></option>
 					<?php
-						foreach( $geny_profile->getAllProfiles() as $profile ) {
+						foreach( $geny_profile->getProfileByActivation(1) as $profile ) {
 							if( $profile->firstname && $profile->lastname ) {
 								echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
 							}

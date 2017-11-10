@@ -150,7 +150,7 @@ $geny_profile = new GenyProfile();
 				<label for="profiles_checkboxgroup">Attributions</label>
 				<select name="project_profiles[]" multiple class="profileslistselect chzn-select" data-placeholder="Choisissez un ou plusieurs profils...">
 				<?php
-					foreach( $geny_profile->getAllProfiles() as $p ){
+					foreach( $geny_profile->getProfileByActivation(1) as $p ){
 						echo "<option value=\"$p->id\">".GenyTools::getProfileDisplayName( $p )."</option>";
 					}
 				?>

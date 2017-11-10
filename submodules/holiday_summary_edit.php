@@ -206,7 +206,7 @@ else if( $edit_holiday_summary == 'true' ) {
 				<label for="profile_id">Profil</label>
 				<select name="profile_id" id="profile_id" class="chzn-select">
 					<?php
-						foreach( $geny_profile->getAllProfiles() as $profile ) {
+						foreach( $geny_profile->getProfileByActivation(1) as $profile ) {
 							if( $geny_holiday_summary->profile_id == $profile->id ) {
 								if( $profile->firstname && $profile->lastname ) {
 									echo "<option value=\"".$profile->id."\" selected>".$profile->firstname." ".$profile->lastname."</option>\n";
