@@ -49,6 +49,19 @@ ALTER TABLE Countries AUTO_INCREMENT = 1;
 INSERT INTO Countries VALUES(1,'France');
 INSERT INTO Countries VALUES(2,'USA');
 
+CREATE TABLE BankHolidays (
+    bank_holiday_id int auto_increment,
+    bank_holiday_name varchar(250) not null default 'Undefined',
+    bank_holiday_project_id int not null,
+    bank_holiday_task_id int not null,
+    bank_holiday_start_date date not null,
+    bank_holiday_stop_date date not null,
+    bank_holiday_country_id int not null,
+    primary key(bank_holiday_id),
+    unique key bank_holiday_key (bank_holiday_start_date,bank_holiday_stop_date,bank_holiday_country_id),
+    foreign key(bank_holiday_country_id) references Countries(country_id) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 CREATE TABLE Profiles (
 	profile_id int auto_increment,
 	profile_login varchar(100) not null default 'Undefined',
