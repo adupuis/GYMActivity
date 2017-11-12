@@ -441,6 +441,21 @@ li.holiday_summary_remove a {
 li.holiday_summary_list a {
 	background-image: url(../../images/genymobile-2012/holiday_summary_generic.png);
 }
+li.bank_holiday_add a {
+	background-image: url(../../images/genymobile-2012/bank_holiday_add.png);
+}
+
+li.bank_holiday_edit a {
+	background-image: url(../../images/genymobile-2012/bank_holiday_generic.png);
+}
+
+li.bank_holiday_remove a {
+	background-image: url(../../images/genymobile-2012/bank_holiday_remove.png);
+}
+
+li.bank_holiday_list a {
+	background-image: url(../../images/genymobile-2012/bank_holiday_generic.png);
+}
 li.daily_rate_add a {
 	background-image: url(../../images/genymobile-2012/daily_rate_add.png);
 }
