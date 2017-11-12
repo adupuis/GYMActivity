@@ -1,6 +1,6 @@
 <?php
-//  Copyright (C) 2011 by GENYMOBILE & Quentin Désert
-//  qdesert@genymobile.com
+//  Copyright (C) 2011 by GENYMOBILE & Arnaud Dupuis
+//  adupuis@genymobile.com
 //  http://www.genymobile.com
 // 
 //  This program is free software; you can redistribute it and/or modify
