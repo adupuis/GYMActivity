@@ -157,13 +157,27 @@ date_default_timezone_set('Europe/Paris');
 		$filter = array();
 		array_push($filter, "activity_date >= \"$dateStart\"");
 		array_push($filter, "activity_date <= \"$dateEnd\"");
-		array_push($filter, "project_name = \"Congés\"");
+// 		array_push($filter, "project_name = \"Congés\"");
 		$activity_report_workflow = new GenyActivityReportWorkflow();
-		$activities = $activity_report_workflow->getActivityReportsWorkflowWithRestrictions($filter);
+// 		$activities = $activity_report_workflow->getActivityReportsWorkflowWithRestrictions($filter);
+		
+		$geny_project = new GenyProject();
+		$activities = array();
+		// Get all project that type is "Congés".
+		// TODO: This should be a property.
+		foreach( $geny_project->getProjectsByTypeId(5) as $p ){
+            array_push($filter,"project_name = \"$p->name\"");
+            $tmp_ar = $activity_report_workflow->getActivityReportsWorkflowWithRestrictions($filter);
+            if(count($tmp_ar)>0){
+                $activities = array_merge($activities,$tmp_ar);
+            }
+            array_pop($filter);
+		}
 		
 		// put it on a table by profile_id
 		$holidays = array();
 		foreach( $activities as $activity ){
+            GenyTools::Debug("Adding $activity->activity_date as a time off for profile $activity->profile_id");
 			$holidays[$activity->profile_id][$activity->activity_date] = true;
 		}
 		?>
