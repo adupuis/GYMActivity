@@ -43,7 +43,7 @@ class GenyWebConfig {
 		$this->debug = true;
 		$this->db_name = "GYMActivity";
 		$this->company_name = "Genymobile";
-		$this->version = "1.1.11";
+		$this->version = "1.2.0";
 		$this->company_corner_logo = "logo_banner.png";
 		$this->company_index_logo = "logo_genymobile.jpg";
 		$this->gmail_username = "yourusername";
