@@ -59,7 +59,7 @@ class GenyBankHoliday extends GenyDatabaseTools {
 		return -1;
 	}
 	public function insertNewBankHoliday($id,$name,$project_id,$task_id,$start_date,$stop_date,$country_id){
-		$query = "INSERT INTO BankHolidays VALUES($id,'".mysql_real_escape_string($name)."',$project_id,$task_id,'".mysql_real_escape_string($start_date)."','".mysql_real_escape_string($stop_date,$country_id)."')";
+		$query = "INSERT INTO BankHolidays VALUES($id,'".mysql_real_escape_string($name)."',$project_id,$task_id,'".mysql_real_escape_string($start_date)."','".mysql_real_escape_string($stop_date)."','".$country_id."')";
 		if( $this->config->debug )
 			error_log("[GYMActivity::DEBUG] GenyBankHoliday MySQL query : $query",0);
 		if( mysql_query( $query, $this->handle ) ) {
