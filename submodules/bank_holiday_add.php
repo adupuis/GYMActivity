@@ -21,7 +21,8 @@
 // Variable to configure global behaviour
 
 
-$geny_profile = new GenyProfile();
+$geny_project = new GenyProject();
+$geny_country = new GenyCountry();
 
 ?>
 <div id="mainarea">
@@ -42,23 +43,20 @@ $geny_profile = new GenyProfile();
 				$("#formID").validationEngine('attach');
 			});
 			$(document).ready(function(){
-				$(".profileslistselect").listselect({listTitle: "Profils disponibles",selectedTitle: "Profils sélectionnés"});
+				$(".projectlistselect").listselect({listTitle: "Profils disponibles",selectedTitle: "Profils sélectionnés"});
 			});
 		</script>
 		<form id="formID" action="loader.php?module=bank_holiday_edit" method="post">
 			<input type="hidden" name="create_bank_holiday" value="true" />
 			<p>
-				<label for="profile_id">Profil</label>
-				<select name="profile_id" id="profile_id" class="chzn-select" data-placeholder="Choisissez un profil...">
+				<label for="project_id">Projet</label>
+				<select name="project_id" id="project_id" class="chzn-select" data-placeholder="Choisissez un projet...">
 					<option value=""></option>
 					<?php
-						foreach( $geny_profile->getProfileByActivation(1) as $profile ) {
-							if( $profile->firstname && $profile->lastname ) {
-								echo "<option value=\"".$profile->id."\">".$profile->firstname." ".$profile->lastname."</option>\n";
-							}
-							else {
-								echo "<option value=\"".$profile->id."\">".$profile->login."</option>\n";
-							}
+                        // Get only projects that are type "Congés"
+                        // TODO: This should be a Property
+						foreach( $geny_project->getProjectsByTypeId(5) as $project ) {
+                            echo "<option value=\"".$project->id."\">".$project->name."</option>\n";
 						}
 					?>
 				</select>
@@ -67,11 +65,28 @@ $geny_profile = new GenyProfile();
 				<label for="bank_holiday_type">Type</label>
 				<select name="bank_holiday_type" id="bank_holiday_type" class="chzn-select" data-placeholder="Choisissez un type de congé...">
 					<option value=""></option>
-					<option value="CP">CP</option>
-					<option value="RTT">RTT</option>
 				</select>
 			</p>
 			<script type="text/javascript">
+                function getTasks(){
+						var project_id = $("#project_id").val();
+						if( project_id > 0 ) {
+							$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function(data){
+								$('.bank_holiday_options').remove();
+								$("#bank_holiday_type").append('<option value="" class="bank_holiday_options"></option>');
+								$.each(data, function(key, val) {
+									$("#bank_holiday_type").append('<option class="bank_holiday_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
+								});
+								$("#bank_holiday_type").attr('data-placeholder','Choisissez un type de congé...');
+								$("#bank_holiday_type").trigger("liszt:updated");
+								$("span:contains('Choisissez d'abord un projet...')").text('Choisissez un type de congé...');
+								
+
+							},'json');
+						}
+					}
+					$("#project_id").change(getTasks);
+					getTasks();
 				$(function() {
 					$( "#bank_holiday_start_date" ).datepicker();
 					$( "#bank_holiday_start_date" ).datepicker('setDate', new Date());
@@ -102,42 +117,19 @@ $geny_profile = new GenyProfile();
 				<label for="bank_holiday_stop_date">Fin de période</label>
 				<input name="bank_holiday_stop_date" id="bank_holiday_stop_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
+			
 			<p>
-				<label for="bank_holiday_count_acquired">Acquis</label>
-				<input name="bank_holiday_count_acquired" id="bank_holiday_count_acquired" type="text" class="validate[required,custom[onlyFloatNumber]] text-input" />
+				<label for="country_id">Pays concerné</label>
+				<select name="country_id" id="country_id" class="chzn-select" data-placeholder="Choisissez un pays...">
+					<option value=""></option>
+					<?php
+						foreach( $geny_country->getAllCountries() as $c ) {
+                            echo "<option value=\"".$c->id."\">".$c->name."</option>\n";
+						}
+					?>
+				</select>
 			</p>
-			<p>
-				<label for="bank_holiday_count_taken">Pris</label>
-				<input name="bank_holiday_count_taken" id="bank_holiday_count_taken" type="text" class="validate[required,custom[onlyFloatNumber]] text-input" />
-			</p>
-			<script>
-				$("#bank_holiday_count_taken").change(function(){
-					var remaining = $('#bank_holiday_count_acquired').val() - $('#bank_holiday_count_taken').val();
-					$('#bank_holiday_count_remaining').val( remaining.toFixed(2) );
-				});
-				$("#bank_holiday_count_acquired").change(function(){
-					$("#bank_holiday_count_taken").change();
-				});
-				$("#bank_holiday_type").chosen().change( function(){
-					var value = $("#bank_holiday_type").val();
-					var date = new Date();
-					if( value == "CP" ){
-						$( "#bank_holiday_start_date" ).datepicker('setDate', date.getFullYear()+"-06-01");
-						$( "#bank_holiday_stop_date" ).datepicker('setDate', (date.getFullYear()+1)+"-05-31");
-					}
-					if( value == "RTT" ){
-						$( "#bank_holiday_start_date" ).datepicker('setDate', date.getFullYear()+"-01-01");
-						$( "#bank_holiday_stop_date" ).datepicker('setDate', date.getFullYear()+"-12-31");
-					}
-					$("#bank_holiday_count_acquired").val('0.00');
-					$("#bank_holiday_count_taken").val('0.00');
-					$("#bank_holiday_count_taken").change();
-				});
-			</script>
-			<p>
-				<label for="bank_holiday_count_remaining">Restant</label>
-				<input name="bank_holiday_count_remaining" id="bank_holiday_count_remaining" type="text" class="validate[required,custom[onlyFloatNumber]] text-input" />
-			</p>
+			
 			<p>
 				<input type="submit" value="Ajouter" /> ou <a href="loader.php?module=bank_holiday_list">annuler</a>
 			</p>
