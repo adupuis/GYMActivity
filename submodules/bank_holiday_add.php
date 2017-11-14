@@ -110,6 +110,10 @@ $geny_country = new GenyCountry();
 				});
 			</script>
 			<p>
+				<label for="bank_holiday_name">Nom</label>
+				<input name="bank_holiday_name" id="bank_holiday_name" type="text" class="validate[required] text-input" />
+			</p>
+			<p>
 				<label for="bank_holiday_start_date">Début de période</label>
 				<input name="bank_holiday_start_date" id="bank_holiday_start_date" type="text" class="validate[required,custom[date]] text-input" />
 			</p>
