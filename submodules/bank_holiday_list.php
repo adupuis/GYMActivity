@@ -156,10 +156,11 @@ foreach( $bank_holiday->getAllBankHolidays() as $tmp ) {
 				displayStatusNotifications($gritter_notifications,$web_config->theme);
 			?>
 		</script>
-		<form id="formID" action="loader.php?module=bank_holiday_list" method="post" class="table_container">
+		<form id="formID" action="loader.php?module=bank_holiday_list_apply" method="post" class="table_container">
 			<style>
 				@import 'styles/<?php echo $web_config->theme ?>/holiday_summary_list.css';
 			</style>
+			<input type="hidden" name="bank_holiday_apply_list" value="true" />
 			<p>
 				<table id="bank_holiday_list_table" style="color: black; width: 100%;">
 					<thead>
@@ -193,6 +194,9 @@ foreach( $bank_holiday->getAllBankHolidays() as $tmp ) {
 						<th class="filtered">Supprimer</th>
 					</tfoot>
 				</table>
+			</p>
+			<p>
+                <input type="submit" value="Appliquer les jours fériés" />
 			</p>
 		</form>
 	</p>

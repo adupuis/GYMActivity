@@ -105,6 +105,9 @@ class GenyBankHoliday extends GenyDatabaseTools {
 	public function getAllBankHolidays(){
 		return $this->getBankHolidaysListWithRestrictions( array() );
 	}
+	public function getBankHolidaysByCountryId($id){
+		return $this->getBankHolidaysListWithRestrictions( array("bank_holiday_country_id=".mysql_real_escape_string($id)) );
+	}
 	public function searchBankHolidays($term){
 		$q = mysql_real_escape_string($term);
 		return $this->getBankHolidaysListWithRestrictions( array("bank_holiday_name LIKE '%$q%'") );
