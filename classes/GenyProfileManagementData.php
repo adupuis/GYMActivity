@@ -51,7 +51,7 @@ class GenyProfileManagementData extends GenyDatabaseTools {
 		$this->technology_leader_id = -1;
 		$this->category = -1;
 		$this->resignation_date = '';
-		$this->$country_id = -1;
+		$this->country_id = -1;
 		if($id > -1)
 			$this->loadProfileManagementDataById($id);
 	}
