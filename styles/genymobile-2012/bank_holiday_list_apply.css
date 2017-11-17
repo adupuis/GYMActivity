@@ -1,0 +1,16 @@
+.table_container {
+	width: 1000px; 
+	margin: auto;
+}
+
+.table_container table {
+	width: 1000px;
+}
+
+.table_container select {
+	width: 100%;
+}
+
+.table_container th {
+	text-align: center;
+}
