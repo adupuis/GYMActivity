@@ -64,7 +64,7 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 					}
 					else{
 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $day pour $profile_name.");
-						$actv ivity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'KO (more than 8h entered for this day)' );
+						$actvivity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'KO (more than 8h entered for this day)' );
 						if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[2]) )
 							$data_array_filters[2][] = 'KO (more than 8h entered for this day)';
 					}
