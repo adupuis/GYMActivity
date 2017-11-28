@@ -54,11 +54,39 @@ try {
 			$geny_ptr = new GenyProjectTaskRelation();
 			$retArray = array();
 			$totalRec = 0;
+			
+			// Building the tasks blacklist
+			$prop = new GenyProperty();
+			$prop->loadPropertyByName('TASKS_BLACKLIST');
+			$tasks_blacklist = array();
+			if($prop->id > -1){
+				$pv = $prop->getPropertyValues();
+				error_log("[GYMActivity::DEBUG] property TASKS_BLACKLIST has ".count($pv)." properties.",0);
+				// !!! TODO !!!
+				foreach($pv as $v){
+					if($v->id > -1 ){
+						error_log("[GYMActivity::DEBUG] GenyPropertyValue has a content of: $v->content",0);
+						$tmp_array = explode(',',$v->content);
+						error_log("[GYMActivity::DEBUG] TASK BLACKLIST: ".implode(',',$tasks_blacklist),0);
+						$tasks_blacklist = array_merge($tasks_blacklist, $tmp_array );
+					}
+					else{
+						error_log("[GYMActivity::DEBUG] GenyPropertyValue is undefined.",0);
+					}
+				}
+			}
+			else{
+				error_log("[GYMActivity::DEBUG] There is no property with the name TASKS_BLACKLIST.",0);
+			}
+			error_log("[GYMActivity::DEBUG] TASK BLACKLIST: ".implode(',',$tasks_blacklist),0);
+			
 			foreach($geny_ptr->getProjectTaskRelationsListByProjectId( $project_id ) as $ptr ){
 				$t = new GenyTask( $ptr->task_id );
-				$ta = array("$t->id","$t->name","$t->description");
-				if (! in_array($ta, $retArray))
-					$retArray[] = $ta;
+				if(! in_array($t->id, $tasks_blacklist)){
+					$ta = array("$t->id","$t->name","$t->description");
+					if (! in_array($ta, $retArray))
+						$retArray[] = $ta;
+				}
 				$totalRec++;
 			}
 			$data = json_encode($retArray);
