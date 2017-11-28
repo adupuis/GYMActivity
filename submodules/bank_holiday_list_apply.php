@@ -55,18 +55,21 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 					GenyTools::debug("Adding an ActivityReport for date $d");
 					$geny_activity = new GenyActivity();
 					$geny_ar = new GenyActivityReport();
+					$geny_country = new GenyCountry($pmd->country_id);
+					if( !in_array($geny_country->name, $data_array_filters[2]) )
+						$data_array_filters[2][] = $geny_country->name;
 					// On récupère la charge pour le jour et on ajoute les 8h (1j) du jour de congés que l'on va rajouter.
 					$day_load = $geny_ar->getDayLoad($profile->id,$day)+8;
 					if($day_load <= 8){
-						$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'Nope' );
-						if( !in_array('Nope', $data_array_filters[2]) )
-							$data_array_filters[2][] = 'Nope';
+						$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name,'status' => 'Nope' );
+						if( !in_array('Nope', $data_array_filters[3]) )
+							$data_array_filters[3][] = 'Nope';
 					}
 					else{
 						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $day pour $profile_name.");
 						$actvivity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'KO (more than 8h entered for this day)' );
-						if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[2]) )
-							$data_array_filters[2][] = 'KO (more than 8h entered for this day)';
+						if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[3]) )
+							$data_array_filters[3][] = 'KO (more than 8h entered for this day)';
 					}
 				}
 			}
@@ -182,7 +185,7 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 				/* Add a select menu for each TH element in the table footer */
 				/* i+1 is to avoid the first row wich contains a <input> tag without any informations */
 				$("tfoot th").each( function ( i ) {
-					if( i == 0 || i == 1 || i == 2 ) {
+					if( i == 0 || i == 1 || i == 2 || i == 3 ) {
 						this.innerHTML = indexData[i];
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -209,18 +212,20 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 					<thead>
 						<th>Profile</th>
 						<th>Jour férié</th>
+						<th>Pays</th>
 						<th>Status</th>
 					</thead>
 					<tbody>
 					<?php
 						foreach( $activity_report_addition_status as $aras ){
-							echo "<tr> <td> <center>".$aras['profile_name']."</center> </td> <td> <center>".$aras['bank_holiday']."</center> </td> <td> <center>".$aras['status']."</center> </td> </tr>";
+							echo "<tr> <td> <center>".$aras['profile_name']."</center> </td> <td> <center>".$aras['bank_holiday']."</center> </td> <td> <center>".$aras['country']."</center> </td> <td> <center>".$aras['status']."</center> </td> </tr>";
 						}
 					?>
 					</tbody>
 					<tfoot>
 						<th class="filtered">Profile</th>
 						<th class="filtered">Jour férié</th>
+						<th class="filtered">Pays</th>
 						<th class="filtered">Status</th>
 					</tfoot>
 				</table>
