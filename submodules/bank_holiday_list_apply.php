@@ -70,6 +70,7 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 						$actvivity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'KO (more than 8h entered for this day)' );
 						if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[3]) )
 							$data_array_filters[3][] = 'KO (more than 8h entered for this day)';
+
 					}
 				}
 			}
