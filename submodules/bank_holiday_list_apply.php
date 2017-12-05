@@ -25,7 +25,7 @@ date_default_timezone_set('Europe/Paris');
 $gritter_notifications = array();
 
 $data_array = array();
-$data_array_filters = array( 0 => array(), 1 => array(), 2 => array() );
+$data_array_filters = array( 0 => array(), 1 => array(), 2 => array(), 3 => array() );
 
 $bank_holiday = new GenyBankHoliday();
 $country = new GenyCountry();
@@ -36,8 +36,13 @@ $activity_report_addition_status = array();
 
 if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 	$profile = new GenyProfile();
+	$geny_assignement = new GenyAssignement();
+	$geny_activity = new GenyActivity();
+	$geny_ar = new GenyActivityReport();
+	$pmd = new GenyProfileManagementData();
+	$geny_project = new GenyProject();
+	// TODO FIXME there is a bug here => all bank holidays are doubled.
 	foreach($profile->getProfileByActivation(true) as $p){
-		$pmd = new GenyProfileManagementData();
 		$pmd->loadProfileManagementDataByProfileId($p->id);
 		$profile_name = $p->login;
 		if( $p->firstname != '' && $p->lastname  != '') {
@@ -46,28 +51,66 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 		if( !in_array($profile_name, $data_array_filters[0]) )
 			$data_array_filters[0][] = $profile_name;
 		foreach ( $bank_holidays as $bh ){
+			GenyTools::debug("\n\nPROCESSING: '$bh->name' to profile $p->login as he is from country $pmd->country_id from $bh->start_date to $bh->stop_date\n\n");
 			if( !in_array($bh->name, $data_array_filters[1]) )
 				$data_array_filters[1][] = $bh->name;
 			if($bh->country_id == $pmd->country_id){
-				GenyTools::debug("Adding banking holiday '$bh->name' to profile $p->login as he is from country $pmd->country_id");
+				GenyTools::debug("Adding banking holiday '$bh->name' to profile $p->login as he is from country $pmd->country_id from $bh->start_date to $bh->stop_date");
 				$bh_days_list = GenyTools::getWorkedDaysList(strtotime($bh->start_date), strtotime($bh->stop_date) );
 				foreach ($bh_days_list as $d){
+					if($bh->project_id != $geny_project->id)
+						$geny_project->loadProjectById($bh->project_id);
+					if( $d < $geny_project->start_date || $d > $geny_project->end_date ){
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $d : la date du jour férié est en dehors des bornes temporelle du projet $geny_project->name (du $geny_project->start_date au $geny_project->end_date).");
+						break;
+					}
 					GenyTools::debug("Adding an ActivityReport for date $d");
-					$geny_activity = new GenyActivity();
-					$geny_ar = new GenyActivityReport();
 					$geny_country = new GenyCountry($pmd->country_id);
 					if( !in_array($geny_country->name, $data_array_filters[2]) )
 						$data_array_filters[2][] = $geny_country->name;
 					// On récupère la charge pour le jour et on ajoute les 8h (1j) du jour de congés que l'on va rajouter.
-					$day_load = $geny_ar->getDayLoad($profile->id,$day)+8;
+					$day_load = $geny_ar->getDayLoad($p->id,$d)+8;
 					if($day_load <= 8){
-						$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name,'status' => 'Nope' );
-						if( !in_array('Nope', $data_array_filters[3]) )
-							$data_array_filters[3][] = 'Nope';
+						$assignements = $geny_assignement->getAssignementsListByProjectIdAndProfileId($bh->project_id,$p->id);
+						if(count($assignements) == 1 && $assignements[0]->id > -1){
+							$geny_activity_id = $geny_activity->insertNewActivity('NULL',$d,8,date('Y-m-j'),$assignements[0]->id,$bh->task_id);
+							if( $geny_activity_id > -1 ){
+								$geny_ars = new GenyActivityReportStatus();
+								$geny_ars->loadActivityReportStatusByShortName('APPROVED');
+								$geny_ar_id = $geny_ar->insertNewActivityReport('NULL',-1,$geny_activity_id,$p->id,$geny_ars->id );
+								if( $geny_ar_id > -1 ){
+									GenyTools::debug("Adding banking holiday '$bh->name' to profile $p->login as he is from country $pmd->country_id => OK");
+									$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name,'status' => 'Ok' );
+									if( !in_array('Ok', $data_array_filters[3]) )
+										$data_array_filters[3][] = 'Ok';
+								}
+								else{
+									$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $d pour $profile_name (Erreur d'insertion dans la base de données).");
+									$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name,'status' => 'KO (Erreur d\'insertion dans la base de données).' );
+									if( !in_array('KO (Erreur d\'insertion dans la base de données).', $data_array_filters[3]) )
+										$data_array_filters[3][] = 'KO (Erreur d\'insertion dans la base de données).';
+								}
+							}
+							else {
+								$geny_activity->deleteActivity($geny_activity_id);
+								$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $d pour $profile_name (Erreur d'insertion dans la base de données).");
+								$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name,'status' => 'KO (Erreur d\'insertion dans la base de données).' );
+								if( !in_array('KO (Erreur d\'insertion dans la base de données).', $data_array_filters[3]) )
+									$data_array_filters[3][] = 'KO (Erreur d\'insertion dans la base de données).';
+							}
+						}
+						else{
+							$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $d pour $profile_name (profile non assigné au projet $geny_project->name).");
+							GenyTools::debug("Adding banking holiday '$bh->name' to profile $p->login as he is from country $pmd->country_id => KO (NO ASSIGNEMENT)");
+							$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name, 'status' => "KO (profile non assigné au projet $geny_project->name)" );
+							if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[3]) )
+								$data_array_filters[3][] = "KO (profile non assigné au projet $geny_project->name)";
+						}
 					}
 					else{
-						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $day pour $profile_name.");
-						$actvivity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'status' => 'KO (more than 8h entered for this day)' );
+						GenyTools::debug("Adding banking holiday '$bh->name' to profile $p->login as he is from country $pmd->country_id => KO (TOO MANY HOURS)");
+						$gritter_notifications[] = array('status'=>'error', 'title' => 'Erreur','msg'=>"Erreur lors de l'ajout du jour férié $bh->name pour le $d pour $profile_name.");
+						$activity_report_addition_status[] = array( 'profile_name' => $profile_name, 'bank_holiday'=>$bh->name, 'country' => $geny_country->name, 'status' => 'KO (more than 8h entered for this day)' );
 						if( !in_array('KO (more than 8h entered for this day)', $data_array_filters[3]) )
 							$data_array_filters[3][] = 'KO (more than 8h entered for this day)';
 
@@ -79,46 +122,6 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 	
 }
 
-// foreach( $country->getAllCountries() as $c ) {
-// 	$countries[$c->id] = $c;
-// }
-// 
-// // Get all project of type "Congés".
-// // TODO: We should use a GenyProperty here.
-// foreach( $project->getProjectsByTypeId(5) as $p ) {
-// 	$projects[$p->id] = $c;
-// }
-// 
-// foreach( $bank_holiday->getAllBankHolidays() as $tmp ) {
-// 	GenyTools::Debug("Got Bank Holiday $tmp->id : $tmp->name\n");
-// 	$tmp_country = $countries["$tmp->country_id"];
-// 
-// 	if( $web_config->theme == "genymobile-2012" ) {
-// 		$edit = "<a href=\"loader.php?module=bank_holiday_edit&load_bank_holiday=true&bank_holiday_id=$tmp->id\" title=\"Editer le jour férié\"><img src=\"images/$web_config->theme/holiday_summary_edit_small.png\" alt=\"Editer le jour férié\"></a>";
-// 
-// 		$remove = "<a href=\"loader.php?module=bank_holiday_remove&bank_holiday_id=$tmp->id\" title=\"Supprimer définitivement le jour férié\"><img src=\"images/$web_config->theme/holiday_summary_remove_small.png\" alt=\"Supprimer définitivement le jour férié\"></a>";
-// 	}
-// 	else {
-// 		$edit = "<a href=\"loader.php?module=bank_holiday_edit&load_bank_holiday=true&bank_holiday_id=$tmp->id\" title=\"Editer le jour férié\"><img src=\"images/$web_config->theme/project_edit_small.png\" alt=\"Editer le jour férié\"></a>";
-// 
-// 		$remove = "<a href=\"loader.php?module=bank_holiday_remove&bank_holiday_id=$tmp->id\" title=\"Supprimer définitivement le jour férié\"><img src=\"images/$web_config->theme/project_remove_small.png\" alt=\"Supprimer définitivement le jour férié\"></a>";
-// 	}
-// 	$project->loadProjectById($tmp->project_id);
-// 	$task->loadTaskById($tmp->task_id);
-// 	$data_array[] = array( $tmp->id, $tmp->name, $project->name, $task->name, $tmp->start_date, $tmp->stop_date, $tmp_country->name, $edit, $remove );
-// 
-// // 	$holiday_summary_types = array( "CP"=>"CP", "RTT"=>"RTT" );
-// // 
-// 	if( !in_array($tmp->name, $data_array_filters[0]) )
-// 		$data_array_filters[0][] = $tmp->name;
-// 	if( !in_array( $project->name, $data_array_filters[1] ) )
-// 		$data_array_filters[1][] = $project->name;
-// 	if( !in_array( $task->name, $data_array_filters[2] ) )
-// 		$data_array_filters[2][] = $task->name;
-// 	if( !in_array( $tmp_country->name, $data_array_filters[5] ) )
-// 		$data_array_filters[5][] = $tmp_country->name;
-// }
-
 ?>
 <div id="mainarea">
 	<p class="mainarea_title">
@@ -129,7 +132,7 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Voici la liste des jours fériés.
+		Voici la liste des jours fériés. <br/><strong style="color:red">Attention: si le jour férié tombe un weekend il n'est pas affiché dans cette liste.</strong>
 		</p>
 		<script>
 			var indexData = new Array();
@@ -219,6 +222,7 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 					<tbody>
 					<?php
 						foreach( $activity_report_addition_status as $aras ){
+							GenyTools::debug("Displaying: ".$aras['profile_name']." - ".$aras['bank_holiday']." - ".$aras['country']." - ".$aras['status']);
 							echo "<tr> <td> <center>".$aras['profile_name']."</center> </td> <td> <center>".$aras['bank_holiday']."</center> </td> <td> <center>".$aras['country']."</center> </td> <td> <center>".$aras['status']."</center> </td> </tr>";
 						}
 					?>

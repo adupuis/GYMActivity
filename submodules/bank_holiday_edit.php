@@ -185,7 +185,7 @@ else{
 						var project_id = $("#project_id").val();
 						var task_id = <?php echo $geny_bh->task_id ?>;
 						if( project_id > 0 ) {
-							$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function(data){
+							$.get('backend/api/get_project_tasks_list.php?no_task_blacklist=1&project_id='+project_id, function(data){
 								$('.bank_holiday_options').remove();
 								$("#bank_holiday_type").append('<option value="" class="bank_holiday_options"></option>');
 								$.each(data, function(key, val) {

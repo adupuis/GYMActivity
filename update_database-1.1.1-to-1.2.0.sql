@@ -55,6 +55,13 @@ CREATE TABLE BankHolidays (
 ALTER TABLE ProfileManagementData ADD COLUMN profile_management_data_country_id int not null AFTER profile_management_data_resignation_date;
 ALTER TABLE ProfileManagementData ADD FOREIGN KEY(profile_management_data_country_id) references Countries(country_id) ON DELETE CASCADE;
 
+-- Ajout d'une tâche pour les jours fériés 
+INSERT INTO Tasks VALUES(NULL,'Bank Holiday','');
+
+-- Ajout d'une propriété pour la blacklist des tâches que les utilisateurs ne peuvent pas utiliser dans l'ajout de CRA/Congés.
+INSERT INTO Properties VALUES(NULL,'TASKS_BLACKLIST',"Liste des taches (séparé par une virgule) ne pouvant pas etre selectionnee par les utilisateurs pour ajouter des CRA/Conges",4);
+INSERT INTO PropertyValues VALUES(NULL, (SELECT property_id FROM Properties WHERE property_name = 'TASKS_BLACKLIST'),(SELECT task_id FROM Tasks WHERE task_name = 'Bank Holiday') );
+
 -- ---------------------------------------------
 -- update de la version de la base de donnée --
 -- ---------------------------------------------

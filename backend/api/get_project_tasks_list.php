@@ -36,6 +36,7 @@ try {
 	if( $checkId_obj->isAllowed($_SESSION['USERID'],6) ){
 		$project_id = -1;
 		$assignement_id = -1;
+		$no_task_blacklist = 0;
 		if(isset($_POST['project_id']))
 			$project_id = $_POST['project_id'];
 		else if( isset($_GET['project_id']))
@@ -44,6 +45,10 @@ try {
 			$assignement_id = $_GET['assignement_id'];
 		else if( isset($_POST['assignement_id']))
 			$assignement_id = $_POST['assignement_id'];
+		if( isset($_GET['no_task_blacklist']))
+			$no_task_blacklist = $_GET['no_task_blacklist'];
+		else if( isset($_POST['no_task_blacklist']))
+			$no_task_blacklist = $_POST['no_task_blacklist'];
 		
 		if( $assignement_id > -1 ){
 			$geny_assignement = new GenyAssignement($assignement_id);
@@ -54,29 +59,27 @@ try {
 			$geny_ptr = new GenyProjectTaskRelation();
 			$retArray = array();
 			$totalRec = 0;
-			
-			// Building the tasks blacklist
-			$prop = new GenyProperty();
-			$prop->loadPropertyByName('TASKS_BLACKLIST');
+			error_log("[GYMActivity::DEBUG] no_task_blacklist=$no_task_blacklist.",0);
+			// Building the tasks blacklist unless no_task_blacklist=1
 			$tasks_blacklist = array();
-			if($prop->id > -1){
-				$pv = $prop->getPropertyValues();
-				error_log("[GYMActivity::DEBUG] property TASKS_BLACKLIST has ".count($pv)." properties.",0);
-				// !!! TODO !!!
-				foreach($pv as $v){
-					if($v->id > -1 ){
-						error_log("[GYMActivity::DEBUG] GenyPropertyValue has a content of: $v->content",0);
-						$tmp_array = explode(',',$v->content);
-						error_log("[GYMActivity::DEBUG] TASK BLACKLIST: ".implode(',',$tasks_blacklist),0);
-						$tasks_blacklist = array_merge($tasks_blacklist, $tmp_array );
-					}
-					else{
-						error_log("[GYMActivity::DEBUG] GenyPropertyValue is undefined.",0);
+			if($no_task_blacklist == 0){
+				$prop = new GenyProperty();
+				$prop->loadPropertyByName('TASKS_BLACKLIST');
+				if($prop->id > -1){
+					$pv = $prop->getPropertyValues();
+					foreach($pv as $v){
+						if($v->id > -1 ){
+							$tmp_array = explode(',',$v->content);
+							$tasks_blacklist = array_merge($tasks_blacklist, $tmp_array );
+						}
+						else{
+							error_log("[GYMActivity::DEBUG] GenyPropertyValue is undefined.",0);
+						}
 					}
 				}
-			}
-			else{
-				error_log("[GYMActivity::DEBUG] There is no property with the name TASKS_BLACKLIST.",0);
+				else{
+					error_log("[GYMActivity::DEBUG] There is no property with the name TASKS_BLACKLIST.",0);
+				}
 			}
 			error_log("[GYMActivity::DEBUG] TASK BLACKLIST: ".implode(',',$tasks_blacklist),0);
 			
