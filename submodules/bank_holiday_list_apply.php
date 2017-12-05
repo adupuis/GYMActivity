@@ -41,7 +41,6 @@ if( GenyTools::getParam("bank_holiday_apply_list","") == "true" ){
 	$geny_ar = new GenyActivityReport();
 	$pmd = new GenyProfileManagementData();
 	$geny_project = new GenyProject();
-	// TODO FIXME there is a bug here => all bank holidays are doubled.
 	foreach($profile->getProfileByActivation(true) as $p){
 		$pmd->loadProfileManagementDataByProfileId($p->id);
 		$profile_name = $p->login;
