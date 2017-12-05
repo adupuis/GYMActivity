@@ -56,7 +56,7 @@ class GenyTools {
 		$worked_days = array();
 		// We do not use this function anymore. We use the BankHoliday system now.
 // 		$arr_bank_holidays = GenyTools::getYearHolidays();
-        $arr_bank_holidays = array();
+		$arr_bank_holidays = array();
 		while ($start_date <= $end_date) {
 			// Si le jour suivant n'est ni un dimanche (0) ou un samedi (6), ni un jour férié, on incrémente les jours ouvrés
 			if (!in_array(date('w', $start_date), array(0, 6))
