@@ -172,7 +172,8 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Dans cette page vous trouverez toutes les informations relatives à votre profil chez <?php echo $web_config->company_name ?>. Vous trouverez aussi la liste complètes des évènements de carrière au sein de l'entreprise.
+		Dans cette page vous trouverez toutes les informations relatives à votre profil chez <?php echo $web_config->company_name ?>. Vous trouverez aussi la liste complètes des évènements de carrière au sein de l'entreprise.<br/>
+		<strong style="color: red">les informations disponible sur cette pages sont données à titre indicatif, seul le bulletin de paie fait foi.</strong>
 		</p>
 		<style>
 			@import 'styles/<?php echo $web_config->theme ?>/profile_summary.css';
