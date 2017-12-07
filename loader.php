@@ -61,11 +61,10 @@ if( $is_cached === true ) {
 			<?php
 				$pmd = new GenyProfileManagementData();
 				$pmd->loadProfileManagementDataByProfileId($profile->id);
-				// NOTE : we should use a different method with for example the name of the country
-				if($pmd->country_id == 1)
-					echo "a#home_flag {background-image: url(../../images/default/flag_france.png);}";
-				else if($pmd->country_id == 2)
-					echo "a#home_flag {background-image: url(../../images/default/flag_usa.png);}";
+				$tmp_country = new GenyCountry($pmd->country_id);
+				$tmp_country_name = strtolower( $tmp_country->name );
+				if( file_exists("images/default/flag_$tmp_country_name.png") )
+					echo "a#home_flag {background-image: url(../../images/default/flag_$tmp_country_name.png);}";
 			?>
 		</style>
 		<?php
