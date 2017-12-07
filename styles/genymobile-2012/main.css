@@ -176,6 +176,16 @@ a#home_logo {
 a#home_logo:hover {
 	background-image: url(../../images/genymobile-2012/logo_home_banner.png);
 }
+a#home_flag {
+	display: block;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	top: 26px;
+	left: 150px;
+	background-image: url(../../images/default/flag_un.png);
+}
+
 
 #wrapper {
 /* 	background-color: red; */

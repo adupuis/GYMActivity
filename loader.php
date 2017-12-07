@@ -57,6 +57,17 @@ if( $is_cached === true ) {
 <div id="<?php echo ( $is_cached === true ) ? "wrapper-cache" : "wrapper" ;?>">
 	<!--       <span id="load"> </span> -->
 	<div id="content">
+		<style>  
+			<?php
+				$pmd = new GenyProfileManagementData();
+				$pmd->loadProfileManagementDataByProfileId($profile->id);
+				// NOTE : we should use a different method with for example the name of the country
+				if($pmd->country_id == 1)
+					echo "a#home_flag {background-image: url(../../images/default/flag_france.png);}";
+				else if($pmd->country_id == 2)
+					echo "a#home_flag {background-image: url(../../images/default/flag_usa.png);}";
+			?>
+		</style>
 		<?php
 			// Here is the code for submodule loading
 			if( $is_cached === true ) {

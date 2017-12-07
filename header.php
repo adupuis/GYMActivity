@@ -162,10 +162,9 @@ echo $header_title
 </head>
 <body>
 <?php if($load_menu == "true"){ ?>
-<a href="loader.php?module=home" id="home_logo">
+<a href="loader.php?module=home" id="home_logo"></a> <a href="loader.php?module=profile_summary" id="home_flag"></a>
 <?php } ?>
 
-</a>
 
 <?php
 	if( $web_config->theme == "default" ) {
