@@ -41,9 +41,8 @@ class GenyWebConfig {
 		$this->db_password = "toto";
 		$this->theme = "default";
 		$this->debug = true;
-		$this->db_name = "GYMActivity";
+		$this->db_name = "GYMActivity2";
 		$this->company_name = "Genymobile";
-		$this->version = "1.2.0";
 		$this->company_corner_logo = "logo_banner.png";
 		$this->company_index_logo = "logo_genymobile.jpg";
 		$this->gmail_username = "yourusername";
