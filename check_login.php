@@ -75,14 +75,14 @@ if(isset($oauth_email) || isset($_POST['geny_username']) && isset($_POST['geny_p
 		if(file_exists("styles/".$_POST['geny_theme']."/main.css"))
 			$_SESSION['THEME'] = $_POST['geny_theme'];
 		else
-			$_SESSION['THEME'] = 'default';
+			$_SESSION['THEME'] = 'genymobile-2012';
 		$tmp_profile = new GenyProfile( $sqldata['profile_id'] );
 		$tmp_group   = new GenyRightsGroup( $tmp_profile->rights_group_id );
 		$pv = new GenyPropertyValue();
 		$state_pv = $pv->getPropertyValuesByPropertyId(3);
 		$s = array_shift($state_pv);
 		error_log("[GYMActivity::DEBUG] check_login.php: \$s->content: $s->content",0);
-		if(($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+		if(($s->content == 5 || $s->content == 6 || $s->content == 7) && $tmp_group->shortname != 'ADM' ){
 			session_destroy();
 			header("Location: index.php");
 			exit();
