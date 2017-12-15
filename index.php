@@ -94,16 +94,16 @@ $web_config = new GenyWebConfig();
 	$state_pv = $pv->getPropertyValuesByPropertyId(3);
 	$s = array_shift($state_pv);
 	GenyTools::debug("\$s->content: $s->content");
-	if( $s->content == 'Active - Issues' ){
+	if( $s->content == 4 ){
 		echo '<div id="app_state" class="app_state_warning"><p>Des problèmes ont été rapportés sur cette version de GYMActivity.</p></div>';
 	}
-	else if($s->content == 'Inactive - Upgrade'){
+	else if($s->content == 5){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est en cours de mise à jour. Connexion impossible.</p></div>';
 	}
-	else if($s->content == 'Inactive - Maintenance' ){
+	else if($s->content == 6 ){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est en cours de maintenance. Connexion impossible.</p></div>';
 	}
-	else if($s->content == 'Inactive' ){
+	else if($s->content == 7 ){
 		echo '<div id="app_state" class="app_state_critical"><p>GYMActivity est inaccessible pour le moment. Connexion impossible.</p></div>';
 	}
 ?>
