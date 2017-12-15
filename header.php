@@ -68,7 +68,7 @@ try {
 	$pv = new GenyPropertyValue();
 	$state_pv = $pv->getPropertyValuesByPropertyId(3);
 	$s = array_shift($state_pv);
-	if(isset($set) && ($s->content == 'Inactive - Upgrade' || $s->content == 'Inactive - Maintenance' || $s->content == 'Inactive') && $tmp_group->shortname != 'ADM' ){
+	if(isset($s) && ($s->content == 5 || $s->content == 6 || $s->content == 7) && $tmp_group->shortname != 'ADM' ){
 		session_destroy();
 		header("Location: index.php");
 		exit();
