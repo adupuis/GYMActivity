@@ -22,12 +22,19 @@
 $property = new GenyProperty();
 $property->loadPropertyByName('PROP_DB_VERSION');
 $pv = $property->getPropertyValues();
+$version = -1;
+
+try {
+    $version = file_get_contents('gymactivity-version');
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
 
 ?>
 
 <li class="admin_generic">
 	<a href="#">
 		<span class="dock_item_title">Version GYMActivity</span><br/>
-		<span class="dock_item_content">La version courante de l'application est : <?php echo $web_config->version ?>.<br/>La version courante de la base de donnée est : <?php echo $pv[0]->content; ?></span>
+		<span class="dock_item_content">La version courante de l'application est : <?php echo $version ?><br/>La version courante de la base de donnée est : <?php echo $pv[0]->content; ?></span>
 	</a>
 </li>
