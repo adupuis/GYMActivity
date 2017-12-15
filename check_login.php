@@ -89,8 +89,14 @@ if(isset($oauth_email) || isset($_POST['geny_username']) && isset($_POST['geny_p
 		}
 		if( $tmp_profile->needs_password_reset )
 			header('Location: user_admin_password_change.php');
-		else
-			header("Location: loader.php?module=home");
+		else{
+			if( isset($_POST['referer']) ){
+				header("Location: ".$_POST['referer']);
+			}
+			else {
+				header("Location: loader.php?module=home");
+			}
+		}
 		exit;
 	}
 

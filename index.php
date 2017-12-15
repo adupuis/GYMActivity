@@ -65,6 +65,12 @@ $web_config = new GenyWebConfig();
 			<option value='genymobile-2012' selected>Genymobile 2012</option>
 		</select>
 	</p>
+	<?php
+		if( $_GET['reason'] == 'authrequired' ){
+			GenyTools::debug("[index.php] reason=".$_GET['reason']." et HTTP_REFERER=".$_SERVER['HTTP_REFERER']);
+			echo "<input type='hidden' name='referer' value='".$_SERVER['HTTP_REFERER']."'/>";
+		}
+	?>
 	<!-- Bouton de soumission habituel. Je l'ai commenté pour pouvoir afficher ma div "finish" avec la pseudo-classe :target -->
 
 	<p>
