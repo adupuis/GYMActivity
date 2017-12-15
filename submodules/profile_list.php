@@ -123,7 +123,7 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 				} );
 				/* Add a select menu for each TH element in the table footer */
 				$("tfoot th").each( function ( i ) {
-					if( i == 6){
+					if( i == 6 || i == 4){
 						this.innerHTML = fnCreateSelect( oTable.fnGetColumnData(i) );
 						$('select', this).change( function () {
 							oTable.fnFilter( $(this).val(), i );
@@ -170,8 +170,14 @@ foreach( $geny_rg->getAllRightsGroups() as $group ){
 					else
 						return 'button_error_small.png';
 				}
+				function getStatus($bool){
+					if($bool == 1)
+						return 'Oui';
+					else
+						return 'Non';
+				}
 				foreach( $profile->getAllProfiles() as $tmp ){
-					echo "<tr><td><a href='loader.php?module=profile_summary&profile_id=$tmp->id'>$tmp->login</a></td><td>$tmp->firstname</td><td>$tmp->lastname</td><td>$tmp->email</td><td><img src='images/$web_config->theme/".getImage($tmp->is_active)."' /></td><td><img src='images/$web_config->theme/".getImage($tmp->needs_password_reset)."' /></td><td>".$groups["$tmp->rights_group_id"]->name."</td><td><a href='loader.php?module=profile_edit&load_profile=true&profile_id=$tmp->id' title='Editer le profile'><img src='images/".$web_config->theme."/profile_edit_small.png' alt='Editer le profile'></a></td><td><a href='loader.php?module=profile_remove&profile_id=$tmp->id' title='Supprimer définitivement le profile'><img src='images/".$web_config->theme."/profile_remove_small.png' alt='Supprimer définitivement le profile'></a></td></tr>";
+					echo "<tr><td><a href='loader.php?module=profile_summary&profile_id=$tmp->id'>$tmp->login</a></td><td>$tmp->firstname</td><td>$tmp->lastname</td><td>$tmp->email</td><td>".getStatus($tmp->is_active)."</td><td><img src='images/$web_config->theme/".getImage($tmp->needs_password_reset)."' /></td><td>".$groups["$tmp->rights_group_id"]->name."</td><td><a href='loader.php?module=profile_edit&load_profile=true&profile_id=$tmp->id' title='Editer le profile'><img src='images/".$web_config->theme."/profile_edit_small.png' alt='Editer le profile'></a></td><td><a href='loader.php?module=profile_remove&profile_id=$tmp->id' title='Supprimer définitivement le profile'><img src='images/".$web_config->theme."/profile_remove_small.png' alt='Supprimer définitivement le profile'></a></td></tr>";
 				}
 			?>
 			</tbody>
