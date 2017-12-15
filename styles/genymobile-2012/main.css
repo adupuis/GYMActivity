@@ -179,9 +179,9 @@ a#home_logo:hover {
 a#home_flag {
 	display: block;
 	position: absolute;
-	width: 64px;
-	height: 64px;
-	top: 26px;
+	width: 32px;
+	height: 32px;
+	top: 58px;
 	left: 150px;
 	background-image: url(../../images/default/flag_un.png);
 }
