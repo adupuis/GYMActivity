@@ -137,7 +137,7 @@ class GenyTools {
 	}
 
 	static function get_google_email($oauth_code) {
-	    $client = create_google_client();
+	    $client = self::create_google_client();
 	    $client->fetchAccessTokenWithAuthCode($oauth_code);
 	    $access_token = $client->getAccessToken();
 	    $oauth2Service = new Google_Service_Oauth2($client);
