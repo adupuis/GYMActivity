@@ -19,6 +19,13 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+/////////////
+//
+// WARNING: I have no idea why this thing has been coded... 
+// It's highly unsecure as it returns all profiles with encoded passwords!!
+//
+/////////////
+
 session_start();
 $required_group_rights = 2;
 $auth_granted = false;
@@ -44,11 +51,17 @@ try {
 		if( $project_id > 0 ) {
 			$results = $tmp_profile->getAllProfilesByProjectId( $project_id );
 		}
+		else {
+			echo json_encode( array( "error" => "Fatal error: project_id is mandatory." ) );
+			exit;
+		}
 		
 		foreach( $results as $pr ){
 			$tmp = array();
 			foreach( get_object_vars( $tmp_profile ) as $field => $value ) {
-				$tmp[$field] = $pr->$field ;
+                if($field == "id" || $field == "login" || $field == "firstname" || $field == "lastname" ){
+                    $tmp[$field] = $pr->$field ;
+                }
 			}
 			$profiles[] = $tmp;
 		}
