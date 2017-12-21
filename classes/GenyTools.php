@@ -19,7 +19,7 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
-require_once 'third_parties/google-api-php-client-2.1.3/vendor/autoload.php';
+// require_once 'third_parties/google-api-php-client-2.1.3/vendor/autoload.php';
 
 // needed by google client. Also seems like a php property can be used
 // so we should test without it before

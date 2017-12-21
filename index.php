@@ -19,6 +19,8 @@
 //  Free Software Foundation, Inc.,
 //  59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
+require_once 'third_parties/google-api-php-client-2.1.3/vendor/autoload.php';
+
 include_once "classes/GenyWebConfig.php";
 include_once 'classes/GenyPropertyValue.php';
 include_once 'classes/GenyTools.php';
