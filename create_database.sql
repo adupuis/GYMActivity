@@ -29,7 +29,7 @@ CREATE TABLE RightsGroups (
 	rights_group_description text,
 	unique key rights_group_shortname (rights_group_shortname),
 	primary key(rights_group_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE RightsGroups AUTO_INCREMENT = 1;
 INSERT INTO RightsGroups VALUES(1,'Admins','ADM','Administrators of the application');
 INSERT INTO RightsGroups VALUES(2,'TopManagers','TM','Company top managers. They are users with more rights than basic users (they can create/edit projects, tasks, assignements and clients,they cannot access rights management features).');
@@ -44,7 +44,7 @@ CREATE TABLE Countries (
 	country_name varchar(250) not null default 'Undefined',
 	primary key(country_id),
 	unique key(country_name)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Countries AUTO_INCREMENT = 1;
 INSERT INTO Countries VALUES(1,'France');
 INSERT INTO Countries VALUES(2,'USA');
@@ -60,7 +60,7 @@ CREATE TABLE BankHolidays (
     primary key(bank_holiday_id),
     unique key bank_holiday_key (bank_holiday_start_date,bank_holiday_stop_date,bank_holiday_country_id),
     foreign key(bank_holiday_country_id) references Countries(country_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 
 CREATE TABLE Profiles (
 	profile_id int auto_increment,
@@ -75,7 +75,7 @@ CREATE TABLE Profiles (
 	primary key(profile_id),
 	unique key profile_login (profile_login),
 	foreign key(rights_group_id) references RightsGroups(rights_group_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 INSERT INTO Profiles VALUES (1,'admin','','','admin','admin@genymobile.com',true,false,1);
 UPDATE Profiles SET profile_password = MD5('admin') WHERE profile_id=1;
 INSERT INTO Profiles VALUES (2,'test','ALongFirstName','AVeryLongLastName','test','admin@genymobile.com',true,false,3);
@@ -102,7 +102,7 @@ CREATE TABLE ProfileManagementData (
 	foreign key(profile_management_data_group_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(profile_management_data_technology_leader_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(profile_management_data_country_id ) references Countries(country_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE ProfileManagementData AUTO_INCREMENT = 1;
 
 -- TODO: Ajouter le support des profiles tags
@@ -115,7 +115,7 @@ CREATE TABLE Notifications (
 	notification_type varchar(50) not null default 'info',
 	primary key(notification_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 
 ALTER TABLE Notifications AUTO_INCREMENT=1;
 
@@ -126,7 +126,7 @@ CREATE TABLE ApiKeys (
 	api_key_timestamp int not null,
 	primary key(api_key_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 
 ALTER TABLE ApiKeys AUTO_INCREMENT=1;
 
@@ -134,7 +134,7 @@ CREATE TABLE Clients (
 	client_id int auto_increment,
 	client_name varchar(200) not null default 'Undefined',
 	primary key(client_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Clients AUTO_INCREMENT = 1;
 INSERT INTO Clients VALUES(1,'Genymobile');
 
@@ -143,7 +143,7 @@ CREATE TABLE ProjectTypes (
 	project_type_name varchar(200) not null default 'Undefined',
 	project_type_description varchar(200),
 	primary key(project_type_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE ProjectTypes AUTO_INCREMENT = 1;
 INSERT INTO ProjectTypes VALUES(1,'Régie','Employé à disposition du client dans les bureaux du client.');
 INSERT INTO ProjectTypes VALUES(2,'Forfait','Employé sur un ou plusieurs projets au forfait.');
@@ -158,7 +158,7 @@ CREATE TABLE ProjectStatus (
 	project_status_name varchar(200),
 	project_status_description varchar(200),
 	primary key(project_status_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE ProjectStatus AUTO_INCREMENT = 1;
 INSERT INTO ProjectStatus VALUES(1,'En cours','Projet en cours sans risques identifiés ni avérés.');
 INSERT INTO ProjectStatus VALUES(2,'Fermé','Projet fermé (plus aucune imputation possible).');
@@ -183,7 +183,7 @@ CREATE TABLE Projects (
 	foreign key(client_id) references Clients(client_id) ON DELETE CASCADE,
 	foreign key(project_type_id) references ProjectTypes(project_type_id) ON DELETE CASCADE,
 	foreign key(project_status_id) references ProjectStatus(project_status_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Projects AUTO_INCREMENT = 1;
 INSERT INTO Projects VALUES(1,'Administratif 2011','Tâches administratives (travaux internes, management, etc.).',1,'Paris','2011-01-01','2011-12-31',2,1);
 INSERT INTO Projects VALUES(2,'Congés 2011','Tous les congés.',1,'None','2011-01-01','2011-12-31',5,1);
@@ -195,7 +195,7 @@ CREATE TABLE Tasks (
 	task_name varchar(200) not null default 'Undefined',
 	task_description text,
 	primary key(task_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Tasks AUTO_INCREMENT = 1;
 INSERT INTO Tasks VALUES(NULL,'Avant Vente','Avant vente de projet (chiffrage, proposition commerciale, présentation client, etc.).');
 INSERT INTO Tasks VALUES(NULL,'Formation Interne','Formation interne à GENYMOBILE.');
@@ -226,7 +226,7 @@ CREATE TABLE ProjectTaskRelations (
 	primary key(project_task_relation_id),
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE ProjectTaskRelations AUTO_INCREMENT = 1;
 
 INSERT INTO `ProjectTaskRelations` VALUES (NULL,1,3),(NULL,3,3),(NULL,1,2),(NULL,3,2),(NULL,1,1),(NULL,3,1),(NULL,1,4),(NULL,1,5),(NULL,1,6),(NULL,2,7),(NULL,2,8),(NULL,2,9),(NULL,2,10),(NULL,2,11),(NULL,2,12),(NULL,2,13),(NULL,2,14),(NULL,2,15),(NULL,2,16),(NULL,2,17),(NULL,2,18),(NULL,2,19),(NULL,2,20),(NULL,3,4),(NULL,3,5),(NULL,3,6),(NULL,4,7),(NULL,4,8),(NULL,4,9),(NULL,4,10),(NULL,4,11),(NULL,4,12),(NULL,4,13),(NULL,4,14),(NULL,4,15),(NULL,4,16),(NULL,4,17),(NULL,4,18),(NULL,4,19),(NULL,4,20);
@@ -240,7 +240,7 @@ CREATE TABLE Assignements (
 	primary key(assignement_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Assignements AUTO_INCREMENT = 1;
 
 CREATE TABLE DailyRates (
@@ -257,7 +257,7 @@ CREATE TABLE DailyRates (
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE DailyRates AUTO_INCREMENT = 1;
 
 CREATE TABLE Activities (
@@ -270,7 +270,7 @@ CREATE TABLE Activities (
 	primary key(activity_id),
 	foreign key(assignement_id) references Assignements(assignement_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Activities AUTO_INCREMENT = 1;
 
 CREATE TABLE ActivityReportStatus (
@@ -279,7 +279,7 @@ CREATE TABLE ActivityReportStatus (
 	activity_report_status_name varchar(200) not null default 'Undefined',
 	activity_report_status_description text,
 	primary key(activity_report_status_id,activity_report_status_shortname)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 
 ALTER TABLE ActivityReportStatus AUTO_INCREMENT = 1;
 INSERT INTO ActivityReportStatus VALUES(NULL,'P_USER_VALIDATION','En attente de validation utilisateur',"Le rapport d'activité a été pré-soumis et est en attente de validation par l'utilisateur.");
@@ -302,7 +302,7 @@ CREATE TABLE ActivityReports (
 	foreign key(activity_id) references Activities(activity_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(activity_report_status_id) references ActivityReportStatus(activity_report_status_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE ActivityReports AUTO_INCREMENT = 1;
 
 CREATE TABLE AccessLogs (
@@ -316,7 +316,7 @@ CREATE TABLE AccessLogs (
 	access_log_extra varchar(200) not null default 'Nothing',
 	primary key(access_log_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE AccessLogs AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaStatus (
@@ -324,7 +324,7 @@ CREATE TABLE IdeaStatus (
 	idea_status_name varchar(200) not null,
 	idea_status_description varchar(200) not null,
 	primary key(idea_status_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IdeaStatus AUTO_INCREMENT=1;
 INSERT INTO IdeaStatus VALUES (NULL,'No status','Idea have not yet been reviewed.');
 INSERT INTO IdeaStatus VALUES (NULL,'Accepted','Idea have been accepted for implementation.');
@@ -349,7 +349,7 @@ CREATE TABLE Ideas (
 	primary key(idea_id),
 	foreign key(idea_submitter) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_status_id) references IdeaStatus(idea_status_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Ideas AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaMessages (
@@ -361,7 +361,7 @@ CREATE TABLE IdeaMessages (
 	primary key(idea_message_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IdeaMessages AUTO_INCREMENT=1;
 
 CREATE TABLE IdeaVotes (
@@ -373,7 +373,7 @@ CREATE TABLE IdeaVotes (
         primary key(idea_vote_id),
         foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
         foreign key(idea_id) references Ideas(idea_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IdeaVotes AUTO_INCREMENT=1;
 
 -- Properties
@@ -383,7 +383,7 @@ CREATE TABLE PropertyTypes (
 	property_type_shortname varchar(250) not null default 'P_TYPE',
 	property_type_name varchar(250) not null default 'Property type name',
 	primary key(property_type_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE PropertyTypes AUTO_INCREMENT=1;
 
 INSERT INTO PropertyTypes VALUES(1,'PROP_TYPE_BOOL','Une propriété booléenne (vrai/faux).');
@@ -400,7 +400,7 @@ CREATE TABLE Properties (
 	property_type_id int not null,
 	primary key(property_id),
 	foreign key(property_type_id) references PropertyTypes(property_type_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE Properties AUTO_INCREMENT=1;
 
 -- Exemple de propriété
@@ -431,7 +431,7 @@ CREATE TABLE PropertyOptions (
 	property_id int not null,
 	primary key(property_option_id),
 	foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE PropertyOptions AUTO_INCREMENT=1;
 
 -- options activé/désactivé pour PROP_LIVE_DEBUG
@@ -466,7 +466,7 @@ CREATE TABLE PropertyValues (
 	property_value_content text not null,
 	primary key(property_value_id),
 	foreign key(property_id) references Properties(property_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE PropertyValues AUTO_INCREMENT=1;
 
 -- insertion des valeurs des exemples ci-dessus
@@ -494,7 +494,7 @@ CREATE TABLE CareerEvents (
 	career_event_employee_agreement int not null default 0,
 	primary key(career_event_id),
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE CareerEvents AUTO_INCREMENT=1;
 
 DELIMITER $$
@@ -521,7 +521,7 @@ CREATE TABLE HolidaySummaries_NG (
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE HolidaySummaries_NG AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetCategories (
@@ -530,7 +530,7 @@ CREATE TABLE IntranetCategories (
 	intranet_category_description varchar(140) not null default 'Undefined',
 	intranet_category_image_name varchar(100) not null default 'intranet_category_generic',
 	primary key(intranet_category_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetCategories AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetTypes (
@@ -540,14 +540,14 @@ CREATE TABLE IntranetTypes (
 	intranet_category_id int not null,
 	primary key(intranet_type_id),
 	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetTypes AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetTags (
 	intranet_tag_id int auto_increment,
 	intranet_tag_name varchar(25) not null default 'Undefined',
 	primary key(intranet_tag_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetTags AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetPages (
@@ -563,7 +563,7 @@ CREATE TABLE IntranetPages (
 	primary key(intranet_page_id),
 	foreign key(intranet_category_id) references IntranetCategories(intranet_category_id) ON DELETE CASCADE,
 	foreign key(intranet_type_id) references IntranetTypes(intranet_type_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetPages AUTO_INCREMENT=1;
 
 DELIMITER $$
@@ -582,7 +582,7 @@ CREATE TABLE IntranetTagPageRelations (
 	primary key(intranet_tag_page_relation_id),
 	foreign key(intranet_tag_id) references IntranetTags(intranet_tag_id) ON DELETE CASCADE,
 	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetTagPageRelations AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetPageStatus (
@@ -590,7 +590,7 @@ CREATE TABLE IntranetPageStatus (
 	intranet_page_status_name varchar(200) not null,
 	intranet_page_status_description varchar(200) not null,
 	primary key(intranet_page_status_id)
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetPageStatus AUTO_INCREMENT=1;
 INSERT INTO IntranetPageStatus VALUES (NULL,'Brouillon','Visible uniquement par le créateur de la page');
 INSERT INTO IntranetPageStatus VALUES (NULL,'Visible par mon groupe','Visible par les profils appartenant au groupe du créateur de la page');
@@ -605,7 +605,7 @@ CREATE TABLE IntranetHistories (
 	intranet_history_content blob not null,
 	primary key(intranet_history_id),
 	foreign key(intranet_page_id) references IntranetPages(intranet_page_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE IntranetHistories AUTO_INCREMENT=1;
 
 -- création de la vue ActivityReportWorkflow
