@@ -507,28 +507,22 @@ end $$
 DELIMITER ;
 
 
-CREATE TABLE HolidaySummaries (
+CREATE TABLE HolidaySummaries_NG (
 	holiday_summary_id int auto_increment,
 	profile_id int not null,
-	holiday_summary_type char(10) not null,
+	project_id int not null,
+	task_id int not null,
 	holiday_summary_period_start date not null,
 	holiday_summary_period_end date not null,
 	holiday_summary_count_acquired float(4,2) not null default '0.00',
 	holiday_summary_count_taken float(4,2) not null default '0.00',
 	holiday_summary_count_remaining float(4,2) not null default '0.00',
 	primary key(holiday_summary_id),
+	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
+	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE,
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE
-);
-ALTER TABLE HolidaySummaries AUTO_INCREMENT=1;
-
-DELIMITER $$
-create trigger hs_check_type before insert on HolidaySummaries for each row
-begin
-  if new.holiday_summary_type != "RTT" and new.holiday_summary_type != "CP" then
-    set new.holiday_summary_type := "CP";
-  end if;
-end $$
-DELIMITER ;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE HolidaySummaries_NG AUTO_INCREMENT=1;
 
 CREATE TABLE IntranetCategories (
 	intranet_category_id int auto_increment,
