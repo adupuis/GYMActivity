@@ -32,15 +32,16 @@ $edit_holiday_summary = GenyTools::getParam( 'edit_holiday_summary', 'NULL' );
 
 if( $create_holiday_summary == "true" ) {
 	$profile_id = GenyTools::getParam( 'profile_id', 'NULL' );
-	$holiday_summary_type = GenyTools::getParam( 'holiday_summary_type', 'NULL' );
+	$project_id = GenyTools::getParam( 'project_id', 'NULL' );
+	$task_id = GenyTools::getParam( 'task_id', 'NULL' );
 	$holiday_summary_period_start = GenyTools::getParam( 'holiday_summary_period_start', 'NULL' );
 	$holiday_summary_period_end = GenyTools::getParam( 'holiday_summary_period_end', 'NULL' );
 	$holiday_summary_count_acquired = GenyTools::getParam( 'holiday_summary_count_acquired', 'NULL' );
 	$holiday_summary_count_taken = GenyTools::getParam( 'holiday_summary_count_taken', 'NULL' );
 	$holiday_summary_count_remaining = GenyTools::getParam( 'holiday_summary_count_remaining', 'NULL' );
 
-	if( $profile_id != 'NULL' && $holiday_summary_type != 'NULL' && $holiday_summary_period_start != 'NULL' && $holiday_summary_period_end != 'NULL' && $holiday_summary_count_acquired != 'NULL' && $holiday_summary_count_taken != 'NULL' && $holiday_summary_count_remaining != 'NULL' ) {
-		$insert_id = $geny_holiday_summary->insertNewHolidaySummary( 'NULL', $profile_id, $holiday_summary_type, $holiday_summary_period_start, $holiday_summary_period_end, $holiday_summary_count_acquired, $holiday_summary_count_taken, $holiday_summary_count_remaining );
+	if( $profile_id != 'NULL' && $project_id != 'NULL' && $task_id != 'NULL' && $holiday_summary_type != 'NULL' && $holiday_summary_period_start != 'NULL' && $holiday_summary_period_end != 'NULL' && $holiday_summary_count_acquired != 'NULL' && $holiday_summary_count_taken != 'NULL' && $holiday_summary_count_remaining != 'NULL' ) {
+		$insert_id = $geny_holiday_summary->insertNewHolidaySummary( 'NULL', $profile_id, $project_id, $task_id, $holiday_summary_period_start, $holiday_summary_period_end, $holiday_summary_count_acquired, $holiday_summary_count_taken, $holiday_summary_count_remaining );
 		if( $insert_id != -1 ) {
 			$gritter_notifications[] = array( 'status'=>'success', 'title' => 'Succès','msg'=>"Solde de congés ajouté avec succès." );
 			$geny_holiday_summary->loadHolidaySummaryById( $insert_id );
@@ -78,7 +79,8 @@ else if( $edit_holiday_summary == 'true' ) {
 		    $profile->rights_group_id == 2 /* superuser */ ) {
 
 			$profile_id = GenyTools::getParam( 'profile_id', 'NULL' );
-			$holiday_summary_type = GenyTools::getParam( 'holiday_summary_type', 'NULL' );
+			$project_id = GenyTools::getParam( 'project_id', 'NULL' );
+            $task_id = GenyTools::getParam( 'task_id', 'NULL' );
 			$holiday_summary_period_start = GenyTools::getParam( 'holiday_summary_period_start', 'NULL' );
 			$holiday_summary_period_end = GenyTools::getParam( 'holiday_summary_period_end', 'NULL' );
 			$holiday_summary_count_acquired = GenyTools::getParam( 'holiday_summary_count_acquired', 'NULL' );
@@ -88,8 +90,11 @@ else if( $edit_holiday_summary == 'true' ) {
 			if( $profile_id != 'NULL' && $geny_holiday_summary->profile_id != $profile_id ) {
 				$geny_holiday_summary->updateInt( 'profile_id', $profile_id );
 			}
-			if( $holiday_summary_type != 'NULL' && $geny_holiday_summary->type != $holiday_summary_type ) {
-				$geny_holiday_summary->updateString( 'holiday_summary_type', $holiday_summary_type );
+			if( $project_id != 'NULL' && $geny_holiday_summary->project_id != $project_id ) {
+				$geny_holiday_summary->updateInt( 'project_id', $project_id );
+			}
+			if( $task_id != 'NULL' && $geny_holiday_summary->task_id != $task_id ) {
+				$geny_holiday_summary->updateInt( 'task_id', $task_id );
 			}
 			if( $holiday_summary_period_start != 'NULL' && $geny_holiday_summary->period_start != $holiday_summary_period_start ) {
 				$geny_holiday_summary->updateString( 'holiday_summary_period_start', $holiday_summary_period_start );
@@ -228,21 +233,68 @@ else if( $edit_holiday_summary == 'true' ) {
 				</select>
 			</p>
 			<p>
-				<label for="holiday_summary_type">Type</label>
-				<select name="holiday_summary_type" id="holiday_summary_type" class="chzn-select">
-					<?php
-					if( $geny_holiday_summary->type == "RTT" ) {
-						echo "<option value=\"CP\">CP</option>";
-						echo "<option value=\"RTT\" selected>RTT</option>";
-					}
-					else {
-						echo "<option value=\"CP\">CP</option>";
-						echo "<option value=\"RTT\">RTT</option>";
-					}
-					?>
+				<label for="project_id">Projet de congés</label>
+				<select name="project_id" id="project_id" class="chzn-select" data-placeholder="Choisissez un projet...">
+					<option value=""></option>
+				</select>
+			</p>
+			<p>
+				<label for="task_id">Tâche</label>
+				<select name="task_id" id="task_id" class="chzn-select" data-placeholder="Choisissez d'abord un projet...">
+					<option value=""></option>
 				</select>
 			</p>
 			<script type="text/javascript">
+                 
+				
+				function getAssignements(){
+                    var profile_id = $("#profile_id").val();
+                    var project_id = <?php echo $geny_holiday_summary->project_id ?>;
+                    if( profile_id > 0 ) {
+						$.get('backend/api/get_assignements_list.php?profile_id='+profile_id+'&project_type_id=5', function( data ) {
+							$('.project_options').remove();
+							$.each( data, function( key, val ) {
+                                if(val['project_id'] == project_id){
+                                    $("#project_id").append('<option class="project_options" value="' + val['project_id'] + '" title="' + val['project_name'] + '" selected>' + val['project_name'] + '</option>');
+                                }
+                                else{
+                                    $("#project_id").append('<option class="project_options" value="' + val['project_id'] + '" title="' + val['project_name'] + '">' + val['project_name'] + '</option>');
+								}
+							});
+							$("#project_id").attr('data-placeholder','Choisissez une tâche...');
+							$("#project_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
+
+						},'json');
+					}
+				}
+				$("#profile_id").change( getAssignements );
+				getAssignements();
+				
+				function getTasks(){
+					var project_id = $("#project_id").val();
+					var task_id = <?php echo $geny_holiday_summary->task_id ?>;
+					if( project_id > 0 ) {
+						$.get('backend/api/get_project_tasks_list.php?project_id='+project_id, function( data ) {
+							$('.tasks_options').remove();
+							$.each( data, function( key, val ) {
+                                if(val[0] == task_id){
+                                    $("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '" selected>' + val[1] + '</option>');
+                                }
+                                else{
+                                    $("#task_id").append('<option class="tasks_options" value="' + val[0] + '" title="' + val[2] + '">' + val[1] + '</option>');
+                                }
+							});
+							$("#task_id").attr('data-placeholder','Choisissez une tâche...');
+							$("#task_id").trigger("liszt:updated");
+							$("span:contains('Choisissez d'abord un projet...')").text('Choisissez une tâche...');
+
+						},'json');
+					}
+				}
+				$("#project_id").change( getTasks );
+				getTasks();
+				
 				$(function() {
 					$( "#holiday_summary_period_start" ).datepicker();
 					$( "#holiday_summary_period_start" ).datepicker('setDate', new Date());
@@ -267,6 +319,8 @@ else if( $edit_holiday_summary == 'true' ) {
 					$( "#holiday_summary_period_end" ).datepicker( "option", "dayNamesMin", ['Di', 'Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa'] );
 					$( "#holiday_summary_period_end" ).datepicker( "option", "monthNames", ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'] );
 					$( "#holiday_summary_period_end" ).datepicker( "option", "firstDay", 1 );
+					
+					getTasks();
 				});
 			</script>
 			<p>

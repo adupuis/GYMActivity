@@ -29,8 +29,11 @@ $data_array_filters = array( 0 => array(), 1 => array() );
 
 
 $geny_holiday_summary = new GenyHolidaySummary();
-
 $geny_activity_report = new GenyActivityReport();
+$geny_project = new GenyProject();
+$geny_task = new GenyTask();
+$geny_assignement = new GenyAssignement();
+$geny_activity = new GenyActivity();
 
 $geny_profile = new GenyProfile();
 foreach( $geny_profile->getAllProfiles() as $prof ) {
@@ -59,21 +62,30 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 	}
 	
 	$count_taken_from_activity_report = 0.00;
-	if( $tmp->type == "CP" ) {
-		$count_taken_from_activity_report = number_format( $geny_activity_report->getDayLoadByProfileIdAndTaskId( $tmp_profile->id, 11 ), 2 );
-	}
-	else if( $tmp->type == "RTT" ) {
-		$count_taken_from_activity_report = number_format( $geny_activity_report->getDayLoadByProfileIdAndTaskId( $tmp_profile->id, 17 ), 2 );
+	$geny_project->loadProjectById($tmp->project_id);
+	$geny_task->loadTaskById($tmp->task_id);
+	// There should be only one assignement in this list. If there is more, there is a huge problem (DB integrity is corrupted).
+	$ass_list = $geny_assignement->getAssignementsListByProjectIdAndProfileId($tmp->project_id,$tmp->profile_id);
+	$activity_list = $geny_activity->getActivitiesListWithRestrictions(array("assignement_id=".$ass_list[0]->id,"activity_date>='".mysql_escape_string($tmp->period_start)."'","activity_date<='".mysql_escape_string($tmp->period_end)."'"));
+	
+	foreach($activity_list as $activity){
+        $count_taken_from_activity_report += ($activity->load / 8) ;
 	}
 	
-	$data_array[] = array( $tmp->id, $screen_name, $tmp->type, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $count_taken_from_activity_report, $tmp->count_remaining, $edit, $remove );
-
-	$holiday_summary_types = array( "CP"=>"CP", "RTT"=>"RTT" );
+	$count_remaining = $tmp->count_acquired;
+	if($tmp->count_taken > $count_taken_from_activity_report ){
+        $count_remaining -= $tmp->count_taken;
+	}
+	else {
+        $count_remaining -= $count_taken_from_activity_report;
+	}
+	
+	$data_array[] = array( $tmp->id, $screen_name, $geny_project->name." - ".$geny_task->name, $tmp->period_start, $tmp->period_end, $tmp->count_acquired, $tmp->count_taken, $count_taken_from_activity_report, $count_remaining, $edit, $remove );
 
 	if( !in_array($screen_name, $data_array_filters[0]) )
 		$data_array_filters[0][] = $screen_name;
-	if( !in_array( $holiday_summary_types["$tmp->type"], $data_array_filters[1] ) )
-		$data_array_filters[1][] = $holiday_summary_types["$tmp->type"];
+	if( !in_array( $geny_project->name." - ".$geny_task->name, $data_array_filters[1] ) )
+		$data_array_filters[1][] = $geny_project->name." - ".$geny_task->name;
 }
 
 ?>
