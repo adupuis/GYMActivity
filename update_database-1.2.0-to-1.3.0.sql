@@ -87,7 +87,7 @@ CREATE TABLE HolidaySummaries_NG (
 	foreign key(profile_id) references Profiles(profile_id) ON DELETE CASCADE,
 	foreign key(project_id) references Projects(project_id) ON DELETE CASCADE,
 	foreign key(task_id) references Tasks(task_id) ON DELETE CASCADE
-) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ENGINE=InnoDB;
+) DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ENGINE=InnoDB;
 ALTER TABLE HolidaySummaries_NG AUTO_INCREMENT=1;
 
 
