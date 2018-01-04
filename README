@@ -26,3 +26,16 @@ Les états de suppressions sont donc :
 ICONES :
 Les icônes ont été créés à partir du pack SnowIsh-1.3 : http://kde-look.org/content/show.php/SnowIsh?content=42905
 Les icônes de drapeaux proviennent de FreePik : https://www.flaticon.com/packs/international-flags/2
+
+GESTION DU NOMBRE DE CONGÉS PAR DÉFAUT :
+Les congés par défauts (pour la création de solde de congés) se fait par l'ajout d'une propriété. 
+Le format doit toujours être le même:
+ * Le nom doit respecter la convention suivante:
+     HOLIDAY_SUMMARY_DEFAULT_<PROJECT ID>_<TASK ID>
+     Par exemple: 
+     HOLIDAY_SUMMARY_DEFAULT_5_11
+ * Le type de champs doit être "Une propriété contenant un texte court"
+ * La valeur doit respecter le format suivant:
+     <nombre de jours par défaut avec 2 chiffres après la virgule>;<nombre de jours déjà consommés avec 2 chiffres après la virgule>;<date de début (jour et mois) au format MM-DD>;<le mot clé YEAR avec éventuellement un nombre d'années en plus>;<date de fin (jour et mois) au format MM-DD>;<le mot clé YEAR avec éventuellement un nombre d'années en plus>
+     Par exemple (pour des congés payés en France, 25 jours débutant au 1er juin ete terminant au 31 mai de l'année suivante):
+     25.00;0.00;06-01;YEAR;05-31;YEAR+1
