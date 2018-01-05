@@ -66,10 +66,12 @@ foreach( $geny_holiday_summary->getAllHolidaySummaries() as $tmp ) {
 	$geny_task->loadTaskById($tmp->task_id);
 	// There should be only one assignement in this list. If there is more, there is a huge problem (DB integrity is corrupted).
 	$ass_list = $geny_assignement->getAssignementsListByProjectIdAndProfileId($tmp->project_id,$tmp->profile_id);
-	$activity_list = $geny_activity->getActivitiesListWithRestrictions(array("assignement_id=".$ass_list[0]->id,"activity_date>='".mysql_escape_string($tmp->period_start)."'","activity_date<='".mysql_escape_string($tmp->period_end)."'"));
+	$activity_list = $geny_activity->getActivitiesListWithRestrictions(array("assignement_id=".$ass_list[0]->id,"activity_date>='".mysql_real_escape_string($tmp->period_start)."'","activity_date<='".mysql_real_escape_string($tmp->period_end)."'"));
 	
 	foreach($activity_list as $activity){
-        $count_taken_from_activity_report += ($activity->load / 8) ;
+        if($activity->task_id == $geny_task->id){
+            $count_taken_from_activity_report += ($activity->load / 8) ;
+        }
 	}
 	
 	$count_remaining = $tmp->count_acquired;
