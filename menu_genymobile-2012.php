@@ -29,14 +29,30 @@ $user_load = 0;
 
 $geny_ar = new GenyActivityReport();
 $geny_hs = new GenyHolidaySummary();
+$geny_project = new GenyProject();
+$geny_task = new GenyTask();
+$geny_assignement = new GenyAssignement();
+$geny_activity = new GenyActivity();
 
-// Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
-$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($profile->id);
+$hs_remaining = 0;
+$today = date('Y-m-d', time());
 
-// Idem pour les RTT
-$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($profile->id);
-
-$hs_remaining = $hs_cp->count_remaining + $hs_rtt->count_remaining;
+foreach( $geny_hs->getHolidaySummariesListWithRestrictions( array("profile_id='".mysql_real_escape_string( $profile->id )."'","holiday_summary_period_start<='".mysql_real_escape_string( $today )."'","holiday_summary_period_end >= '".mysql_real_escape_string( $today )."'") ) as $tmp ){
+    $geny_project->loadProjectById($tmp->project_id);
+	$geny_task->loadTaskById($tmp->task_id);
+	$count_taken_from_activity_report=0;
+    $hs_remaining += $tmp->count_acquired;
+	// There should be only one assignement in this list. If there is more, there is a huge problem (DB integrity is corrupted).
+	$ass_list = $geny_assignement->getAssignementsListByProjectIdAndProfileId($tmp->project_id,$tmp->profile_id);
+	$activity_list = $geny_activity->getActivitiesListWithRestrictions(array("assignement_id=".$ass_list[0]->id,"activity_date>='".mysql_real_escape_string($tmp->period_start)."'","activity_date<='".mysql_real_escape_string($tmp->period_end)."'"));
+	
+	foreach($activity_list as $activity){
+        if($activity->task_id == $geny_task->id){
+            $count_taken_from_activity_report += ($activity->load / 8) ;
+        }
+	}
+	$hs_remaining -= $count_taken_from_activity_report;
+}
 
 foreach( GenyTools::getWorkedDaysList(strtotime($start_date),strtotime($end_date)) as $day ){
 	$estimated_load += 8;
