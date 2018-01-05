@@ -35,7 +35,16 @@ date_default_timezone_set('Europe/Paris');
 	</p>
 	<p class="mainarea_content">
 		<p class="mainarea_content_intro">
-		Ce formulaire permet de faire vos demandes de congés.<br />
+            Ce formulaire permet de faire vos demandes de congés.<br />
+            Il vous reste en tout <strong><?php echo $hs_remaining; ?> jours</strong> de congés (tous types confondus).<br/><br/>
+            <u>Le détail est le suivant (pris/disponible/restant):</u><br/>
+            <table border='0' class="object_list">
+            <?php
+                foreach ($hs_condensed as $hs){
+                    echo "<tr><td><strong>$hs[0]</strong></td><td style='padding: 5px;'>$hs[1] / $hs[2] / ".($hs[2]-$hs[1]).".</td></tr>\n";
+                }
+            ?>
+            </table>
 		</p>
 		<script>
 			jQuery(document).ready(function(){
