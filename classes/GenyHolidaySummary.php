@@ -149,7 +149,7 @@ class GenyHolidaySummary extends GenyDatabaseTools  {
 	
 	public function getAvailableHolidaySummariesList() {
         $today = date('Y-m-d', time());
-		return $this->getHolidaySummariesListWithRestrictions( array("holiday_summary_period_start>='".mysql_real_escape_string( $today )."'","holiday_summary_period_end <= '".mysql_real_escape_string( $today )."'") );
+		return $this->getHolidaySummariesListWithRestrictions( array("holiday_summary_period_start<='".mysql_real_escape_string( $today )."'","holiday_summary_period_end >= '".mysql_real_escape_string( $today )."'") );
 	}
 
 	public function loadHolidaySummaryById( $id ) {
