@@ -35,6 +35,7 @@ $geny_assignement = new GenyAssignement();
 $geny_activity = new GenyActivity();
 
 $hs_remaining = 0;
+$hs_condensed = array();
 $today = date('Y-m-d', time());
 
 foreach( $geny_hs->getHolidaySummariesListWithRestrictions( array("profile_id='".mysql_real_escape_string( $profile->id )."'","holiday_summary_period_start<='".mysql_real_escape_string( $today )."'","holiday_summary_period_end >= '".mysql_real_escape_string( $today )."'") ) as $tmp ){
@@ -51,6 +52,7 @@ foreach( $geny_hs->getHolidaySummariesListWithRestrictions( array("profile_id='"
             $count_taken_from_activity_report += ($activity->load / 8) ;
         }
 	}
+	$hs_condensed[] = [$geny_project->name." - ".$geny_task->name,$count_taken_from_activity_report,$tmp->count_acquired];
 	$hs_remaining -= $count_taken_from_activity_report;
 }
 
