@@ -35,18 +35,18 @@ $data_array = array();
 $data_array_filters = array( 0 => array(), 2 => array('Über positif','Positif','Neutre','Négatif','Faute') );
 
 // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
-$geny_hs->setDebug(true);
-$hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($geny_profile->id);
-$geny_hs->setDebug(false);
-
-// Idem pour les RTT
-$hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($geny_profile->id);
-
-// Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
-$prev_hs_cp = $geny_hs->getPreviousCPSummaryByProfileId($geny_profile->id);
-
-// Idem pour les RTT
-$prev_hs_rtt = $geny_hs->getPreviousRTTSummaryByProfileId($geny_profile->id);
+// $geny_hs->setDebug(true);
+// $hs_cp = $geny_hs->getCurrentCPSummaryByProfileId($geny_profile->id);
+// $geny_hs->setDebug(false);
+// 
+// // Idem pour les RTT
+// $hs_rtt = $geny_hs->getCurrentRTTSummaryByProfileId($geny_profile->id);
+// 
+// // Nous ne pouvons avoir qu'un seul solde de congés valide pour une période annuelle
+// $prev_hs_cp = $geny_hs->getPreviousCPSummaryByProfileId($geny_profile->id);
+// 
+// // Idem pour les RTT
+// $prev_hs_rtt = $geny_hs->getPreviousRTTSummaryByProfileId($geny_profile->id);
 
 
 foreach( $geny_ce->getCareerEventListByProfileId($geny_profile->id) as $ce ){
@@ -199,42 +199,37 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
 				<strong>Group Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->group_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?><br/>
 				<strong>Technology Leader : </strong> <?php $gl = new GenyProfile( $geny_pmd->technology_leader_id ); echo GenyTools::getProfileDisplayName( $gl ); ?>
 			</li>
-			<?php
-				if( ($prev_hs_cp->count_acquired - $prev_hs_cp->count_taken) > 0 && $prev_hs_cp->count_remaining > 0 ){
-			?>
-			<li>
-				<strong><u>Congés Payés pour la période du <?php echo $prev_hs_cp->period_start." au ".$prev_hs_cp->period_end; ?></u></strong><br/>
-				<strong>Congés acquis : </strong><?php echo $prev_hs_cp->count_acquired; ?><br/>
-				<strong>Congés pris : </strong><?php echo $prev_hs_cp->count_taken; ?><br/>
-				<strong>Congés restant : </strong><?php echo $prev_hs_cp->count_remaining; ?>
-			</li>
-			<?php
-				}
-			?>
-			<li>
-				<strong><u>Congés Payés pour la période du <?php echo $hs_cp->period_start." au ".$hs_cp->period_end; ?></u></strong><br/>
-				<strong>Congés acquis : </strong><?php echo $hs_cp->count_acquired; ?><br/>
-				<strong>Congés pris : </strong><?php echo $hs_cp->count_taken; ?><br/>
-				<strong>Congés restant : </strong><?php echo $hs_cp->count_remaining; ?>
-			</li>
-			<?php
-				if( ($prev_hs_rtt->count_acquired - $prev_hs_rtt->count_taken) > 0 && $prev_hs_rtt->count_remaining > 0 ){
-			?>
-			<li>
-				<strong><u>RTT pour la période du <?php echo $prev_hs_rtt->period_start." au ".$prev_hs_rtt->period_end; ?></u></strong><br/>
-				<strong>Congés acquis : </strong><?php echo $prev_hs_rtt->count_acquired; ?><br/>
-				<strong>Congés pris : </strong><?php echo $prev_hs_rtt->count_taken; ?><br/>
-				<strong>Congés restant : </strong><?php echo $prev_hs_rtt->count_remaining; ?>
-			</li>
-			<?php
-				}
-			?>
-			<li>
-				<strong><u>RTT pour la période du <?php echo $hs_rtt->period_start." au ".$hs_rtt->period_end; ?></u></strong><br/>
-				<strong>Congés acquis : </strong><?php echo $hs_rtt->count_acquired; ?><br/>
-				<strong>Congés pris : </strong><?php echo $hs_rtt->count_taken; ?><br/>
-				<strong>Congés restant : </strong><?php echo $hs_rtt->count_remaining; ?>
-			</li>
+			<?php 
+                $geny_project = new GenyProject();
+                $geny_task = new GenyTask();
+                $geny_assignement = new GenyAssignement();
+                $geny_activity = new GenyActivity();
+
+                $hs_remaining = 0;
+                $today = date('Y-m-d', time());
+                foreach( $geny_hs->getHolidaySummariesListWithRestrictions( array("profile_id='".mysql_real_escape_string( $profile->id )."'","holiday_summary_period_start<='".mysql_real_escape_string( $today )."'","holiday_summary_period_end >= '".mysql_real_escape_string( $today )."'") ) as $tmp ){
+                    echo "<li>";
+                    $geny_project->loadProjectById($tmp->project_id);
+                    $geny_task->loadTaskById($tmp->task_id);
+                    $count_taken_from_activity_report=0;
+                    $hs_remaining = $tmp->count_acquired;
+                    echo "<strong><u>".$geny_project->name." - ".$geny_task->name." pour la période du $tmp->period_start au $tmp->period_end</u></strong><br/><strong>Acquis : </strong>$tmp->count_acquired<br/>";
+                    // There should be only one assignement in this list. If there is more, there is a huge problem (DB integrity is corrupted).
+                    $ass_list = $geny_assignement->getAssignementsListByProjectIdAndProfileId($tmp->project_id,$tmp->profile_id);
+                    $activity_list = $geny_activity->getActivitiesListWithRestrictions(array("assignement_id=".$ass_list[0]->id,"activity_date>='".mysql_real_escape_string($tmp->period_start)."'","activity_date<='".mysql_real_escape_string($tmp->period_end)."'"));
+                    
+                    foreach($activity_list as $activity){
+                        if($activity->task_id == $geny_task->id){
+                            $count_taken_from_activity_report += ($activity->load / 8) ;
+                        }
+                    }
+                    echo "<strong>Pris : </strong>$count_taken_from_activity_report<br/>";
+                    $hs_remaining -= $count_taken_from_activity_report;
+                    echo "<strong>Restant : </strong>$hs_remaining<br/>";
+                    echo "</li>";
+                }
+            ?>
+			
 			<?php
 				$cp_pmd = new GenyProfileManagementData();
 				$cp_pmd->loadProfileManagementDataByProfileId($geny_profile->id);
