@@ -151,6 +151,7 @@ $geny_profile = new GenyProfile();
                         $geny_property = new GenyProperty();
                         $geny_p_v = new GenyPropertyValue();
                         $prop_array = $geny_property->searchProperties("HOLIDAY_SUMMARY_DEFAULT_");
+                        $is_init = array();
                         foreach($prop_array as $tmp_prop){
                             error_log("!! DEBUG !! geny_property found with name $tmp_prop->name",0);
                             $prop_name_exploded = explode('_',$tmp_prop->name);
@@ -168,7 +169,10 @@ $geny_profile = new GenyProfile();
                                 if(!isset($year_end[1])){
                                     $year_end[1]=0;
                                 }
-                                echo "default_values[".$prop_name_exploded[3]."] = [[],[]];\n";
+                                if($is_init[$prop_name_exploded[3]] != 1){
+                                    echo "default_values[".$prop_name_exploded[3]."] = [[],[]];\n";
+                                    $is_init[$prop_name_exploded[3]] = 1;
+                                }
                                 echo "default_values[".$prop_name_exploded[3]."][".$prop_name_exploded[4]."] = ['".$tmp_values[0]."','".$tmp_values[1]."',(date.getFullYear()+".$year_start[1].")+\"-".$tmp_values[2]."\",(date.getFullYear()+".$year_end[1].")+\"-".$tmp_values[4]."\"];\n";
                                 
                             }
