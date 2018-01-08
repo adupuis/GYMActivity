@@ -1,0 +1,7 @@
+Brainstorm before v2.0.0 development:
+-------------------------------------
+
+- The whole Intranet feature have to be suppressed.
+- The whole Idea feature have to be suppressed (go to Github to suggest features).
+- Architecture has to be micro-service/API based.
+- Use UUID for object identification accross the APIs
