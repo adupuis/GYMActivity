@@ -30,6 +30,11 @@ $geny_pmd->loadProfileManagementDataByProfileId($geny_profile->id);
 $geny_hs = new GenyHolidaySummary();
 $geny_ce = new GenyCareerEvent();
 $geny_profile_category_option = new GenyPropertyOption( $geny_pmd->category );
+$geny_activity_report_status_approved = new GenyActivityReportStatus();
+$geny_activity_report_status_approved->loadActivityReportStatusByShortName('APPROVED');
+if($geny_activity_report_status_approved->id == -1 ){
+    error_log("FATAL: could not load the activity report status for shortname 'APPROVED' in profile_summary.php. THIS WILL LEAD TO ERROR IN HOLIDAYS DISPLAY.\n");
+}
 
 $data_array = array();
 $data_array_filters = array( 0 => array(), 2 => array('Über positif','Positif','Neutre','Négatif','Faute') );
@@ -204,6 +209,7 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
                 $geny_task = new GenyTask();
                 $geny_assignement = new GenyAssignement();
                 $geny_activity = new GenyActivity();
+                $geny_activity_report = new GenyActivityReport();
 
                 $hs_remaining = 0;
                 $today = date('Y-m-d', time());
@@ -220,7 +226,16 @@ function ceAgreementToHtml($type,$ce_id,$agreement,$theme,$current_profile,$cons
                     
                     foreach($activity_list as $activity){
                         if($activity->task_id == $geny_task->id){
-                            $count_taken_from_activity_report += ($activity->load / 8) ;
+                            $activity_reports = $geny_activity_report->getActivityReportsByActivityId($activity->id);
+                            if( count($activity_reports) == 1 ){
+                                if( $activity_reports[0]->status_id == $geny_activity_report_status_approved->id ){
+                                    $count_taken_from_activity_report += ($activity->load / 8) ;
+                                }
+                                else{
+                                    GenyTools::Debug("Activity $activity->id has a report status not approved (".$activity_reports[0]->status_id." != $geny_activity_report_status_approved->id)");
+                                }
+                            }
+                            
                         }
                     }
                     echo "<strong>Pris : </strong>$count_taken_from_activity_report<br/>";
