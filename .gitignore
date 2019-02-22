@@ -1,0 +1,6 @@
+client_secrets.json
+*.diff
+cache/
+*.backup
+.directory
+doc/
